@@ -19,7 +19,9 @@ import {
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    data: TData[],
+    onEdit?: (row: TData) => void
+    onDelete?: (row: TData) => void
 }
 
 export function DataTable<TData, TValue>({

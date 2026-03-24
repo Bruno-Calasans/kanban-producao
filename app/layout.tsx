@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import ContentContainer from "@/components/custom/ContentContainer";
-import { AppSidebar } from "@/components/custom/AppSideBar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Toaster } from "@/components/ui/sonner"
+import AppProvider from "@/components/custom/AppProvider";
 
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -19,6 +16,7 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -36,14 +34,9 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <SidebarProvider defaultOpen={false}>
-          <AppSidebar />
-          <SidebarTrigger />
-          <ContentContainer>
-            <Toaster />
-            {children}
-          </ContentContainer>
-        </SidebarProvider>
+        <AppProvider>
+          {children}
+        </AppProvider>
       </body>
     </html>
   );

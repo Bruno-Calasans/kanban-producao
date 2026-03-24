@@ -10,6 +10,7 @@ type ClearButtonProps = {
 export default function ClearButton({ title, onclick }: ClearButtonProps) {
     return (
         <Button
+
             className="cursor-pointer"
             title="Limpa todos os campos do formulário"
             variant="outline"

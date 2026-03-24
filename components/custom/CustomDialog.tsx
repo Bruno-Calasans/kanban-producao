@@ -12,11 +12,13 @@ type CustomDialogProps = {
     description?: React.ReactNode
     trigger: React.ReactNode
     children: React.ReactNode
+
 }
 
 
 export default function CustomDialog({ title, description, trigger, children }: CustomDialogProps) {
     return (
+
         <Dialog>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
             <DialogContent>

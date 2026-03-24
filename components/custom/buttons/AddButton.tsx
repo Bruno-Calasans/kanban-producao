@@ -4,7 +4,7 @@ import { Button } from "../../ui/button"
 
 type AddButtonProps = {
     label: string
-    onClick: () => void
+    onClick?: () => void
 }
 
 export default function AddButton({ label, onClick }: AddButtonProps) {

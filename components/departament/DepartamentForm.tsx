@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
 import * as z from "zod"
@@ -15,6 +14,7 @@ import {
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
+import useCreateDepartament from "@/hooks/departament/useCreateDepartament"
 
 
 const formSchema = z.object({
@@ -23,25 +23,28 @@ const formSchema = z.object({
         .nonempty("Nome do departamento é obrigatório.")
         .min(5, "Nome do departamento deve ter pelo menos 5 caracteres.")
         .max(32, "Nome do departamento deve ter no máximo 32 caracteres."),
-    ordem: z
+    order: z
         .coerce
         .number()
         .min(1, "Ordem deve ser maior ou igual a 1.")
-        .nonoptional("Campo obrigatório")
 })
 
+
 export default function DepartamentForm() {
+    const { mutate, error, isPending } = useCreateDepartament()
+
     const form = useForm({
         defaultValues: {
             name: "",
-            ordem: 1,
+            order: 1,
         },
         validators: {
             onSubmit: formSchema,
         },
         onSubmit: async ({ value }) => {
             toast.success("Departamento criado com sucesso!")
-
+            mutate(value)
+            form.reset()
         },
     })
 
@@ -82,7 +85,7 @@ export default function DepartamentForm() {
                 />
 
                 <form.Field
-                    name="ordem"
+                    name="order"
                     children={(field) => {
                         const isInvalid =
                             field.state.meta.isTouched && !field.state.meta.isValid
@@ -116,7 +119,7 @@ export default function DepartamentForm() {
 
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
                 <ClearButton title="Limpar" onclick={() => form.reset()} />
-                <ConfirmButton title="Criar departamento" />
+                <ConfirmButton loading={isPending} title="Criar departamento" />
             </div>
         </form>
 

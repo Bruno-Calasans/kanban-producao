@@ -1,11 +1,26 @@
+"use client";
+
+import PageTitle from "@/components/custom/PageTitle";
+import { DepartamentTable } from "../../components/departament/DepartamentTable";
+import AddButton from "@/components/custom/buttons/AddButton";
+import CustomDialog from "../../components/custom/CustomDialog";
+import DepartamentForm from "@/components/departament/DepartamentFormt";
 
 export default function DepartamentPage() {
     return (
         <section>
-            <h1 className="font-bold text-2xl">Departamentos</h1>
-            <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa id reprehenderit, ratione incidunt eius libero. Reprehenderit ipsum deleniti commodi at, earum vitae facilis explicabo corporis voluptates! Ratione adipisci rem ad.
-            </p>
+            <PageTitle>Departamentos</PageTitle>
+            <div className="flex flex-col">
+
+                <CustomDialog
+                    trigger={
+                        <AddButton label="Novo departamento" onClick={() => { }} />
+                    }
+                >
+                    <DepartamentForm />
+                </CustomDialog>
+                <DepartamentTable departaments={[]} />
+            </div>
         </section>
     )
 }

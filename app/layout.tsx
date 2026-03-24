@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import ContentContainer from "@/components/custom/ContentContainer";
 import { AppSidebar } from "@/components/custom/AppSideBar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner"
+
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -38,6 +40,7 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarTrigger />
           <ContentContainer>
+            <Toaster />
             {children}
           </ContentContainer>
         </SidebarProvider>

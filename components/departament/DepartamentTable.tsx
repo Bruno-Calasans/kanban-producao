@@ -13,12 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
-import CustomDialog from "../custom/CustomDialog"
+import EditDepartamentDialog from "./dialogs/EditDepartamentDialog"
+import DeleteDepartamentDialog from "./dialogs/DeleteDepartamentDialog"
 
 type DepartamentPageProps = {
     departaments: Departament[]
-    onEdit?: (departament: Departament) => void
-    onDelete?: (departament: Departament) => void
 }
 
 
@@ -45,12 +44,7 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
             return formatDateTimeCellValue(props.getValue())
         },
     },
-]
-
-function createActionColumn(
-    onEdit?: (departament: Departament) => void,
-    onDelete?: (departament: Departament) => void): ColumnDef<Departament> {
-    return {
+    {
         id: "action",
         header: "",
         cell: ({ row }) => {
@@ -58,42 +52,36 @@ function createActionColumn(
 
             return (
                 <DropdownMenu>
-
                     <DropdownMenuTrigger asChild>
                         <EllipsisVerticalIcon className="h-4 w-4" />
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent side="bottom" align="end">
-                        <CustomDialog
-                            title="Editar departamento"
-                            trigger={
-                                <DropdownMenuItem
-                                    onSelect={e => e.preventDefault()}
-                                    onClick={() => onEdit && onEdit(departament)}>
-                                    <Edit2Icon />
-                                    Editar
-                                </DropdownMenuItem>
-                            }>
-                            <p>Editar departamento: {departament.name}</p>
-                        </CustomDialog>
+                        <EditDepartamentDialog departament={departament}>
+                            <DropdownMenuItem onSelect={e => e.preventDefault()}>
+                                <Edit2Icon />
+                                Editar
+                            </DropdownMenuItem>
+                        </EditDepartamentDialog>
 
-
-                        <DropdownMenuItem
-                            onClick={() => onDelete && onDelete(departament)}>
-                            <Trash2Icon />
-                            Excluir
-                        </DropdownMenuItem>
+                        <DeleteDepartamentDialog departament={departament}>
+                            <DropdownMenuItem onSelect={e => e.preventDefault()}>
+                                <Trash2Icon />
+                                Excluir
+                            </DropdownMenuItem>
+                        </DeleteDepartamentDialog>
 
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
         }
     }
-}
+]
 
-export function DepartamentTable({ departaments, onEdit, onDelete }: DepartamentPageProps) {
-    const columns = [...DepartmentColumns, createActionColumn(onEdit, onDelete)]
+
+
+export function DepartamentTable({ departaments }: DepartamentPageProps) {
     return (
-        <DataTable columns={columns} data={departaments} />
+        <DataTable columns={DepartmentColumns} data={departaments} />
     )
 }

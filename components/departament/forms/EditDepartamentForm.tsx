@@ -4,9 +4,10 @@ import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
 import * as z from "zod"
 import { Input } from "@/components/ui/input"
-import ClearButton from "../custom/buttons/ClearButton"
-import ConfirmButton from "../custom/buttons/ConfirmButton"
-
+import ClearButton from "../../custom/buttons/ClearButton"
+import useUpdateDepartament from "@/hooks/departament/useUpdateDepartament"
+import SaveButton from "../../custom/buttons/SaveButton"
+import type { Departament } from "@/types/database.type"
 import {
     Field,
     FieldDescription,
@@ -14,7 +15,9 @@ import {
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
-import useCreateDepartament from "@/hooks/departament/useCreateDepartament"
+import { PostgrestError } from "@supabase/supabase-js"
+import useGetOneDepartament from "@/hooks/departament/useGetOneDepartament"
+import { getDepartamentById, getDepartamentByName } from "@/service/api/departamentApi"
 
 
 const formSchema = z.object({
@@ -30,23 +33,41 @@ const formSchema = z.object({
 })
 
 
-export default function DepartamentForm() {
-    const { mutate, error, isPending } = useCreateDepartament()
+type DepartamentFormProps = {
+    departament: Departament
+}
+
+export default function EditDepartamentForm({ departament }: DepartamentFormProps) {
+    const { mutateAsync, isPending } = useUpdateDepartament()
 
     const form = useForm({
         defaultValues: {
-            name: "",
-            order: 1,
+            name: departament.name,
+            order: departament.order,
         },
         validators: {
             onSubmit: formSchema,
         },
-        onSubmit: async ({ value }) => {
-            toast.success("Departamento criado com sucesso!")
-            mutate(value)
-            form.reset()
+        onSubmit: async ({ value, formApi }) => {
+            try {
+                await mutateAsync({ id: departament.id, updateData: value })
+                toast.success("Departamento atualizado com sucesso!")
+                form.reset()
+            } catch (error) {
+                if (error instanceof PostgrestError) {
+                    if (error.message.toLowerCase().includes("duplicate")) {
+                        toast.error("Error: departamento já existe!")
+                    }
+
+                } else {
+                    toast.error("Error desconhecido")
+                }
+
+            }
+
         },
     })
+
 
     return (
         <form
@@ -71,7 +92,7 @@ export default function DepartamentForm() {
                                     name={field.name}
                                     value={field.state.value}
                                     onBlur={field.handleBlur}
-                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    onChange={(e) => field.handleChange(e.target.value.toLocaleUpperCase())}
                                     aria-invalid={isInvalid}
                                     placeholder="Nome do departamento"
                                     autoComplete="off"
@@ -118,8 +139,8 @@ export default function DepartamentForm() {
             </FieldGroup>
 
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-                <ClearButton title="Limpar" onclick={() => form.reset()} />
-                <ConfirmButton loading={isPending} title="Criar departamento" />
+                <ClearButton isLoading={isPending} onclick={() => form.reset()} />
+                <SaveButton isLoading={isPending || !form.state.isValid} />
             </div>
         </form>
 

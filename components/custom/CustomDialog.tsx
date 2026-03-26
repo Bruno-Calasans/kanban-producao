@@ -23,7 +23,7 @@ export default function CustomDialog({ title, description, trigger, children }: 
             <DialogTrigger asChild>{trigger}</DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
+                    <DialogTitle className="font-bold text-lg">{title}</DialogTitle>
                     <DialogDescription>
                         {description}
                     </DialogDescription>

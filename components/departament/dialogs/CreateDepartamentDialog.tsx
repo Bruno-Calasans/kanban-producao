@@ -1,0 +1,15 @@
+import CustomDialog from "@/components/custom/CustomDialog";
+import AddButton from "@/components/custom/buttons/AddButton";
+import CreateDepartamentForm from "../forms/CreateDepartamentForm";
+
+
+export default function CreateDepartamentDialog() {
+    return <CustomDialog
+        title="Criar novo departamento"
+        trigger={
+            <AddButton label="Novo departamento" />
+        }
+    >
+        <CreateDepartamentForm />
+    </CustomDialog>
+}

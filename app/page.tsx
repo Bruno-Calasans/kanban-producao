@@ -47,8 +47,12 @@ export default function Home() {
       amount: 10,
       status: "PROCESSANDO",
       updated_at: new Date().toLocaleString(),
+      end_hour: null,
+      id: 0,
+      start_hour: null
     }
   ]
+
   return (
     <section>
       <PageTitle>Resumo</PageTitle>

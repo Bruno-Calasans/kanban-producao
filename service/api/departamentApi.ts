@@ -6,7 +6,7 @@ export type CreateDepartamentData = {
     order: number;
 }
 
-export type UpdateDepartamentData = Partial<CreateDepartamentData> & Required<{ id: number }>
+export type UpdateDepartamentData = Partial<CreateDepartamentData>
 
 export async function getAllDepartaments() {
     return await supabase
@@ -23,6 +23,14 @@ export async function getDepartamentById(id: number) {
         .throwOnError()
 }
 
+export async function getDepartamentByName(departamentName: string) {
+    return await supabase
+        .from("Departament")
+        .select("*")
+        .eq("name", departamentName)
+        .throwOnError()
+}
+
 export async function createDepartament(name: string, order: number) {
     return await supabase
         .from("Departament")
@@ -30,11 +38,18 @@ export async function createDepartament(name: string, order: number) {
         .throwOnError()
 }
 
-export async function updateDepartament(data: UpdateDepartamentData) {
-    const { id, ...updateData } = data
+export async function updateDepartament(id: number, data: UpdateDepartamentData) {
     return await supabase
         .from("Departament")
-        .update(updateData)
-        .eq("id", data.id)
+        .update(data)
+        .eq("id", id)
+        .throwOnError()
+}
+
+export async function deleteDepartament(id: number) {
+    return await supabase
+        .from("Departament")
+        .delete()
+        .eq("id", id)
         .throwOnError()
 }

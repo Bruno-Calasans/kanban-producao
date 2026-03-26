@@ -89,7 +89,7 @@ export default function CreateDepartamentForm() {
                                     onBlur={field.handleBlur}
                                     onChange={(e) => field.handleChange(e.target.value.toLocaleUpperCase())}
                                     aria-invalid={isInvalid}
-                                    placeholder="Nome do departamento"
+                                    placeholder="Nome"
                                     autoComplete="off"
                                 />
                                 {isInvalid && (
@@ -115,7 +115,7 @@ export default function CreateDepartamentForm() {
                                     onBlur={field.handleBlur}
                                     onChange={(e) => field.handleChange(e.target.value)}
                                     aria-invalid={isInvalid}
-                                    placeholder="Número da ordem do departamento"
+                                    placeholder="Número da ordem"
                                     autoComplete="off"
                                     type="number"
                                 />

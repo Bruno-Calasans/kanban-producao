@@ -19,6 +19,7 @@ export default function DeleteButton({ title, isLoading, onclick }: DeleteButton
                 disabled={isLoading}
                 type="button"
             >
+
                 <Trash2Icon />
                 {title || "Excluir"}
             </Button>

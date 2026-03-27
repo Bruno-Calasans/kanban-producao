@@ -1,6 +1,6 @@
 "use client"
 
-import { DataTable } from "@/components/custom/DataTable"
+import { DataTable } from "@/components/custom/data-table/DataTable"
 import { Departament } from "@/types/database.type"
 import { ColumnDef } from "@tanstack/react-table"
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime"
@@ -79,9 +79,15 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
 ]
 
 
-
 export function DepartamentTable({ departaments }: DepartamentPageProps) {
+
+    var copies: Departament[] = departaments.flatMap(item => [
+        item, item, item, item, item, item, item, item, item, item, item, item, item, item, item, 
+    ])
+
+
     return (
-        <DataTable columns={DepartmentColumns} data={departaments} />
+
+        <DataTable columns={DepartmentColumns} data={copies} />
     )
 }

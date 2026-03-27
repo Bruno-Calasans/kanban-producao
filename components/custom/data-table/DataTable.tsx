@@ -1,10 +1,11 @@
 "use client"
-
+import { Button } from "@/components/ui/button"
 import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
     useReactTable,
+    getPaginationRowModel,
 } from "@tanstack/react-table"
 
 import {
@@ -15,6 +16,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import DataTablePagination from "./DataTablePagination"
 
 
 interface DataTableProps<TData, TValue> {
@@ -33,9 +35,10 @@ export function DataTable<TData, TValue>({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
     })
 
-    return (
+    return (<div>
         <div className="overflow-hidden rounded-md border mt-2">
             <Table>
                 <TableHeader>
@@ -79,6 +82,11 @@ export function DataTable<TData, TValue>({
                     )}
                 </TableBody>
             </Table>
+
+
         </div>
+        <DataTablePagination table={table} />
+    </div>
+
     )
 }

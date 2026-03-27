@@ -1,6 +1,6 @@
 "use client"
 
-import { DataTable } from "@/components/custom/DataTable"
+import { DataTable } from "@/components/custom/data-table/DataTable"
 import PageTitle from "@/components/custom/PageTitle"
 import { ColumnDef } from "@tanstack/react-table"
 import type { ProductLog } from "@/types/database.type"

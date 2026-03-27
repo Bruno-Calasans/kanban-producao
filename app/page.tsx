@@ -38,20 +38,7 @@ export const columns: ColumnDef<ProductLog>[] = [
 ]
 
 export default function Home() {
-  const data: ProductLog[] = [
-    {
-      created_at: new Date().toLocaleString(),
-      product_id: 1,
-      process_id: 2,
-      departament_id: 1,
-      amount: 10,
-      status: "PROCESSANDO",
-      updated_at: new Date().toLocaleString(),
-      end_hour: null,
-      id: 0,
-      start_hour: null
-    }
-  ]
+
 
   return (
     <section>
@@ -59,7 +46,7 @@ export default function Home() {
       <p>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa id reprehenderit, ratione incidunt eius libero. Reprehenderit ipsum deleniti commodi at, earum vitae facilis explicabo corporis voluptates! Ratione adipisci rem ad.
       </p>
-      <DataTable columns={columns} data={data} />
+      {/* <DataTable columns={columns} data={data} /> */}
     </section>
 
   )

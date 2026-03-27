@@ -6,7 +6,7 @@ import * as z from "zod"
 import { Input } from "@/components/ui/input"
 import ClearButton from "../../custom/buttons/ClearButton"
 import ConfirmButton from "../../custom/buttons/ConfirmButton"
-import useCreateProcess from "@/hooks/process/useCreateProcess"
+import useCreateProduct from "@/hooks/product/useCreateProduct"
 import {
     Field,
     FieldDescription,
@@ -15,54 +15,42 @@ import {
     FieldLabel,
 } from "@/components/ui/field"
 import { PostgrestError } from "@supabase/supabase-js"
-import { useState } from "react"
-import { Departament } from "@/types/database.type"
-import DepartamentSelector from "@/components/custom/DepartamentSelector"
 
 
 const formSchema = z.object({
     name: z
         .string()
-        .nonempty("Nome do processo é obrigatório.")
-        .min(5, "Nome do processo deve ter pelo menos 5 caracteres.")
-        .max(32, "Nome do processo deve ter no máximo 32 caracteres.")
+        .nonempty("Nome do produto é obrigatório.")
+        .min(5, "Nome do produto deve ter pelo menos 5 caracteres.")
         .toUpperCase(),
-    order: z
-        .number()
-        .min(1, "Ordem deve ser maior ou igual a 1."),
-
-    departamentName: z.string().nonempty("Nome do departamento é obrigatório.")
+    op: z.coerce.number().min(1, "Valor mínimo é 1").optional().or(z.literal('')),
+    max_amount: z.coerce.number().min(1, "Valor mínimo é 1").optional().or(z.literal('')),
 })
 
+type ProductSchema = z.infer<typeof formSchema>;
 
-export default function CreateProcessForm() {
-    const { mutateAsync, isPending } = useCreateProcess()
-    const [selectedDepartament, setSelectedDepartament] = useState<Departament | null>(null)
+
+export default function CreateProductForm() {
+    const { mutateAsync, isPending } = useCreateProduct()
 
     const form = useForm({
         defaultValues: {
             name: "",
-            order: 1,
-            departamentName: ""
-        },
+        } as ProductSchema,
         validators: {
             onSubmit: formSchema,
+            onChange: formSchema
         },
         onSubmit: async ({ value }) => {
             try {
-                if (!selectedDepartament) return
-                await mutateAsync({
-                    name: value.name,
-                    order: value.order,
-                    departament_id: selectedDepartament.id
-                })
-                toast.success("Processo criado com sucesso!")
+                await mutateAsync(value)
+                toast.success("Produto criado com sucesso!")
                 form.reset()
 
             } catch (error) {
                 if (error instanceof PostgrestError) {
                     if (error.message.toLowerCase().includes("duplicate")) {
-                        toast.error("Error: processo já existe!")
+                        toast.error("Error: produto já existe!")
                     }
 
                 } else {
@@ -76,14 +64,13 @@ export default function CreateProcessForm() {
 
     return (
         <form
-            id="process-form"
+            id="product-form"
             onSubmit={(e) => {
                 e.preventDefault()
                 form.handleSubmit()
             }}
         >
             <FieldGroup>
-
                 <form.Field
                     name="name"
                     children={(field) => {
@@ -91,7 +78,7 @@ export default function CreateProcessForm() {
                             field.state.meta.isTouched && !field.state.meta.isValid
                         return (
                             <Field data-invalid={isInvalid}>
-                                <FieldLabel htmlFor={field.name}>Nome do Processo</FieldLabel>
+                                <FieldLabel htmlFor={field.name}>Nome do Produto</FieldLabel>
                                 <Input
                                     id={field.name}
                                     name={field.name}
@@ -111,13 +98,13 @@ export default function CreateProcessForm() {
                 />
 
                 <form.Field
-                    name="order"
+                    name="op"
                     children={(field) => {
                         const isInvalid =
                             field.state.meta.isTouched && !field.state.meta.isValid
                         return (
                             <Field data-invalid={isInvalid}>
-                                <FieldLabel htmlFor={field.name}>Ordem</FieldLabel>
+                                <FieldLabel htmlFor={field.name}>Ordem de Produção (OP)</FieldLabel>
                                 <Input
                                     id={field.name}
                                     name={field.name}
@@ -125,13 +112,12 @@ export default function CreateProcessForm() {
                                     onBlur={field.handleBlur}
                                     onChange={(e) => field.handleChange(e.target.value as unknown as number)}
                                     aria-invalid={isInvalid}
-                                    placeholder="Número da ordem"
+                                    placeholder="Número de OP do produto"
                                     autoComplete="off"
                                     type="number"
                                 />
-
                                 <FieldDescription>
-                                    A ordem do processo é usada para determinar o fluxo de produção.
+                                    Se não souber a OP do produto, pode cadastrar depois.
                                 </FieldDescription>
                                 {isInvalid && (
                                     <FieldError errors={field.state.meta.errors} />
@@ -142,25 +128,33 @@ export default function CreateProcessForm() {
                 />
 
                 <form.Field
-                    name="departamentName"
+                    name="max_amount"
                     children={(field) => {
                         const isInvalid =
                             field.state.meta.isTouched && !field.state.meta.isValid
                         return (
                             <Field data-invalid={isInvalid}>
-                                <FieldLabel htmlFor={field.name}>Departamento</FieldLabel>
-                                <DepartamentSelector
+                                <FieldLabel htmlFor={field.name}>Quantidade Máxima</FieldLabel>
+                                <Input
+                                    id={field.name}
                                     name={field.name}
-                                    value={selectedDepartament}
-                                    onvalueChange={(dpt) => {
-                                        field.handleChange(dpt.name)
-                                        setSelectedDepartament(dpt)
-                                    }}
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value as unknown as number)}
+                                    aria-invalid={isInvalid}
+                                    placeholder="Quantidade máxima"
+                                    autoComplete="off"
+                                    type="number"
                                 />
+                                <FieldDescription>
+                                    Diz quantas peças serão produzidas. Se não souber agora,
+                                    cadastre depois.
+                                </FieldDescription>
                                 {isInvalid && (
                                     <FieldError errors={field.state.meta.errors} />
                                 )}
-                            </Field>)
+                            </Field>
+                        )
                     }}
                 />
 

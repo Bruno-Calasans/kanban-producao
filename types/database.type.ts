@@ -7,5 +7,7 @@ export type Process = Database['public']['Tables']['Process']['Row']
 export type ProcessWithDepartament = Omit<Process, 'departament_id'> & {
     departament: Departament
 }
-
-
+export type Responsible = Database['public']['Tables']['Responsible']['Row']
+export type ResponsibleWithDepartament = Omit<Responsible, 'departament_id'> & {
+    departament: Departament
+}

@@ -35,7 +35,7 @@ export default function DeleteProductDialog({ product, children }: DeleteProduct
                 Tem certeza que deseja excluir o produto <strong>{product.name}</strong>?
             </p>
             <p>
-                Essa ação não pode ser desfeita. Todos os registros relacionados a esse produto serão afetados.
+                Essa ação não pode ser desfeita.
             </p>
             <p></p>
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

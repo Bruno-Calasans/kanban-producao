@@ -1,39 +1,38 @@
 import CustomDialog from "@/components/custom/CustomDialog"
 import CancelButton from "@/components/custom/buttons/CancelButton"
 import DeleteButton from "@/components/custom/buttons/DeleteButton"
-import useDeleteDepartament from "@/hooks/departament/useDeleteDepartament"
+import useDeleteResponsible from "@/hooks/responsible/useDeleteResponsible"
 import { toast } from "sonner"
-import type { Departament } from "@/types/database.type"
+import type { ResponsibleWithDepartament } from "@/types/database.type"
 
-
-type DeleteDepartamentDialogProps = {
-    departament: Departament
+type DeleteResponsibleDialogProps = {
+    responsible: ResponsibleWithDepartament
     children?: React.ReactNode
 }
 
 
-export default function DeleteDepartamentDialog({ departament, children }: DeleteDepartamentDialogProps) {
-    const { mutateAsync, isPending } = useDeleteDepartament()
+export default function DeleteResponsibleDialog({ responsible, children }: DeleteResponsibleDialogProps) {
+    const { mutateAsync, isPending } = useDeleteResponsible()
 
 
     const handleDelete = async () => {
         try {
-            await mutateAsync({ id: departament.id })
-            toast.success("Departamento excluído com sucesso!")
+            await mutateAsync({ id: responsible.id })
+            toast.success("Responsável excluído com sucesso!")
 
         } catch (error) {
-            toast.error("Erro ao excluir departamento. Tente novamente.")
+            toast.error("Erro ao excluir responsável. Tente novamente.")
         }
 
     }
 
     return <CustomDialog
-        title="Excluir departamento"
+        title="Excluir responsável"
         trigger={children}>
 
         <div className="flex flex-col gap-2">
             <p>
-                Tem certeza que deseja excluir o departamento <strong>{departament.name}</strong>?
+                Tem certeza que deseja excluir o responsável <strong>{responsible.name}</strong>?
             </p>
             <p>
                 Essa ação não pode ser desfeita.

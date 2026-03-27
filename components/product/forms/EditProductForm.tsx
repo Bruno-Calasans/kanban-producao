@@ -24,7 +24,12 @@ const formSchema = z.object({
         .min(5, "Nome do product deve ter pelo menos 5 caracteres.")
         .max(32, "Nome do product deve ter no máximo 32 caracteres.")
         .toUpperCase(),
-    op: z.coerce.number().min(1, "Valor mínimo é 1").optional().or(z.literal('')),
+    op: z
+        .coerce
+        .number()
+        .min(1, "Valor mínimo é 1")
+        .optional()
+        .or(z.literal('')),
     max_amount: z.coerce.number().min(1, "Valor mínimo é 1").optional().or(z.literal(''))
 })
 
@@ -51,9 +56,6 @@ export default function EditProductForm({ product }: EditProductForm) {
         },
         onSubmit: async ({ value }) => {
             try {
-                if (value.max_amount == "") value.max_amount = undefined
-                if (value.op == "") value.op = undefined
-
                 await mutateAsync({ id: product.id, updateData: value })
                 toast.success("Produto atualizado com sucesso!")
                 form.reset()

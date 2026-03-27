@@ -35,7 +35,7 @@ export default function DeleteProcessDialog({ process, children }: DeleteProcess
                 Tem certeza que deseja excluir o processo <strong>{process.name}</strong>?
             </p>
             <p>
-                Essa ação não pode ser desfeita. Todos os registros relacionados a esse processo serão afetados.
+                Essa ação não pode ser desfeita.
             </p>
             <p></p>
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

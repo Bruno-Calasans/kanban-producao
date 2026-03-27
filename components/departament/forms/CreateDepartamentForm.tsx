@@ -66,7 +66,7 @@ export default function CreateDepartamentForm() {
 
     return (
         <form
-            id="departament-form"w
+            id="departament-form"
             onSubmit={(e) => {
                 e.preventDefault()
                 form.handleSubmit()

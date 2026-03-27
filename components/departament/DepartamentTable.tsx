@@ -104,6 +104,10 @@ export function DepartamentTable({ departaments }: DepartamentPageProps) {
         copies.push(copy)
     }
 
-    return <DataTable columns={DepartmentColumns} data={copies} />
+    return <DataTable
+        filterPlaceholder="Procurar departamento"
+        filterColumn="name"
+        columns={DepartmentColumns} data={copies}
+    />
 
 }

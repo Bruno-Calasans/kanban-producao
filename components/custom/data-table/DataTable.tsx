@@ -8,6 +8,8 @@ import {
     getPaginationRowModel,
     SortingState,
     getSortedRowModel,
+    ColumnFiltersState,
+    getFilteredRowModel
 } from "@tanstack/react-table"
 
 import {
@@ -20,10 +22,12 @@ import {
 } from "@/components/ui/table"
 import DataTablePagination from "./DataTablePagination"
 import { useState } from "react"
-
+import DataTableFilter from "./DataTableFilter"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
+    filterColumn: keyof TData
+    filterPlaceholder?: string
     data: TData[],
     onEdit?: (row: TData) => void
     onDelete?: (row: TData) => void
@@ -32,8 +36,13 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
     columns,
     data,
+    filterColumn,
+    filterPlaceholder
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
+        []
+    )
 
     const table = useReactTable({
         data,
@@ -42,12 +51,16 @@ export function DataTable<TData, TValue>({
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
         state: {
             sorting,
+            columnFilters
         },
     })
 
     return (<div>
+        <DataTableFilter placeholder={filterPlaceholder} column={filterColumn} table={table} />
         <div className="overflow-hidden rounded-md border mt-2">
             <Table>
                 <TableHeader >
@@ -91,8 +104,6 @@ export function DataTable<TData, TValue>({
                     )}
                 </TableBody>
             </Table>
-
-
         </div>
         <DataTablePagination table={table} />
     </div>

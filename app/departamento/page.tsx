@@ -4,6 +4,7 @@ import PageTitle from "@/components/custom/PageTitle";
 import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments";
 import { DepartamentTable } from "../../components/departament/DepartamentTable";
 import CreateDepartamentDialog from "@/components/departament/dialogs/CreateDepartamentDialog";
+import Loader from "@/components/custom/Loader";
 
 export default function DepartamentPage() {
     const { data, isLoading, error } = useGetAllDepartaments()
@@ -14,7 +15,7 @@ export default function DepartamentPage() {
         return (
             <section>
                 <PageTitle>Departamentos</PageTitle>
-                <p>Carregando...</p>
+                <Loader title="Carregando departamentos..." />
             </section>
         )
     }

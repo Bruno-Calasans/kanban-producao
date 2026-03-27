@@ -49,9 +49,8 @@ export default function EditProductForm({ product }: EditProductForm) {
             onSubmit: formSchema,
             onChange: formSchema
         },
-        onSubmit: async ({ value }) => {/*  */
-            try {/*  */
-/*  */
+        onSubmit: async ({ value }) => {
+            try {
                 if (value.max_amount == "") value.max_amount = undefined
                 if (value.op == "") value.op = undefined
 

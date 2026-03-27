@@ -36,6 +36,8 @@ export default function CreateProductForm() {
     const form = useForm({
         defaultValues: {
             name: "",
+            op: "",
+            max_amount: ""
         } as ProductSchema,
         validators: {
             onSubmit: formSchema,

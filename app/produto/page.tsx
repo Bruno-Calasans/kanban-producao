@@ -11,6 +11,7 @@ export default function ProductPage() {
     const { data, isLoading, error } = useGetAllProducts()
     const products = data?.data || []
 
+    console.log(products)
 
     if (isLoading) {
         return (

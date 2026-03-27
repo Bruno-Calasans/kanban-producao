@@ -44,12 +44,6 @@ const productColumns: ColumnDef<Product>[] = [
         ),
     },
     {
-        accessorKey: "order",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Ordem" />
-        ),
-    },
-    {
         accessorKey: "max_amount",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Qtd. Máxima" />

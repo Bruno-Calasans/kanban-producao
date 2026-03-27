@@ -15,6 +15,7 @@ import {
 import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
 import EditDepartamentDialog from "./dialogs/EditDepartamentDialog"
 import DeleteDepartamentDialog from "./dialogs/DeleteDepartamentDialog"
+import { DataTableColumnHeader } from "../custom/data-table/DataTableColumnHeader"
 
 type DepartamentPageProps = {
     departaments: Departament[]
@@ -24,22 +25,30 @@ type DepartamentPageProps = {
 const DepartmentColumns: ColumnDef<Departament>[] = [
     {
         accessorKey: "created_at",
-        header: "Data de criação",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Data de criação" />
+        ),
         cell(props) {
             return formatDateTimeCellValue(props.getValue())
         },
     },
     {
         accessorKey: "name",
-        header: "Nome",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Nome" />
+        ),
     },
     {
         accessorKey: "order",
-        header: "Ordem",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Ordem" />
+        ),
     },
     {
         accessorKey: "updated_at",
-        header: "Última atualização",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Última atualização" />
+        ),
         cell: (props) => {
             return formatDateTimeCellValue(props.getValue())
         },
@@ -78,16 +87,23 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
     }
 ]
 
+function getRandomIntegerInclusive(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 
 export function DepartamentTable({ departaments }: DepartamentPageProps) {
 
-    var copies: Departament[] = departaments.flatMap(item => [
-        item, item, item, item, item, item, item, item, item, item, item, item, item, item, item, 
-    ])
+    var copies: Departament[] = []
 
+    for (let index = 0; index < 10; index++) {
+        const copy = { ...departaments[0] }
+        copy.order = getRandomIntegerInclusive(1, 100)
+        copies.push(copy)
+    }
 
-    return (
+    return <DataTable columns={DepartmentColumns} data={copies} />
 
-        <DataTable columns={DepartmentColumns} data={copies} />
-    )
 }

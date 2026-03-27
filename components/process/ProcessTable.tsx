@@ -1,7 +1,7 @@
 "use client"
 
 import { DataTable } from "@/components/custom/data-table/DataTable"
-import { Departament } from "@/types/database.type"
+import { ProcessWithDepartament } from "@/types/database.type"
 import { ColumnDef } from "@tanstack/react-table"
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime"
 
@@ -13,16 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
-import EditDepartamentDialog from "./dialogs/EditDepartamentDialog"
-import DeleteDepartamentDialog from "./dialogs/DeleteDepartamentDialog"
 import { DataTableColumnHeader } from "../custom/data-table/DataTableColumnHeader"
+import EditProcessDialog from "./dialogs/EditProcessDialog"
+import DeleteProcessDialog from "./dialogs/DeleteProcessDialog"
 
-type DepartamentPageProps = {
-    departaments: Departament[]
+type ProcessPageProps = {
+    processes: ProcessWithDepartament[]
 }
 
 
-const DepartmentColumns: ColumnDef<Departament>[] = [
+const processColumns: ColumnDef<ProcessWithDepartament>[] = [
     {
         accessorKey: "created_at",
         header: ({ column }) => (
@@ -35,13 +35,13 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
     {
         accessorKey: "name",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Nome" />
+            <DataTableColumnHeader column={column} title="Processo" />
         ),
     },
     {
-        accessorKey: "order",
+        accessorKey: "departament.name",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Ordem" />
+            <DataTableColumnHeader column={column} title="Departamento" />
         ),
     },
     {
@@ -57,7 +57,7 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
         id: "action",
         header: "",
         cell: ({ row }) => {
-            const departament = row.original
+            const process = row.original
 
             return (
                 <DropdownMenu>
@@ -66,19 +66,19 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent side="bottom" align="end">
-                        <EditDepartamentDialog departament={departament}>
+                        <EditProcessDialog process={process}>
                             <DropdownMenuItem onSelect={e => e.preventDefault()}>
                                 <Edit2Icon />
                                 Editar
                             </DropdownMenuItem>
-                        </EditDepartamentDialog>
+                        </EditProcessDialog>
 
-                        <DeleteDepartamentDialog departament={departament}>
+                        <DeleteProcessDialog process={process}>
                             <DropdownMenuItem onSelect={e => e.preventDefault()}>
                                 <Trash2Icon />
                                 Excluir
                             </DropdownMenuItem>
-                        </DeleteDepartamentDialog>
+                        </DeleteProcessDialog>
 
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -87,27 +87,13 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
     }
 ]
 
-function getRandomIntegerInclusive(min: number, max: number): number {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 
-export function DepartamentTable({ departaments }: DepartamentPageProps) {
-
-    var copies: Departament[] = []
-
-    for (let index = 0; index < 10; index++) {
-        const copy = { ...departaments[0] }
-        copy.order = getRandomIntegerInclusive(1, 100)
-        copies.push(copy)
-    }
-
+export function ProcessTable({ processes }: ProcessPageProps) {
     return <DataTable
-        filterPlaceholder="Procurar departamento"
+        filterPlaceholder="Procurar processo"
         filterColumn="name"
-        columns={DepartmentColumns} data={departaments}
+        columns={processColumns} data={processes}
     />
 
 }

@@ -1,11 +1,41 @@
+"use client";
+
+import PageTitle from "@/components/custom/PageTitle";
+import Loader from "@/components/custom/Loader";
+import { ProcessTable } from "@/components/process/ProcessTable";
+import useGetAllProcesses from "@/hooks/process/useGetAllProcesses";
+import CreateProcessDialog from "@/components/process/dialogs/CreateProcessDialog";
 
 export default function ProcessPage() {
+    const { data, isLoading, error } = useGetAllProcesses()
+    const processes = data?.data || []
+
+
+    if (isLoading) {
+        return (
+            <section>
+                <PageTitle>Processos</PageTitle>
+                <Loader title="Carregando processos..." />
+            </section>
+        )
+    }
+
+    if (error) {
+        return (
+            <section>
+                <PageTitle>Processos</PageTitle>
+                <p>Ocorreu um erro ao carregar os processos.</p>
+            </section>
+        )
+    }
+
     return (
         <section>
-            <h1 className="font-bold text-2xl">Processos</h1>
-            <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa id reprehenderit, ratione incidunt eius libero. Reprehenderit ipsum deleniti commodi at, earum vitae facilis explicabo corporis voluptates! Ratione adipisci rem ad.
-            </p>
+            <PageTitle>Processos</PageTitle>
+            <div className="flex flex-col">
+                <CreateProcessDialog />
+                <ProcessTable processes={processes} />
+            </div>
         </section>
     )
 }

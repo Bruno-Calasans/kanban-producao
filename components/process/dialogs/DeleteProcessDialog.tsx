@@ -2,9 +2,8 @@ import CustomDialog from "@/components/custom/CustomDialog"
 import CancelButton from "@/components/custom/buttons/CancelButton"
 import DeleteButton from "@/components/custom/buttons/DeleteButton"
 import useDeleteProcess from "@/hooks/process/useDeleteProcess"
-import type { ProcessWithDepartament } from "@/types/database.type"
 import { toast } from "sonner"
-
+import type { ProcessWithDepartament } from "@/types/database.type"
 
 type DeleteProcessDialogProps = {
     process: ProcessWithDepartament

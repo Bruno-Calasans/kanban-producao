@@ -1,6 +1,6 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import AddButton from "@/components/custom/buttons/AddButton";
-import CreateDepartamentForm from "../forms/CreateDepartamentForm";
+import CreateDepartamentForm from "@/components/departament/forms/CreateDepartamentForm";
 
 
 export default function CreateDepartamentDialog() {

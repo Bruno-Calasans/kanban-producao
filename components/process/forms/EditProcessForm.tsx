@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/field"
 import { PostgrestError } from "@supabase/supabase-js"
 import { useState } from "react"
-import { Departament, ProcessWithDepartament } from "@/types/database.type"
 import DepartamentSelector from "@/components/custom/DepartamentSelector"
 import useUpdateProcess from "@/hooks/process/useUpdateProcess"
+import type { Departament, ProcessWithDepartament } from "@/types/database.type"
 
 
 const formSchema = z.object({
@@ -28,7 +28,6 @@ const formSchema = z.object({
         .max(32, "Nome do processo deve ter no máximo 32 caracteres.")
         .toUpperCase(),
     order: z
-        .coerce
         .number()
         .min(1, "Ordem deve ser maior ou igual a 1."),
 
@@ -92,12 +91,14 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
         >
             <FieldGroup>
 
+                {/* nome do processo */}
                 <form.Field
                     name="name"
                     children={(field) => {
                         const isInvalid =
                             field.state.meta.isTouched && !field.state.meta.isValid
                         return (
+
                             <Field data-invalid={isInvalid}>
                                 <FieldLabel htmlFor={field.name}>Nome do Processo</FieldLabel>
                                 <Input
@@ -118,6 +119,7 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
                     }}
                 />
 
+                {/* Número da ordem do processo */}
                 <form.Field
                     name="order"
                     children={(field) => {
@@ -131,7 +133,7 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
                                     name={field.name}
                                     value={field.state.value}
                                     onBlur={field.handleBlur}
-                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    onChange={(e) => field.handleChange(Number(e.target.value))}
                                     aria-invalid={isInvalid}
                                     placeholder="Número da ordem"
                                     autoComplete="off"
@@ -149,6 +151,7 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
                     }}
                 />
 
+                {/* Nome do departamento */}
                 <form.Field
                     name="departamentName"
                     children={(field) => {
@@ -174,6 +177,7 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
 
             </FieldGroup>
 
+            {/* Botões */}
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
                 <ClearButton isLoading={isPending} onclick={() => form.reset()} />
                 <ConfirmButton isLoading={isPending} title="Criar" />

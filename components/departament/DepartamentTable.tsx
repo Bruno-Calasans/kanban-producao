@@ -1,10 +1,13 @@
 "use client"
 
 import { DataTable } from "@/components/custom/data-table/DataTable"
-import { Departament } from "@/types/database.type"
 import { ColumnDef } from "@tanstack/react-table"
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime"
-
+import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
+import EditDepartamentDialog from "@/components/departament/dialogs/EditDepartamentDialog"
+import DeleteDepartamentDialog from "@/components/departament/dialogs/DeleteDepartamentDialog"
+import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader"
+import type { Departament } from "@/types/database.type"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,10 +15,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
-import EditDepartamentDialog from "./dialogs/EditDepartamentDialog"
-import DeleteDepartamentDialog from "./dialogs/DeleteDepartamentDialog"
-import { DataTableColumnHeader } from "../custom/data-table/DataTableColumnHeader"
 
 type DepartamentPageProps = {
     departaments: Departament[]
@@ -35,7 +34,7 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
     {
         accessorKey: "name",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Nome" />
+            <DataTableColumnHeader column={column} title="Departamento" />
         ),
     },
     {
@@ -87,23 +86,7 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
     }
 ]
 
-function getRandomIntegerInclusive(min: number, max: number): number {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-
 export function DepartamentTable({ departaments }: DepartamentPageProps) {
-
-    var copies: Departament[] = []
-
-    for (let index = 0; index < 10; index++) {
-        const copy = { ...departaments[0] }
-        copy.order = getRandomIntegerInclusive(1, 100)
-        copies.push(copy)
-    }
-
     return <DataTable
         filterPlaceholder="Procurar departamento"
         filterColumn="name"

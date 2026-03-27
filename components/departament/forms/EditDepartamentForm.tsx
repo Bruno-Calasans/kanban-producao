@@ -4,10 +4,11 @@ import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
 import * as z from "zod"
 import { Input } from "@/components/ui/input"
-import ClearButton from "../../custom/buttons/ClearButton"
+import ClearButton from "@/components//custom/buttons/ClearButton"
 import useUpdateDepartament from "@/hooks/departament/useUpdateDepartament"
-import SaveButton from "../../custom/buttons/SaveButton"
+import SaveButton from "@/components/custom/buttons/SaveButton"
 import type { Departament } from "@/types/database.type"
+import { PostgrestError } from "@supabase/supabase-js"
 import {
     Field,
     FieldDescription,
@@ -15,9 +16,6 @@ import {
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
-import { PostgrestError } from "@supabase/supabase-js"
-import useGetOneDepartament from "@/hooks/departament/useGetOneDepartament"
-import { getDepartamentById, getDepartamentByName } from "@/service/api/departamentApi"
 
 
 const formSchema = z.object({
@@ -27,7 +25,6 @@ const formSchema = z.object({
         .min(5, "Nome do departamento deve ter pelo menos 5 caracteres.")
         .max(32, "Nome do departamento deve ter no máximo 32 caracteres."),
     order: z
-        .coerce
         .number()
         .min(1, "Ordem deve ser maior ou igual a 1.")
 })
@@ -118,7 +115,7 @@ export default function EditDepartamentForm({ departament }: DepartamentFormProp
                                     name={field.name}
                                     value={field.state.value}
                                     onBlur={field.handleBlur}
-                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    onChange={(e) => field.handleChange(e.target.value as unknown as number)}
                                     aria-invalid={isInvalid}
                                     placeholder="Número da ordem do departamento"
                                     autoComplete="off"

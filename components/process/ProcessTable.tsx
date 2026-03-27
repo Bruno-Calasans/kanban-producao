@@ -4,7 +4,10 @@ import { DataTable } from "@/components/custom/data-table/DataTable"
 import { ProcessWithDepartament } from "@/types/database.type"
 import { ColumnDef } from "@tanstack/react-table"
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime"
-
+import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
+import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader"
+import EditProcessDialog from "@/components/process/dialogs/EditProcessDialog"
+import DeleteProcessDialog from "@/components/process/dialogs/DeleteProcessDialog"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,10 +15,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
-import { DataTableColumnHeader } from "../custom/data-table/DataTableColumnHeader"
-import EditProcessDialog from "./dialogs/EditProcessDialog"
-import DeleteProcessDialog from "./dialogs/DeleteProcessDialog"
 
 type ProcessPageProps = {
     processes: ProcessWithDepartament[]
@@ -42,6 +41,12 @@ const processColumns: ColumnDef<ProcessWithDepartament>[] = [
         accessorKey: "departament.name",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Departamento" />
+        ),
+    },
+    {
+        accessorKey: "order",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Ordem" />
         ),
     },
     {
@@ -89,7 +94,7 @@ const processColumns: ColumnDef<ProcessWithDepartament>[] = [
 
 
 
-export function ProcessTable({ processes }: ProcessPageProps) {
+export default function ProcessTable({ processes }: ProcessPageProps) {
     return <DataTable
         filterPlaceholder="Procurar processo"
         filterColumn="name"

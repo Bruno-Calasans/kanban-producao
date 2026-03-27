@@ -2,8 +2,8 @@ import CustomDialog from "@/components/custom/CustomDialog"
 import CancelButton from "@/components/custom/buttons/CancelButton"
 import DeleteButton from "@/components/custom/buttons/DeleteButton"
 import useDeleteDepartament from "@/hooks/departament/useDeleteDepartament"
-import type { Departament } from "@/types/database.type"
 import { toast } from "sonner"
+import type { Departament } from "@/types/database.type"
 
 
 type DeleteDepartamentDialogProps = {

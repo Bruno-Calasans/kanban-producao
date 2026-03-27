@@ -1,13 +1,14 @@
 "use client"
 
+
+import * as z from "zod"
 import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
-import * as z from "zod"
 import { Input } from "@/components/ui/input"
-import ClearButton from "../../custom/buttons/ClearButton"
-import ConfirmButton from "../../custom/buttons/ConfirmButton"
+import ClearButton from "@/components/custom/buttons/ClearButton"
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton"
 import useCreateDepartament from "@/hooks/departament/useCreateDepartament"
-import { useQueryClient } from "@tanstack/react-query"
+import { PostgrestError } from "@supabase/supabase-js"
 import {
     Field,
     FieldDescription,
@@ -15,7 +16,6 @@ import {
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
-import { PostgrestError } from "@supabase/supabase-js"
 
 
 const formSchema = z.object({
@@ -26,7 +26,6 @@ const formSchema = z.object({
         .max(32, "Nome do departamento deve ter no máximo 32 caracteres.")
         .toUpperCase(),
     order: z
-        .coerce
         .number()
         .min(1, "Ordem deve ser maior ou igual a 1.")
 })
@@ -113,7 +112,7 @@ export default function CreateDepartamentForm() {
                                     name={field.name}
                                     value={field.state.value}
                                     onBlur={field.handleBlur}
-                                    onChange={(e) => field.handleChange(e.target.value)}
+                                    onChange={(e) => field.handleChange(e.target.value as unknown as number)}
                                     aria-invalid={isInvalid}
                                     placeholder="Número da ordem"
                                     autoComplete="off"

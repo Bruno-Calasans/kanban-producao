@@ -1,7 +1,6 @@
 import CustomDialog from "@/components/custom/CustomDialog"
-import { Departament } from "@/types/database.type"
-import EditDepartamentForm from "../forms/EditDepartamentForm"
-
+import EditDepartamentForm from "@/components/departament/forms/EditDepartamentForm"
+import type { Departament } from "@/types/database.type"
 
 type EditDepartamentDialogProps = {
     departament: Departament

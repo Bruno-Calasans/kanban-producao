@@ -4,6 +4,9 @@ import { DataTable } from "@/components/custom/data-table/DataTable"
 import PageTitle from "@/components/custom/PageTitle"
 import { ColumnDef } from "@tanstack/react-table"
 import type { ProductLog } from "@/types/database.type"
+import useGetAllProducts from "@/hooks/product/useGetAllProducts"
+import Loader from "@/components/custom/Loader"
+import ResumeTable from "@/components/resume/ResumeTable"
 
 
 export const columns: ColumnDef<ProductLog>[] = [
@@ -38,15 +41,35 @@ export const columns: ColumnDef<ProductLog>[] = [
 ]
 
 export default function Home() {
+  const { data, isLoading, error } = useGetAllProducts()
+  const products = data?.data || []
+
+  if (isLoading) {
+    return (
+      <section>
+        <PageTitle>Produtos</PageTitle>
+        <Loader title="Carregando produtos..." />
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section>
+        <PageTitle>Produtos</PageTitle>
+        <p>Ocorreu um erro ao carregar os produtos.</p>
+      </section>
+    )
+  }
 
 
   return (
     <section>
       <PageTitle>Resumo</PageTitle>
       <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa id reprehenderit, ratione incidunt eius libero. Reprehenderit ipsum deleniti commodi at, earum vitae facilis explicabo corporis voluptates! Ratione adipisci rem ad.
+        Aqui está um resumo dos produtos cadastrados.
       </p>
-      {/* <DataTable columns={columns} data={data} /> */}
+      <ResumeTable products={products} />
     </section>
 
   )

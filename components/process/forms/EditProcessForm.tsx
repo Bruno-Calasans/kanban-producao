@@ -1,38 +1,18 @@
 "use client"
 
-import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
-import * as z from "zod"
-import { Input } from "@/components/ui/input"
-import ClearButton from "../../custom/buttons/ClearButton"
-import ConfirmButton from "../../custom/buttons/ConfirmButton"
-import {
-    Field,
-    FieldDescription,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from "@/components/ui/field"
-import { PostgrestError } from "@supabase/supabase-js"
+import ClearButton from "@/components/custom/buttons/ClearButton"
+import { FieldGroup } from "@/components/ui/field"
 import { useState } from "react"
-import DepartamentSelector from "@/components/custom/DepartamentSelector"
 import useUpdateProcess from "@/hooks/process/useUpdateProcess"
+import SaveButton from "@/components/custom/buttons/SaveButton"
+import useDialog from "@/hooks/dialog/useDialog"
+import { formSchema, useAppForm } from "./ProcessFormContext"
 import type { Departament, ProcessWithDepartament } from "@/types/database.type"
-
-
-const formSchema = z.object({
-    name: z
-        .string()
-        .nonempty("Nome do processo é obrigatório.")
-        .min(5, "Nome do processo deve ter pelo menos 5 caracteres.")
-        .max(32, "Nome do processo deve ter no máximo 32 caracteres.")
-        .toUpperCase(),
-    order: z
-        .number()
-        .min(1, "Ordem deve ser maior ou igual a 1."),
-
-    departamentName: z.string().nonempty("Nome do departamento é obrigatório.")
-})
+import handleFormError from "@/utils/formErrorHandler"
+import { ProcessNameField } from "./fields/ProcessNameField"
+import { ProcessDepartamentField } from "./fields/ProcessDepartamentField"
+import { ProcessOrderField } from "./fields/ProcessOrderField"
 
 
 type EditProcessFormProps = {
@@ -40,10 +20,11 @@ type EditProcessFormProps = {
 }
 
 export default function EditProcessForm({ process }: EditProcessFormProps) {
+    const { closeDialog } = useDialog()
     const { mutateAsync, isPending } = useUpdateProcess()
-    const [selectedDepartament, setSelectedDepartament] = useState<Departament | null>(process.departament)
+    const [selectedDepartament, setSelectedDepartament] = useState<Departament | undefined>(process.departament)
 
-    const form = useForm({
+    const form = useAppForm({
         defaultValues: {
             name: process.name,
             order: process.order,
@@ -51,6 +32,7 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
         },
         validators: {
             onSubmit: formSchema,
+            onChange: formSchema
         },
         onSubmit: async ({ value }) => {
             try {
@@ -65,16 +47,13 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
                 })
                 toast.success("Processo atualizado com sucesso!")
                 form.reset()
+                closeDialog("edit-process")
 
             } catch (error) {
-                if (error instanceof PostgrestError) {
-                    if (error.message.toLowerCase().includes("duplicate")) {
-                        toast.error("Error: processo já existe!")
-                    }
-
-                } else {
-                    toast.error("Error desconhecido")
-                }
+                handleFormError(error, {
+                    duplicate: "Erro: processo com esse nome já existe.",
+                    default: "Erro: Não foi possível editar o processo."
+                })
 
             }
 
@@ -83,104 +62,25 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
 
     return (
         <form
-            id="process-form"
+            id="edit-process-form"
             onSubmit={(e) => {
                 e.preventDefault()
                 form.handleSubmit()
             }}
         >
             <FieldGroup>
-
-                {/* nome do processo */}
-                <form.Field
-                    name="name"
-                    children={(field) => {
-                        const isInvalid =
-                            field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-
-                            <Field data-invalid={isInvalid}>
-                                <FieldLabel htmlFor={field.name}>Nome do Processo</FieldLabel>
-                                <Input
-                                    id={field.name}
-                                    name={field.name}
-                                    value={field.state.value}
-                                    onBlur={field.handleBlur}
-                                    onChange={(e) => field.handleChange(e.target.value.toLocaleUpperCase())}
-                                    aria-invalid={isInvalid}
-                                    placeholder="Nome"
-                                    autoComplete="off"
-                                />
-                                {isInvalid && (
-                                    <FieldError errors={field.state.meta.errors} />
-                                )}
-                            </Field>
-                        )
-                    }}
+                <ProcessNameField form={form} />
+                <ProcessOrderField form={form} />
+                <ProcessDepartamentField
+                    form={form}
+                    selectedDepartament={selectedDepartament}
+                    onChange={setSelectedDepartament}
                 />
-
-                {/* Número da ordem do processo */}
-                <form.Field
-                    name="order"
-                    children={(field) => {
-                        const isInvalid =
-                            field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-                            <Field data-invalid={isInvalid}>
-                                <FieldLabel htmlFor={field.name}>Ordem</FieldLabel>
-                                <Input
-                                    id={field.name}
-                                    name={field.name}
-                                    value={field.state.value}
-                                    onBlur={field.handleBlur}
-                                    onChange={(e) => field.handleChange(Number(e.target.value))}
-                                    aria-invalid={isInvalid}
-                                    placeholder="Número da ordem"
-                                    autoComplete="off"
-                                    type="number"
-                                />
-
-                                <FieldDescription>
-                                    A ordem do processo é usada para determinar o fluxo de produção.
-                                </FieldDescription>
-                                {isInvalid && (
-                                    <FieldError errors={field.state.meta.errors} />
-                                )}
-                            </Field>
-                        )
-                    }}
-                />
-
-                {/* Nome do departamento */}
-                <form.Field
-                    name="departamentName"
-                    children={(field) => {
-                        const isInvalid =
-                            field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-                            <Field data-invalid={isInvalid}>
-                                <FieldLabel htmlFor={field.name}>Departamento</FieldLabel>
-                                <DepartamentSelector
-                                    name={field.name}
-                                    value={selectedDepartament}
-                                    onvalueChange={(dpt) => {
-                                        field.handleChange(dpt.name)
-                                        setSelectedDepartament(dpt)
-                                    }}
-                                />
-                                {isInvalid && (
-                                    <FieldError errors={field.state.meta.errors} />
-                                )}
-                            </Field>)
-                    }}
-                />
-
             </FieldGroup>
 
-            {/* Botões */}
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
                 <ClearButton isLoading={isPending} onclick={() => form.reset()} />
-                <ConfirmButton isLoading={isPending} title="Criar" />
+                <SaveButton isLoading={isPending} label="Salvar alterações" />
             </div>
         </form>
 

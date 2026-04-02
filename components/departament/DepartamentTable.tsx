@@ -3,17 +3,10 @@
 import { DataTable } from "@/components/custom/data-table/DataTable"
 import { ColumnDef } from "@tanstack/react-table"
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime"
-import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
-import EditDepartamentDialog from "@/components/departament/dialogs/EditDepartamentDialog"
-import DeleteDepartamentDialog from "@/components/departament/dialogs/DeleteDepartamentDialog"
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader"
 import type { Departament } from "@/types/database.type"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import DepartamentDropdownMenu from "./table/DepartamentDropdownMenu"
 
 
 type DepartamentPageProps = {
@@ -30,6 +23,23 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
         cell(props) {
             return formatDateTimeCellValue(props.getValue())
         },
+    },
+    {
+        accessorKey: "isDefault",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Padrão" />
+        ),
+        sortingFn: (rowA, rowB) => {
+            const a = rowA.original.is_default
+            const b = rowB.original.is_default
+            return Number(a) - Number(b)
+        },
+        cell: ({ row }) => {
+            const { is_default } = row.original
+            return is_default ?
+                <Badge variant="default" className="bg-emerald-500 rounded-full">Sim</Badge> :
+                <Badge variant="secondary" className="rounded-full">Não</Badge>
+        }
     },
     {
         accessorKey: "name",
@@ -57,31 +67,7 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
         header: "",
         cell: ({ row }) => {
             const departament = row.original
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <EllipsisVerticalIcon className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent side="bottom" align="end">
-                        <EditDepartamentDialog departament={departament}>
-                            <DropdownMenuItem onSelect={e => e.preventDefault()}>
-                                <Edit2Icon />
-                                Editar
-                            </DropdownMenuItem>
-                        </EditDepartamentDialog>
-
-                        <DeleteDepartamentDialog departament={departament}>
-                            <DropdownMenuItem onSelect={e => e.preventDefault()}>
-                                <Trash2Icon />
-                                Excluir
-                            </DropdownMenuItem>
-                        </DeleteDepartamentDialog>
-
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
+            return <DepartamentDropdownMenu departament={departament} />
         }
     }
 ]

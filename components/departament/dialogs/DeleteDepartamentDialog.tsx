@@ -24,10 +24,10 @@ export default function DeleteDepartamentDialog({ departament, children }: Delet
         } catch (error) {
             toast.error("Erro ao excluir departamento. Tente novamente.")
         }
-
     }
 
     return <CustomDialog
+        id="delete-departament"
         title="Excluir departamento"
         trigger={children}>
 

@@ -8,9 +8,13 @@ type EditDepartamentDialogProps = {
 }
 
 export default function EditDepartamentDialog({ departament, children }: EditDepartamentDialogProps) {
-    return <CustomDialog
-        title="Editar departamento"
-        trigger={children}>
-        <EditDepartamentForm departament={departament} />
-    </CustomDialog>
+    return (
+        <CustomDialog
+            id="edit-departament"
+            title="Editar departamento"
+            trigger={children}>
+            <EditDepartamentForm departament={departament} />
+        </CustomDialog>
+    )
+
 }

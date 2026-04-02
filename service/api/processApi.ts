@@ -29,6 +29,14 @@ export async function getAllProcesses() {
         .throwOnError()
 }
 
+export async function getAllProcessesByDepartamentId(departamentId: number) {
+    return await supabase
+        .from("Process")
+        .select("*")
+        .eq("departament_id", departamentId)
+        .throwOnError()
+}
+
 export async function createProcess(data: CreateProcesstData) {
     return await supabase
         .from("Process")
@@ -48,6 +56,14 @@ export async function deleteProcess(id: number) {
     return await supabase
         .from("Process")
         .delete()
+        .eq("id", id)
+        .throwOnError()
+}
+
+export async function setDefaultProcess(id: number) {
+    return await supabase
+        .from("Process")
+        .update({ is_default: true })
         .eq("id", id)
         .throwOnError()
 }

@@ -9,7 +9,15 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-import { HomeIcon, ArrowLeftRightIcon, ShirtIcon, FactoryIcon, CogIcon, BriefcaseBusinessIcon } from "lucide-react"
+import {
+    HomeIcon,
+    ArrowLeftRightIcon,
+    ShirtIcon,
+    FactoryIcon,
+    CogIcon,
+    BriefcaseBusinessIcon,
+    Settings2Icon
+} from "lucide-react"
 
 const items = [
     {
@@ -41,6 +49,11 @@ const items = [
         name: "Responsável",
         url: "/responsavel",
         icon: BriefcaseBusinessIcon,
+    },
+    {
+        name: "Configuração",
+        url: "/configuracao",
+        icon: Settings2Icon,
     },
 ]
 

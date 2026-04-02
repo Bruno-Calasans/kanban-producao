@@ -4,12 +4,16 @@ import CreateProcessForm from "@/components/process/forms/CreateProcessForm";
 
 
 export default function CreateProcessDialog() {
-    return <CustomDialog
-        title="Criar novo processo"
-        trigger={
-            <AddButton label="Novo processo" />
-        }
-    >
-        <CreateProcessForm />
-    </CustomDialog>
+    return (
+        <CustomDialog
+            id="create-process"
+            title="Criar novo processo"
+            trigger={
+                <AddButton label="Novo processo" />
+            }
+        >
+            <CreateProcessForm />
+        </CustomDialog>
+    )
+
 }

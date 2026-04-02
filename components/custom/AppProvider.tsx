@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import ContentContainer from "./ContentContainer"
 import { Toaster } from "sonner"
 import { AppSidebar } from "./AppSideBar"
+import { DialogProvider } from "@/hooks/dialog/DialogContext"
 
 const queryClient = new QueryClient()
 
@@ -17,7 +18,9 @@ export default function AppProvider({ children }: { children: React.ReactNode })
             <ContentContainer>
                 <Toaster />
                 <QueryClientProvider client={queryClient}>
-                    {children}
+                    <DialogProvider>
+                        {children}
+                    </DialogProvider>
                 </QueryClientProvider>
             </ContentContainer>
         </SidebarProvider>

@@ -1,17 +1,20 @@
 import CustomDialog from "@/components/custom/CustomDialog"
 import CancelButton from "@/components/custom/buttons/CancelButton"
 import DeleteButton from "@/components/custom/buttons/DeleteButton"
+import useDialog from "@/hooks/dialog/useDialog"
 import useDeleteProduct from "@/hooks/product/useDeleteProduct"
+import type { ProductPopulated } from "@/types/database.type"
+import handleFormError from "@/utils/formErrorHandler"
 import { toast } from "sonner"
-import type { Product } from "@/types/database.type"
 
 type DeleteProductDialogProps = {
-    product: Product
+    product: ProductPopulated
     children?: React.ReactNode
 }
 
 
 export default function DeleteProductDialog({ product, children }: DeleteProductDialogProps) {
+    const { closeDialog } = useDialog()
     const { mutateAsync, isPending } = useDeleteProduct()
 
 
@@ -19,14 +22,16 @@ export default function DeleteProductDialog({ product, children }: DeleteProduct
         try {
             await mutateAsync({ id: product.id })
             toast.success("Produto excluído com sucesso!")
+            closeDialog("delete-product")
 
         } catch (error) {
-            toast.error("Erro ao excluir produto. Tente novamente.")
+            handleFormError(error, { default: "Erro ao excluir produto. Tente novamente." })
         }
 
     }
 
     return <CustomDialog
+        id="delete-product"
         title="Excluir produto"
         trigger={children}>
 

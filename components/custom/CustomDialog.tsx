@@ -6,22 +6,33 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { DialogID } from "@/hooks/dialog/DialogContext"
+import useDialog from "@/hooks/dialog/useDialog"
 
 type CustomDialogProps = {
+    id: DialogID
     title?: React.ReactNode
     description?: React.ReactNode
     trigger: React.ReactNode
     children: React.ReactNode
-
+    maxContentWidth?: number
 }
 
 
-export default function CustomDialog({ title, description, trigger, children }: CustomDialogProps) {
-    return (
+export default function CustomDialog({ id, title, description, trigger, maxContentWidth, children }: CustomDialogProps) {
+    const { dialog, openDialog, closeDialog } = useDialog()
 
-        <Dialog>
+    const openHandler = (value: boolean) => {
+        if (value) openDialog(id)
+        else closeDialog(id)
+    }
+
+    return (
+        <Dialog open={dialog === id} onOpenChange={openHandler}>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
-            <DialogContent>
+            <DialogContent style={{
+                maxWidth: maxContentWidth
+            }}>
                 <DialogHeader>
                     <DialogTitle className="font-bold text-lg">{title}</DialogTitle>
                     <DialogDescription>

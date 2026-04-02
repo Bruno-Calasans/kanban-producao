@@ -1,7 +1,7 @@
 "use client"
 
 import { DataTable } from "@/components/custom/data-table/DataTable"
-import { Product } from "@/types/database.type"
+import { Product, ProductPopulated } from "@/types/database.type"
 import { ColumnDef } from "@tanstack/react-table"
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime"
 import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
@@ -17,11 +17,11 @@ import {
 
 
 type ProductPageProps = {
-    products: Product[]
+    products: ProductPopulated[]
 }
 
 
-const productColumns: ColumnDef<Product>[] = [
+const productColumns: ColumnDef<ProductPopulated>[] = [
     {
         accessorKey: "created_at",
         header: ({ column }) => (
@@ -97,7 +97,8 @@ export default function ProductTable({ products }: ProductPageProps) {
     return <DataTable
         filterPlaceholder="Procurar produto"
         filterColumn="name"
-        columns={productColumns} data={products}
+        columns={productColumns}
+        data={products}
     />
 
 }

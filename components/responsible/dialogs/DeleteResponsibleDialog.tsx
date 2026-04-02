@@ -4,6 +4,8 @@ import DeleteButton from "@/components/custom/buttons/DeleteButton"
 import useDeleteResponsible from "@/hooks/responsible/useDeleteResponsible"
 import { toast } from "sonner"
 import type { ResponsibleWithDepartament } from "@/types/database.type"
+import useDialog from "@/hooks/dialog/useDialog"
+import handleFormError from "@/utils/formErrorHandler"
 
 type DeleteResponsibleDialogProps = {
     responsible: ResponsibleWithDepartament
@@ -12,6 +14,7 @@ type DeleteResponsibleDialogProps = {
 
 
 export default function DeleteResponsibleDialog({ responsible, children }: DeleteResponsibleDialogProps) {
+    const { closeDialog } = useDialog()
     const { mutateAsync, isPending } = useDeleteResponsible()
 
 
@@ -19,14 +22,18 @@ export default function DeleteResponsibleDialog({ responsible, children }: Delet
         try {
             await mutateAsync({ id: responsible.id })
             toast.success("Responsável excluído com sucesso!")
+            closeDialog("delete-responsible")
 
         } catch (error) {
-            toast.error("Erro ao excluir responsável. Tente novamente.")
+            handleFormError(error, {
+                default: "Erro: não foi possível excluir responsável. Tente novamente."
+            })
         }
 
     }
 
     return <CustomDialog
+        id="delete-responsible"
         title="Excluir responsável"
         trigger={children}>
 
@@ -40,7 +47,7 @@ export default function DeleteResponsibleDialog({ responsible, children }: Delet
             <p></p>
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
                 <CancelButton isLoading={isPending} />
-                <DeleteButton isLoading={isPending} onclick={handleDelete} />
+                <DeleteButton isLoading={isPending} onclick={handleDelete} label="Excluir responsável" />
             </div>
         </div>
     </CustomDialog>

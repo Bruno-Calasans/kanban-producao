@@ -3,7 +3,10 @@ import CancelButton from "@/components/custom/buttons/CancelButton"
 import DeleteButton from "@/components/custom/buttons/DeleteButton"
 import useDeleteProcess from "@/hooks/process/useDeleteProcess"
 import { toast } from "sonner"
+import useDialog from "@/hooks/dialog/useDialog"
 import type { ProcessWithDepartament } from "@/types/database.type"
+import handleFormError from "@/utils/formErrorHandler"
+
 
 type DeleteProcessDialogProps = {
     process: ProcessWithDepartament
@@ -12,6 +15,7 @@ type DeleteProcessDialogProps = {
 
 
 export default function DeleteProcessDialog({ process, children }: DeleteProcessDialogProps) {
+    const { closeDialog } = useDialog()
     const { mutateAsync, isPending } = useDeleteProcess()
 
 
@@ -19,14 +23,18 @@ export default function DeleteProcessDialog({ process, children }: DeleteProcess
         try {
             await mutateAsync({ id: process.id })
             toast.success("Processo excluído com sucesso!")
+            closeDialog("delete-process")
 
         } catch (error) {
-            toast.error("Erro ao excluir processo. Tente novamente.")
+            handleFormError(error, {
+                default: "Erro: Não foi possível excluir o processo. Tente novamente."
+            })
         }
 
     }
 
     return <CustomDialog
+        id="delete-process"
         title="Excluir processo"
         trigger={children}>
 

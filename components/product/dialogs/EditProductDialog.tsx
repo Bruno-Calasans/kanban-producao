@@ -1,17 +1,21 @@
 import CustomDialog from "@/components/custom/CustomDialog"
-import { Product } from "@/types/database.type"
 import EditProductForm from "@/components/product/forms/EditProductForm"
-
+import type { ProductPopulated } from "@/types/database.type"
 
 type EditProductDialogProps = {
-    product: Product
+    product: ProductPopulated
     children?: React.ReactNode
 }
 
 export default function EditProductDialog({ product, children }: EditProductDialogProps) {
-    return <CustomDialog
-        title="Editar produto"
-        trigger={children}>
-        <EditProductForm product={product} />
-    </CustomDialog>
+    return (
+        <CustomDialog
+            id="edit-product"
+            title="Editar produto"
+            trigger={children}
+        >
+            <EditProductForm product={product} />
+        </CustomDialog>
+    )
+
 }

@@ -1,62 +1,39 @@
 "use client"
 
-
-import * as z from "zod"
-import { useForm } from "@tanstack/react-form"
 import { toast } from "sonner"
-import { Input } from "@/components/ui/input"
 import ClearButton from "@/components/custom/buttons/ClearButton"
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton"
 import useCreateDepartament from "@/hooks/departament/useCreateDepartament"
-import { PostgrestError } from "@supabase/supabase-js"
-import {
-    Field,
-    FieldDescription,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from "@/components/ui/field"
-
-
-const formSchema = z.object({
-    name: z
-        .string()
-        .nonempty("Nome do departamento é obrigatório.")
-        .min(5, "Nome do departamento deve ter pelo menos 5 caracteres.")
-        .max(32, "Nome do departamento deve ter no máximo 32 caracteres.")
-        .toUpperCase(),
-    order: z
-        .number()
-        .min(1, "Ordem deve ser maior ou igual a 1.")
-})
+import { FieldGroup } from "@/components/ui/field"
+import { defaultDepartamentFormValues, useAppForm, formSchema } from "./departamentFormContext"
+import { DepartamentNameField } from "./fields/DepartamentNameField"
+import { DepartamentOrderField } from "./fields/DepartamentOrderField"
+import handleFormError from "@/utils/formErrorHandler"
+import useDialog from "@/hooks/dialog/useDialog"
 
 
 export default function CreateDepartamentForm() {
+    const { closeDialog } = useDialog()
     const { mutateAsync, isPending } = useCreateDepartament()
 
-    const form = useForm({
-        defaultValues: {
-            name: "",
-            order: 1,
-        },
+    const form = useAppForm({
+        defaultValues: defaultDepartamentFormValues,
         validators: {
             onSubmit: formSchema,
+            onChange: formSchema
         },
         onSubmit: async ({ value }) => {
             try {
                 await mutateAsync(value)
                 toast.success("Departamento criado com sucesso!")
                 form.reset()
+                closeDialog("create-departament")
 
             } catch (error) {
-                if (error instanceof PostgrestError) {
-                    if (error.message.toLowerCase().includes("duplicate")) {
-                        toast.error("Error: departamento já existe!")
-                    }
-
-                } else {
-                    toast.error("Error desconhecido")
-                }
+                handleFormError(error, {
+                    duplicate: "Erro: departamento já existe.",
+                    default: "Erro: não foi possível criar o departamento."
+                })
 
             }
 
@@ -65,76 +42,20 @@ export default function CreateDepartamentForm() {
 
     return (
         <form
-            id="departament-form"
+            id="create-departament-form"
             onSubmit={(e) => {
                 e.preventDefault()
                 form.handleSubmit()
             }}
         >
             <FieldGroup>
-
-                <form.Field
-                    name="name"
-                    children={(field) => {
-                        const isInvalid =
-                            field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-                            <Field data-invalid={isInvalid}>
-                                <FieldLabel htmlFor={field.name}>Nome do Departamento</FieldLabel>
-                                <Input
-                                    id={field.name}
-                                    name={field.name}
-                                    value={field.state.value}
-                                    onBlur={field.handleBlur}
-                                    onChange={(e) => field.handleChange(e.target.value.toLocaleUpperCase())}
-                                    aria-invalid={isInvalid}
-                                    placeholder="Nome"
-                                    autoComplete="off"
-                                />
-                                {isInvalid && (
-                                    <FieldError errors={field.state.meta.errors} />
-                                )}
-                            </Field>
-                        )
-                    }}
-                />
-
-                <form.Field
-                    name="order"
-                    children={(field) => {
-                        const isInvalid =
-                            field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-                            <Field data-invalid={isInvalid}>
-                                <FieldLabel htmlFor={field.name}>Ordem</FieldLabel>
-                                <Input
-                                    id={field.name}
-                                    name={field.name}
-                                    value={field.state.value}
-                                    onBlur={field.handleBlur}
-                                    onChange={(e) => field.handleChange(e.target.value as unknown as number)}
-                                    aria-invalid={isInvalid}
-                                    placeholder="Número da ordem"
-                                    autoComplete="off"
-                                    type="number"
-                                />
-
-                                <FieldDescription>
-                                    A ordem do departamento é usada para determinar o fluxo de produção.
-                                </FieldDescription>
-                                {isInvalid && (
-                                    <FieldError errors={field.state.meta.errors} />
-                                )}
-                            </Field>
-                        )
-                    }}
-                />
-
+                <DepartamentNameField form={form} />
+                <DepartamentOrderField form={form} />
             </FieldGroup>
 
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
                 <ClearButton isLoading={isPending} onclick={() => form.reset()} />
-                <ConfirmButton isLoading={isPending} title="Criar" />
+                <ConfirmButton hiddenIcon isLoading={isPending} label="Criar departamento" />
             </div>
         </form>
 

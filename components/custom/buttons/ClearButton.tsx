@@ -3,15 +3,18 @@ import { BrushCleaningIcon } from "lucide-react";
 
 
 type ClearButtonProps = {
-    title?: string
+    label?: string
     isLoading?: boolean
-    onclick: () => void
+    hiddenIcon?: boolean
+    onclick?: () => void
 }
 
-export default function ClearButton({ title, isLoading, onclick }: ClearButtonProps) {
+export default function ClearButton({ label, isLoading, hiddenIcon, onclick }: ClearButtonProps) {
+    const defaultLabel = label || "Limpar"
+
     return (
         <Button
-
+            id="clear-button"
             className="cursor-pointer"
             title="Limpa todos os campos do formulário"
             variant="outline"
@@ -19,8 +22,8 @@ export default function ClearButton({ title, isLoading, onclick }: ClearButtonPr
             disabled={isLoading}
             type="button"
         >
-            <BrushCleaningIcon />
-            {title || "Limpar"}
+            {!hiddenIcon && <BrushCleaningIcon />}
+            {defaultLabel}
         </Button>
 
     )

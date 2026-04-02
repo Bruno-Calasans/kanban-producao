@@ -1,5 +1,5 @@
 import CustomDialog from "@/components/custom/CustomDialog"
-import { Process, ProcessWithDepartament } from "@/types/database.type"
+import { ProcessWithDepartament } from "@/types/database.type"
 import EditProcessForm from "@/components/process/forms/EditProcessForm"
 
 
@@ -9,9 +9,12 @@ type EditProcessDialogProps = {
 }
 
 export default function EditProcessDialog({ process, children }: EditProcessDialogProps) {
-    return <CustomDialog
-        title="Editar processo"
-        trigger={children}>
-        <EditProcessForm process={process} />
-    </CustomDialog>
+    return (
+        <CustomDialog
+            id="edit-process"
+            title="Editar processo"
+            trigger={children}>
+            <EditProcessForm process={process} />
+        </CustomDialog>
+    )
 }

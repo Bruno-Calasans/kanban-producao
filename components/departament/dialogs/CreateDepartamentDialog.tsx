@@ -4,12 +4,16 @@ import CreateDepartamentForm from "@/components/departament/forms/CreateDepartam
 
 
 export default function CreateDepartamentDialog() {
-    return <CustomDialog
-        title="Criar novo departamento"
-        trigger={
-            <AddButton label="Novo departamento" />
-        }
-    >
-        <CreateDepartamentForm />
-    </CustomDialog>
+    return (
+        <CustomDialog
+            id="create-departament"
+            title="Criar novo departamento"
+            trigger={
+                <AddButton label="Novo departamento" />
+            }
+        >
+            <CreateDepartamentForm />
+        </CustomDialog>
+    )
+
 }

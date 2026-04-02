@@ -26,7 +26,7 @@ import DataTableFilter from "./DataTableFilter"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    filterColumn: keyof TData
+    filterColumn: string
     filterPlaceholder?: string
     data: TData[],
     onEdit?: (row: TData) => void

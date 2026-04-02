@@ -1,21 +1,28 @@
 import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
-
+import { PackagePlusIcon } from "lucide-react";
 
 type ConfirmButtonProps = {
-    title?: string
+    label?: string
     loadingMsg?: string
     isLoading?: boolean
+    disabled?: boolean
+    hiddenIcon?: boolean
 }
 
-export default function ConfirmButton({ title, isLoading, loadingMsg }: ConfirmButtonProps) {
+export default function ConfirmButton({ label, isLoading, loadingMsg, disabled, hiddenIcon }: ConfirmButtonProps) {
+    const defaultLabel = label || "Confirmar"
+    const defaultLoadingMsg = loadingMsg || "Confirmando..."
+    const canLoad = isLoading && !disabled
+
     return (
         <Button
+            id="confirm-button"
             className="cursor-pointer bg-indigo-400 text-white hover:text-white hover:bg-indigo-500"
             type="submit"
-            disabled={isLoading}>
-            <PlusIcon />
-            {isLoading ? (loadingMsg || "Criando...") : title || "Criar"}
+            disabled={isLoading || disabled}>
+            {!canLoad ? defaultLabel : null}
+            {canLoad ? defaultLoadingMsg : null}
+            {!hiddenIcon && !isLoading && <PackagePlusIcon className="ml-2" />}
         </Button>
     )
 }

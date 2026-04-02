@@ -12,6 +12,7 @@ export async function getAllDepartaments() {
     return await supabase
         .from("Departament")
         .select("*")
+        .order("is_default", { ascending: false })
         .throwOnError()
 }
 
@@ -50,6 +51,14 @@ export async function deleteDepartament(id: number) {
     return await supabase
         .from("Departament")
         .delete()
+        .eq("id", id)
+        .throwOnError()
+}
+
+export async function setDefaultDepartament(id: number) {
+    return await supabase
+        .from("Departament")
+        .update({ is_default: true })
         .eq("id", id)
         .throwOnError()
 }

@@ -1,17 +1,23 @@
 import { supabase } from "@/lib/supabase/client";
+import { Product } from "@/types/database.type";
 
-export type CreateProductData = {
-    name: string
-    max_amount?: number | null
-    op?: number | null
-}
-
+export type CreateProductData = Omit<Product, "id" | "created_at" | "updated_at">
 export type UpdateProductData = Partial<CreateProductData>
 
 export async function getAllProducts() {
     return await supabase
         .from("Product")
-        .select("*")
+        .select(`
+            id,
+            name,
+            op,
+            max_amount,
+            created_at,
+            updated_at,
+            departament:Departament!departament_id(*),
+            process:Process!process_id(*),
+            responsible:Responsible!responsible_id(*)
+        `)
         .throwOnError()
 }
 

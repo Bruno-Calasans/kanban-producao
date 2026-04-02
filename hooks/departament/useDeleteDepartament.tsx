@@ -1,6 +1,6 @@
 import { deleteDepartament } from "@/service/api/departamentApi"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { departamentKeys } from "../../constants/departamentKeys"
+import { departamentKeys } from "@/constants/departamentKeys"
 
 export default function useDeleteDepartament() {
     const queryClient = useQueryClient()

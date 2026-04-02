@@ -4,12 +4,16 @@ import CreateResponsibleForm from "@/components/responsible/forms/CreateResponsi
 
 
 export default function CreateResponsibleDialog() {
-    return <CustomDialog
-        title="Criar novo responsável"
-        trigger={
-            <AddButton label="Novo responsável" />
-        }
-    >
-        <CreateResponsibleForm />
-    </CustomDialog>
+    return (
+        <CustomDialog
+            id="create-responsible"
+            title="Criar novo responsável"
+            trigger={
+                <AddButton label="Novo responsável" />
+            }
+        >
+            <CreateResponsibleForm />
+        </CustomDialog>
+    )
+
 }

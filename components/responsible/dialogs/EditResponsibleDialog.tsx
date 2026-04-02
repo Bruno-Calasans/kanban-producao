@@ -9,9 +9,13 @@ type EditResponsibleDialogProps = {
 }
 
 export default function EditResponsibleDialog({ responsible, children }: EditResponsibleDialogProps) {
-    return <CustomDialog
-        title="Editar Responsável"
-        trigger={children}>
-        <EditResponsibleForm responsible={responsible} />
-    </CustomDialog>
+    return (
+        <CustomDialog
+            id="edit-responsible"
+            title="Editar Responsável"
+            trigger={children}>
+            <EditResponsibleForm responsible={responsible} />
+        </CustomDialog>
+    )
+
 }

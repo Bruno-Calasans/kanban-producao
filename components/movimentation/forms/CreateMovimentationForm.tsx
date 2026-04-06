@@ -5,21 +5,8 @@ import { toast } from "sonner"
 import ClearButton from "@/components/custom/buttons/ClearButton"
 import MoveButton from "@/components/custom/buttons/MoveButton"
 import useCreateMovimentation from "@/hooks/movimentation/useCreateMovimentation"
-import {
-    Field,
-    FieldContent,
-    FieldDescription,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-    FieldLegend,
-    FieldSet,
-} from "@/components/ui/field"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Departament, Process, ProductPopulated } from "@/types/database.type"
-import DepartamentProcessSelector from "@/components/custom/DepartamentProcessSelector"
-import { ArrowRightIcon } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
 import CantMoveProductWarn from "@/components/movimentation/CantMoveProductWarn"
 import { MovimentationProductNameField } from "./fields/MovimentationProductNameField"
 import { defaultMovimentationFormValues, useAppForm, formSchema } from "./movimentationFormContext"
@@ -27,9 +14,11 @@ import handleFormError from "@/utils/formErrorHandler"
 import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup"
 import { MovimentationDepartamentFieldGroup } from "./fields/MovimentationDepartamentFieldGroup"
 import { MovimentationProcessFieldGroup } from "./fields/MovimentationProcessFieldGroup"
+import useDialog from "@/hooks/dialog/useDialog"
 
 
 export default function CreateMovimentationForm() {
+    const { closeDialog } = useDialog()
     const { mutateAsync, isPending } = useCreateMovimentation()
     const [product, setProduct] = useState<ProductPopulated | undefined>()
     const [departamentOrigin, setDepartamentOrigin] = useState<Departament | undefined>()
@@ -44,10 +33,22 @@ export default function CreateMovimentationForm() {
             onChange: formSchema
         },
         onSubmit: async ({ value }) => {
+            if (!product || !departamentOrigin || !departamentDestination || !processOrigin || !processDestination)
+                return
+
+            const { amount } = value
             try {
-                await mutateAsync(value)
+                await mutateAsync({
+                    product_id: product.id,
+                    amount,
+                    departament_origin_id: departamentOrigin.id,
+                    departament_destination_id: departamentDestination.id,
+                    process_origin_id: processOrigin.id,
+                    process_destination_id: processDestination.id
+                })
                 toast.success("Produto movimentado com sucesso!")
                 form.reset()
+                closeDialog("create-movimentation")
 
             } catch (error) {
                 handleFormError(error, {
@@ -60,11 +61,11 @@ export default function CreateMovimentationForm() {
 
     const resetForm = () => {
         form.reset()
-        setProduct(null)
-        setDepartamentOrigin(null)
-        setDepartamentDestination(null)
-        setProcessOrigin(null)
-        setProcessDestination(null)
+        setProduct(undefined)
+        setDepartamentOrigin(undefined)
+        setDepartamentDestination(undefined)
+        setProcessOrigin(undefined)
+        setProcessDestination(undefined)
     }
 
     const canMoveProuct = product &&
@@ -112,9 +113,10 @@ export default function CreateMovimentationForm() {
             )}
 
 
-            {canMoveProuct && (
+            {canMoveProuct && departamentOrigin && departamentDestination && (
                 <MovimentationProcessFieldGroup
                     form={form}
+                    selectedProduct={product}
                     departamentOrigin={departamentOrigin}
                     departamentDestination={departamentDestination}
                     processOrigin={processOrigin}
@@ -126,8 +128,8 @@ export default function CreateMovimentationForm() {
             )}
 
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-                <ClearButton isLoading={isPending} onclick={resetForm} />
-                <MoveButton isLoading={isPending || form.state.isValid} />
+                {/* <ClearButton isLoading={isPending} onclick={resetForm} /> */}
+                <MoveButton isLoading={isPending} disabled={!form.store.state.isValid} />
             </div>
         </form>
 

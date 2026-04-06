@@ -2,43 +2,62 @@ import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLab
 import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import DepartamentProcessSelector from "@/components/custom/DepartamentProcessSelector";
 import { ArrowRightIcon } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Departament, Process } from "@/types/database.type";
+import { Departament, Process, ProductPopulated } from "@/types/database.type";
 
 
 type MovimentationProcessFieldGroupProps = {
-    departamentOrigin?: Departament
-    departamentDestination?: Departament
+    selectedProduct?: ProductPopulated
+    departamentOrigin: Departament
+    departamentDestination: Departament
     processOrigin?: Process
     processDestination?: Process
-    onChangeProcessOrigin: (process: Process) => void
-    onChangeProcessDestination: (process: Process) => void
+    onChangeProcessOrigin: (process?: Process) => void
+    onChangeProcessDestination: (process?: Process) => void
 }
 
 
 export const MovimentationProcessFieldGroup = withForm({
     defaultValues: defaultMovimentationFormValues,
     props: {} as MovimentationProcessFieldGroupProps,
-    render({ form, departamentOrigin, departamentDestination, processOrigin, processDestination, onChangeProcessOrigin, onChangeProcessDestination }) {
+    render({ form,
+        selectedProduct,
+        departamentOrigin,
+        departamentDestination,
+        processOrigin,
+        processDestination,
+        onChangeProcessOrigin,
+        onChangeProcessDestination
+    }) {
         return <FieldSet>
             <FieldLegend>Processo</FieldLegend>
-            <FieldGroup id="processes" className="flex-row justify-center items-center">
+            <FieldGroup
+                id="origin-process-movimentation-form"
+                className="flex-row justify-center items-center"
+            >
 
                 {/* Campo: processo do departamento de origem*/}
                 <form.Field
                     name="processOriginName"
                     children={(field) => {
+
+                        const defaultProcess = selectedProduct?.process ? selectedProduct.process : processOrigin
+
+                        const isSameDepartament = departamentOrigin && departamentDestination &&
+                            departamentOrigin.id === departamentDestination.id
+
                         const isInvalid =
                             field.state.meta.isTouched && !field.state.meta.isValid
+
                         return (
                             <Field data-invalid={isInvalid}>
                                 <FieldLabel htmlFor={field.name}>Processo de origem</FieldLabel>
                                 <DepartamentProcessSelector
+                                    disabled
                                     name={field.name}
                                     selectedDepartament={departamentOrigin}
-                                    selectedProcess={processOrigin}
+                                    selectedProcess={defaultProcess}
                                     onValueChange={(process) => {
-                                        field.handleChange(process.name)
+                                        field.handleChange(process?.name || "")
                                         onChangeProcessOrigin(process)
                                     }}
                                 />
@@ -55,6 +74,7 @@ export const MovimentationProcessFieldGroup = withForm({
                 <form.Field
                     name="processDestinationName"
                     children={(field) => {
+                        const excludeProcess = selectedProduct?.process || undefined
                         const isInvalid =
                             field.state.meta.isTouched && !field.state.meta.isValid
                         return (
@@ -64,8 +84,9 @@ export const MovimentationProcessFieldGroup = withForm({
                                     name={field.name}
                                     selectedDepartament={departamentDestination}
                                     selectedProcess={processDestination}
+                                    excludeProcess={excludeProcess}
                                     onValueChange={(process) => {
-                                        field.handleChange(process.name)
+                                        field.handleChange(process?.name || "")
                                         onChangeProcessDestination(process)
                                     }}
                                 />
@@ -77,31 +98,6 @@ export const MovimentationProcessFieldGroup = withForm({
                 />
 
             </FieldGroup>
-            {/* <form.Field
-                name="useMoveNextDepartament"
-                children={(field) => {
-                    return (
-                        <Field orientation="horizontal">
-                            <Checkbox
-                                id="terms-checkbox-desc"
-                                name="terms-checkbox-desc"
-                                checked={field.state.value}
-                                onCheckedChange={checked => field.handleChange(checked as boolean)}
-
-                            />
-                            <FieldContent>
-                                <FieldLabel htmlFor="terms-checkbox-desc">
-                                    Ir para próximo departamento
-                                </FieldLabel>
-                                <FieldDescription>
-                                    Movimenta para o próximo departamento
-                                </FieldDescription>
-                            </FieldContent>
-                        </Field>
-                    )
-                }}
-            /> */}
-
         </FieldSet>
     }
 })

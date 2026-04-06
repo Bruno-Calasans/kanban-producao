@@ -39,7 +39,7 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
         ),
     },
     {
-        accessorKey: "amount",
+        accessorKey: "product.max_amount",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Qtd." />
         ),

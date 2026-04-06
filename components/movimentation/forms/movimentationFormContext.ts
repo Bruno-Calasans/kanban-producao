@@ -21,17 +21,11 @@ export const formSchema = z.object({
     amount: z
         .coerce
         .number()
-        .min(1, "Valor mínimo é 1")
-        .or(z.literal('')),
+        .min(1, "Valor mínimo é 1"),
     useMaxAmount: z
         .boolean()
         .default(false),
-    useSameDepartament: z
-        .boolean()
-        .default(false),
-    useMoveNextDepartament: z
-        .boolean()
-        .default(false),
+
 })
 
 export type MovimentationFormSchema = z.infer<typeof formSchema>;
@@ -43,10 +37,8 @@ export const defaultMovimentationFormValues: MovimentationFormSchema = {
     departamentDestinationName: "",
     processOriginName: "",
     processDestinationName: "",
-    amount: 1,
     useMaxAmount: true,
-    useSameDepartament: true,
-    useMoveNextDepartament: false
+    amount: 1,
 }
 
 export const {

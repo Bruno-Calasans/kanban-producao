@@ -4,13 +4,16 @@ import CreateMovimentationForm from "@/components/movimentation/forms/CreateMovi
 
 
 export default function CreateMovimentationDialog() {
-    return <CustomDialog
-        title="Criar nova Movimentação"
-        trigger={
-            <AddButton label="Nova Movimentação" />
-        }
-        maxContentWidth={700}
-    >
-        <CreateMovimentationForm />
-    </CustomDialog>
+    return (
+        <CustomDialog
+            id="create-movimentation"
+            title="Criar nova Movimentação"
+            trigger={
+                <AddButton label="Nova Movimentação" />
+            }
+            maxContentWidth={700}
+        >
+            <CreateMovimentationForm />
+        </CustomDialog>
+    )
 }

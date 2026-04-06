@@ -71,14 +71,14 @@ export const MovimentationAmountFieldGroup = withForm({
                         return (
                             <Field orientation="horizontal">
                                 <Checkbox
-                                    id="terms-checkbox-desc"
-                                    name="terms-checkbox-desc"
+                                    id="use-max-amount-product-checkbox"
+                                    name="use-max-amount-product-checkbox"
                                     checked={field.state.value}
                                     onCheckedChange={checked => field.handleChange(checked as boolean)}
 
                                 />
                                 <FieldContent>
-                                    <FieldLabel htmlFor="terms-checkbox-desc">
+                                    <FieldLabel htmlFor="use-max-amount-product-checkbox">
                                         Usar quantidade disponível
                                     </FieldLabel>
                                     <FieldDescription>

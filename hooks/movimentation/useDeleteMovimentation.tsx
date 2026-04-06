@@ -6,7 +6,7 @@ export default function useDeleteMovimentation() {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: (data: { id: number }) => deleteMovimentation(data.id),
+        mutationFn: (data: { movimentationId: number, productId: number }) => deleteMovimentation(data),
         onSuccess() {
             queryClient.invalidateQueries({
                 queryKey: movimentationKeys.lists(),

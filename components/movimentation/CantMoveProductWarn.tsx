@@ -26,13 +26,14 @@ export default function CantMoveProductWarn({ product }: NoProductAmountWarnProp
         msg.push(<p className="text-md">Não definiu <span className="uppercase font-bold">processo inicial</span></p>)
     }
 
+
     if (msg.length > 0) {
         return (
             <div className="flex flex-col gap-1">
                 <p className="font-bold text-lg p-0 m-0">Não é possível movimentar este produto ainda.</p>
                 <ul className="list-disc ml-4">
-                    {msg.map((m, i) => (
-                        <li className="ml-5" key={i}>{m}</li>
+                    {msg.map((msg, i) => (
+                        <li className="ml-5" key={i}>{msg}</li>
                     ))}
                 </ul>
 
@@ -48,5 +49,6 @@ export default function CantMoveProductWarn({ product }: NoProductAmountWarnProp
         )
 
     }
+
     return null
 }

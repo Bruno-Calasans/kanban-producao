@@ -3,7 +3,7 @@ import { Table } from "@tanstack/react-table"
 
 interface DataTableFilterProps<TData> {
     table: Table<TData>
-    column: keyof TData
+    column: string
     placeholder?: string
 }
 

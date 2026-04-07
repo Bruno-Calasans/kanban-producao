@@ -11,7 +11,7 @@ export const formSchema = z.object({
     order: z
         .coerce
         .number()
-        .min(1, "Ordem deve ser maior ou igual a 1."),
+        .min(0, "Ordem deve ser maior ou igual a 0."),
 
     departamentName: z
         .string()

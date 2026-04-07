@@ -106,7 +106,7 @@ export async function getOneMovimentationById(id: number) {
 }
 
 
-export async function getLasProductMovimentation(productId: number) {
+export async function getLastProductMovimentation(productId: number) {
     return await supabase
         .from("Movimentation")
         .select(`
@@ -182,11 +182,11 @@ export async function deleteMovimentation({ movimentationId, productId }: Delete
         .throwOnError()
 
     // Atualiza produto com última movimentação
-    const { data: lastMovimentation } = await getLasProductMovimentation(productId)
+    const { data: lastMovimentation } = await getLastProductMovimentation(productId)
 
     if (lastMovimentation) {
         const { departamentDestination, processDestination } = lastMovimentation
-        await updateProduct(productId, {
+        return await updateProduct(productId, {
             departament_id: departamentDestination.id,
             process_id: processDestination.id
         })
@@ -196,7 +196,7 @@ export async function deleteMovimentation({ movimentationId, productId }: Delete
     const { departament, process } = await getDefaultDepartamentAndProcess()
 
     if (departament && process) {
-        await updateProduct(productId, {
+        return await updateProduct(productId, {
             departament_id: departament.id,
             process_id: process.id
         })

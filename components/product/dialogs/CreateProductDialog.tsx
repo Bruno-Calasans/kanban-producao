@@ -1,17 +1,16 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import AddButton from "@/components/custom/buttons/AddButton";
-import CreateProductForm from "@/components/product/forms/CreateProductForm";
-import { useState } from "react";
+import CreateProductLogForm from "@/components/productLog/forms/CreateProductLogForm";
 
 
 export default function CreateProductDialog() {
     return <CustomDialog
         id="create-product"
-        title="Criar novo produto"
+        title="Criar novo Registro"
         trigger={
-            <AddButton label="Novo produto" />
+            <AddButton label="Novo Registro" />
         }
     >
-        <CreateProductForm />
+        <CreateProductLogForm />
     </CustomDialog>
 }

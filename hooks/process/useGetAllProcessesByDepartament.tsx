@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { processKeys } from "@/constants/processKeys"
 import { getAllProcessesByDepartamentId } from "@/service/api/processApi"
 
-export default function useGetAllProcessesByDepartamentId(departamentId: number) {
+export default function useGetAllProcessesByDepartament(departamentId: number) {
     return useQuery({
         queryKey: processKeys.list(departamentId),
         queryFn: () => getAllProcessesByDepartamentId(departamentId),

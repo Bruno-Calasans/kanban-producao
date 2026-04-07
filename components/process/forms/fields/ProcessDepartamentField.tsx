@@ -6,7 +6,7 @@ import { defaultProcessFormValues, withForm } from "../ProcessFormContext"
 
 type DefaultDepartamentProcessFieldProps = {
     selectedDepartament?: Departament
-    onChange: (departament: Departament) => void
+    onChange: (departament?: Departament) => void
 }
 
 export const ProcessDepartamentField = withForm({
@@ -30,8 +30,8 @@ export const ProcessDepartamentField = withForm({
                                 name={field.name}
                                 selectedDepartament={selectedDepartament}
                                 placeHolder="Departamento inicial"
-                                onvalueChange={(departament) => {
-                                    field.handleChange(departament.name)
+                                onValueChange={(departament) => {
+                                    field.handleChange(departament?.name)
                                     onChange(departament)
                                 }}
                             />

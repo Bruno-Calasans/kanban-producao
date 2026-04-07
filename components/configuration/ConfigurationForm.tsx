@@ -91,7 +91,7 @@ export default function ConfigurationForm() {
                                 <DepartamentSelector
                                     name={field.name}
                                     selectedDepartament={selectedDepartament}
-                                    onvalueChange={(dpt) => {
+                                    onValueChange={(dpt) => {
                                         field.handleChange(dpt.name)
                                         setSelectedDepartament(dpt)
                                     }}
@@ -119,7 +119,7 @@ export default function ConfigurationForm() {
                                     selectedDepartament={selectedDepartament}
                                     selectedProcess={selectedProcess}
                                     onValueChange={(process) => {
-                                        field.handleChange(process.name)
+                                        field.handleChange(process?.name)
                                         setSelectedProcess(process)
                                     }}
                                 />

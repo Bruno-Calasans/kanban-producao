@@ -20,9 +20,32 @@ export async function getAllResponsibles() {
             name,
             order,
             created_at,
-            updated_at
+            updated_at,
+            is_default
         )    
         `)
+        .throwOnError()
+}
+
+
+export async function getAllResponsiblesByDepartamentId(departamentId: number) {
+    return await supabase
+        .from("Responsible")
+        .select(`
+        id,
+        name,
+        created_at,
+        updated_at,
+        departament:Departament (
+            id,
+            name,
+            order,
+            created_at,
+            updated_at,
+            is_default
+        )    
+        `)
+        .eq("departament_id", departamentId)
         .throwOnError()
 }
 

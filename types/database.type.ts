@@ -1,7 +1,6 @@
 import { Database } from "@/database.types"
 
 export type Departament = Database['public']['Tables']['Departament']['Row']
-export type ProductLog = Database['public']['Tables']['ProductLog']['Row']
 
 export type Product = Database['public']['Tables']['Product']['Row']
 export type ProductPopulated = Omit<
@@ -9,9 +8,9 @@ export type ProductPopulated = Omit<
     "process_id" |
     "responsible_id"
 > & {
-    departament: Departament | null,
-    process: Process | null,
-    responsible: Responsible | null
+    departament: Departament,
+    process: Process,
+    responsible: Responsible
 }
 
 
@@ -41,3 +40,16 @@ export type MovimentationPopulated =
         product: Product
     }
 
+
+export type ProductLog = Database['public']['Tables']['ProductLog']['Row']
+export type ProductLogPopulated = Omit<ProductLog,
+    "product_id" |
+    "departament_id" |
+    "process_id"
+> & {
+    product: Product,
+    departament: Departament,
+    process: Process
+}
+
+export type Status = Database["public"]["Enums"]["Status"]

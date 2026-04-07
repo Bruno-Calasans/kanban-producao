@@ -18,6 +18,9 @@ export const formSchema = z.object({
     processDestinationName: z
         .string()
         .nonempty("Processo de destino é obrigatório."),
+    responsibleName: z
+        .string()
+        .nonempty("Responsável é obrigatório."),
     amount: z
         .coerce
         .number()
@@ -37,6 +40,7 @@ export const defaultMovimentationFormValues: MovimentationFormSchema = {
     departamentDestinationName: "",
     processOriginName: "",
     processDestinationName: "",
+    responsibleName: "",
     useMaxAmount: true,
     amount: 1,
 }

@@ -14,6 +14,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Badge } from "../ui/badge"
 
 
 type ProcessPageProps = {
@@ -30,6 +31,23 @@ const processColumns: ColumnDef<ProcessWithDepartament>[] = [
         cell(props) {
             return formatDateTimeCellValue(props.getValue())
         },
+    },
+    {
+        accessorKey: "is_default",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Padrão" />
+        ),
+        sortingFn: (rowA, rowB) => {
+            const a = rowA.original.is_default
+            const b = rowB.original.is_default
+            return Number(a) - Number(b)
+        },
+        cell: ({ row }) => {
+            const { is_default } = row.original
+            return is_default ?
+                <Badge variant="default" className="bg-emerald-500 rounded-full">Sim</Badge> :
+                <Badge variant="secondary" className="rounded-full">Não</Badge>
+        }
     },
     {
         accessorKey: "name",

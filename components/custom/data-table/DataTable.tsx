@@ -1,5 +1,4 @@
 "use client"
-import { Button } from "@/components/ui/button"
 import {
     ColumnDef,
     flexRender,
@@ -23,11 +22,13 @@ import {
 import DataTablePagination from "./DataTablePagination"
 import { useState } from "react"
 import DataTableFilter from "./DataTableFilter"
+import { cn } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     filterColumn: string
     filterPlaceholder?: string
+    className?: string
     data: TData[],
     onEdit?: (row: TData) => void
     onDelete?: (row: TData) => void
@@ -37,7 +38,9 @@ export function DataTable<TData, TValue>({
     columns,
     data,
     filterColumn,
-    filterPlaceholder
+    filterPlaceholder,
+    className
+
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
@@ -59,54 +62,64 @@ export function DataTable<TData, TValue>({
         },
     })
 
-    return (<div>
-        <DataTableFilter placeholder={filterPlaceholder} column={filterColumn} table={table} />
-        <div className="overflow-hidden rounded-md border mt-2">
-            <Table>
-                <TableHeader >
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </TableHead>
-                                )
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && "selected"}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
+    return (
+        <div>
+            {/* Filtro da tabela */}
+            <DataTableFilter
+                placeholder={filterPlaceholder}
+                column={filterColumn}
+                table={table}
+            />
+
+            {/* Tabela em si */}
+            <div className={cn("overflow-hidden rounded-md border mt-2", className)}>
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    )
+                                })}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                Nada encontrado.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                    Nada encontrado.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+
+            {/* Paginação da tabela */}
+            <DataTablePagination table={table} />
         </div>
-        <DataTablePagination table={table} />
-    </div>
 
     )
 }

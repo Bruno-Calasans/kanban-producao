@@ -16,12 +16,14 @@ export async function getAllProcesses() {
         id,
         name,
         order,
+        is_default,
         created_at,
         updated_at,
         departament:Departament (
             id,
             name,
             order,
+            is_default,
             created_at,
             updated_at
         )    

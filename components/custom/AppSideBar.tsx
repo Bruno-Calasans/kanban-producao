@@ -26,6 +26,11 @@ const items = [
         icon: HomeIcon,
     },
     {
+        name: "Registro Geral",
+        url: "/geral",
+        icon: ArrowLeftRightIcon,
+    },
+    {
         name: "Movimentação",
         url: "/movimentacao",
         icon: ArrowLeftRightIcon,

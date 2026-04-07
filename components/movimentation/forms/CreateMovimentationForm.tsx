@@ -6,7 +6,7 @@ import ClearButton from "@/components/custom/buttons/ClearButton"
 import MoveButton from "@/components/custom/buttons/MoveButton"
 import useCreateMovimentation from "@/hooks/movimentation/useCreateMovimentation"
 import { useEffect, useState } from "react"
-import { Departament, Process, ProductPopulated } from "@/types/database.type"
+import { Departament, Process, ProductPopulated, ResponsibleWithDepartament } from "@/types/database.type"
 import CantMoveProductWarn from "@/components/movimentation/CantMoveProductWarn"
 import { MovimentationProductNameField } from "./fields/MovimentationProductNameField"
 import { defaultMovimentationFormValues, useAppForm, formSchema } from "./movimentationFormContext"
@@ -15,6 +15,7 @@ import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountField
 import { MovimentationDepartamentFieldGroup } from "./fields/MovimentationDepartamentFieldGroup"
 import { MovimentationProcessFieldGroup } from "./fields/MovimentationProcessFieldGroup"
 import useDialog from "@/hooks/dialog/useDialog"
+import { MovimentationResponsibleField } from "./fields/MovimentationResponsibleField"
 
 
 export default function CreateMovimentationForm() {
@@ -25,6 +26,7 @@ export default function CreateMovimentationForm() {
     const [departamentDestination, setDepartamentDestination] = useState<Departament | undefined>()
     const [processOrigin, setProcessOrigin] = useState<Process | undefined>()
     const [processDestination, setProcessDestination] = useState<Process | undefined>()
+    // const [responsible, setResponsible] = useState<ResponsibleWithDepartament | undefined>()
 
     const form = useAppForm({
         defaultValues: defaultMovimentationFormValues,
@@ -44,7 +46,7 @@ export default function CreateMovimentationForm() {
                     departament_origin_id: departamentOrigin.id,
                     departament_destination_id: departamentDestination.id,
                     process_origin_id: processOrigin.id,
-                    process_destination_id: processDestination.id
+                    process_destination_id: processDestination.id,
                 })
                 toast.success("Produto movimentado com sucesso!")
                 form.reset()
@@ -77,11 +79,11 @@ export default function CreateMovimentationForm() {
     return (
         <form
             id="create-movimentation-form"
+            className="flex flex-col gap-6"
             onSubmit={(e) => {
                 e.preventDefault()
                 form.handleSubmit()
             }}
-            className="flex flex-col gap-6"
         >
             <MovimentationProductNameField
                 form={form}
@@ -126,6 +128,16 @@ export default function CreateMovimentationForm() {
                 />
 
             )}
+
+            {/* {canMoveProuct && departamentDestination && (
+                <MovimentationResponsibleField
+                    form={form}
+                    selectedDepartament={departamentDestination}
+                    selectedResponsible={responsible}
+                    onChangeResponsible={setResponsible}
+                />
+
+            )} */}
 
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
                 {/* <ClearButton isLoading={isPending} onclick={resetForm} /> */}

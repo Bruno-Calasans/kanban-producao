@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog"
 import { DialogID } from "@/hooks/dialog/DialogContext"
 import useDialog from "@/hooks/dialog/useDialog"
+import { cn } from "@/lib/utils"
 
 type CustomDialogProps = {
     id: DialogID
@@ -16,10 +17,11 @@ type CustomDialogProps = {
     trigger: React.ReactNode
     children: React.ReactNode
     maxContentWidth?: number
+    triggerClassName?: string
 }
 
 
-export default function CustomDialog({ id, title, description, trigger, maxContentWidth, children }: CustomDialogProps) {
+export default function CustomDialog({ id, title, description, trigger, maxContentWidth, triggerClassName, children }: CustomDialogProps) {
     const { dialog, openDialog, closeDialog } = useDialog()
 
     const openHandler = (value: boolean) => {
@@ -29,7 +31,7 @@ export default function CustomDialog({ id, title, description, trigger, maxConte
 
     return (
         <Dialog open={dialog === id} onOpenChange={openHandler}>
-            <DialogTrigger asChild>{trigger}</DialogTrigger>
+            <DialogTrigger className={cn(triggerClassName)} asChild>{trigger}</DialogTrigger>
             <DialogContent style={{
                 maxWidth: maxContentWidth
             }}>

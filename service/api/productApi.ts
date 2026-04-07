@@ -21,6 +21,24 @@ export async function getAllProducts() {
         .throwOnError()
 }
 
+export async function getAllProductsByDepartamentId(departamentId: number) {
+    return await supabase
+        .from("Product")
+        .select(`
+            id,
+            name,
+            op,
+            max_amount,
+            created_at,
+            updated_at,
+            departament:Departament!departament_id(*),
+            process:Process!process_id(*),
+            responsible:Responsible!responsible_id(*)
+        `)
+        .eq("departament_id", departamentId)
+        .throwOnError()
+}
+
 export async function createProduct(data: CreateProductData) {
     return await supabase
         .from("Product")

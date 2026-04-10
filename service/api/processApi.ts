@@ -1,33 +1,17 @@
 import { supabase } from "@/lib/supabase/client";
+import { getOneProduct } from "./productApi";
+import { Process } from "@/types/database.type";
 
 
-export type CreateProcesstData = {
-    name: string
-    order: number
-    departament_id: number
-}
+export type CreateProcesstData = Omit<Process, "id" | "created_at" | "updated_at" | "is_default">
 
 export type UpdateProcessData = Partial<CreateProcesstData>
 
 export async function getAllProcesses() {
     return await supabase
         .from("Process")
-        .select(`
-        id,
-        name,
-        order,
-        is_default,
-        created_at,
-        updated_at,
-        departament:Departament (
-            id,
-            name,
-            order,
-            is_default,
-            created_at,
-            updated_at
-        )    
-        `)
+        .select("*, departament:Departament(*)")
+        .order("sequence", { ascending: true })
         .throwOnError()
 }
 
@@ -36,6 +20,7 @@ export async function getAllProcessesByDepartamentId(departamentId: number) {
         .from("Process")
         .select("*")
         .eq("departament_id", departamentId)
+        .order("sequence", { ascending: true })
         .throwOnError()
 }
 
@@ -46,10 +31,10 @@ export async function createProcess(data: CreateProcesstData) {
         .throwOnError()
 }
 
-export async function updateProcess(id: number, data: UpdateProcessData) {
+export async function updateProcess(id: number, updateData: UpdateProcessData) {
     return await supabase
         .from("Process")
-        .update(data)
+        .update(updateData)
         .eq("id", id)
         .throwOnError()
 }
@@ -69,3 +54,19 @@ export async function setDefaultProcess(id: number) {
         .eq("id", id)
         .throwOnError()
 }
+
+
+// export async function getNextProcesses(productId: number) {
+//     const { data: product } = await getOneProduct(productId)
+//     const { data: processes } = await supabase
+//         .from("Process")
+//         .select("*")
+//         .eq("departament_id", product.departament.id)
+//         .gt('"order"', product.process.order)
+//         .order('"order"', { ascending: true })
+//         .throwOnError()
+
+//     return processes
+// }
+
+

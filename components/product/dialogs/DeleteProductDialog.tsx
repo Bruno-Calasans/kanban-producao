@@ -3,12 +3,12 @@ import CancelButton from "@/components/custom/buttons/CancelButton"
 import DeleteButton from "@/components/custom/buttons/DeleteButton"
 import useDialog from "@/hooks/dialog/useDialog"
 import useDeleteProduct from "@/hooks/product/useDeleteProduct"
-import type { ProductPopulated } from "@/types/database.type"
-import handleFormError from "@/utils/formErrorHandler"
+import { Product } from "@/types/database.type"
+import errorHandler from "@/utils/errorHandler"
 import { toast } from "sonner"
 
 type DeleteProductDialogProps = {
-    product: ProductPopulated
+    product: Product
     children?: React.ReactNode
 }
 
@@ -25,7 +25,9 @@ export default function DeleteProductDialog({ product, children }: DeleteProduct
             closeDialog("delete-product")
 
         } catch (error) {
-            handleFormError(error, { default: "Erro ao excluir produto. Tente novamente." })
+            errorHandler(error, {
+                default: "Error: Não foi possível excluir o produto. Tente novamente."
+            })
         }
 
     }
@@ -44,7 +46,7 @@ export default function DeleteProductDialog({ product, children }: DeleteProduct
             </p>
             <p></p>
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-                <CancelButton isLoading={isPending} />
+                <CancelButton isLoading={isPending} onclick={() => closeDialog("delete-product")} />
                 <DeleteButton isLoading={isPending} onclick={handleDelete} />
             </div>
         </div>

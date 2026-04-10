@@ -7,21 +7,23 @@ export const ProcessOrderField = withForm({
     defaultValues: defaultProcessFormValues,
     render({ form }) {
         return <form.Field
-            name="order"
+            name="sequence"
             children={(field) => {
+                const hasDefaultValue = defaultProcessFormValues[field.name] == field.state.value
                 const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                     <Field data-invalid={isInvalid}>
-                        <FieldLabel htmlFor={field.name}>Ordem</FieldLabel>
+                        <FieldLabel htmlFor={field.name}>Sequência</FieldLabel>
                         <Input
                             id={field.name}
                             name={field.name}
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value as unknown as number)}
+                            onFocus={e => hasDefaultValue && field.handleChange("" as unknown as number)}
                             aria-invalid={isInvalid}
-                            placeholder="Número da ordem"
+                            placeholder="Número da sequência"
                             autoComplete="off"
                             type="number"
                         />

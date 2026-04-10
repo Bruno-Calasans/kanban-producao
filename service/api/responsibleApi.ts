@@ -1,50 +1,31 @@
 import { supabase } from "@/lib/supabase/client";
+import { Responsible } from "@/types/database.type";
 
-export type CreateResponsibleData = {
-    name: string
-    departament_id: number
-}
+export type CreateResponsibleData = Omit<Responsible, "id" | "created_at" | "updated_at">
 
 export type UpdateResponsibleData = Partial<CreateResponsibleData>
 
 export async function getAllResponsibles() {
     return await supabase
         .from("Responsible")
-        .select(`
-        id,
-        name,
-        created_at,
-        updated_at,
-        departament:Departament (
-            id,
-            name,
-            order,
-            created_at,
-            updated_at,
-            is_default
-        )    
-        `)
+        .select("*, departament:Departament!departament_id(*)")
+        .throwOnError()
+}
+
+export async function getOneResponsible(responsibleId: number) {
+    return await supabase
+        .from("Responsible")
+        .select("*, departament:Departament!departament_id(*)")
+        .eq("id", responsibleId)
+        .single()
         .throwOnError()
 }
 
 
-export async function getAllResponsiblesByDepartamentId(departamentId: number) {
+export async function getAllResponsiblesByDepartament(departamentId: number) {
     return await supabase
         .from("Responsible")
-        .select(`
-        id,
-        name,
-        created_at,
-        updated_at,
-        departament:Departament (
-            id,
-            name,
-            order,
-            created_at,
-            updated_at,
-            is_default
-        )    
-        `)
+        .select("*, departament:Departament!departament_id(*)")
         .eq("departament_id", departamentId)
         .throwOnError()
 }
@@ -56,18 +37,18 @@ export async function createResponsible(data: CreateResponsibleData) {
         .throwOnError()
 }
 
-export async function updateResponsible(id: number, data: UpdateResponsibleData) {
+export async function updateResponsible(responsibleId: number, data: UpdateResponsibleData) {
     return await supabase
         .from("Responsible")
         .update(data)
-        .eq("id", id)
+        .eq("id", responsibleId)
         .throwOnError()
 }
 
-export async function deleteResponsible(id: number) {
+export async function deleteResponsible(responsibleId: number) {
     return await supabase
         .from("Responsible")
         .delete()
-        .eq("id", id)
+        .eq("id", responsibleId)
         .throwOnError()
 }

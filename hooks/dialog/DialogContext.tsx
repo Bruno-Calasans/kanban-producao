@@ -21,7 +21,10 @@ export type DialogID =
     "delete-movimentation" |
     "create-product-log" |
     "edit-product-log" |
-    "delete-product-log"
+    "delete-product-log" |
+    "create-production-flow" |
+    "edit-production-flow" |
+    "delete-production-flow"
 
 
 export type DialogContext = {

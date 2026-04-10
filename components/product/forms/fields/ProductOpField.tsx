@@ -9,6 +9,7 @@ export const ProductOpField = withForm({
         return <form.Field
             name="op"
             children={(field) => {
+                const hasDefaultValue = defaultProductFormValues[field.name] == field.state.value
                 const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid
                 return (
@@ -27,9 +28,12 @@ export const ProductOpField = withForm({
                             placeholder="OP do produto"
                             autoComplete="off"
                             type="number"
+                            onFocus={e => {
+                                hasDefaultValue && field.handleChange("" as unknown as number)
+                            }}
                         />
-                        <FieldDescription>
-                            Se não souber a OP do produto, pode cadastrar depois.
+                        <FieldDescription >
+                            Se não souber, deixe o valor "0". Quando souber, edite depois.
                         </FieldDescription>
                         {isInvalid && (
                             <FieldError errors={field.state.meta.errors} />

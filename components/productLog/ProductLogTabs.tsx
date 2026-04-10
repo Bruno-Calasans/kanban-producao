@@ -3,7 +3,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Departament } from "@/types/database.type"
 import { useState } from "react"
-import Loader from "../custom/Loader"
+import Loader from "@/components/custom/Loader"
 import ProductLogTable from "./ProductLogTable"
 import useGetAllProductLogsByDepartament from "@/hooks/productLog/useGetAllProductLogsByDepartament"
 import CreateProductDialog from "../product/dialogs/CreateProductDialog"

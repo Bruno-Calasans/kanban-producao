@@ -1,9 +1,11 @@
 import { supabase } from "@/lib/supabase/client";
+import { getOneProduct } from "./productApi";
+import { getAllProcessesByDepartamentId } from "./processApi";
 
 
 export type CreateDepartamentData = {
     name: string;
-    order: number;
+    sequence: number;
 }
 
 export type UpdateDepartamentData = Partial<CreateDepartamentData>
@@ -16,11 +18,12 @@ export async function getAllDepartaments() {
         .throwOnError()
 }
 
-export async function getDepartamentById(id: number) {
+export async function getOneDepartament(departamentId: number) {
     return await supabase
         .from("Departament")
         .select("*")
-        .eq("id", id)
+        .eq("id", departamentId)
+        .single()
         .throwOnError()
 }
 
@@ -32,10 +35,10 @@ export async function getDepartamentByName(departamentName: string) {
         .throwOnError()
 }
 
-export async function createDepartament(name: string, order: number) {
+export async function createDepartament(data: CreateDepartamentData) {
     return await supabase
         .from("Departament")
-        .insert({ name, order })
+        .insert(data)
         .throwOnError()
 }
 
@@ -47,11 +50,11 @@ export async function updateDepartament(id: number, data: UpdateDepartamentData)
         .throwOnError()
 }
 
-export async function deleteDepartament(id: number) {
+export async function deleteDepartament(departamentId: number) {
     return await supabase
         .from("Departament")
         .delete()
-        .eq("id", id)
+        .eq("id", departamentId)
         .throwOnError()
 }
 
@@ -62,3 +65,15 @@ export async function setDefaultDepartament(id: number) {
         .eq("id", id)
         .throwOnError()
 }
+
+// export async function getNextDepartaments(productId: number) {
+//     const { data: product } = await getOneProduct(productId)
+//     const { data: departaments } = await supabase
+//         .from("Departament")
+//         .select("*")
+//         .gt('"order"', product.departament?.order)
+//         .order('"order"', { ascending: true })
+//         .throwOnError()
+
+//     return departaments
+// }

@@ -1,14 +1,14 @@
 "use client"
 
 import { toast } from "sonner"
-import ClearButton from "../../custom/buttons/ClearButton"
-import ConfirmButton from "../../custom/buttons/ConfirmButton"
+import ClearButton from "@/components/custom/buttons/ClearButton"
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton"
 import useCreateProcess from "@/hooks/process/useCreateProcess"
 import { FieldGroup } from "@/components/ui/field"
 import { useState } from "react"
 import { Departament } from "@/types/database.type"
 import { defaultProcessFormValues, useAppForm, formSchema } from "./ProcessFormContext"
-import handleFormError from "@/utils/formErrorHandler"
+import errorHandler from "@/utils/errorHandler"
 import { ProcessNameField } from "./fields/ProcessNameField"
 import { ProcessOrderField } from "./fields/ProcessOrderField"
 import { ProcessDepartamentField } from "./fields/ProcessDepartamentField"
@@ -29,19 +29,20 @@ export default function CreateProcessForm() {
         onSubmit: async ({ value }) => {
             try {
                 if (!selectedDepartament) return
+                const { name, sequence } = value
                 await mutateAsync({
-                    name: value.name,
-                    order: value.order,
-                    departament_id: selectedDepartament.id
+                    name: name,
+                    sequence: sequence,
+                    departament_id: selectedDepartament.id,
                 })
                 toast.success("Processo criado com sucesso!")
-                form.reset()
                 closeDialog("create-process")
+                form.reset()
 
             } catch (error) {
-                handleFormError(error, {
-                    duplicate: "Erro: nome de processo já existe.",
-                    default: "Erro: não foi possível criar o processo."
+                errorHandler(error, {
+                    default: "Erro: não foi possível criar o processo.",
+                    duplicate: "Erro: nome ou sequência do processo está em uso.",
                 })
 
             }

@@ -1,17 +1,19 @@
 "use client"
 
 
+import { Edit2Icon, EllipsisVerticalIcon, FlagIcon, Trash2Icon } from "lucide-react"
+import EditDepartamentDialog from "../dialogs/EditDepartamentDialog"
+import { Departament } from "@/types/database.type"
+import DeleteDepartamentDialog from "../dialogs/DeleteDepartamentDialog"
+import useSetDefaultDepartament from "@/hooks/departament/useSetDefaultDepartament"
+import { toast } from "sonner"
+import errorHandler from "@/utils/errorHandler"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Edit2Icon, EllipsisVerticalIcon, FlagIcon, Trash2Icon } from "lucide-react"
-import EditDepartamentDialog from "../dialogs/EditDepartamentDialog"
-import { Departament } from "@/types/database.type"
-import DeleteDepartamentDialog from "../dialogs/DeleteDepartamentDialog"
-import useSetDefaultDepartament from "@/hooks/departament/useSetDefaultDepartament"
 
 
 type DepartamentDropdownMenuProps = {
@@ -20,12 +22,20 @@ type DepartamentDropdownMenuProps = {
 
 
 export default function DepartamentDropdownMenu({ departament }: DepartamentDropdownMenuProps) {
-    const { mutate, isPending } = useSetDefaultDepartament()
+    const { mutateAsync, isPending } = useSetDefaultDepartament()
 
-
-    const handleSetDefault = () => {
+    const handleSetDefault = async () => {
         if (isPending) return
-        mutate({ id: departament.id })
+        try {
+            await mutateAsync({ departamentId: departament.id })
+            toast.success("Departamento padrão atualizado com sucesso.")
+
+        } catch (error) {
+            errorHandler(error, {
+                default: "Error: não foi possível definir departamento padrão."
+            })
+
+        }
     }
 
 
@@ -36,6 +46,14 @@ export default function DepartamentDropdownMenu({ departament }: DepartamentDrop
             </DropdownMenuTrigger>
 
             <DropdownMenuContent side="bottom" align="end" className="w-fit">
+
+                {departament.is_default ? null : (
+                    <DropdownMenuItem onSelect={handleSetDefault}>
+                        <FlagIcon />
+                        Marcar como padrão
+                    </DropdownMenuItem>
+                )}
+
                 <EditDepartamentDialog departament={departament}>
                     <DropdownMenuItem onSelect={e => e.preventDefault()}>
                         <Edit2Icon />
@@ -49,14 +67,6 @@ export default function DepartamentDropdownMenu({ departament }: DepartamentDrop
                         Excluir
                     </DropdownMenuItem>
                 </DeleteDepartamentDialog>
-
-                {departament.is_default ? null : (
-                    <DropdownMenuItem onSelect={handleSetDefault}>
-                        <FlagIcon />
-                        Marcar como padrão
-                    </DropdownMenuItem>
-                )}
-
             </DropdownMenuContent>
         </DropdownMenu>
     )

@@ -7,8 +7,8 @@ import useCreateDepartament from "@/hooks/departament/useCreateDepartament"
 import { FieldGroup } from "@/components/ui/field"
 import { defaultDepartamentFormValues, useAppForm, formSchema } from "./departamentFormContext"
 import { DepartamentNameField } from "./fields/DepartamentNameField"
-import { DepartamentOrderField } from "./fields/DepartamentOrderField"
-import handleFormError from "@/utils/formErrorHandler"
+import { DepartamentSequenceField } from "./fields/DepartamentSequenceField"
+import errorHandler from "@/utils/errorHandler"
 import useDialog from "@/hooks/dialog/useDialog"
 
 
@@ -26,12 +26,12 @@ export default function CreateDepartamentForm() {
             try {
                 await mutateAsync(value)
                 toast.success("Departamento criado com sucesso!")
-                form.reset()
                 closeDialog("create-departament")
+                form.reset()
 
             } catch (error) {
-                handleFormError(error, {
-                    duplicate: "Erro: departamento já existe.",
+                errorHandler(error, {
+                    duplicate: "Erro: departamento ou sequência já existe.",
                     default: "Erro: não foi possível criar o departamento."
                 })
 
@@ -50,7 +50,7 @@ export default function CreateDepartamentForm() {
         >
             <FieldGroup>
                 <DepartamentNameField form={form} />
-                <DepartamentOrderField form={form} />
+                <DepartamentSequenceField form={form} />
             </FieldGroup>
 
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

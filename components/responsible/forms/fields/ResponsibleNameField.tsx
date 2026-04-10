@@ -9,6 +9,7 @@ export const ResponsibleNameField = withForm({
         return <form.Field
             name="name"
             children={(field) => {
+                const hasDefaultValue = defaultResponsibleFormValues[field.name] == field.state.value
                 const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid
                 return (
@@ -20,6 +21,7 @@ export const ResponsibleNameField = withForm({
                             value={field.state.value}
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value.toLocaleUpperCase())}
+                            onFocus={e => hasDefaultValue && field.handleChange("")}
                             aria-invalid={isInvalid}
                             placeholder="Nome do responsável"
                             autoComplete="off"

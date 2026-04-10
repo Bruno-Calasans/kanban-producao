@@ -7,9 +7,9 @@ import { useState } from "react"
 import useUpdateProcess from "@/hooks/process/useUpdateProcess"
 import SaveButton from "@/components/custom/buttons/SaveButton"
 import useDialog from "@/hooks/dialog/useDialog"
-import { formSchema, useAppForm } from "./ProcessFormContext"
+import { formSchema, useAppForm, ProcessFormSchema } from "./ProcessFormContext"
 import type { Departament, ProcessWithDepartament } from "@/types/database.type"
-import handleFormError from "@/utils/formErrorHandler"
+import handleFormError from "@/utils/errorHandler"
 import { ProcessNameField } from "./fields/ProcessNameField"
 import { ProcessDepartamentField } from "./fields/ProcessDepartamentField"
 import { ProcessOrderField } from "./fields/ProcessOrderField"
@@ -27,9 +27,9 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
     const form = useAppForm({
         defaultValues: {
             name: process.name,
-            order: process.order,
+            sequence: process.sequence,
             departamentName: process.departament.name
-        },
+        } as ProcessFormSchema,
         validators: {
             onSubmit: formSchema,
             onChange: formSchema
@@ -41,18 +41,18 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
                     id: process.id,
                     updateData: {
                         name: value.name,
-                        order: value.order,
+                        sequence: value.sequence,
                         departament_id: selectedDepartament.id,
                     }
                 })
                 toast.success("Processo atualizado com sucesso!")
-                form.reset()
                 closeDialog("edit-process")
+                form.reset()
 
             } catch (error) {
                 handleFormError(error, {
-                    duplicate: "Erro: processo com esse nome já existe.",
-                    default: "Erro: Não foi possível editar o processo."
+                    default: "Erro: Não foi possível editar o processo.",
+                    duplicate: "Erro: já existe um processo com esse nome ou sequência.",
                 })
 
             }

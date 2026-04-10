@@ -1,16 +1,15 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import AddButton from "@/components/custom/buttons/AddButton";
-import CreateProductLogForm from "@/components/productLog/forms/CreateProductLogForm";
-
+import CreateProductForm from "../forms/CreateProductForm";
 
 export default function CreateProductDialog() {
     return <CustomDialog
         id="create-product"
-        title="Criar novo Registro"
+        title="Criar novo Produto"
         trigger={
-            <AddButton label="Novo Registro" />
+            <AddButton label="Novo Produto" />
         }
     >
-        <CreateProductLogForm />
+        <CreateProductForm />
     </CustomDialog>
 }

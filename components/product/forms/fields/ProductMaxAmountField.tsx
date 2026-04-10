@@ -1,6 +1,6 @@
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useFieldContext, withForm, defaultProductFormValues } from "@/components/product/forms/productFormContext"
+import { withForm, defaultProductFormValues } from "@/components/product/forms/productFormContext"
 
 
 export const ProductMaxAmountField = withForm({
@@ -10,6 +10,7 @@ export const ProductMaxAmountField = withForm({
             <form.Field
                 name="max_amount"
                 children={(field) => {
+                    const hasDefaultValue = defaultProductFormValues[field.name] == field.state.value
                     const isInvalid =
                         field.state.meta.isTouched && !field.state.meta.isValid
                     return (
@@ -28,11 +29,10 @@ export const ProductMaxAmountField = withForm({
                                 placeholder="Quantidade máxima"
                                 autoComplete="off"
                                 type="number"
-                                onFocus={e => field.setValue("")}
+                                onFocus={e => hasDefaultValue && field.setValue("" as unknown as number)}
                             />
                             <FieldDescription>
-                                Diz quantas peças serão produzidas. Se não souber agora,
-                                cadastre depois.
+                                Se não souber, deixe o valor "0". Quando souber, edite depois.
                             </FieldDescription>
                             {isInvalid && (
                                 <FieldError errors={field.state.meta.errors} />

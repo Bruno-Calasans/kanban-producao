@@ -26,10 +26,10 @@ import { cn } from "@/lib/utils"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
+    data: TData[]
     filterColumn: string
     filterPlaceholder?: string
     className?: string
-    data: TData[],
     onEdit?: (row: TData) => void
     onDelete?: (row: TData) => void
 }
@@ -98,6 +98,7 @@ export function DataTable<TData, TValue>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
+                                    onClick={() => console.log(row)}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>

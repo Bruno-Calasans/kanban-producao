@@ -11,6 +11,7 @@ export const DepartamentNameField = withForm({
         return <form.Field
             name="name"
             children={(field) => {
+                const hasDefaultValue = defaultDepartamentFormValues[field.name] == field.state.value
                 const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid
                 return (
@@ -25,6 +26,7 @@ export const DepartamentNameField = withForm({
                             aria-invalid={isInvalid}
                             placeholder="Nome"
                             autoComplete="off"
+                            onFocus={e => hasDefaultValue && field.handleChange("")}
                         />
                         {isInvalid && (
                             <FieldError errors={field.state.meta.errors} />

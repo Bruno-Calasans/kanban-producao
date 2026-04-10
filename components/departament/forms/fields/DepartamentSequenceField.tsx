@@ -5,17 +5,18 @@ import { Input } from "@/components/ui/input";
 
 
 
-export const DepartamentOrderField = withForm({
+export const DepartamentSequenceField = withForm({
     defaultValues: defaultDepartamentFormValues,
     render({ form }) {
         return <form.Field
-            name="order"
+            name="sequence"
             children={(field) => {
+                const hasDefaultValue = defaultDepartamentFormValues[field.name] == field.state.value
                 const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                     <Field data-invalid={isInvalid}>
-                        <FieldLabel htmlFor={field.name}>Ordem</FieldLabel>
+                        <FieldLabel htmlFor={field.name}>Sequência</FieldLabel>
                         <Input
                             id={field.name}
                             name={field.name}
@@ -23,13 +24,14 @@ export const DepartamentOrderField = withForm({
                             onBlur={field.handleBlur}
                             onChange={(e) => field.handleChange(e.target.value as unknown as number)}
                             aria-invalid={isInvalid}
-                            placeholder="Número da ordem"
+                            placeholder="Número da sequência"
                             autoComplete="off"
                             type="number"
+                            onFocus={e => hasDefaultValue && field.handleChange("" as unknown as number)}
                         />
 
                         <FieldDescription>
-                            A ordem do departamento é usada para determinar o fluxo de produção.
+                            A sequência do departamento é usada para determinar o fluxo de produção.
                         </FieldDescription>
                         {isInvalid && (
                             <FieldError errors={field.state.meta.errors} />

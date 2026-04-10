@@ -5,7 +5,7 @@ import useDeleteResponsible from "@/hooks/responsible/useDeleteResponsible"
 import { toast } from "sonner"
 import type { ResponsibleWithDepartament } from "@/types/database.type"
 import useDialog from "@/hooks/dialog/useDialog"
-import handleFormError from "@/utils/formErrorHandler"
+import errorHandler from "@/utils/errorHandler"
 
 type DeleteResponsibleDialogProps = {
     responsible: ResponsibleWithDepartament
@@ -25,7 +25,7 @@ export default function DeleteResponsibleDialog({ responsible, children }: Delet
             closeDialog("delete-responsible")
 
         } catch (error) {
-            handleFormError(error, {
+            errorHandler(error, {
                 default: "Erro: não foi possível excluir responsável. Tente novamente."
             })
         }
@@ -47,7 +47,7 @@ export default function DeleteResponsibleDialog({ responsible, children }: Delet
             <p></p>
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
                 <CancelButton isLoading={isPending} />
-                <DeleteButton isLoading={isPending} onclick={handleDelete} label="Excluir responsável" />
+                <DeleteButton isLoading={isPending} onclick={handleDelete} />
             </div>
         </div>
     </CustomDialog>

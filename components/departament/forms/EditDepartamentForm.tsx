@@ -6,10 +6,10 @@ import useUpdateDepartament from "@/hooks/departament/useUpdateDepartament"
 import SaveButton from "@/components/custom/buttons/SaveButton"
 import type { Departament } from "@/types/database.type"
 import { FieldGroup } from "@/components/ui/field"
-import { useAppForm, formSchema } from "./departamentFormContext"
-import handleFormError from "@/utils/formErrorHandler"
+import { useAppForm, formSchema, DepartamentFormSchema } from "./departamentFormContext"
+import handleFormError from "@/utils/errorHandler"
 import { DepartamentNameField } from "./fields/DepartamentNameField"
-import { DepartamentOrderField } from "./fields/DepartamentOrderField"
+import { DepartamentSequenceField } from "./fields/DepartamentSequenceField"
 import useDialog from "@/hooks/dialog/useDialog"
 
 type DepartamentFormProps = {
@@ -23,8 +23,8 @@ export default function EditDepartamentForm({ departament }: DepartamentFormProp
     const form = useAppForm({
         defaultValues: {
             name: departament.name,
-            order: departament.order,
-        },
+            sequence: departament.sequence,
+        } as DepartamentFormSchema,
         validators: {
             onSubmit: formSchema,
             onChange: formSchema
@@ -55,12 +55,12 @@ export default function EditDepartamentForm({ departament }: DepartamentFormProp
         >
             <FieldGroup>
                 <DepartamentNameField form={form} />
-                <DepartamentOrderField form={form} />
+                <DepartamentSequenceField form={form} />
             </FieldGroup>
 
             <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
                 <ClearButton isLoading={isPending} onclick={() => form.reset()} />
-                <SaveButton isLoading={isPending || !form.state.isValid} />
+                <SaveButton hiddenIcon isLoading={isPending || !form.state.isValid} />
             </div>
         </form>
 

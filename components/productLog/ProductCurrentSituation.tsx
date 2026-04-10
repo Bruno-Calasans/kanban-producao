@@ -2,6 +2,7 @@ import { ProductPopulated } from "@/types/database.type"
 import { FieldLegend, FieldSet } from "@/components/ui/field"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import MoveNext from "./MoveNext"
 
 type ProductCurrentSituationProps = {
     product: ProductPopulated
@@ -9,6 +10,10 @@ type ProductCurrentSituationProps = {
 }
 
 export function ProductCurrentSituation({ product, totalAmountDone }: ProductCurrentSituationProps) {
+
+    const hasAmount = product.max_amount > 0
+    const IsDone = hasAmount && product.max_amount == totalAmountDone
+
     return (
         <FieldSet>
             <FieldLegend>Situação atual</FieldLegend>
@@ -27,7 +32,7 @@ export function ProductCurrentSituation({ product, totalAmountDone }: ProductCur
                 </div>
             </div>
             {
-                product.max_amount == 0 && (
+                !hasAmount && (
                     <div className="flex flex-col gap-1 justify-start items-start">
                         <p>Nenhuma <span className="font-bold">quantidade disponível</span>.</p>
                         <p>Defina a quantidade do produto.</p>
@@ -36,12 +41,7 @@ export function ProductCurrentSituation({ product, totalAmountDone }: ProductCur
                 )
             }
             {
-                product.max_amount > 0 && product.max_amount == totalAmountDone && (
-                    <div className="flex flex-col gap-1">
-                        <p>Você já terminou de processar esse produto.</p>
-                        <p>Deseja movê-lo para o próximo processo?</p>
-                    </div>
-                )
+                IsDone && <MoveNext product={product} />
             }
         </FieldSet>
     )

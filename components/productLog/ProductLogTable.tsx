@@ -18,21 +18,24 @@ import { formatTimezToTime } from "@/utils/formatTimezToTime"
 import { diffTimeZToTimeString } from "@/utils/diffTimeZToTimeString"
 import StatusBadge from "../custom/badges/StatusBadge"
 import DeleteProductLogDialog from "./dialogs/DeleteProductDialog"
+import MoveNextProcessButton from "./actions/MoveNextProcessButton"
+import MoveNextProcesDialog from "./dialogs/MoveNextProcessDepartamentDialog"
+import MoveNextProcessDepartamentDialog from "./dialogs/MoveNextProcessDepartamentDialog"
 
 type ProductLogTableProps = {
     productLogs: ProductLogPopulated[]
 }
 
 const productLogColumns: ColumnDef<ProductLogPopulated>[] = [
-    // {
-    //     accessorKey: "created_at",
-    //     header: ({ column }) => (
-    //         <DataTableColumnHeader column={column} title="Data" />
-    //     ),
-    //     cell(props) {
-    //         return formatDateTimeCellValue(props.getValue())
-    //     },
-    // },
+    {
+        accessorKey: "created_at",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Data" />
+        ),
+        cell({ row: { original: productLog } }) {
+            return new Date(productLog.created_at).toLocaleDateString()
+        },
+    },
     {
         id: "product.name",
         accessorKey: "product.name",
@@ -54,16 +57,16 @@ const productLogColumns: ColumnDef<ProductLogPopulated>[] = [
         ),
     },
     {
-        accessorKey: "remaining_amount",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Qtd. Rest" />
-        ),
-    },
-    {
         id: "product.max_amount",
         accessorKey: "product.max_amount",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Qtd. Total" />
+        ),
+    },
+    {
+        accessorKey: "remaining_amount",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Qtd. Rest" />
         ),
     },
     {
@@ -109,8 +112,8 @@ const productLogColumns: ColumnDef<ProductLogPopulated>[] = [
     },
     {
         id: "action",
-        cell: ({ row }) => {
-            const productLog = row.original
+        cell: ({ row: { original: productLog } }) => {
+            const canMoveNextProcess = productLog.status == "PROCESSADO"
 
             return (
                 <DropdownMenu>
@@ -118,13 +121,13 @@ const productLogColumns: ColumnDef<ProductLogPopulated>[] = [
                         <EllipsisVerticalIcon className="h-4 w-4" />
                     </DropdownMenuTrigger>
 
-                    <DropdownMenuContent side="bottom" align="end">
-                        {/* <EditProductDialog product={productLog}>
+                    <DropdownMenuContent className="w-fit" side="bottom" align="end">
+                        {/* {canMoveNextProcess && (
+                            
                             <DropdownMenuItem onSelect={e => e.preventDefault()}>
-                                <Edit2Icon />
-                                Editar
+                                <MoveNextProcessDepartamentDialog productLog={productLog} />
                             </DropdownMenuItem>
-                        </EditProductDialog> */}
+                        )} */}
 
                         <DeleteProductLogDialog productLog={productLog}>
                             <DropdownMenuItem onSelect={e => e.preventDefault()}>

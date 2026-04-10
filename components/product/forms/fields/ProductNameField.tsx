@@ -6,9 +6,11 @@ import { defaultProductFormValues, withForm } from "@/components/product/forms/p
 export const ProductNameField = withForm({
     defaultValues: defaultProductFormValues,
     render({ form }) {
+
         return <form.Field
             name="name"
             children={(field) => {
+                const hasDefaultValue = defaultProductFormValues[field.name] == field.state.value
                 const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid
                 return (
@@ -26,6 +28,9 @@ export const ProductNameField = withForm({
                             aria-invalid={isInvalid}
                             placeholder="Nome"
                             autoComplete="off"
+                            onFocus={e => {
+                                hasDefaultValue && field.handleChange("")
+                            }}
                         />
                         {isInvalid && (
                             <FieldError errors={field.state.meta.errors} />

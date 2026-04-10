@@ -10,6 +10,7 @@ export const ProcessNameField = withForm({
         return <form.Field
             name="name"
             children={(field) => {
+                const hasDefaultValue = defaultProcessFormValues[field.name] == field.state.value
                 const isInvalid =
                     field.state.meta.isTouched && !field.state.meta.isValid
                 return (
@@ -24,6 +25,7 @@ export const ProcessNameField = withForm({
                             aria-invalid={isInvalid}
                             placeholder="Nome"
                             autoComplete="off"
+                            onFocus={e => hasDefaultValue && field.handleChange("")}
                         />
                         {isInvalid && (
                             <FieldError errors={field.state.meta.errors} />

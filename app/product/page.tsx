@@ -10,7 +10,7 @@ import ProductTable from "@/components/product/ProductTable";
 export default function ProductPage() {
     const { data, isLoading, error } = useGetAllProducts()
     const products = data?.data || []
-    
+
     if (isLoading) {
         return (
             <section>

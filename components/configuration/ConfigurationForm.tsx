@@ -18,7 +18,7 @@ import SaveButton from "@/components/custom/buttons/SaveButton"
 import useSetDefaultDepartament from "@/hooks/departament/useSetDefaultDepartament"
 import DepartamentProcessSelector from "../custom/DepartamentProcessSelector"
 import useSetDefaultProcess from "@/hooks/process/useSetDefaultProcess"
-import handleFormError from "@/utils/formErrorHandler"
+import handleFormError from "@/utils/errorHandler"
 
 
 const formSchema = z.object({

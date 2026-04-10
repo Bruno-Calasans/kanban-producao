@@ -6,11 +6,11 @@ import ConfirmButton from "@/components/custom/buttons/ConfirmButton"
 import { useState } from "react"
 import { defaultProductLogFormValues, formSchema, useAppForm } from "./productLogFormContext"
 import { FieldGroup } from "@/components/ui/field"
-import handleFormError from "@/utils/formErrorHandler"
+import handleFormError from "@/utils/errorHandler"
 import useDialog from "@/hooks/dialog/useDialog"
 import useCreateProductLog from "@/hooks/productLog/useCreateProductLog"
 import { ProductLogProductNameField } from "./fields/ProductLogProductNameField"
-import { ProductPopulated, Status } from "@/types/database.type"
+import { Product, Status } from "@/types/database.type"
 import { ProductLogAmountField } from "./fields/ProductLogAmountField"
 import { ProductLogHoursField } from "./fields/ProductLogHoursField"
 import { ProductCurrentSituation } from "../ProductCurrentSituation"
@@ -21,11 +21,11 @@ import Loader from "@/components/custom/Loader"
 export default function CreateProductLogForm() {
     const { closeDialog } = useDialog()
     const { mutateAsync, isPending: isCreateProductLogPending } = useCreateProductLog()
-    const [product, setProduct] = useState<ProductPopulated | undefined>()
+    const [product, setProduct] = useState<Product | undefined>()
     const { data, isPending: isTotalAmountPending } = useGetTotalAmountDone({
         product_id: product?.id,
-        departament_id: product?.departament?.id,
-        process_id: product?.process?.id
+        departament_id: product?.departament.id,
+        process_id: product?.process.id
     })
 
     // quantidade feita até agora
@@ -94,16 +94,17 @@ export default function CreateProductLogForm() {
             }}
         >
             <FieldGroup>
-                {product && <ProductCurrentSituation
-                    product={product}
-                    totalAmountDone={totalAmountDone}
-                />}
-
                 <ProductLogProductNameField
                     form={form}
                     selectedProduct={product}
                     onChangeProduct={setProduct}
                 />
+
+                {product && <ProductCurrentSituation
+                    product={product}
+                    totalAmountDone={totalAmountDone}
+                />}
+
 
                 {canLog && <ProductLogAmountField
                     form={form}

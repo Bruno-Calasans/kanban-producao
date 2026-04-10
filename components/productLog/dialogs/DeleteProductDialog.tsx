@@ -4,7 +4,7 @@ import DeleteButton from "@/components/custom/buttons/DeleteButton"
 import useDialog from "@/hooks/dialog/useDialog"
 import { useDeleteProductLog } from "@/hooks/productLog/useDeleteProductLog"
 import type { ProductLogPopulated } from "@/types/database.type"
-import handleFormError from "@/utils/formErrorHandler"
+import handleFormError from "@/utils/errorHandler"
 import { toast } from "sonner"
 
 type DeleteProductLogDialogProps = {

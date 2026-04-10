@@ -174,6 +174,7 @@ export async function updateMovimentation(movimentationId: number, data: UpdateM
         .throwOnError()
 }
 
+
 export async function deleteMovimentation({ movimentationId, productId }: DeleteMovimentationData) {
     await supabase
         .from("Movimentation")
@@ -203,3 +204,5 @@ export async function deleteMovimentation({ movimentationId, productId }: Delete
     }
 
 }
+
+

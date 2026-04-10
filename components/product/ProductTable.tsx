@@ -1,7 +1,7 @@
 "use client"
 
 import { DataTable } from "@/components/custom/data-table/DataTable"
-import { Product, ProductPopulated } from "@/types/database.type"
+import { Product } from "@/types/database.type"
 import { ColumnDef } from "@tanstack/react-table"
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime"
 import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react"
@@ -17,11 +17,11 @@ import {
 
 
 type ProductPageProps = {
-    products: ProductPopulated[]
+    products: Product[]
 }
 
 
-const productColumns: ColumnDef<ProductPopulated>[] = [
+const productColumns: ColumnDef<Product>[] = [
     {
         accessorKey: "created_at",
         header: ({ column }) => (
@@ -52,7 +52,7 @@ const productColumns: ColumnDef<ProductPopulated>[] = [
     {
         accessorKey: "updated_at",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Última atualização" />
+            <DataTableColumnHeader column={column} title="Atualizado em" />
         ),
         cell: (props) => {
             return formatDateTimeCellValue(props.getValue())

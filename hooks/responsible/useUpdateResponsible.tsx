@@ -8,8 +8,8 @@ export default function useUpdateResponsible() {
 
     return useMutation({
         mutationFn: (
-            data: { id: number, updateData: UpdateResponsibleData }
-        ) => updateResponsible(data.id, data.updateData),
+            data: { responsibleId: number, updateData: UpdateResponsibleData }
+        ) => updateResponsible(data.responsibleId, data.updateData),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: responsibleKeys.lists(),

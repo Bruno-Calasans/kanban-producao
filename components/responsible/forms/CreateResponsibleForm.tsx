@@ -9,7 +9,7 @@ import { useState } from "react"
 import { Departament } from "@/types/database.type"
 import { ResponsibleNameField } from "./fields/ResponsibleNameField"
 import { defaultResponsibleFormValues, useAppForm, formSchema } from "./responsibleFormContext"
-import handleFormError from "@/utils/formErrorHandler"
+import errorHandler from "@/utils/errorHandler"
 import useDialog from "@/hooks/dialog/useDialog"
 import { ResponsibleDepartamentName } from "./fields/ResponsibleDepartamentName"
 
@@ -33,12 +33,12 @@ export default function CreateResponsibleForm() {
                     departament_id: selectedDepartament.id
                 })
                 toast.success("Responsável criado com sucesso!")
-                form.reset()
                 closeDialog("create-responsible")
+                form.reset()
 
             } catch (error) {
-                handleFormError(error, {
-                    default: "Erro: não foi possível criar o responsável"
+                errorHandler(error, {
+                    default: "Erro: não foi possível criar o responsável",
                 })
 
             }
@@ -60,7 +60,7 @@ export default function CreateResponsibleForm() {
                 <ResponsibleDepartamentName
                     form={form}
                     selectedDepartament={selectedDepartament}
-                    onChange={setSelectedDepartament}
+                    onDepartamentChange={setSelectedDepartament}
                 />
 
             </FieldGroup>

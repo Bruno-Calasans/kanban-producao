@@ -25,7 +25,7 @@ export default function ResponsiblePage() {
         return (
             <section>
                 <PageTitle>Responsável</PageTitle>
-                <p>Ocorreu um erro ao carregar os Responsável.</p>
+                <p>Ocorreu um erro ao carregar os responsáveis.</p>
             </section>
         )
     }

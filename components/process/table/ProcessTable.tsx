@@ -1,20 +1,21 @@
 "use client"
 
 import { DataTable } from "@/components/custom/data-table/DataTable"
+import { ProcessWithDepartament } from "@/types/database.type"
 import { ColumnDef } from "@tanstack/react-table"
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime"
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader"
-import type { Departament } from "@/types/database.type"
 import { Badge } from "@/components/ui/badge"
-import DepartamentDropdownMenu from "./table/DepartamentDropdownMenu"
+import ProcessDropdownMenu from "@/components/process/table/ProcessDropdownMenu"
+import sortByDefault from "@/utils/sortByDefault"
 
 
-type DepartamentPageProps = {
-    departaments: Departament[]
+type ProcessPageProps = {
+    processes: ProcessWithDepartament[]
 }
 
 
-const DepartmentColumns: ColumnDef<Departament>[] = [
+const processColumns: ColumnDef<ProcessWithDepartament>[] = [
     {
         accessorKey: "created_at",
         header: ({ column }) => (
@@ -25,15 +26,11 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
         },
     },
     {
-        accessorKey: "isDefault",
+        accessorKey: "is_default",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Padrão" />
         ),
-        sortingFn: (rowA, rowB) => {
-            const a = rowA.original.is_default
-            const b = rowB.original.is_default
-            return Number(a) - Number(b)
-        },
+        sortingFn: (rowA, rowB) => sortByDefault(rowA.original, rowB.original),
         cell: ({ row }) => {
             const { is_default } = row.original
             return is_default ?
@@ -44,13 +41,20 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
     {
         accessorKey: "name",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Departamento" />
+            <DataTableColumnHeader column={column} title="Processo" />
         ),
     },
     {
-        accessorKey: "order",
+        accessorKey: "sequence",
         header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Ordem" />
+            <DataTableColumnHeader column={column} title="Sequência" />
+        ),
+    },
+    {
+        id: "departament.name",
+        accessorKey: "departament.name",
+        header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Departamento" />
         ),
     },
     {
@@ -64,19 +68,20 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
     },
     {
         id: "action",
-        header: "",
         cell: ({ row }) => {
-            const departament = row.original
-            return <DepartamentDropdownMenu departament={departament} />
+            const process = row.original
+            return <ProcessDropdownMenu process={process} />
         }
     }
 ]
 
-export function DepartamentTable({ departaments }: DepartamentPageProps) {
+
+
+export default function ProcessTable({ processes }: ProcessPageProps) {
     return <DataTable
-        filterPlaceholder="Procurar departamento"
+        filterPlaceholder="Procurar processo"
         filterColumn="name"
-        columns={DepartmentColumns} data={departaments}
+        columns={processColumns} data={processes}
     />
 
 }

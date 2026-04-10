@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { CircleXIcon } from "lucide-react";
 
 
@@ -12,20 +11,18 @@ type CancelButtonProps = {
 
 export default function CancelButton({ title, isLoading, showIcon = true, onclick }: CancelButtonProps) {
     return (
-        <DialogClose>
-            <Button
-                onClick={onclick ? onclick : undefined}
-                className="cursor-pointer"
-                title="Cancelar"
-                variant="outline"
-                disabled={isLoading}
-                type="button"
-            >
+        <Button
+            onClick={onclick ? onclick : undefined}
+            className="cursor-pointer"
+            title="Cancelar"
+            variant="outline"
+            disabled={isLoading}
+            type="button"
+        >
 
-                {showIcon && <CircleXIcon />}
-                {title || "Cancelar"}
-            </Button>
-        </DialogClose>
+            {showIcon && <CircleXIcon />}
+            {title || "Cancelar"}
+        </Button>
 
     )
 }

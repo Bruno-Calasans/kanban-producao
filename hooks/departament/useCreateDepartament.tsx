@@ -6,7 +6,7 @@ export default function useCreateDepartament() {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: (data: CreateDepartamentData) => createDepartament(data.name, data.order),
+        mutationFn: (data: CreateDepartamentData) => createDepartament(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: departamentKeys.lists(),

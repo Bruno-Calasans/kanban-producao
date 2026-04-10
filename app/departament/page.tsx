@@ -2,9 +2,10 @@
 
 import PageTitle from "@/components/custom/PageTitle";
 import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments";
-import { DepartamentTable } from "../../components/departament/DepartamentTable";
+import { DepartamentTable } from "../../components/departament/table/DepartamentTable";
 import CreateDepartamentDialog from "@/components/departament/dialogs/CreateDepartamentDialog";
 import Loader from "@/components/custom/Loader";
+import NoDefaultDepartamentWarn from "@/components/departament/table/NoDefaultDepartamentWarn";
 
 export default function DepartamentPage() {
     const { data, isLoading, error } = useGetAllDepartaments()
@@ -29,11 +30,13 @@ export default function DepartamentPage() {
         )
     }
 
+    const hasDefaultDepartament = departaments.find(dpt => dpt.is_default)
 
     return (
         <section>
             <PageTitle>Departamentos</PageTitle>
             <div className="flex flex-col">
+                {!hasDefaultDepartament && <NoDefaultDepartamentWarn />}
                 <CreateDepartamentDialog />
                 <DepartamentTable departaments={departaments} />
             </div>

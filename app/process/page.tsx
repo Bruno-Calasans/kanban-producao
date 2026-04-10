@@ -4,7 +4,8 @@ import PageTitle from "@/components/custom/PageTitle";
 import Loader from "@/components/custom/Loader";
 import useGetAllProcesses from "@/hooks/process/useGetAllProcesses";
 import CreateProcessDialog from "@/components/process/dialogs/CreateProcessDialog";
-import ProcessTable from "@/components/process/ProcessTable";
+import ProcessTable from "@/components/process/table/ProcessTable";
+import NoDefaultProcessWarn from "@/components/process/table/NoDefaultProcessWarn";
 
 
 export default function ProcessPage() {
@@ -30,10 +31,13 @@ export default function ProcessPage() {
         )
     }
 
+    const hasDefaultProcess = processes.find(p => p.is_default == true)
+
     return (
         <section>
             <PageTitle>Processos</PageTitle>
             <div className="flex flex-col">
+                {!hasDefaultProcess && <NoDefaultProcessWarn />}
                 <CreateProcessDialog />
                 <ProcessTable processes={processes} />
             </div>

@@ -5,7 +5,7 @@ import useDeleteProcess from "@/hooks/process/useDeleteProcess"
 import { toast } from "sonner"
 import useDialog from "@/hooks/dialog/useDialog"
 import type { ProcessWithDepartament } from "@/types/database.type"
-import handleFormError from "@/utils/formErrorHandler"
+import handleFormError from "@/utils/errorHandler"
 
 
 type DeleteProcessDialogProps = {

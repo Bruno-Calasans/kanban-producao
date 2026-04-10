@@ -1,9 +1,9 @@
 import CustomDialog from "@/components/custom/CustomDialog"
 import EditProductForm from "@/components/product/forms/EditProductForm"
-import type { ProductPopulated } from "@/types/database.type"
+import type { Product } from "@/types/database.type"
 
 type EditProductDialogProps = {
-    product: ProductPopulated
+    product: Product
     children?: React.ReactNode
 }
 

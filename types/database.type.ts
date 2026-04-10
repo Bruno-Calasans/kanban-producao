@@ -3,16 +3,6 @@ import { Database } from "@/database.types"
 export type Departament = Database['public']['Tables']['Departament']['Row']
 
 export type Product = Database['public']['Tables']['Product']['Row']
-export type ProductPopulated = Omit<
-    Product, "departament_id" |
-    "process_id" |
-    "responsible_id"
-> & {
-    departament: Departament,
-    process: Process,
-    responsible: Responsible
-}
-
 
 export type Process = Database['public']['Tables']['Process']['Row']
 export type ProcessWithDepartament = Omit<Process, 'departament_id'> & {
@@ -53,3 +43,7 @@ export type ProductLogPopulated = Omit<ProductLog,
 }
 
 export type Status = Database["public"]["Enums"]["Status"]
+
+export type ProductionFlow = Database['public']['Tables']['ProductionFlow']['Row']
+
+export type ProductionFlowTemplate = Database['public']['Tables']['ProductionFlowTemplate']['Row']

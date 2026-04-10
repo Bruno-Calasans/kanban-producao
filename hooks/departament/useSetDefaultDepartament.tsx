@@ -8,8 +8,8 @@ export default function useSetDefaultDepartament() {
 
     return useMutation({
         mutationFn: (
-            data: { id: number }
-        ) => setDefaultDepartament(data.id),
+            data: { departamentId: number }
+        ) => setDefaultDepartament(data.departamentId),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: departamentKeys.lists(),

@@ -12,7 +12,7 @@ export default function AddButton({ label, onClick }: AddButtonProps) {
         <Button
             size="sm"
             onClick={onClick}
-            className="self-end bg-emerald-500 hover:bg-emerald-600 text-white mb-4"
+            className="self-end bg-emerald-500 hover:bg-emerald-600 text-white mb-4 cursor-pointer"
         >
             <CirclePlusIcon className="mr-2" />
             {label}

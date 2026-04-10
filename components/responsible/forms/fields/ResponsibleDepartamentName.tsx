@@ -6,13 +6,13 @@ import { defaultResponsibleFormValues, withForm } from "../responsibleFormContex
 
 type DefaultDepartamentProcessFieldProps = {
     selectedDepartament?: Departament
-    onChange: (departament: Departament) => void
+    onDepartamentChange: (departament?: Departament) => void
 }
 
 export const ResponsibleDepartamentName = withForm({
     defaultValues: defaultResponsibleFormValues,
     props: {} as DefaultDepartamentProcessFieldProps,
-    render({ form, selectedDepartament, onChange }) {
+    render({ form, selectedDepartament, onDepartamentChange }) {
         return (
             (
                 <form.AppField
@@ -30,9 +30,9 @@ export const ResponsibleDepartamentName = withForm({
                                 name={field.name}
                                 selectedDepartament={selectedDepartament}
                                 placeHolder="Departamento"
-                                onvalueChange={(departament) => {
-                                    field.handleChange(departament.name)
-                                    onChange(departament)
+                                onValueChange={(departament) => {
+                                    field.handleChange(departament?.name)
+                                    onDepartamentChange(departament)
                                 }}
                             />
                             {isInvalid && (

@@ -24,7 +24,7 @@ export const defaultErrorMsgs: ErrorMsg = {
     default: "Erro: não foi possível realizar sua solicitação"
 }
 
-export default function handleFormError(error: unknown, msgs: Partial<ErrorMsg> = {}) {
+export default function errorHandler(error: unknown, msgs: Partial<ErrorMsg> = {}) {
 
 
     if (error instanceof PostgrestError) {
@@ -48,7 +48,8 @@ export default function handleFormError(error: unknown, msgs: Partial<ErrorMsg> 
             toast.error(msgs.default || defaultErrorMsgs.default)
         }
 
-    } else {
-        toast.error(msgs.unknown || defaultErrorMsgs.unknown)
+    }
+    else {
+        toast.error(`Error: ${error?.message}` || defaultErrorMsgs.unknown)
     }
 }

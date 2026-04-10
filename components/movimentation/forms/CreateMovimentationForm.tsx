@@ -10,7 +10,7 @@ import { Departament, Process, ProductPopulated, ResponsibleWithDepartament } fr
 import CantMoveProductWarn from "@/components/movimentation/CantMoveProductWarn"
 import { MovimentationProductNameField } from "./fields/MovimentationProductNameField"
 import { defaultMovimentationFormValues, useAppForm, formSchema } from "./movimentationFormContext"
-import handleFormError from "@/utils/formErrorHandler"
+import handleFormError from "@/utils/errorHandler"
 import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup"
 import { MovimentationDepartamentFieldGroup } from "./fields/MovimentationDepartamentFieldGroup"
 import { MovimentationProcessFieldGroup } from "./fields/MovimentationProcessFieldGroup"

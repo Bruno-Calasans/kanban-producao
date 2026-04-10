@@ -30,11 +30,12 @@ export default function CustomDialog({ id, title, description, trigger, maxConte
     }
 
     return (
-        <Dialog open={dialog === id} onOpenChange={openHandler}>
+        <Dialog open={dialog === id} onOpenChange={openHandler}  >
             <DialogTrigger className={cn(triggerClassName)} asChild>{trigger}</DialogTrigger>
-            <DialogContent style={{
-                maxWidth: maxContentWidth
-            }}>
+            <DialogContent
+                style={{
+                    maxWidth: maxContentWidth
+                }}>
                 <DialogHeader>
                     <DialogTitle className="font-bold text-lg">{title}</DialogTitle>
                     <DialogDescription>

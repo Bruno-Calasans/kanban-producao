@@ -7,6 +7,10 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarGroup,
+    SidebarGroupLabel,
+    SidebarGroupAction,
+    SidebarGroupContent
 } from "@/components/ui/sidebar"
 
 import {
@@ -16,7 +20,10 @@ import {
     FactoryIcon,
     CogIcon,
     BriefcaseBusinessIcon,
-    Settings2Icon
+    Settings2Icon,
+    FileClockIcon,
+    Plus,
+    FormIcon
 } from "lucide-react"
 
 const items = [
@@ -26,9 +33,9 @@ const items = [
         icon: HomeIcon,
     },
     {
-        name: "Registro Geral",
+        name: "Registro de produto",
         url: "/geral",
-        icon: ArrowLeftRightIcon,
+        icon: FileClockIcon,
     },
     {
         name: "Movimentação",
@@ -36,28 +43,33 @@ const items = [
         icon: ArrowLeftRightIcon,
     },
     {
+        name: "Fluxo de Produção",
+        url: "/production-flow",
+        icon: FormIcon,
+    },
+    {
         name: "Produto",
-        url: "/produto",
+        url: "/product",
         icon: ShirtIcon,
     },
     {
         name: "Departamento",
-        url: "/departamento",
+        url: "/departament",
         icon: FactoryIcon,
     },
     {
         name: "Processo",
-        url: "/processo",
+        url: "/process",
         icon: CogIcon,
     },
     {
         name: "Responsável",
-        url: "/responsavel",
+        url: "/responsible",
         icon: BriefcaseBusinessIcon,
     },
     {
         name: "Configuração",
-        url: "/configuracao",
+        url: "/configuration",
         icon: Settings2Icon,
     },
 ]
@@ -79,6 +91,17 @@ export function AppSidebar() {
                     ))}
                 </SidebarMenu>
             </SidebarContent>
+
+            {/* <SidebarGroup>
+                <SidebarGroupLabel>Application</SidebarGroupLabel>
+                <SidebarGroupAction>
+                    <Plus /> <span className="sr-only">Add Project</span>
+                </SidebarGroupAction>
+                <SidebarGroupContent>
+                    <p>teste</p>
+                </SidebarGroupContent>
+            </SidebarGroup> */}
+
             <SidebarFooter />
         </Sidebar>
     )

@@ -7,37 +7,19 @@ export type UpdateProductData = Partial<CreateProductData>
 export async function getAllProducts() {
     return await supabase
         .from("Product")
-        .select(`
-            id,
-            name,
-            op,
-            max_amount,
-            created_at,
-            updated_at,
-            departament:Departament!departament_id(*),
-            process:Process!process_id(*),
-            responsible:Responsible!responsible_id(*)
-        `)
+        .select('*')
         .throwOnError()
 }
 
-export async function getAllProductsByDepartamentId(departamentId: number) {
+export async function getOneProduct(productId: number) {
     return await supabase
         .from("Product")
-        .select(`
-            id,
-            name,
-            op,
-            max_amount,
-            created_at,
-            updated_at,
-            departament:Departament!departament_id(*),
-            process:Process!process_id(*),
-            responsible:Responsible!responsible_id(*)
-        `)
-        .eq("departament_id", departamentId)
+        .select("*")
+        .eq("id", productId)
+        .single()
         .throwOnError()
 }
+
 
 export async function createProduct(data: CreateProductData) {
     return await supabase
@@ -46,18 +28,18 @@ export async function createProduct(data: CreateProductData) {
         .throwOnError()
 }
 
-export async function updateProduct(id: number, data: UpdateProductData) {
+export async function updateProduct(productId: number, data: UpdateProductData) {
     return await supabase
         .from("Product")
         .update(data)
-        .eq("id", id)
+        .eq("id", productId)
         .throwOnError()
 }
 
-export async function deleteProduct(id: number) {
+export async function deleteProduct(productId: number) {
     return await supabase
         .from("Product")
         .delete()
-        .eq("id", id)
+        .eq("id", productId)
         .throwOnError()
 }

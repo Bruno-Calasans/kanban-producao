@@ -1,150 +1,44 @@
-"use client"
+/* eslint-disable react/no-children-prop */
+/* eslint-disable react-hooks/rules-of-hooks */
+"use client";
 
 import { FieldLegend, FieldSet, FieldDescription } from "@/components/ui/field";
 import { defaultProductionFlowValues, withForm } from "../ProductionFlowFormContext";
-import {
-    Combobox,
-    ComboboxChip,
-    ComboboxChips,
-    ComboboxChipsInput,
-    ComboboxCollection,
-    ComboboxContent,
-    ComboboxEmpty,
-    ComboboxGroup,
-    ComboboxItem,
-    ComboboxLabel,
-    ComboboxList,
-    ComboboxSeparator,
-    ComboboxValue,
-    useComboboxAnchor,
-
-} from "@/components/ui/combobox"
-import { useEffect, useState } from "react";
-import useGetAllProcesses from "@/hooks/process/useGetAllProcesses";
-import Loader from "@/components/custom/Loader";
-import { Process, ProductionFlow } from "@/types/database.type";
-import { sortBySequence } from "@/utils/sortByOrder";
-
-
-type ComboItem = {
-    label: string
-    value: string
-}
-
-type GroupedItems = {
-    value: string
-    items: ComboItem[]
-}
+import { Process } from "@/types/database.type";
+import ProcessSelector from "@/components/custom/ProcessSelector";
 
 type ProductionFlowProcessesFieldProps = {
-
-    productionflow?: ProductionFlow
-    defautlSelectedProcesses?: Process[]
-    onSelectedProcesses: (processes: Process[]) => void
-}
-
+  selectedProcesses?: Process[];
+  onSelect: (processes: Process[]) => void;
+};
 
 export const ProductionFlowProcessesField = withForm({
-    defaultValues: defaultProductionFlowValues,
-    props: {} as ProductionFlowProcessesFieldProps,
-    render({ form, productionflow, defautlSelectedProcesses, onSelectedProcesses }) {
-        const anchor = useComboboxAnchor()
-        const { data: processesData, isPending } = useGetAllProcesses()
-        const [selectedProcesses, setSelectedProcesses] = useState<Process[]>(defautlSelectedProcesses || [])
-        const processes = processesData?.data || []
+  defaultValues: defaultProductionFlowValues,
+  props: {} as ProductionFlowProcessesFieldProps,
+  render({ form, selectedProcesses, onSelect }) {
+    const handleSelectedProcesses = (processes: Process[]) => {
+      onSelect(processes);
+      const processNames = processes.map((process) => process.name);
+      form.setFieldValue("processNames", processNames);
+    };
 
-        const groupItems = () => {
-            const groups: GroupedItems[] = []
-            processes.forEach(process => {
-                const hasGroup = groups.find(group => group.value === process.departament.name)
-                if (hasGroup) {
-                    hasGroup.items.push({
-                        label: formatProcess(process),
-                        value: formatProcess(process)
-                    })
-                } else {
-                    groups.push({
-                        value: process.departament.name,
-                        items: [{
-                            label: formatProcess(process),
-                            value: formatProcess(process)
-                        }]
-                    })
-                }
-
-            })
-
-            return groups
-        }
-
-        const handleValueChange = (items: string[]) => {
-            const processNames = items.map(item => item.split(" ")[1])
-            const chosedProcesses = processes.filter(process => processNames.includes(process.name))
-            onSelectedProcesses(chosedProcesses)
-            setSelectedProcesses(chosedProcesses)
-        }
-
-        const formatProcess = (process: Process) => {
-            return `(${process.sequence}) ${process.name}`
-        }
-
-        useEffect(() => {
-            if (defautlSelectedProcesses) {
-                onSelectedProcesses(defautlSelectedProcesses)
-            }
-
-        }, [])
-
-        const groups = groupItems()
-
-        if (isPending) return <Loader title="Carregando processos..." />
-
-        return (
-            <FieldSet>
-                <FieldLegend>Processos</FieldLegend>
-                <FieldDescription>Selecione os processos do seu fluxo de produção.
-                    A ordem dos processos será de acordo com a sequência definida em cada processo.
-                </FieldDescription>
-                <Combobox
-                    multiple
-                    items={groups}
-                    onValueChange={handleValueChange}
-                    value={selectedProcesses.sort(sortBySequence).map(formatProcess)}
-                >
-                    <ComboboxChips
-                        ref={anchor}
-                        style={{
-                            flexWrap: "wrap"
-                        }}>
-                        <ComboboxValue>
-                            {selectedProcesses.map((item) => (
-                                <ComboboxChip key={item.id}>{formatProcess(item)}</ComboboxChip>
-                            ))}
-                        </ComboboxValue>
-                        <ComboboxChipsInput placeholder="Adicione processos" />
-                    </ComboboxChips>
-
-                    <ComboboxContent side="bottom" anchor={anchor}>
-                        <ComboboxEmpty>Nenhum processo encontrado.</ComboboxEmpty>
-                        <ComboboxList>
-                            {(group: GroupedItems, index) => (
-                                <ComboboxGroup key={group.value} items={group.items}>
-                                    <ComboboxLabel>{group.value}</ComboboxLabel>
-                                    <ComboboxCollection>
-                                        {(item: ComboItem) => (
-                                            <ComboboxItem key={item.label} value={item.value}>
-                                                {item.label}
-                                            </ComboboxItem>
-                                        )}
-                                    </ComboboxCollection>
-                                    {index < groups.length - 1 && <ComboboxSeparator />}
-                                </ComboboxGroup>
-                            )}
-                        </ComboboxList>
-                    </ComboboxContent>
-                </Combobox>
-            </FieldSet >
-        )
-
-    }
-})
+    return (
+      <form.Field
+        name="processNames"
+        children={(field) => (
+          <FieldSet>
+            <FieldLegend>Processos</FieldLegend>
+            <FieldDescription>
+              Selecione os processos que fazem parte deste fluxo de produção.
+            </FieldDescription>
+            <ProcessSelector
+              selectedProcesses={selectedProcesses}
+              onSelect={handleSelectedProcesses}
+            />
+            <FieldDescription />
+          </FieldSet>
+        )}
+      ></form.Field>
+    );
+  },
+});

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon } from "lucide-react";
+import { Edit2Icon } from "lucide-react";
 import Link from "next/link";
 
-type BackButtonProps = {
+type EditButtonProps = {
   label?: string;
   loadingMsg?: string;
   isLoading?: boolean;
@@ -11,15 +11,15 @@ type BackButtonProps = {
   to: string;
 };
 
-export default function BackButton({
+export default function EditButton({
   label,
   isLoading,
   loadingMsg,
   disabled,
   hiddenIcon,
   to,
-}: BackButtonProps) {
-  const defaultLabel = label || "Voltar";
+}: EditButtonProps) {
+  const defaultLabel = label || "Editar";
   const defaultLoadingMsg = loadingMsg || "Voltando...";
   const canLoad = isLoading && !disabled;
 
@@ -27,12 +27,11 @@ export default function BackButton({
     <Link className="w-fit" href={to}>
       <Button
         id="back-button"
+        className="cursor-pointer text-white hover:text-white"
         type="submit"
-        size="sm"
         disabled={isLoading || disabled}
-        className="cursor-pointer text-white hover:text-white bg-indigo-500 hover:bg-indigo-400"
       >
-        {!hiddenIcon && !isLoading && <ChevronLeftIcon className="ml-2" />}
+        {!hiddenIcon && !isLoading && <Edit2Icon className="ml-2" />}
         {!canLoad ? defaultLabel : null}
         {canLoad ? defaultLoadingMsg : null}
       </Button>

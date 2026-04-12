@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import { defaultProductFormValues, withForm } from "@/components/product/forms/productFormContext"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"

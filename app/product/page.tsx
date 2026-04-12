@@ -4,7 +4,7 @@ import PageTitle from "@/components/custom/PageTitle";
 import Loader from "@/components/custom/Loader";
 import useGetAllProducts from "@/hooks/product/useGetAllProducts";
 import CreateProductDialog from "@/components/product/dialogs/CreateProductDialog";
-import ProductTable from "@/components/product/ProductTable";
+import ProductTable from "@/components/product/table/ProductTable";
 
 
 export default function ProductPage() {

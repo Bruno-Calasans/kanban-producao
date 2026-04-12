@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import Loader from "./Loader";
 import { useEffect } from "react";
-import { sortByOrder } from "@/utils/sortBySequence";
+import { sortBySequence } from "@/utils/sortBySequence";
 
 type DepartamentSelectorProps = {
   name: string;
@@ -47,10 +47,10 @@ export default function DepartamentSelector({
   };
 
   const filterDepartaments = () => {
-    const sortedDepartaments = departaments.sort(sortByOrder);
+    const sortedDepartaments = departaments.sort(sortBySequence);
     const filteredDepartaments = excludeDepartament
       ? sortedDepartaments.filter(
-          (d) => d.id != excludeDepartament.id || d.order > excludeDepartament.order,
+          (d) => d.id != excludeDepartament.id || d.sequence > excludeDepartament.sequence,
         )
       : sortedDepartaments;
 

@@ -8,7 +8,8 @@ export async function getAllProductionFlows() {
   return await supabase
     .from("ProductionFlow")
     .select("*")
-    .order("is_default", { ascending: false });
+    .order("is_default", { ascending: false })
+    .throwOnError();
 }
 
 export async function getOneProductionFlow(templateId: number) {
@@ -44,4 +45,8 @@ export async function setDefaultProductionFlow(templateId: number) {
     .update({ is_default: true })
     .eq("id", templateId)
     .throwOnError();
+}
+
+export async function getDefaultProductionFlow() {
+  return await supabase.from("ProductionFlow").select("*").limit(1).eq("is_default", true).single();
 }

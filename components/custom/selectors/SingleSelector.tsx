@@ -65,7 +65,6 @@ export function SingleSelector<T extends DataItem>({
 
   useEffect(() => {
     if (defaultData) valueChangeHandler(String(defaultData.id))
-    console.log("use effect", defaultData)
   }, [defaultData])
 
   if (isLoading) return <Loader title={loadingMsg || "Carregando items"} horizontal />
@@ -73,7 +72,7 @@ export function SingleSelector<T extends DataItem>({
   if (items.length == 0) return noItemFoundMsg || <div>Nenhum item encontrado</div>;
 
   return (
-    <Select disabled={disabled} value={getValue()} onValueChange={valueChangeHandler}>
+    <Select disabled={!!disabled} value={getValue()} onValueChange={valueChangeHandler}>
       <SelectTrigger className="min-w-30 w-full">
         <SelectValue placeholder={placeholder || "Selecione um item"} />
       </SelectTrigger>

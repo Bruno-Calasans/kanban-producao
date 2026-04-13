@@ -9,11 +9,11 @@ import {
 } from "@/components/ui/field";
 import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import DepartamentSelector from "@/components/custom/DepartamentSelector";
-import { Departament, ProductPopulated } from "@/types/database.type";
+import { Departament, Product } from "@/types/database.type";
 import { ArrowRightIcon } from "lucide-react";
 
 type MovimentationDepartamentFieldGroupProps = {
-  selectedProduct: ProductPopulated;
+  selectedProduct: Product;
   originDepartament?: Departament;
   destinationDepartament?: Departament;
   onChangeDepartamentOrigin: (departament: Departament | undefined) => void;

@@ -67,8 +67,6 @@ export default function EditProductForm({ product }: EditProductForm) {
     },
   });
 
-  console.log(selectedProductionFlow)
-
   return (
     <form
       id="edit-product-form"

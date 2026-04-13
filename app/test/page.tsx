@@ -1,6 +1,5 @@
 "use client"
 
-import ReformedProductionFlowSelector from "@/components/custom/selectors/ReformedProductionFlowSelector"
 import { SelectorItem, SingleSelector } from "@/components/custom/selectors/SingleSelector"
 import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments"
 import { Departament } from "@/types/database.type"
@@ -14,7 +13,7 @@ type DepartamentSelectorProps = {
 
 export default function TestPage({ defaultDepartament, onChange }: DepartamentSelectorProps) {
     return (
-        <ReformedProductionFlowSelector />
+        <div>Test</div>
     )
 
 }

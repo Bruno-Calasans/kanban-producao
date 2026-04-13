@@ -2,7 +2,7 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { defaultProductFormValues, withForm } from "../productFormContext";
 import { ProductionFlow } from "@/types/database.type";
-import ProductionFlowSelector from "@/components/custom/selectors/ProductionFlowSelector";
+import ProductionFlowSelectorWithCheckbox from "@/components/custom/selectors/ProductionFlowSelectorWithCheckbox";
 
 type ProductProductionFlowFieldProps = {
   defaultProductionFlow?: ProductionFlow;
@@ -21,7 +21,7 @@ export const ProductProductionFlowField = withForm({
           return (
             <Field className="mt-4">
               <FieldLabel htmlFor={field.name}>Fluxo de Produção</FieldLabel>
-              <ProductionFlowSelector
+              <ProductionFlowSelectorWithCheckbox
                 defaultProductionFlow={defaultProductionFlow}
                 onValueChange={(productionFlow) => {
                   field.handleChange(productionFlow?.name || "");

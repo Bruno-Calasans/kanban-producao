@@ -16,14 +16,12 @@ import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/
 import { Button } from "@/components/ui/button";
 
 type ProductionFlowSelectorProps = {
-  name: string;
   defaultProductionFlow?: ProductionFlow;
   selectedProductionFlow?: ProductionFlow;
   onValueChange(productionFlow: ProductionFlow): void;
 };
 
 export default function ProductionFlowSelector({
-  name,
   selectedProductionFlow,
   defaultProductionFlow,
   onValueChange,
@@ -45,12 +43,14 @@ export default function ProductionFlowSelector({
   useEffect(() => {
     if (isPending) return;
 
-    if (defaultProductionFlow) {
-      setUseDefault(false);
-      onValueChange(defaultProductionFlow);
-      return;
-    }
+    // forneceu valores padrões
+    // if (defaultProductionFlow) {
+    //   setUseDefault(false);
+    //   onValueChange(defaultProductionFlow);
+    //   return;
+    // }
 
+    // Checbox useDefault
     if (useDefault && hasDefaultProductionFlow) {
       onValueChange(hasDefaultProductionFlow);
     }
@@ -60,9 +60,7 @@ export default function ProductionFlowSelector({
     }
   }, [selectedProductionFlow, defaultProductionFlow, hasDefaultProductionFlow, isPending]);
 
-
-  console.log('selected production flow ', selectedProductionFlow)
-
+  console.log("selected production flow ", selectedProductionFlow);
 
   if (isPending) return <Loader className="text-sm" title="Carregando fluxos de produção..." />;
 
@@ -83,7 +81,6 @@ export default function ProductionFlowSelector({
     <div className="flex flex-col gap-4">
       {!useDefault && (
         <Select
-          name={name}
           value={selectedProductionFlow ? selectedProductionFlow.name : ""}
           onValueChange={handleValueChange}
         >

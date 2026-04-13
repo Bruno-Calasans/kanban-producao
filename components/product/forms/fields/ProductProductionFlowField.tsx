@@ -23,7 +23,6 @@ export const ProductProductionFlowField = withForm({
             <Field data-invalid={isInvalid} className="mt-4">
               <FieldLabel htmlFor={field.name}>Fluxo de Produção</FieldLabel>
               <ProductionFlowSelector
-                name={field.name}
                 defaultProductionFlow={defaultProductionFlow}
                 selectedProductionFlow={selectedProductionFlow}
                 onValueChange={(productionFlow) => {

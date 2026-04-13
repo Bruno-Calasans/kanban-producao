@@ -49,7 +49,8 @@ export default function CreateProductForm() {
     },
   });
 
-  console.log(selectedProductionFlow);
+  console.log(selectedProductionFlow)
+
 
   return (
     <form
@@ -67,7 +68,6 @@ export default function CreateProductForm() {
 
       <ProductProductionFlowField
         form={form}
-        productionFlow={selectedProductionFlow}
         onChangeProductionFlow={setSelectedProductionFlow}
       />
 

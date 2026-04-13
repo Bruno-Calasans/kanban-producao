@@ -42,14 +42,17 @@ export default function EditProductForm({ product }: EditProductForm) {
       onChange: formSchema,
     },
     onSubmit: async ({ value: inputData }) => {
+      if (!selectedProductionFlow) return
       try {
         const { name, op, max_amount } = inputData;
+
         await mutateAsync({
           id: product.id,
           updateData: {
             name,
             op,
             max_amount,
+            production_flow_id: selectedProductionFlow.id
           },
         });
         toast.success("Produto atualizado com sucesso!");
@@ -63,6 +66,8 @@ export default function EditProductForm({ product }: EditProductForm) {
       }
     },
   });
+
+  console.log(selectedProductionFlow)
 
   return (
     <form
@@ -80,7 +85,6 @@ export default function EditProductForm({ product }: EditProductForm) {
 
       <ProductProductionFlowField
         form={form}
-        productionFlow={selectedProductionFlow}
         defaultProductionFlow={product.production_flow}
         onChangeProductionFlow={setSelectedProductionFlow}
       />

@@ -9,7 +9,7 @@ type LoaderProps = {
     horizontal?: boolean
 }
 
-export default function Loader({ containerClassname, title, className, titleClassname, horizontal }: LoaderProps) {
+export default function Loader({ title, containerClassname, className, titleClassname, horizontal }: LoaderProps) {
 
     return (
         <div

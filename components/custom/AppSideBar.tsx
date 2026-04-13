@@ -33,13 +33,13 @@ const items = [
         icon: HomeIcon,
     },
     {
-        name: "Registro de produto",
-        url: "/geral",
+        name: "Execução de Processo",
+        url: "/process-executation",
         icon: FileClockIcon,
     },
     {
         name: "Movimentação",
-        url: "/movimentacao",
+        url: "/movimentation",
         icon: ArrowLeftRightIcon,
     },
     {

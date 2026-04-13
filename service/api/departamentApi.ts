@@ -1,6 +1,4 @@
 import { supabase } from "@/lib/supabase/client";
-import { getOneProduct } from "./productApi";
-import { getAllProcessesByDepartamentId } from "./processApi";
 
 
 export type CreateDepartamentData = {
@@ -65,15 +63,3 @@ export async function setDefaultDepartament(id: number) {
         .eq("id", id)
         .throwOnError()
 }
-
-// export async function getNextDepartaments(productId: number) {
-//     const { data: product } = await getOneProduct(productId)
-//     const { data: departaments } = await supabase
-//         .from("Departament")
-//         .select("*")
-//         .gt('"order"', product.departament?.order)
-//         .order('"order"', { ascending: true })
-//         .throwOnError()
-
-//     return departaments
-// }

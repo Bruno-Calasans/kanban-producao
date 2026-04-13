@@ -6,7 +6,7 @@ import ClearButton from "@/components/custom/buttons/ClearButton"
 import MoveButton from "@/components/custom/buttons/MoveButton"
 import useCreateMovimentation from "@/hooks/movimentation/useCreateMovimentation"
 import { useEffect, useState } from "react"
-import { Departament, Process, ProductPopulated, ResponsibleWithDepartament } from "@/types/database.type"
+import { Departament, Process, Product } from "@/types/database.type"
 import CantMoveProductWarn from "@/components/movimentation/CantMoveProductWarn"
 import { MovimentationProductNameField } from "./fields/MovimentationProductNameField"
 import { defaultMovimentationFormValues, useAppForm, formSchema } from "./movimentationFormContext"
@@ -15,18 +15,16 @@ import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountField
 import { MovimentationDepartamentFieldGroup } from "./fields/MovimentationDepartamentFieldGroup"
 import { MovimentationProcessFieldGroup } from "./fields/MovimentationProcessFieldGroup"
 import useDialog from "@/hooks/dialog/useDialog"
-import { MovimentationResponsibleField } from "./fields/MovimentationResponsibleField"
 
 
 export default function CreateMovimentationForm() {
     const { closeDialog } = useDialog()
     const { mutateAsync, isPending } = useCreateMovimentation()
-    const [product, setProduct] = useState<ProductPopulated | undefined>()
-    const [departamentOrigin, setDepartamentOrigin] = useState<Departament | undefined>()
-    const [departamentDestination, setDepartamentDestination] = useState<Departament | undefined>()
-    const [processOrigin, setProcessOrigin] = useState<Process | undefined>()
-    const [processDestination, setProcessDestination] = useState<Process | undefined>()
-    // const [responsible, setResponsible] = useState<ResponsibleWithDepartament | undefined>()
+    const [product, setProduct] = useState<Product | undefined>()
+    const [fromDepartament, setFromDepartament] = useState<Departament | undefined>()
+    const [toDepartament, setToDepartament] = useState<Departament | undefined>()
+    const [fromProcess, setFromProcess] = useState<Process | undefined>()
+    const [toProcess, setToProcess] = useState<Process | undefined>()
 
     const form = useAppForm({
         defaultValues: defaultMovimentationFormValues,
@@ -35,7 +33,7 @@ export default function CreateMovimentationForm() {
             onChange: formSchema
         },
         onSubmit: async ({ value }) => {
-            if (!product || !departamentOrigin || !departamentDestination || !processOrigin || !processDestination)
+            if (!product || !fromDepartament || !toDepartament || !fromProcess || !toProcess)
                 return
 
             const { amount } = value
@@ -43,18 +41,18 @@ export default function CreateMovimentationForm() {
                 await mutateAsync({
                     product_id: product.id,
                     amount,
-                    departament_origin_id: departamentOrigin.id,
-                    departament_destination_id: departamentDestination.id,
-                    process_origin_id: processOrigin.id,
-                    process_destination_id: processDestination.id,
+                    to_departament_id: fromDepartament.id,
+                    from_departament_id: toDepartament.id,
+                    to_process_id: fromProcess.id,
+                    from_process_id: toProcess.id,
                 })
                 toast.success("Produto movimentado com sucesso!")
-                form.reset()
                 closeDialog("create-movimentation")
+                form.reset()
 
             } catch (error) {
                 handleFormError(error, {
-                    default: "Erro: não foi possível movimentar."
+                    default: "Erro: não foi possível movimentar. Tente novamente"
                 })
             }
 
@@ -64,17 +62,15 @@ export default function CreateMovimentationForm() {
     const resetForm = () => {
         form.reset()
         setProduct(undefined)
-        setDepartamentOrigin(undefined)
-        setDepartamentDestination(undefined)
-        setProcessOrigin(undefined)
-        setProcessDestination(undefined)
+        setFromDepartament(undefined)
+        setToDepartament(undefined)
+        setFromProcess(undefined)
+        setToProcess(undefined)
     }
 
     const canMoveProuct = product &&
         product.max_amount &&
-        product.max_amount > 0 &&
-        product.departament &&
-        product.process
+        product.max_amount > 0
 
     return (
         <form
@@ -107,24 +103,24 @@ export default function CreateMovimentationForm() {
                 <MovimentationDepartamentFieldGroup
                     form={form}
                     selectedProduct={product}
-                    originDepartament={departamentOrigin}
-                    destinationDepartament={departamentDestination}
-                    onChangeDepartamentOrigin={setDepartamentOrigin}
-                    onChangeDepartamentDestination={setDepartamentDestination}
+                    originDepartament={fromDepartament}
+                    destinationDepartament={toDepartament}
+                    onChangeDepartamentOrigin={setFromDepartament}
+                    onChangeDepartamentDestination={setToDepartament}
                 />
             )}
 
 
-            {canMoveProuct && departamentOrigin && departamentDestination && (
+            {canMoveProuct && fromDepartament && toDepartament && (
                 <MovimentationProcessFieldGroup
                     form={form}
                     selectedProduct={product}
-                    departamentOrigin={departamentOrigin}
-                    departamentDestination={departamentDestination}
-                    processOrigin={processOrigin}
-                    processDestination={processDestination}
-                    onChangeProcessOrigin={setProcessOrigin}
-                    onChangeProcessDestination={setProcessDestination}
+                    departamentOrigin={fromDepartament}
+                    departamentDestination={toDepartament}
+                    processOrigin={fromProcess}
+                    processDestination={fromProcess}
+                    onChangeProcessOrigin={setFromProcess}
+                    onChangeProcessDestination={setToProcess}
                 />
 
             )}

@@ -38,35 +38,40 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
         ),
     },
     {
-        accessorKey: "product.max_amount",
+        accessorKey: "amount",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Qtd." />
         ),
     },
     {
-        accessorKey: "departamentOrigin.name",
+        id: "from_departament.name",
+        accessorKey: "from_departament.name",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Dpt: origem" />
         ),
     },
     {
-        accessorKey: "departamentDestination.name",
+        id: "to_departament.name",
+        accessorKey: "to_departament.name",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Dpt: destino" />
         ),
     },
     {
-        accessorKey: "processOrigin.name",
+        id: "from_process.name",
+        accessorKey: "from_process.name",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Processo: origem" />
         ),
     },
     {
+        id: "to_process.name",
         accessorKey: "processDestination.name",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Processo: destino" />
         ),
-    }, ,
+    },
+
     {
         id: "action",
         header: "",
@@ -108,7 +113,6 @@ export default function MovimentationTable({ movimentations }: MovimentationPage
         filterColumn="productName"
         columns={movimentationColumns}
         data={movimentations}
-        className="w-fit"
     />
 
 }

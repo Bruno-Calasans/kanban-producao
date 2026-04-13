@@ -20,16 +20,16 @@ export type ResponsibleWithDepartament = Omit<Responsible, "departament_id"> & {
 export type Movimentation = Database["public"]["Tables"]["Movimentation"]["Row"];
 export type MovimentationPopulated = Omit<
   Movimentation,
-  | "departament_destination_id"
-  | "departament_origin_id"
-  | "process_destination_id"
-  | "process_origin_id"
+  | "from_departament_id"
+  | "to_departament_id"
+  | "from_process_id"
+  | "to_process_id"
   | "product_id"
 > & {
-  departamentOrigin: Departament;
-  departamentDestination: Departament;
-  processOrigin: Process;
-  processDestination: Process;
+  from_departament: Departament;
+  to_departament: Departament;
+  from_process: Process;
+  to_process: Process;
   product: Product;
 };
 

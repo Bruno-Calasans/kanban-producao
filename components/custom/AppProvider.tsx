@@ -6,6 +6,7 @@ import ContentContainer from "./ContentContainer"
 import { Toaster } from "sonner"
 import { AppSidebar } from "./AppSideBar"
 import { DialogProvider } from "@/hooks/dialog/DialogContext"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const queryClient = new QueryClient()
 
@@ -17,12 +18,13 @@ export default function AppProvider({ children }: { children: React.ReactNode })
             <SidebarTrigger />
             <ContentContainer>
                 <Toaster />
+
                 <QueryClientProvider client={queryClient}>
                     <DialogProvider>
-                        {children}
+                        <TooltipProvider>{children}</TooltipProvider>
                     </DialogProvider>
                 </QueryClientProvider>
             </ContentContainer>
-        </SidebarProvider>
+        </SidebarProvider >
     )
 }

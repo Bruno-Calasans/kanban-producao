@@ -8,8 +8,8 @@ export default function useUpdateMovimentation() {
 
     return useMutation({
         mutationFn: (
-            data: { id: number, updateData: UpdateMovimentationData }
-        ) => updateMovimentation(data.id, data.updateData),
+            data: { movimentationId: number, updateData: UpdateMovimentationData }
+        ) => updateMovimentation(data.movimentationId, data.updateData),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: movimentationKeys.lists(),

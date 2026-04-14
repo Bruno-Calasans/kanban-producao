@@ -6,21 +6,6 @@ export const formSchema = z.object({
     productName: z
         .string()
         .nonempty("Produto é obrigatório."),
-    departamentOriginName: z
-        .string()
-        .nonempty("Departamento de origem é obrigatório."),
-    departamentDestinationName: z
-        .string()
-        .nonempty("Departamento destino é obrigatório."),
-    processOriginName: z
-        .string()
-        .nonempty("Processo de origem é obrigatório."),
-    processDestinationName: z
-        .string()
-        .nonempty("Processo de destino é obrigatório."),
-    responsibleName: z
-        .string()
-        .nonempty("Responsável é obrigatório."),
     amount: z
         .coerce
         .number()
@@ -36,11 +21,6 @@ export type MovimentationFormSchema = z.infer<typeof formSchema>;
 
 export const defaultMovimentationFormValues: MovimentationFormSchema = {
     productName: "",
-    departamentOriginName: "",
-    departamentDestinationName: "",
-    processOriginName: "",
-    processDestinationName: "",
-    responsibleName: "",
     useMaxAmount: true,
     amount: 1,
 }

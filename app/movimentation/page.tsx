@@ -4,7 +4,7 @@ import PageTitle from "@/components/custom/PageTitle";
 import Loader from "@/components/custom/Loader";
 import useGetAllMovimentations from "@/hooks/movimentation/useGetAllMovimentation";
 import CreateMovimentationDialog from "@/components/movimentation/dialogs/CreateMovimentationDialog";
-import MovimentationTable from "@/components/movimentation/MovimentationTable";
+import MovimentationTable from "@/components/movimentation/table/MovimentationTable";
 
 
 export default function MovimentationPage() {

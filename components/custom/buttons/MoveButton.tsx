@@ -6,10 +6,11 @@ type ClearButtonProps = {
     title?: string
     isLoading?: boolean
     disabled?: boolean
+    hiddenIcon?: boolean
     onclick?: () => void
 }
 
-export default function MoveButton({ title, isLoading, disabled, onclick }: ClearButtonProps) {
+export default function MoveButton({ title, isLoading, disabled, hiddenIcon, onclick }: ClearButtonProps) {
     return (
         <Button
             type="submit"
@@ -18,7 +19,7 @@ export default function MoveButton({ title, isLoading, disabled, onclick }: Clea
             disabled={isLoading || disabled}
             className="cursor-pointer bg-indigo-400 text-white hover:text-white hover:bg-indigo-500"
         >
-            <ArrowLeftRightIcon />
+            {!hiddenIcon && <ArrowLeftRightIcon />}
             {title || "Movimentar"}
         </Button>
 

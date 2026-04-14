@@ -1,22 +1,19 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import ProductSelector from "@/components/custom/ProductSelector";
-import { ProductPopulated } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 
 
 type MovimentationProductNameFieldProps = {
-    selectedProduct?: ProductPopulated
-    onChange: (product: ProductPopulated) => void
+    selectedProduct?: Product;
+    defaultProduct?: Product
+    onChange(product?: Product): void;
 }
 
 export const MovimentationProductNameField = withForm({
     defaultValues: defaultMovimentationFormValues,
-    props: {
-        selectedProduct: undefined,
-        onChange(product) { }
-
-    } as MovimentationProductNameFieldProps,
-    render({ form, selectedProduct, onChange }) {
+    props: {} as MovimentationProductNameFieldProps,
+    render({ form, selectedProduct, defaultProduct, onChange }) {
         return <form.Field
             name="productName"
             children={(field) => {
@@ -26,10 +23,10 @@ export const MovimentationProductNameField = withForm({
                     <Field data-invalid={isInvalid}>
                         <FieldLabel htmlFor={field.name}>Produto</FieldLabel>
                         <ProductSelector
-                            name={field.name}
                             selectedProduct={selectedProduct}
-                            onvalueChange={(product) => {
-                                field.handleChange(product.name)
+                            defaultProduct={defaultProduct}
+                            onChangeProduct={(product) => {
+                                field.handleChange(product?.name || "")
                                 onChange(product)
                             }}
                         />

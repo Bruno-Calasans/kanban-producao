@@ -19,6 +19,7 @@ export type DialogID =
     "create-movimentation" |
     "edit-movimentation" |
     "delete-movimentation" |
+    "cancel-movimentation" |
     "create-product-log" |
     "edit-product-log" |
     "delete-product-log" |

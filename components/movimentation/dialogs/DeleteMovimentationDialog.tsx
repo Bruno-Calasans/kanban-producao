@@ -41,7 +41,7 @@ export default function DeleteMovimentationDialog({ movimentation, children }: D
 
             <div className="flex flex-col gap-2">
                 <p>
-                    Tem certeza que deseja excluir a movimentação do produto <strong>{movimentation.product.name}</strong>?
+                    Tem certeza que deseja excluir a <strong>movimentação #{movimentation.id}</strong> do produto <strong>{movimentation.product.name}</strong>?
                 </p>
                 <p>
                     Essa ação não pode ser desfeita.

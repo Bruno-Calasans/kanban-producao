@@ -1,8 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
-import { Movimentation, MovimentationPopulated } from "@/types/database.type";
-import { updateProduct } from "./productApi";
-import { getDefaultDepartamentAndProcess } from "./configurationApi";
-
+import { Movimentation } from "@/types/database.type";
 
 export type CreateMovimentationtData = Omit<Movimentation, "id" | "created_at" | "updated_at">
 export type UpdateMovimentationData = Partial<CreateMovimentationtData>
@@ -13,11 +10,7 @@ export async function getAllMovimentations() {
         .from("Movimentation")
         .select(`
         *,
-        product:Product!product_id(*),
-        from_departament:Departament!from_departament_id(*),
-        to_departament:Departament!to_departament_id(*),
-        from_process:Process!from_process_id(*),
-        to_process:Process!to_process_id(*)`)
+        product:Product!product_id(*)`)
         .throwOnError()
 }
 
@@ -27,11 +20,7 @@ export async function getOneMovimentationById(id: number) {
         .from("Movimentation")
         .select(`
         *,
-        product:Product!product_id(*),
-        from_departament:Departament!from_departament_id(*),
-        to_departament:Departament!to_departament_id(*),
-        from_process:Process!from_process_id(*),
-        to_process:Process!to_process_id(*)`)
+        product:Product!product_id(*)`)
         .eq("id", id)
         .throwOnError()
 }
@@ -42,11 +31,7 @@ export async function getLastProductMovimentation(productId: number) {
         .from("Movimentation")
         .select(`
         *,
-        product:Product!product_id(*),
-        from_departament:Departament!from_departament_id(*),
-        to_departament:Departament!to_departament_id(*),
-        from_process:Process!from_process_id(*),
-        to_process:Process!to_process_id(*)`)
+        product:Product!product_id(*)`)
         .order("created_at", { ascending: false })
         .eq("product_id", productId)
         .limit(1)

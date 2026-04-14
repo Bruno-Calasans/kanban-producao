@@ -11,7 +11,7 @@ export default function useCreateMovimentation() {
         mutationFn: (data: CreateMovimentationtData) => createMovimentation(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: [...movimentationKeys.lists(), ...productKeys.lists()],
+                queryKey: movimentationKeys.lists(),
                 exact: false,
                 refetchType: "active",
             });

@@ -2,11 +2,11 @@ import { Field, FieldContent, FieldDescription, FieldError, FieldGroup, FieldLab
 import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ProductPopulated } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 
 
 type MovimentationAmountFieldGroupProps = {
-    selectedProduct: ProductPopulated
+    selectedProduct: Product
 }
 
 export const MovimentationAmountFieldGroup = withForm({
@@ -15,82 +15,39 @@ export const MovimentationAmountFieldGroup = withForm({
     render({ form, selectedProduct }) {
 
         return (
-            <FieldGroup>
+            <form.Field
+                name="amount"
+                children={(field) => {
+                    let fieldValue = field.state.value
+                    const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid
 
-                {/* Campo de quantidade de peças a serem movimentadas */}
-                <form.Subscribe selector={state => state.values.useMaxAmount}>
+                    return (
+                        <Field data-invalid={isInvalid}>
+                            <FieldLabel htmlFor={field.name}>Quantidade</FieldLabel>
+                            <Input
+                                id={field.name}
+                                name={field.name}
+                                value={fieldValue}
+                                onBlur={field.handleBlur}
+                                onChange={(e) => field.handleChange(e.target.value as unknown as number)}
+                                aria-invalid={isInvalid}
+                                placeholder="Quantidade a ser movimentada"
+                                autoComplete="off"
+                                type="number"
+                            />
+                            <FieldDescription>
+                                Quantidade que você quer produzir.
+                            </FieldDescription>
 
-                    {(useMaxAmount) => (
-                        <form.Field
-                            name="amount"
-                            children={(field) => {
-                                let fieldValue = field.state.value
-                                const isInvalid =
-                                    field.state.meta.isTouched && !field.state.meta.isValid
+                            {isInvalid && (
+                                <FieldError errors={field.state.meta.errors} />
+                            )}
+                        </Field>
+                    )
+                }}
+            />
 
-                                if (useMaxAmount) {
-                                    fieldValue = selectedProduct.max_amount || 1
-                                }
-
-                                return (
-                                    <Field data-invalid={isInvalid}>
-                                        <FieldLabel htmlFor={field.name}>Quantidade</FieldLabel>
-                                        <Input
-                                            id={field.name}
-                                            name={field.name}
-                                            value={fieldValue}
-                                            onBlur={field.handleBlur}
-                                            onChange={(e) => field.handleChange(e.target.value as unknown as number)}
-                                            aria-invalid={isInvalid}
-                                            placeholder="Quantidade a ser movimentada"
-                                            autoComplete="off"
-                                            type="number"
-                                            disabled={useMaxAmount}
-                                        />
-                                        <FieldDescription>
-                                            Quantidade disponível: {selectedProduct.max_amount}
-                                        </FieldDescription>
-
-                                        {isInvalid && (
-                                            <FieldError errors={field.state.meta.errors} />
-                                        )}
-                                    </Field>
-                                )
-                            }}
-                        />
-                    )}
-
-                </form.Subscribe>
-
-                {/* Campo checkbox para movimentar todas as peças disponíveis */}
-                <form.Field
-                    name="useMaxAmount"
-                    children={(field) => {
-                        const isInvalid =
-                            field.state.meta.isTouched && !field.state.meta.isValid
-                        return (
-                            <Field orientation="horizontal">
-                                <Checkbox
-                                    id="use-max-amount-product-checkbox"
-                                    name="use-max-amount-product-checkbox"
-                                    checked={field.state.value}
-                                    onCheckedChange={checked => field.handleChange(checked as boolean)}
-
-                                />
-                                <FieldContent>
-                                    <FieldLabel htmlFor="use-max-amount-product-checkbox">
-                                        Usar quantidade disponível
-                                    </FieldLabel>
-                                    <FieldDescription>
-                                        Movimenta a quantidade máxima disponível de peças.
-                                    </FieldDescription>
-                                </FieldContent>
-                            </Field>
-                        )
-                    }}
-                />
-
-            </FieldGroup>
         )
     }
 })

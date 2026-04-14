@@ -11,7 +11,6 @@ export default function CreateMovimentationDialog() {
             trigger={
                 <AddButton label="Nova Movimentação" />
             }
-            maxContentWidth={700}
         >
             <CreateMovimentationForm />
         </CustomDialog>

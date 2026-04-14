@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import ProductTableDropdownMenu from "./ProductTableDropdownMenu";
+import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 
 type ProductPageProps = {
   products: ProductWithProductionFlow[];
@@ -21,10 +22,6 @@ const productColumns: ColumnDef<ProductWithProductionFlow>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Produto" />,
   },
   {
-    accessorKey: "max_amount",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd. Máxima" />,
-  },
-  {
     id: "production_flow.name",
     accessorKey: "production_flow.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Fluxo" />,
@@ -32,16 +29,12 @@ const productColumns: ColumnDef<ProductWithProductionFlow>[] = [
   {
     accessorKey: "created_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Criado em" />,
-    cell(props) {
-      return formatDateTimeCellValue(props.getValue());
-    },
+    cell: ({ row: { original: product } }) => stringDateTimeToDate(product.created_at)
   },
   {
     accessorKey: "updated_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado em" />,
-    cell: (props) => {
-      return formatDateTimeCellValue(props.getValue());
-    },
+    cell: ({ row: { original: product } }) => stringDateTimeToDate(product.updated_at)
   },
   {
     id: "action",

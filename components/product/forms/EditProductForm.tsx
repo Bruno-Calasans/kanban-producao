@@ -13,12 +13,11 @@ import {
 } from "./productFormContext";
 import { ProductNameField } from "./fields/ProductNameField";
 import { ProductOpField } from "./fields/ProductOpField";
-import { ProductMaxAmountField } from "./fields/ProductMaxAmountField";
 import handleFormError from "@/utils/errorHandler";
-import type { Product, ProductionFlow, ProductWithProductionFlow } from "@/types/database.type";
 import useDialog from "@/hooks/dialog/useDialog";
 import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { ProductionFlow, ProductWithProductionFlow } from "@/types/database.type";
 
 type EditProductForm = {
   product: ProductWithProductionFlow;
@@ -35,7 +34,6 @@ export default function EditProductForm({ product }: EditProductForm) {
     defaultValues: {
       name: product.name,
       op: product.op || defaultProductFormValues.op,
-      max_amount: product.max_amount || defaultProductFormValues.max_amount,
     } as ProductSchema,
     validators: {
       onSubmit: formSchema,
@@ -44,14 +42,13 @@ export default function EditProductForm({ product }: EditProductForm) {
     onSubmit: async ({ value: inputData }) => {
       if (!selectedProductionFlow) return
       try {
-        const { name, op, max_amount } = inputData;
+        const { name, op } = inputData;
 
         await mutateAsync({
           id: product.id,
           updateData: {
             name,
             op,
-            max_amount,
             production_flow_id: selectedProductionFlow.id
           },
         });
@@ -78,7 +75,6 @@ export default function EditProductForm({ product }: EditProductForm) {
       <FieldGroup>
         <ProductNameField form={form} />
         <ProductOpField form={form} />
-        <ProductMaxAmountField form={form} />
       </FieldGroup>
 
       <ProductProductionFlowField

@@ -7,7 +7,6 @@ import useCreateProduct from "@/hooks/product/useCreateProduct";
 import { ProductNameField } from "./fields/ProductNameField";
 import { defaultProductFormValues, formSchema, useAppForm } from "./productFormContext";
 import { ProductOpField } from "./fields/ProductOpField";
-import { ProductMaxAmountField } from "./fields/ProductMaxAmountField";
 import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
@@ -30,11 +29,10 @@ export default function CreateProductForm() {
       if (!selectedProductionFlow) return;
 
       try {
-        const { name, max_amount, op } = value;
+        const { name, op } = value;
         await mutateAsync({
           name,
           op,
-          max_amount,
           production_flow_id: selectedProductionFlow.id,
         });
         toast.success("Produto criado com sucesso!");
@@ -49,9 +47,6 @@ export default function CreateProductForm() {
     },
   });
 
-  console.log(selectedProductionFlow)
-
-
   return (
     <form
       id="create-product-form"
@@ -63,7 +58,6 @@ export default function CreateProductForm() {
       <FieldGroup>
         <ProductNameField form={form} />
         <ProductOpField form={form} />
-        <ProductMaxAmountField form={form} />
       </FieldGroup>
 
       <ProductProductionFlowField

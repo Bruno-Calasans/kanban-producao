@@ -25,18 +25,5 @@ export type MovimentationPopulated = Omit<
   product: Product;
 };
 
-export type ProductLog = Database["public"]["Tables"]["ProductLog"]["Row"];
-export type ProductLogPopulated = Omit<
-  ProductLog,
-  "product_id" | "departament_id" | "process_id"
-> & {
-  product: Product;
-  departament: Departament;
-  process: Process;
-};
-
-export type Status = Database["public"]["Enums"]["Status"];
-
 export type ProductionFlow = Database["public"]["Tables"]["ProductionFlow"]["Row"];
-
 export type ProductionFlowTemplate = Database["public"]["Tables"]["ProductionFlowTemplate"]["Row"];

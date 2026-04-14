@@ -40,7 +40,7 @@ export default function EditProductForm({ product }: EditProductForm) {
       onChange: formSchema,
     },
     onSubmit: async ({ value: inputData }) => {
-      if (!selectedProductionFlow) return
+      if (!selectedProductionFlow) return;
       try {
         const { name, op } = inputData;
 
@@ -49,7 +49,7 @@ export default function EditProductForm({ product }: EditProductForm) {
           updateData: {
             name,
             op,
-            production_flow_id: selectedProductionFlow.id
+            production_flow_id: selectedProductionFlow.id,
           },
         });
         toast.success("Produto atualizado com sucesso!");

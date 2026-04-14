@@ -1,15 +1,13 @@
-"use client"
+"use client";
 
-import { DataTable } from "@/components/custom/data-table/DataTable"
-import PageTitle from "@/components/custom/PageTitle"
-import { ColumnDef } from "@tanstack/react-table"
-import type { ProductLog } from "@/types/database.type"
-import useGetAllProducts from "@/hooks/product/useGetAllProducts"
-import Loader from "@/components/custom/Loader"
-import ResumeTable from "@/components/resume/ResumeTable"
+import PageTitle from "@/components/custom/PageTitle";
+import { ColumnDef } from "@tanstack/react-table";
+import type { Product } from "@/types/database.type";
+import useGetAllProducts from "@/hooks/product/useGetAllProducts";
+import Loader from "@/components/custom/Loader";
+import ResumeTable from "@/components/resume/ResumeTable";
 
-
-export const columns: ColumnDef<ProductLog>[] = [
+export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "created_at",
     header: "Data",
@@ -37,12 +35,12 @@ export const columns: ColumnDef<ProductLog>[] = [
   {
     accessorKey: "updated_at",
     header: "Última atualização",
-  }
-]
+  },
+];
 
 export default function Home() {
-  const { data, isLoading, error } = useGetAllProducts()
-  const products = data?.data || []
+  const { data, isLoading, error } = useGetAllProducts();
+  const products = data?.data || [];
 
   if (isLoading) {
     return (
@@ -50,7 +48,7 @@ export default function Home() {
         <PageTitle>Produtos</PageTitle>
         <Loader title="Carregando produtos..." />
       </section>
-    )
+    );
   }
 
   if (error) {
@@ -59,18 +57,14 @@ export default function Home() {
         <PageTitle>Produtos</PageTitle>
         <p>Ocorreu um erro ao carregar os produtos.</p>
       </section>
-    )
+    );
   }
-
 
   return (
     <section>
       <PageTitle>Resumo</PageTitle>
-      <p>
-        Aqui está um resumo dos produtos cadastrados.
-      </p>
+      <p>Aqui está um resumo dos produtos cadastrados.</p>
       <ResumeTable products={products} />
     </section>
-
-  )
+  );
 }

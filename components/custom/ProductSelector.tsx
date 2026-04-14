@@ -1,10 +1,10 @@
 import useGetAllProducts from "@/hooks/product/useGetAllProducts";
-import { Product } from "@/types/database.type";
+import { Product, ProductWithProductionFlow } from "@/types/database.type";
 import { SingleSelector } from "./selectors/SingleSelector";
 
 type ProductSelectorProps = {
-  selectedProduct?: Product;
-  defaultProduct?: Product
+  selectedProduct?: ProductWithProductionFlow;
+  defaultProduct?: ProductWithProductionFlow;
   onChangeProduct(product?: Product): void;
 };
 
@@ -28,5 +28,5 @@ export default function ProductSelector({
       placeholder="Escolha um produto"
       noItemFoundMsg="Nenhum produto encontrado"
     />
-  )
+  );
 }

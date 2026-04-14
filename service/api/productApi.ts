@@ -12,7 +12,12 @@ export async function getAllProducts() {
 }
 
 export async function getOneProduct(productId: number) {
-  return await supabase.from("Product").select("*").eq("id", productId).single().throwOnError();
+  return await supabase
+    .from("Product")
+    .select("*, production_flow:ProductionFlow!production_flow_id(*)")
+    .eq("id", productId)
+    .single()
+    .throwOnError();
 }
 
 export async function createProduct(createData: CreateProductData) {

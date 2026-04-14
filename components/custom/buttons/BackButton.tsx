@@ -30,9 +30,9 @@ export default function BackButton({
         type="submit"
         size="sm"
         disabled={isLoading || disabled}
-        className="cursor-pointer text-white hover:text-white bg-indigo-500 hover:bg-indigo-400"
+        className="m-0 p-2 cursor-pointer text-white hover:text-white bg-indigo-500 hover:bg-indigo-400"
       >
-        {!hiddenIcon && !isLoading && <ChevronLeftIcon className="ml-2" />}
+        {!hiddenIcon && !isLoading && <ChevronLeftIcon className="m-0 ml-2" />}
         {!canLoad ? defaultLabel : null}
         {canLoad ? defaultLoadingMsg : null}
       </Button>

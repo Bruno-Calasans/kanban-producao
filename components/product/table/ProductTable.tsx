@@ -29,12 +29,12 @@ const productColumns: ColumnDef<ProductWithProductionFlow>[] = [
   {
     accessorKey: "created_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Criado em" />,
-    cell: ({ row: { original: product } }) => stringDateTimeToDate(product.created_at)
+    cell: ({ row: { original: product } }) => stringDateTimeToDate(product.created_at),
   },
   {
     accessorKey: "updated_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado em" />,
-    cell: ({ row: { original: product } }) => stringDateTimeToDate(product.updated_at)
+    cell: ({ row: { original: product } }) => stringDateTimeToDate(product.updated_at),
   },
   {
     id: "action",

@@ -39,7 +39,7 @@ const items = [
     },
     {
         name: "Movimentação",
-        url: "/movimentation",
+        url: "/movimentations",
         icon: ArrowLeftRightIcon,
     },
     {

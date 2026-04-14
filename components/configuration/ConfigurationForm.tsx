@@ -11,11 +11,9 @@ import useSetDefaultProductionFlow from "@/hooks/production-flow/useSetDefaultPr
 import { DefaultProductionFlowField } from "./form/fields/DefaultProductionFlowField";
 import { useAppForm, ConfigurationFormSchema, formSchema } from "./form/configurationFormContext";
 
-
 export default function ConfigurationForm() {
-  const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow>()
-  const { mutateAsync: setDefaultProductionFlow, isPending } = useSetDefaultProductionFlow()
-
+  const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow>();
+  const { mutateAsync: setDefaultProductionFlow, isPending } = useSetDefaultProductionFlow();
 
   const form = useAppForm({
     defaultValues: {
@@ -28,7 +26,7 @@ export default function ConfigurationForm() {
       try {
         if (selectedProductionFlow) {
           await setDefaultProductionFlow({
-            productionFlowId: selectedProductionFlow.id
+            productionFlowId: selectedProductionFlow.id,
           });
           toast.success("Fluxo de produção padrão atualizado com sucesso!");
           form.reset();
@@ -49,7 +47,11 @@ export default function ConfigurationForm() {
         form.handleSubmit();
       }}
     >
-      <DefaultProductionFlowField form={form} selectedProductionFlow={selectedProductionFlow} onChangeProductionFlow={setSelectedProductionFlow} />
+      <DefaultProductionFlowField
+        form={form}
+        selectedProductionFlow={selectedProductionFlow}
+        onChangeProductionFlow={setSelectedProductionFlow}
+      />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={() => form.reset()} />

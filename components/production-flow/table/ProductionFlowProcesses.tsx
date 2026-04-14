@@ -23,9 +23,7 @@ export default function ProductionFlowProcesses({ productionFlow }: ProductionFl
     <div>
       <div className={cn("flex flex-col gap-1 overflow-hidden max-h-20", expand && "max-h-fit")}>
         {processes.map((process) => (
-          <Badge key={process.id}>
-            {process.name}
-          </Badge>
+          <Badge key={process.id}>{process.name}</Badge>
         ))}
       </div>
       {canShowExpandButton && (

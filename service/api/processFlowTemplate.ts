@@ -16,10 +16,11 @@ export async function getAllProductionFlowTemplates(productionFlowId: number) {
     .from("ProductionFlowTemplate")
     .select(
       `*,
-            process:process_id(*)
+        process:Process!process_id(*)
         `,
     )
     .eq("production_flow_id", productionFlowId)
+    .order("sequence", { ascending: true, referencedTable: "process" })
     .throwOnError();
 }
 
@@ -41,4 +42,3 @@ export async function deleteFlowTemplates(flowTemplateIds: number[]) {
     .in("id", flowTemplateIds)
     .throwOnError();
 }
-

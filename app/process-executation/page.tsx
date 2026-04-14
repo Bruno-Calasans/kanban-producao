@@ -2,7 +2,7 @@
 
 import Loader from "@/components/custom/Loader"
 import PageTitle from "@/components/custom/PageTitle"
-import ProductLogTabs from "@/components/productLog/ProductLogTabs"
+// import ProductLogTabs from "@/components/productLog/ProductLogTabs"
 import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments"
 
 export default function ProcessExecutationPage() {
@@ -30,7 +30,7 @@ export default function ProcessExecutationPage() {
     return (
         <section>
             <PageTitle>Execução de Processo</PageTitle>
-            <ProductLogTabs departaments={departaments} />
+            {/* <ProductLogTabs departaments={departaments} /> */}
         </section>
     )
 }

@@ -1,19 +1,15 @@
-"use client"
+"use client";
 
-import { SelectorItem, SingleSelector } from "@/components/custom/selectors/SingleSelector"
-import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments"
-import { Departament } from "@/types/database.type"
-import { useEffect, useState } from "react"
+import { SelectorItem, SingleSelector } from "@/components/custom/selectors/SingleSelector";
+import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments";
+import { Departament } from "@/types/database.type";
+import { useEffect, useState } from "react";
 
 type DepartamentSelectorProps = {
-    defaultDepartament?: Departament
-    onChange: (departament?: Departament) => void
-}
-
+  defaultDepartament?: Departament;
+  onChange: (departament?: Departament) => void;
+};
 
 export default function TestPage({ defaultDepartament, onChange }: DepartamentSelectorProps) {
-    return (
-        <div>Test</div>
-    )
-
+  return <div>Test</div>;
 }

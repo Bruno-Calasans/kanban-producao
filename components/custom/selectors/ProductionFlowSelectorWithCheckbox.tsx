@@ -17,29 +17,35 @@ export default function ProductionFlowSelectorWithCheckbox({
   defaultProductionFlow,
   onValueChange,
 }: ProductionFlowSelectorWithCheckboxProps) {
-  const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow | undefined>()
-  const [useDefault, setUseDefault] = useState<boolean | "indeterminate">(defaultProductionFlow ? false : true);
+  const [selectedProductionFlow, setSelectedProductionFlow] = useState<
+    ProductionFlow | undefined
+  >();
+  const [useDefault, setUseDefault] = useState<boolean | "indeterminate">(
+    defaultProductionFlow ? false : true,
+  );
   const { data, isPending } = useGetAllProductionFlow();
   const productionFlows = data ? data.data : [];
-  const hasDefault = productionFlows.find(flow => flow.is_default)
-  const defaultflow = defaultProductionFlow || hasDefault || productionFlows[0]
+  const hasDefault = productionFlows.find((flow) => flow.is_default);
+  const defaultflow = defaultProductionFlow || hasDefault || productionFlows[0];
 
   const handleUseDefault = (value: boolean) => {
-    if (value) valueChangeHandler(hasDefault)
-    setUseDefault(value)
-  }
+    if (value) valueChangeHandler(hasDefault);
+    setUseDefault(value);
+  };
 
   const valueChangeHandler = (productionFlow?: ProductionFlow) => {
-    setSelectedProductionFlow(productionFlow)
-    onValueChange(productionFlow)
-  }
+    setSelectedProductionFlow(productionFlow);
+    onValueChange(productionFlow);
+  };
 
   return (
     <div className="flex flex-col gap-3">
       <SingleSelector<ProductionFlow>
         disabled={useDefault}
         data={productionFlows}
-        selectedData={!useDefault ? selectedProductionFlow : productionFlows.find(flow => flow.is_default)}
+        selectedData={
+          !useDefault ? selectedProductionFlow : productionFlows.find((flow) => flow.is_default)
+        }
         defaultData={defaultflow}
         labelSelector="name"
         isLoading={isPending}
@@ -50,11 +56,13 @@ export default function ProductionFlowSelectorWithCheckbox({
           <div>
             <p>Nenhum fluxo de produção encontrado</p>
             <p>
-              Defina um fluxo em <Link href="/configuracao">
+              Defina um fluxo em{" "}
+              <Link href="/configuracao">
                 <Button className="self-start p-0" variant="link">
                   configurações
                 </Button>
-              </Link>.
+              </Link>
+              .
             </p>
           </div>
         }
@@ -69,9 +77,7 @@ export default function ProductionFlowSelectorWithCheckbox({
             onCheckedChange={handleUseDefault}
           />
           <FieldContent>
-            <FieldLabel>
-              Usar fluxo de produção padrão
-            </FieldLabel>
+            <FieldLabel>Usar fluxo de produção padrão</FieldLabel>
             <FieldDescription>
               Usar fluxo de produção definido nas{" "}
               <Link href="/configuracao">
@@ -84,6 +90,5 @@ export default function ProductionFlowSelectorWithCheckbox({
         </Field>
       )}
     </div>
-
-  )
+  );
 }

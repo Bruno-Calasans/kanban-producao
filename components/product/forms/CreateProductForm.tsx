@@ -60,10 +60,7 @@ export default function CreateProductForm() {
         <ProductOpField form={form} />
       </FieldGroup>
 
-      <ProductProductionFlowField
-        form={form}
-        onChangeProductionFlow={setSelectedProductionFlow}
-      />
+      <ProductProductionFlowField form={form} onChangeProductionFlow={setSelectedProductionFlow} />
 
       <div
         id="create-product-form-buttons"

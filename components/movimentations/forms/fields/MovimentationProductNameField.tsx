@@ -1,12 +1,12 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import ProductSelector from "@/components/custom/ProductSelector";
-import { Product, ProductWithProductionFlow } from "@/types/database.type";
+import { ProductWithProductionFlow } from "@/types/database.type";
 
 type MovimentationProductNameFieldProps = {
   selectedProduct?: ProductWithProductionFlow;
   defaultProduct?: ProductWithProductionFlow;
-  onChange(product?: Product): void;
+  onChange(product?: ProductWithProductionFlow): void;
 };
 
 export const MovimentationProductNameField = withForm({

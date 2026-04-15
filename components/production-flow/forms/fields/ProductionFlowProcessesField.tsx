@@ -16,6 +16,7 @@ export const ProductionFlowProcessesField = withForm({
   defaultValues: defaultProductionFlowValues,
   props: {} as ProductionFlowProcessesFieldProps,
   render({ form, selectedProcesses, onSelect }) {
+    
     const handleSelectedProcesses = (processes: Process[]) => {
       onSelect(processes);
       const processNames = processes.map((process) => process.name);

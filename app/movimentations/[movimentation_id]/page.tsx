@@ -3,9 +3,7 @@
 import BackButton from "@/components/custom/buttons/BackButton";
 import Loader from "@/components/custom/Loader";
 import PageTitle from "@/components/custom/PageTitle";
-import CreateProcessExecutionDialog from "@/components/processs-execution/dialogs/CreateProcessExecutionDialog";
 import MovimentationTabs from "@/components/movimentation/tabs/MovimentationTab";
-import { MovimentationProcessExecutions } from "@/components/movimentations/table/MovimentationProcessExecutionsTable";
 import MovimentationStatusBadge from "@/components/movimentations/badges/MovimentationStatusBadge";
 import getOneMovimentation from "@/hooks/movimentation/useGetOneMovimentation";
 import { useParams } from "next/navigation";
@@ -24,9 +22,6 @@ export default function MovimentationIdPage() {
         <p>Movimentação não encontrada</p>
       </section>
     );
-
-  const canCreateExecution =
-    movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
 
   return (
     <section>

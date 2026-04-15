@@ -56,6 +56,8 @@ export async function updateMovimentation(
     .from("Movimentation")
     .update(updateData)
     .eq("id", movimentationId)
+    .select()
+    .single()
     .throwOnError();
 }
 

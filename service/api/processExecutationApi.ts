@@ -40,7 +40,7 @@ export async function getOneProcessExecution(processExecutionId: number) {
 }
 
 export async function createProcessExecution(createData: CreateProcessExecutionData) {
-  return await supabase.from("ProcessExecution").insert(createData).throwOnError();
+  return await supabase.from("ProcessExecution").insert(createData).select().single().throwOnError();
 }
 
 export async function updateProcessExecution(

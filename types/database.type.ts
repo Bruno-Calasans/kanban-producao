@@ -25,7 +25,7 @@ export type MovimentationPopulated = Omit<Movimentation, "product_id"> & {
 export type ProductionFlow = Database["public"]["Tables"]["ProductionFlow"]["Row"];
 export type ProductionFlowTemplate = Database["public"]["Tables"]["ProductionFlowTemplate"]["Row"];
 export type ProductionFlowTemplateWithProcess = Omit<ProductionFlowTemplate, "process_id"> & {
-  process: Process;
+  process: ProcessWithDepartament;
 };
 
 export type ProcessExecution = Database["public"]["Tables"]["ProcessExecution"]["Row"];
@@ -44,8 +44,11 @@ export type ProcessExecutionType = ProcessExecution["type"];
 export type ProcessExecutionStatus = ProcessExecution["status"];
 
 export type ProcessState = {
-  process: Process;
+  process: ProcessWithDepartament;
   avaliableAmount: number;
   status: ProcessExecutionStatus;
   flowTemplates: ProductionFlowTemplateWithProcess[];
+  movimentation: MovimentationPopulated;
+  previousProcess: ProcessWithDepartament | null;
+  nextProcess: ProcessWithDepartament | null;
 };

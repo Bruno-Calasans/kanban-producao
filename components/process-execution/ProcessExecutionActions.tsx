@@ -1,6 +1,7 @@
-import { Process, ProcessState } from "@/types/database.type";
+import { Button } from "@/components/ui/button";
+import { ProcessState, ProcessWithDepartament } from "@/types/database.type";
 import CreateProcessExecutionDialog from "./dialogs/CreateProcessExecutionDialog";
-import { Button } from "../ui/button";
+import CreateReprocessExecutionDialog from "./dialogs/CreateReprocessExecutionDialog";
 
 type ProcessExecutionActionsProps = {
   processState: ProcessState;
@@ -8,8 +9,8 @@ type ProcessExecutionActionsProps = {
 
 export default function ProcessExecutionActions({ processState }: ProcessExecutionActionsProps) {
   const getNextAndPreviousProcesses = () => {
-    let previous: Process | null = null;
-    let next: Process | null = null;
+    let previous: ProcessWithDepartament | null = null;
+    let next: ProcessWithDepartament | null = null;
 
     const { flowTemplates } = processState;
     const flowTemplatesSize = flowTemplates.length;
@@ -26,8 +27,8 @@ export default function ProcessExecutionActions({ processState }: ProcessExecuti
       const nextProcessIndex = currentProcessIndex + 1;
       const previousProcessIndex = currentProcessIndex - 1;
 
-      next = nextProcessIndex == flowTemplatesSize ? null : flowTemplates[nextProcessIndex].process;
-      previous = previousProcessIndex < 0 ? null : flowTemplates[previousProcessIndex].process;
+      next = nextProcessIndex < flowTemplatesSize ? flowTemplates[nextProcessIndex].process : null;
+      previous = previousProcessIndex >= 0 ? flowTemplates[previousProcessIndex].process : null;
     }
 
     return {
@@ -36,15 +37,17 @@ export default function ProcessExecutionActions({ processState }: ProcessExecuti
     };
   };
 
-  const nextProcess = getNextAndPreviousProcesses();
+  const { next, previous } = getNextAndPreviousProcesses();
 
   if (processState.avaliableAmount == 0) return null;
 
   return (
     <div className="flex gap-1">
-      {nextProcess && <CreateProcessExecutionDialog processState={processState} />}
-      <Button size="xs">Reprocessar</Button>
-      <Button size="xs">Ajustar</Button>
+      {next && <CreateProcessExecutionDialog processState={processState} nextProcess={next} />}
+      {/* {previous && (
+        <CreateReprocessExecutionDialog processState={processState} previousProcess={previous} />
+      )} */}
+      {/* <Button size="xs">Ajustar</Button> */}
     </div>
   );
 }

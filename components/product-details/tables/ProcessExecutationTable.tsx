@@ -4,8 +4,8 @@ import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import type { ProcessExecutionPopulated } from "@/types/database.type";
-import ProcessExecutionTypeBadge from "@/components/processs-execution/badges/ProcessExecutionTypeBadge";
-import ProcessStatusBadge from "@/components/processs-execution/badges/ProcessExecutionStatusBadge";
+import ProcessExecutionTypeBadge from "@/components/process-execution/badges/ProcessExecutionTypeBadge";
+import ProcessStatusBadge from "@/components/process-execution/badges/ProcessExecutionStatusBadge";
 
 type MovimentationPageProps = {
   processExecutions: ProcessExecutionPopulated[];
@@ -45,15 +45,6 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
       <ProcessStatusBadge status={processExecution.status} />
     ),
   },
-  // {
-  //     accessorKey: "created_at",
-  //     header: ({ column }) => (
-  //         <DataTableColumnHeader column={column} title="Criado em" />
-  //     ),
-  //     cell(props) {
-  //         return formatDateTimeCellValue(props.getValue())
-  //     },
-  // },
 ];
 
 export default function ProcessExecutationTable({ processExecutions }: MovimentationPageProps) {

@@ -16,7 +16,9 @@ export async function getAllProductionFlowTemplates(productionFlowId: number) {
     .from("ProductionFlowTemplate")
     .select(
       `*,
-        process:Process!process_id(*)
+        process:Process!process_id(*,
+          departament:Departament!departament_id(*)
+        )
         `,
     )
     .eq("production_flow_id", productionFlowId)

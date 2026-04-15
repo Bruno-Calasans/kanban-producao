@@ -69,7 +69,7 @@ export default function CreateProductionFlowForm() {
         <ProductionFlowNameField form={form} />
         <ProductionFlowDescField form={form} />
         <ProductionFlowUseDefaultField form={form} />
-        <ProductionFlowProcessesField form={form} onSelectedProcesses={setSelectedProcesses} />
+        <ProductionFlowProcessesField form={form} onSelect={setSelectedProcesses} />
       </FieldGroup>
 
       <div

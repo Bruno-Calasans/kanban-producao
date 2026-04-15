@@ -3,18 +3,17 @@ import {
   createProcessExecution,
 } from "@/service/api/processExecutationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productKeys } from "@/constants/productKeys";
+import { processExecutationKeys } from "@/constants/processExecutationKeys";
 
 export default function useCreateProcessExecution() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: CreateProcessExecutionData) => createProcessExecution(data),
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       queryClient.invalidateQueries({
-        queryKey: productKeys.lists(),
+        queryKey: processExecutationKeys.lists(),
         exact: false,
-        refetchType: "active",
       });
     },
   });

@@ -1,30 +1,31 @@
-"use client"
+"use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import ContentContainer from "./ContentContainer"
-import { Toaster } from "sonner"
-import { AppSidebar } from "./AppSideBar"
-import { DialogProvider } from "@/hooks/dialog/DialogContext"
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import ContentContainer from "./ContentContainer";
+import { Toaster } from "sonner";
+import { AppSidebar } from "./AppSideBar";
+import { DialogProvider } from "@/hooks/dialog/DialogContext";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-const queryClient = new QueryClient()
-
+const queryClient = new QueryClient();
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
-    return (
-        <SidebarProvider defaultOpen={false}>
-            <AppSidebar />
-            <SidebarTrigger />
-            <ContentContainer>
-                <Toaster />
+  return (
+    <SidebarProvider defaultOpen={false}>
+      <AppSidebar />
+      <SidebarTrigger />
+      <ContentContainer>
+        <Toaster />
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
 
-                <QueryClientProvider client={queryClient}>
-                    <DialogProvider>
-                        <TooltipProvider>{children}</TooltipProvider>
-                    </DialogProvider>
-                </QueryClientProvider>
-            </ContentContainer>
-        </SidebarProvider >
-    )
+          <DialogProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </DialogProvider>
+        </QueryClientProvider>
+      </ContentContainer>
+    </SidebarProvider>
+  );
 }

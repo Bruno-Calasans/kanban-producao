@@ -4,13 +4,12 @@ import { toast } from "sonner";
 import MoveButton from "@/components/custom/buttons/MoveButton";
 import useCreateMovimentation from "@/hooks/movimentation/useCreateMovimentation";
 import { useState } from "react";
-import CantMoveProductWarn from "@/components/movimentations/CantMoveProductWarn";
 import { MovimentationProductNameField } from "./fields/MovimentationProductNameField";
 import { useAppForm, formSchema, MovimentationFormSchema } from "./movimentationFormContext";
 import handleFormError from "@/utils/errorHandler";
 import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup";
 import useDialog from "@/hooks/dialog/useDialog";
-import { MovimentationPopulated, Product } from "@/types/database.type";
+import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 
 type EditMovimentationFormProps = {
@@ -20,7 +19,7 @@ type EditMovimentationFormProps = {
 export default function EditMovimentationForm({ movimentation }: EditMovimentationFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useCreateMovimentation();
-  const [product, setProduct] = useState<Product | undefined>();
+  const [product, setProduct] = useState<ProductWithProductionFlow>();
 
   const form = useAppForm({
     defaultValues: {
@@ -56,8 +55,6 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
     setProduct(undefined);
   };
 
-  const canMoveProuct = product && product.max_amount && product.max_amount > 0;
-
   return (
     <form
       id="edit-movimentation-form"
@@ -73,14 +70,7 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
         defaultProduct={movimentation.product}
         onChange={setProduct}
       />
-
-      {/* Aviso se produto não tem quantidade para mover */}
-      {product && !canMoveProuct && <CantMoveProductWarn product={product} />}
-
-      {/* Campo de quantidade, checkbox  de quantidade máxima */}
-      {canMoveProuct && product && (
-        <MovimentationAmountFieldGroup form={form} selectedProduct={product} />
-      )}
+      {product && <MovimentationAmountFieldGroup form={form} selectedProduct={product} />}
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={resetForm} />

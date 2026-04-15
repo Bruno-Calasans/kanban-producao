@@ -10,18 +10,15 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  withForm,
-  defaultExecutionFormValues,
-} from "@/components/processs-execution/forms/execution-form/processExecutionFormContext";
 import { Checkbox } from "@/components/ui/checkbox";
+import { withForm, defaultReprocessFormValues } from "../reprocessExecutionFormContext";
 
 type ExecutionAmountFieldProps = {
   maxAmount: number;
 };
 
-export const ExecutionAmountField = withForm({
-  defaultValues: defaultExecutionFormValues,
+export const ReprocessAmountField = withForm({
+  defaultValues: defaultReprocessFormValues,
   props: {} as ExecutionAmountFieldProps,
   render({ form, maxAmount }) {
     const onUseMaxAmount = (value: boolean) => {
@@ -53,9 +50,10 @@ export const ExecutionAmountField = withForm({
                       autoComplete="off"
                       type="number"
                       disabled={useMaxAmount}
+                      onFocus={(e) => !form.state.isTouched && field.handleChange("")}
                     />
                     <FieldDescription>
-                      Define a quantidade que será movida para próximo processo.
+                      Define a quantidade que será refeita para o processo anterior.
                     </FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>

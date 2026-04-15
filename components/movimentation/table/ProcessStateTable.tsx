@@ -4,8 +4,8 @@ import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ProcessState } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import ProcessStatusBadge from "@/components/processs-execution/badges/ProcessExecutionStatusBadge";
-import ProcessExecutionActions from "@/components/processs-execution/ProcessExecutionActions";
+import ProcessStatusBadge from "@/components/process-execution/badges/ProcessExecutionStatusBadge";
+import ProcessExecutionActions from "@/components/process-execution/ProcessExecutionActions";
 
 type ProcessStateTableProps = {
   processStates: ProcessState[];
@@ -32,9 +32,16 @@ const processColumns: ColumnDef<ProcessState>[] = [
   {
     id: "actions",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Ações" />,
-    cell: ({ row: { original: processState } }) => (
-      <ProcessExecutionActions processState={processState} />
-    ),
+    cell: ({ row: { original: processState } }) => {
+      if (
+        processState.movimentation.status === "CANCELLED" ||
+        processState.movimentation.status == "COMPLETED"
+      ) {
+        return null;
+      }
+
+      return <ProcessExecutionActions processState={processState} />;
+    },
   },
 ];
 

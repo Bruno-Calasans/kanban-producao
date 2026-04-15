@@ -27,7 +27,8 @@ export type DialogID =
   | "delete-production-flow"
   | "create-process-execution"
   | "edit-process-execution"
-  | "delete-process-execution";
+  | "delete-process-execution"
+  | "create-reprocess-execution";
 
 export type DialogContext = {
   dialog: DialogID | null;

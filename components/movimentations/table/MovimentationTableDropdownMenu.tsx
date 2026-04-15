@@ -41,7 +41,7 @@ export function MovimentationTableDropdownMenu({
           </EditMovimentationDialog>
         )}
 
-        {movimentation.status !== "CANCELLED" && (
+        {movimentation.status !== "CANCELLED" && movimentation.status != "COMPLETED" && (
           <CancelMovimentationDialog movimentation={movimentation}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <BanIcon />

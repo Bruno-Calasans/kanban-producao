@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MovimentationTableDropdownMenu } from "./MovimentationTableDropdownMenu";
-import MovimentationStatusBadge from "./MovimentationStatusBadge";
+import MovimentationStatusBadge from "../badges/MovimentationStatusBadge";
 
 type MovimentationPageProps = {
   movimentations: MovimentationPopulated[];

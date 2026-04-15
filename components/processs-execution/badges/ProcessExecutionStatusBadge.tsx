@@ -1,14 +1,12 @@
-import { ProcessState } from "@/types/database.type";
+import { ProcessExecutionStatus } from "@/types/database.type";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 import { Badge } from "@/components/ui/badge";
 
-type ProcessStateBadgeProps = {
-  processState: ProcessState;
+type ProcessExecutionStatusBadgeProps = {
+  status: ProcessExecutionStatus;
 };
 
-export default function ProcessStateBadge({ processState }: ProcessStateBadgeProps) {
-  const { status } = processState;
-
+export default function ProcessExecutionStatusBadge({ status }: ProcessExecutionStatusBadgeProps) {
   if (status == "PENDING")
     return (
       <CustomTooltip content="Processo ainda não começou">
@@ -38,8 +36,8 @@ export default function ProcessStateBadge({ processState }: ProcessStateBadgePro
     );
 
   return (
-    <CustomTooltip content="Processo terminou">
-      <Badge className="bg-emerald-400 text-white">CONCLUÍDO</Badge>
+    <CustomTooltip content="Processo terminou sem problemas">
+      <Badge className="bg-emerald-400 text-white">SUCESSO</Badge>
     </CustomTooltip>
   );
 }

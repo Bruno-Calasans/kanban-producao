@@ -2,16 +2,16 @@
 
 import useGetAllProcessExecutationsByMovimentation from "@/hooks/process-executation/useGetAllProcessExecutionsByMovimentation";
 import { Movimentation } from "@/types/database.type";
-import ProcessExecutationTable from "../product-details/tables/ProcessExecutationTable";
-import Loader from "../custom/Loader";
+import ProcessExecutationTable from "../../product-details/tables/ProcessExecutationTable";
+import Loader from "../../custom/Loader";
 
-type MovimentationProcessExecutionsProps = {
+type MovimentationProcessExecutionsTableProps = {
   movimentation: Movimentation;
 };
 
-export function MovimentationProcessExecutions({
+export function MovimentationProcessExecutionsTable({
   movimentation,
-}: MovimentationProcessExecutionsProps) {
+}: MovimentationProcessExecutionsTableProps) {
   const { data, error, isPending } = useGetAllProcessExecutationsByMovimentation(movimentation.id);
   const processExecutations = data?.data || [];
 

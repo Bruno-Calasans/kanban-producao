@@ -1,6 +1,6 @@
 import useGetAllProcessExecutionsByMovimentation from "@/hooks/process-executation/useGetAllProcessExecutionsByMovimentation";
 import useGetAllProductionFlowTemplates from "@/hooks/production-flow-template/useGetAllProductionFlowTemplates";
-import { MovimentationPopulated, Process, ProcessState } from "@/types/database.type";
+import { MovimentationPopulated, ProcessState } from "@/types/database.type";
 import ProcessStateTable from "../table/ProcessStateTable";
 import Loader from "@/components/custom/Loader";
 
@@ -22,12 +22,12 @@ export default function MovimentationActionsTab({ movimentation }: Movimentation
   } = useGetAllProcessExecutionsByMovimentation(movimentation.id);
 
   const processExecutions = processExecutionsData?.data || [];
-  const flowTemplate = flowTemplateData?.data || [];
+  const flowTemplates = flowTemplateData?.data || [];
 
   const calcAvaliableAmount = () => {
     const processStates: ProcessState[] = [];
 
-    for (const template of flowTemplate) {
+    for (const template of flowTemplates) {
       let status: ProcessState["status"] = "PENDING";
       const currentProcess = template.process;
       const sucessExecutions = processExecutions.filter((exe) => exe.status === "SUCCESS");
@@ -52,6 +52,7 @@ export default function MovimentationActionsTab({ movimentation }: Movimentation
       if (hasExecutions && avaliableAmount > 0) status = "IN_PROGRESS";
 
       processStates.push({
+        flowTemplates: flowTemplates,
         process: template.process,
         avaliableAmount,
         status,
@@ -71,9 +72,5 @@ export default function MovimentationActionsTab({ movimentation }: Movimentation
 
   if (isError) return <div>Não foi possível carregar as ações</div>;
 
-  return (
-    <div>
-      <ProcessStateTable processStates={processStates} />
-    </div>
-  );
+  return <ProcessStateTable processStates={processStates} />;
 }

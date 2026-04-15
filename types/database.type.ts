@@ -24,6 +24,9 @@ export type MovimentationPopulated = Omit<Movimentation, "product_id"> & {
 
 export type ProductionFlow = Database["public"]["Tables"]["ProductionFlow"]["Row"];
 export type ProductionFlowTemplate = Database["public"]["Tables"]["ProductionFlowTemplate"]["Row"];
+export type ProductionFlowTemplateWithProcess = Omit<ProductionFlowTemplate, "process_id"> & {
+  process: Process;
+};
 
 export type ProcessExecution = Database["public"]["Tables"]["ProcessExecution"]["Row"];
 export type ProcessExecutionPopulated = Omit<
@@ -44,4 +47,5 @@ export type ProcessState = {
   process: Process;
   avaliableAmount: number;
   status: ProcessExecutionStatus;
+  flowTemplates: ProductionFlowTemplateWithProcess[];
 };

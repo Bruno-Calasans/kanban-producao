@@ -4,8 +4,8 @@ import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ProcessState } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import ProcessStateBadge from "../ProcessStateBadge";
-import { Button } from "@/components/ui/button";
+import ProcessStatusBadge from "@/components/processs-execution/badges/ProcessExecutionStatusBadge";
+import ProcessExecutionActions from "@/components/processs-execution/ProcessExecutionActions";
 
 type ProcessStateTableProps = {
   processStates: ProcessState[];
@@ -25,25 +25,16 @@ const processColumns: ColumnDef<ProcessState>[] = [
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row: { original: processState } }) => (
-      <ProcessStateBadge processState={processState} />
+      <ProcessStatusBadge status={processState.status} />
     ),
   },
 
   {
-    id: "action",
+    id: "actions",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Ações" />,
-    cell: ({ row }) => {
-      const process = row.original;
-      if (process.avaliableAmount == 0) return null;
-
-      return (
-        <div className="flex gap-1">
-          <Button size="xs">Executar</Button>
-          <Button size="xs">Reprocessar</Button>
-          <Button size="xs">Ajustar</Button>
-        </div>
-      );
-    },
+    cell: ({ row: { original: processState } }) => (
+      <ProcessExecutionActions processState={processState} />
+    ),
   },
 ];
 

@@ -79,7 +79,7 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={() => form.reset()} />
-        <SaveButton isLoading={isPending} label="Salvar alterações" />
+        <SaveButton hiddenIcon isLoading={isPending} />
       </div>
     </form>
   );

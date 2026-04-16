@@ -33,10 +33,11 @@ export default function EditDepartamentForm({ departament }: DepartamentFormProp
       try {
         await mutateAsync({ id: departament.id, updateData: value });
         toast.success("Departamento atualizado com sucesso!");
+        closeDialog("edit-departament");
         form.reset();
-        closeDialog("delete-departament");
       } catch (error) {
         handleFormError(error, {
+          duplicate: "Erro: departamento com esse nome ou sequência existe.",
           default: "Erro: não foi possível atualizar o departamento.",
         });
       }

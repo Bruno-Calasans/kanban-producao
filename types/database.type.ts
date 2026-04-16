@@ -52,3 +52,8 @@ export type ProcessState = {
   previousProcess: ProcessWithDepartament | null;
   nextProcess: ProcessWithDepartament | null;
 };
+
+export type ProductMovimentation = {
+  product: Product;
+  movimentations: MovimentationPopulated[];
+};

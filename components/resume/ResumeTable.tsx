@@ -1,96 +1,77 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
-import { ProductPopulated } from "@/types/database.type";
+import { ProductMovimentation } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
-import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
-import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import EditProductDialog from "@/components/products/dialogs/EditProductDialog";
-import DeleteProductDialog from "@/components/products/dialogs/DeleteProductDialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 type ProductPageProps = {
-  products: ProductPopulated[];
+  productMovimentations: ProductMovimentation[];
 };
 
-const productColumns: ColumnDef<ProductPopulated>[] = [
+const productColumns: ColumnDef<ProductMovimentation>[] = [
   {
-    accessorKey: "created_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Data de criação" />,
-    cell(props) {
-      return formatDateTimeCellValue(props.getValue());
-    },
-  },
-  {
-    accessorKey: "op",
+    accessorKey: "product.op",
     header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,
   },
   {
-    accessorKey: "name",
+    id: "product.name",
+    accessorKey: "product.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Produto" />,
   },
   {
-    accessorKey: "max_amount",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd. Máxima" />,
-  },
-  {
-    accessorKey: "departament.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
-  },
-  {
-    accessorKey: "process.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
-  },
-  {
-    accessorKey: "responsible.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
-  },
-  {
-    id: "action",
-    header: "",
-    cell: ({ row }) => {
-      const product = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <EllipsisVerticalIcon className="h-4 w-4" />
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent side="bottom" align="end" className="w-fit">
-            <EditProductDialog product={product}>
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Edit2Icon />
-                Editar
-              </DropdownMenuItem>
-            </EditProductDialog>
-
-            <DeleteProductDialog product={product}>
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <Trash2Icon />
-                Excluir
-              </DropdownMenuItem>
-            </DeleteProductDialog>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    id: "movimentations",
+    accessorFn: ({ movimentations }) => movimentations.length,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Movimentações" />,
+    cell({ row: { original } }) {
+      return original.movimentations.length;
     },
   },
+  {
+    id: "last-movimentation",
+    accessorFn: ({ movimentations }) => `#${movimentations[movimentations.length - 1].id}`,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Última movimentação" />,
+  },
+  // {
+  //   id: "action",
+  //   header: "",
+  //   cell: ({ row }) => {
+  //     const product = row.original;
+
+  //     return (
+  //       <DropdownMenu>
+  //         <DropdownMenuTrigger asChild>
+  //           <EllipsisVerticalIcon className="h-4 w-4" />
+  //         </DropdownMenuTrigger>
+
+  //         <DropdownMenuContent side="bottom" align="end" className="w-fit">
+  //           <EditProductDialog product={product}>
+  //             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+  //               <Edit2Icon />
+  //               Editar
+  //             </DropdownMenuItem>
+  //           </EditProductDialog>
+
+  //           <DeleteProductDialog product={product}>
+  //             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+  //               <Trash2Icon />
+  //               Excluir
+  //             </DropdownMenuItem>
+  //           </DeleteProductDialog>
+  //         </DropdownMenuContent>
+  //       </DropdownMenu>
+  //     );
+  //   },
+  // },
 ];
 
-export default function ResumeTable({ products }: ProductPageProps) {
+export default function ResumeTable({ productMovimentations }: ProductPageProps) {
   return (
     <DataTable
       filterPlaceholder="Procurar produto"
-      filterColumn="name"
+      filterColumn="product.name"
       columns={productColumns}
-      data={products}
+      data={productMovimentations}
     />
   );
 }

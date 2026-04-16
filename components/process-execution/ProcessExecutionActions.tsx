@@ -11,10 +11,11 @@ type ProcessExecutionActionsProps = {
 
 export default function ProcessExecutionActions({ processState }: ProcessExecutionActionsProps) {
   const { previousProcess, nextProcess, movimentation } = processState;
+  const isLastProcess = nextProcess == null
 
   if (processState.avaliableAmount == 0) return null;
 
-  if (movimentation.status === "CANCELLED" || movimentation.status == "COMPLETED") {
+  if ((movimentation.status === "CANCELLED" || movimentation.status == "COMPLETED") && !isLastProcess) {
     return null;
   }
 

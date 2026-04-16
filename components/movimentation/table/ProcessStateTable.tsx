@@ -13,6 +13,11 @@ type ProcessStateTableProps = {
 
 const processColumns: ColumnDef<ProcessState>[] = [
   {
+    id: "process.sequence",
+    accessorKey: "process.sequence",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
+  },
+  {
     id: "process.name",
     accessorKey: "process.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
@@ -45,6 +50,7 @@ export default function ProcessStateTable({ processStates }: ProcessStateTablePr
       filterColumn="process.name"
       columns={processColumns}
       data={processStates}
+      hidePagination
     />
   );
 }

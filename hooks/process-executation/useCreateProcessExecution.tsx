@@ -4,6 +4,7 @@ import {
 } from "@/service/api/processExecutationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { processExecutationKeys } from "@/constants/processExecutationKeys";
+import { movimentationKeys } from "@/constants/movimentationKeys";
 
 export default function useCreateProcessExecution() {
   const queryClient = useQueryClient();
@@ -13,6 +14,11 @@ export default function useCreateProcessExecution() {
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries({
         queryKey: processExecutationKeys.lists(),
+        exact: false,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: movimentationKeys.list(data.movimentation_id),
         exact: false,
       });
     },

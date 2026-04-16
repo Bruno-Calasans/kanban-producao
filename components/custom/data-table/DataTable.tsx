@@ -31,6 +31,7 @@ interface DataTableProps<TData, TValue> {
   filterColumn: string;
   filterPlaceholder?: string;
   className?: string;
+  hidePagination?: boolean;
   onEdit?: (row: TData) => void;
   onDelete?: (row: TData) => void;
   onClickRow?: (row: TData) => void;
@@ -42,6 +43,7 @@ export function DataTable<TData, TValue>({
   filterColumn,
   filterPlaceholder,
   className,
+  hidePagination,
   onClickRow,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -112,7 +114,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Paginação da tabela */}
-      <DataTablePagination table={table} />
+      {!hidePagination && <DataTablePagination table={table} />}
     </div>
   );
 }

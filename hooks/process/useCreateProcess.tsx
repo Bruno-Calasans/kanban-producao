@@ -1,6 +1,6 @@
 import { createProcess, CreateProcesstData } from "@/service/api/processApi"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { processKeys } from "../../constants/processKeys"
+import { processKeys } from "@/constants/processKeys"
 
 export default function useCreateProcess() {
     const queryClient = useQueryClient()

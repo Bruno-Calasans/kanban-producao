@@ -91,7 +91,8 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
         avaliableAmount,
         currentProcess,
         executions: processExecutions.filter(
-          (exe) => exe.process?.id == currentProcess.id || exe.from_process?.id == currentProcess.id,
+          (exe) =>
+            exe.process?.id == currentProcess.id || exe.from_process?.id == currentProcess.id,
         ),
         lastProcess,
       });
@@ -144,7 +145,14 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     if (isPending) return [];
     if (!flowTemplates.length || !processExecutions) return [];
     return getProcessStates();
-  }, [movimentation.id, processExecutions, flowTemplates, isPending]);
+  }, [
+    movimentation.id,
+    movimentation.status,
+    movimentation.amount,
+    processExecutions,
+    flowTemplates,
+    isPending,
+  ]);
 
   return {
     processStates,

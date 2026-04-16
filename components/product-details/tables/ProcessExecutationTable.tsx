@@ -6,12 +6,19 @@ import DataTableColumnHeader from "@/components/custom/data-table/DataTableColum
 import type { ProcessExecutionPopulated } from "@/types/database.type";
 import ProcessExecutionTypeBadge from "@/components/process-execution/badges/ProcessExecutionTypeBadge";
 import ProcessStatusBadge from "@/components/process-execution/badges/ProcessExecutionStatusBadge";
+import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 
 type MovimentationPageProps = {
   processExecutions: ProcessExecutionPopulated[];
 };
 
 const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Data" />,
+    cell: ({ row: { original: processExecution } }) =>
+      stringDateTimeToDate(processExecution.created_at),
+  },
   {
     id: "from_process.name",
     accessorKey: "from_process.name",
@@ -27,11 +34,6 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd." />,
   },
   {
-    id: "responsible.name",
-    accessorKey: "responsible.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Resp" />,
-  },
-  {
     accessorKey: "type",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Tipo" />,
     cell: ({ row: { original: processExecution } }) => (
@@ -39,12 +41,17 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
     ),
   },
   {
-    accessorKey: "status",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-    cell: ({ row: { original: processExecution } }) => (
-      <ProcessStatusBadge status={processExecution.status} />
-    ),
+    id: "responsible.name",
+    accessorKey: "responsible.name",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Resp" />,
   },
+  // {
+  //   accessorKey: "status",
+  //   header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+  //   cell: ({ row: { original: processExecution } }) => (
+  //     <ProcessStatusBadge status={processExecution.status} />
+  //   ),
+  // },
 ];
 
 export default function ProcessExecutationTable({ processExecutions }: MovimentationPageProps) {

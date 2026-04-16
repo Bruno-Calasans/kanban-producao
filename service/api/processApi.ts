@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
 import { Process } from "@/types/database.type";
 
-export type CreateProcesstData = Omit<Process, "id" | "created_at" | "updated_at" | "is_default">;
+export type CreateProcesstData = Omit<Process, "id" | "created_at" | "updated_at">;
 export type UpdateProcessData = Partial<CreateProcesstData>;
 
 export async function getAllProcesses() {

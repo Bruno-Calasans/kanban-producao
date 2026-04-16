@@ -22,7 +22,7 @@ export default function ProductTableDropdownMenu({ product }: ProductTableDropdo
       </DropdownMenuTrigger>
 
       <DropdownMenuContent side="bottom" align="end" className="w-fit">
-        <Link className="flex" href={`product/${product.id}`}>
+        <Link className="flex" href={`products/${product.id}`}>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <InfoIcon />
             Mais detalhes

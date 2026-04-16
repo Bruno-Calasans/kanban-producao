@@ -1,7 +1,7 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Departament } from "@/types/database.type";
-import DepartamentSelector from "@/components/custom/DepartamentSelector";
 import { defaultResponsibleFormValues, withForm } from "../responsibleFormContext";
+import DepartamentSelector from "@/components/custom/selectors/DepartamentSelector";
 
 type DefaultDepartamentProcessFieldProps = {
   selectedDepartament?: Departament;
@@ -22,11 +22,9 @@ export const ResponsibleDepartamentName = withForm({
             <Field id="responsible-departament" data-invalid={isInvalid}>
               <FieldLabel htmlFor={field.name}>Departamento</FieldLabel>
               <DepartamentSelector
-                name={field.name}
                 selectedDepartament={selectedDepartament}
-                placeHolder="Departamento"
                 onValueChange={(departament) => {
-                  field.handleChange(departament?.name);
+                  field.handleChange(departament?.name || "");
                   onDepartamentChange(departament);
                 }}
               />

@@ -3,41 +3,15 @@
 import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ProcessWithDepartament } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
-import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import { Badge } from "@/components/ui/badge";
 import ProcessDropdownMenu from "@/components/process/table/ProcessDropdownMenu";
-import sortByDefault from "@/utils/sortByDefault";
+import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 
 type ProcessPageProps = {
   processes: ProcessWithDepartament[];
 };
 
 const processColumns: ColumnDef<ProcessWithDepartament>[] = [
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Data de criação" />,
-    cell(props) {
-      return formatDateTimeCellValue(props.getValue());
-    },
-  },
-  {
-    accessorKey: "is_default",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Padrão" />,
-    sortingFn: (rowA, rowB) => sortByDefault(rowA.original, rowB.original),
-    cell: ({ row }) => {
-      const { is_default } = row.original;
-      return is_default ? (
-        <Badge variant="default" className="bg-emerald-500 rounded-full">
-          Sim
-        </Badge>
-      ) : (
-        <Badge variant="secondary" className="rounded-full">
-          Não
-        </Badge>
-      );
-    },
-  },
   {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
@@ -52,11 +26,14 @@ const processColumns: ColumnDef<ProcessWithDepartament>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
   },
   {
+    accessorKey: "created_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Criado em" />,
+    cell: (props) => stringDateTimeToDate(props.getValue()),
+  },
+  {
     accessorKey: "updated_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Última atualização" />,
-    cell: (props) => {
-      return formatDateTimeCellValue(props.getValue());
-    },
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado em" />,
+    cell: (props) => stringDateTimeToDate(props.getValue()),
   },
   {
     id: "action",

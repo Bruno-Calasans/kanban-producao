@@ -6,8 +6,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 import { Edit2Icon, EllipsisVerticalIcon, Trash2Icon } from "lucide-react";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import EditProductDialog from "@/components/product/dialogs/EditProductDialog";
-import DeleteProductDialog from "@/components/product/dialogs/DeleteProductDialog";
+import EditProductDialog from "@/components/products/dialogs/EditProductDialog";
+import DeleteProductDialog from "@/components/products/dialogs/DeleteProductDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,

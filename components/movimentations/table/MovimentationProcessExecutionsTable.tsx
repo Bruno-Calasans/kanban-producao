@@ -2,7 +2,7 @@
 
 import useGetAllProcessExecutationsByMovimentation from "@/hooks/process-executation/useGetAllProcessExecutionsByMovimentation";
 import { Movimentation } from "@/types/database.type";
-import ProcessExecutationTable from "../../product-details/tables/ProcessExecutationTable";
+import ProcessExecutationTable from "../../product/tables/ProcessExecutationTable";
 import Loader from "../../custom/Loader";
 
 type MovimentationProcessExecutionsTableProps = {

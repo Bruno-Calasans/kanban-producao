@@ -6,7 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import sortByDefault from "@/utils/sortByDefault";
-import DefaultBadge from "@/components/custom/DefaultBadge";
+import DefaultBadge from "@/components/custom/badges/DefaultBadge";
 import ProductionFlowDropdownMenu from "./ProductionFlowDropdownMenu";
 import { Badge } from "@/components/ui/badge";
 import ProductionFlowProcesses from "./ProductionFlowProcesses";

@@ -1,5 +1,5 @@
 import CustomDialog from "@/components/custom/CustomDialog";
-import EditProductForm from "@/components/product/forms/EditProductForm";
+import EditProductForm from "@/components/products/forms/EditProductForm";
 import type { Product, ProductWithProductionFlow } from "@/types/database.type";
 
 type EditProductDialogProps = {

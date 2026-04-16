@@ -1,5 +1,5 @@
 /* eslint-disable react/no-children-prop */
-import { withForm } from "@/components/product/forms/productFormContext";
+import { withForm } from "@/components/products/forms/productFormContext";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field } from "@/components/ui/field";
 import { FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field";
@@ -8,7 +8,6 @@ import { defaultProductionFlowValues } from "../ProductionFlowFormContext";
 export const ProductionFlowUseDefaultField = withForm({
   defaultValues: defaultProductionFlowValues,
   render({ form }) {
-
     return (
       <form.Field
         name="useDefault"

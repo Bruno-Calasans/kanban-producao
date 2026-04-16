@@ -12,7 +12,7 @@ import type { Departament, ProcessWithDepartament } from "@/types/database.type"
 import handleFormError from "@/utils/errorHandler";
 import { ProcessNameField } from "./fields/ProcessNameField";
 import { ProcessDepartamentField } from "./fields/ProcessDepartamentField";
-import { ProcessOrderField } from "./fields/ProcessOrderField";
+import { ProcessSequenceField } from "./fields/ProcessSequenceField";
 
 type EditProcessFormProps = {
   process: ProcessWithDepartament;
@@ -68,11 +68,12 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
     >
       <FieldGroup>
         <ProcessNameField form={form} />
-        <ProcessOrderField form={form} />
+        <ProcessSequenceField form={form} />
         <ProcessDepartamentField
           form={form}
           selectedDepartament={selectedDepartament}
-          onChange={setSelectedDepartament}
+          defaultDepartament={process.departament}
+          onChangeDepartament={setSelectedDepartament}
         />
       </FieldGroup>
 

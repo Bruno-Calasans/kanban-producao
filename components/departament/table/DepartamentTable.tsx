@@ -6,8 +6,6 @@ import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import type { Departament } from "@/types/database.type";
 import DepartamentDropdownMenu from "./DepartamentDropdownMenu";
-import sortByDefault from "@/utils/sortByDefault";
-import DefaultBadge from "@/components/custom/DefaultBadge";
 
 type DepartamentPageProps = {
   departaments: Departament[];
@@ -20,16 +18,6 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
     cell(props) {
       return formatDateTimeCellValue(props.getValue());
     },
-  },
-  {
-    accessorKey: "isDefault",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Padrão" />,
-    sortingFn: (rowA, rowB) => sortByDefault(rowA.original, rowB.original),
-    cell: ({
-      row: {
-        original: { is_default },
-      },
-    }) => <DefaultBadge isDefault={is_default} />,
   },
   {
     accessorKey: "name",

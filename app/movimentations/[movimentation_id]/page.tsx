@@ -4,7 +4,7 @@ import BackButton from "@/components/custom/buttons/BackButton";
 import Loader from "@/components/custom/Loader";
 import PageTitle from "@/components/custom/PageTitle";
 import MovimentationTabs from "@/components/movimentation/tabs/MovimentationTab";
-import MovimentationStatusBadge from "@/components/movimentations/badges/MovimentationStatusBadge";
+import MovimentationStatusBadge from "@/components/custom/badges/MovimentationStatusBadge";
 import getOneMovimentation from "@/hooks/movimentation/useGetOneMovimentation";
 import { useParams } from "next/navigation";
 

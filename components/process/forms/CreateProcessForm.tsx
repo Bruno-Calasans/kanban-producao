@@ -10,7 +10,7 @@ import { Departament } from "@/types/database.type";
 import { defaultProcessFormValues, useAppForm, formSchema } from "./ProcessFormContext";
 import errorHandler from "@/utils/errorHandler";
 import { ProcessNameField } from "./fields/ProcessNameField";
-import { ProcessOrderField } from "./fields/ProcessOrderField";
+import { ProcessSequenceField } from "./fields/ProcessSequenceField";
 import { ProcessDepartamentField } from "./fields/ProcessDepartamentField";
 import useDialog from "@/hooks/dialog/useDialog";
 
@@ -40,7 +40,7 @@ export default function CreateProcessForm() {
       } catch (error) {
         errorHandler(error, {
           default: "Erro: não foi possível criar o processo.",
-          duplicate: "Erro: nome ou sequência do processo está em uso.",
+          duplicate: "Erro: nome ou sequência do processo já existe.",
         });
       }
     },
@@ -48,7 +48,7 @@ export default function CreateProcessForm() {
 
   return (
     <form
-      id="create-rocess-form"
+      id="create-process-form"
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();
@@ -56,11 +56,11 @@ export default function CreateProcessForm() {
     >
       <FieldGroup>
         <ProcessNameField form={form} />
-        <ProcessOrderField form={form} />
+        <ProcessSequenceField form={form} />
         <ProcessDepartamentField
           form={form}
           selectedDepartament={selectedDepartament}
-          onChange={setSelectedDepartament}
+          onChangeDepartament={setSelectedDepartament}
         />
       </FieldGroup>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Loader from "@/components/custom/Loader";
-import ProcessExecutationTable from "@/components/product-details/tables/ProcessExecutationTable";
+import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 import useGetAllProcessExecutionsByMovimentation from "@/hooks/process-executation/useGetAllProcessExecutionsByMovimentation";
 import { MovimentationPopulated } from "@/types/database.type";
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/preserve-manual-memoization */
 "use client";
 
 import {
@@ -10,6 +11,7 @@ import {
 } from "@/types/database.type";
 import useGetAllProductionFlowTemplates from "../production-flow-template/useGetAllProductionFlowTemplates";
 import useGetAllProcessExecutionsByMovimentation from "../process-executation/useGetAllProcessExecutionsByMovimentation";
+import { useEffect, useMemo, useState } from "react";
 
 type UseProcessStateProps = {
   movimentation: MovimentationPopulated;
@@ -48,11 +50,12 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
   }: ProcessStatusData): ProcessExecutionStatus => {
     const hasExecutions = executions.length > 0;
     const isLastProcess = lastProcess.id == currentProcess.id;
-    const isLastExecutionReprocess =
-      executions.length > 0 ? executions[executions.length - 1]?.type == "REPROCESS" : false;
+    // Execução está ordenada da mais recente primeiro, por isso a primeira execução
+    const isFirstExecutionReprocess =
+      executions.length > 0 ? executions[0]?.type == "REPROCESS" : false;
 
     if (!hasExecutions) return "PENDING";
-    else if (isLastExecutionReprocess && avaliableAmount == 0) return "IN_PROGRESS";
+    else if (isFirstExecutionReprocess && avaliableAmount == 0) return "IN_PROGRESS";
     else if (isLastProcess && avaliableAmount == movimentation.amount) return "SUCCESS";
     else if (avaliableAmount > 0) return "IN_PROGRESS";
     return "SUCCESS";
@@ -60,14 +63,14 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
 
   const getProcessStates = () => {
     if (isPending) return [];
-    const processStates: ProcessState[] = [];
+    const states: ProcessState[] = [];
     const lastProcess = flowTemplates[flowTemplates.length - 1].process;
 
     for (const template of flowTemplates) {
       const currentProcess = template.process;
 
       const inExecutions = processExecutions.filter(
-        (exe) => exe.status === "SUCCESS" && exe.process.id === currentProcess.id,
+        (exe) => exe.status === "SUCCESS" && exe.process?.id === currentProcess.id,
       );
       const outExecutions = processExecutions.filter(
         (exe) => exe.status === "SUCCESS" && exe.from_process?.id === currentProcess.id,
@@ -88,25 +91,27 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
         avaliableAmount,
         currentProcess,
         executions: processExecutions.filter(
-          (exe) => exe.process.id == currentProcess.id || exe.from_process?.id == currentProcess.id,
+          (exe) => exe.process?.id == currentProcess.id || exe.from_process?.id == currentProcess.id,
         ),
         lastProcess,
       });
 
       const { previousProcess, nextProcess } = getNextAndPreviousProcesses(currentProcess);
 
-      processStates.push({
-        movimentation,
-        flowTemplates: flowTemplates,
-        process: currentProcess,
-        avaliableAmount,
-        status,
-        previousProcess,
-        nextProcess,
-      });
+      states.push(
+        structuredClone({
+          movimentation,
+          flowTemplates: flowTemplates,
+          process: currentProcess,
+          avaliableAmount,
+          status,
+          previousProcess,
+          nextProcess,
+        }),
+      );
     }
 
-    return processStates;
+    return states;
   };
 
   const getNextAndPreviousProcesses = (process: ProcessWithDepartament) => {
@@ -135,7 +140,11 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     };
   };
 
-  const processStates = getProcessStates();
+  const processStates = useMemo(() => {
+    if (isPending) return [];
+    if (!flowTemplates.length || !processExecutions) return [];
+    return getProcessStates();
+  }, [movimentation.id, processExecutions, flowTemplates, isPending]);
 
   return {
     processStates,

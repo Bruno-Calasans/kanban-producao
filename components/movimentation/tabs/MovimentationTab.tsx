@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/database.type";
+import { MovimentationPopulated } from "@/types/database.type";
 import { useState } from "react";
 import MovimentationActionsTab from "./MovimentationActionsTab";
 import { MovimentationProcessExecutions } from "./MovimentationProcessExecutions";

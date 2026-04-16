@@ -14,8 +14,5 @@ export default function MovimentationActionsTab({ movimentation }: Movimentation
 
   if (isPending) return <Loader title="Carregando ações...." />;
   if (isError) return <div>Não foi possível carregar as ações</div>;
-
-  console.log(processStates);
-
   return <ProcessStateTable processStates={processStates} />;
 }

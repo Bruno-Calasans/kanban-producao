@@ -22,8 +22,7 @@ export default function CreateReprocessExecutionDialog({
         </Button>
       }
     >
-      <div>{processState.process.name}</div>
-      <CreateReprocessForm processState={processState}/>
+      <CreateReprocessForm processState={processState} />
     </CustomDialog>
   );
 }

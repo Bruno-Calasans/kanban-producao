@@ -53,6 +53,7 @@ export const ExecutionAmountField = withForm({
                       autoComplete="off"
                       type="number"
                       disabled={useMaxAmount}
+                      onFocus={(e) => field.handleChange("")}
                     />
                     <FieldDescription>
                       Define a quantidade que será movida para próximo processo.

@@ -2,8 +2,8 @@ import { ProcessWithDepartament } from "@/types/database.type";
 import { FactoryIcon, CogIcon } from "lucide-react";
 
 type ExecutionStateMsgProps = {
-  from_process: ProcessWithDepartament;
-  to_process: ProcessWithDepartament;
+  from_process: ProcessWithDepartament | null;
+  to_process: ProcessWithDepartament | null;
 };
 
 export default function ExecutionStateMsg({ from_process, to_process }: ExecutionStateMsgProps) {
@@ -15,7 +15,7 @@ export default function ExecutionStateMsg({ from_process, to_process }: Executio
           <FactoryIcon size={18} />
           <p className="flex flex-col flex-1">
             <strong>Departamento Origem</strong>
-            {from_process.departament.name}
+            {from_process?.departament.name}
           </p>
         </div>
 
@@ -24,7 +24,7 @@ export default function ExecutionStateMsg({ from_process, to_process }: Executio
           <CogIcon size={18} />
           <p className="flex flex-col">
             <strong>Processo Origem</strong>
-            {from_process.name}
+            {from_process?.name}
           </p>
         </div>
       </div>
@@ -34,7 +34,7 @@ export default function ExecutionStateMsg({ from_process, to_process }: Executio
         <div className="flex gap-1 flex-1">
           <FactoryIcon size={18} />
           <p className="flex flex-col">
-            <strong>Departamento Destino</strong> {to_process.departament.name}
+            <strong>Departamento Destino</strong> {to_process?.departament.name}
           </p>
         </div>
 
@@ -42,7 +42,7 @@ export default function ExecutionStateMsg({ from_process, to_process }: Executio
         <div className="flex gap-1 flex-1">
           <CogIcon size={18} />
           <p className="flex flex-col">
-            <strong>Processo Destino</strong> {to_process.name}
+            <strong>Processo Destino</strong> {to_process?.name}
           </p>
         </div>
       </div>

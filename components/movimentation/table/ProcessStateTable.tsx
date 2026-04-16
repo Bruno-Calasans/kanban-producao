@@ -33,13 +33,6 @@ const processColumns: ColumnDef<ProcessState>[] = [
     id: "actions",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Ações" />,
     cell: ({ row: { original: processState } }) => {
-      if (
-        processState.movimentation.status === "CANCELLED" ||
-        processState.movimentation.status == "COMPLETED"
-      ) {
-        return null;
-      }
-
       return <ProcessExecutionActions processState={processState} />;
     },
   },

@@ -28,7 +28,8 @@ export type DialogID =
   | "create-process-execution"
   | "edit-process-execution"
   | "delete-process-execution"
-  | "create-reprocess-execution";
+  | "create-reprocess-execution"
+  | string;
 
 export type DialogContext = {
   dialog: DialogID | null;

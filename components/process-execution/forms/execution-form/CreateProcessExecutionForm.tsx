@@ -9,7 +9,7 @@ import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
-import { ProcessState, ProcessWithDepartament, Responsible } from "@/types/database.type";
+import { ProcessState, Responsible } from "@/types/database.type";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { ExecutionAmountField } from "./fields/ExecutionAmountField";
 import { ExecutionResponsibleField } from "./fields/ExecutionResponsibleField";
@@ -43,23 +43,14 @@ export default function CreateProcessExecutionForm({
     onSubmit: async ({ value }) => {
       if (!responsible) return;
       const { amount } = value;
-      const {
-        process,
-        movimentation,
-        flowTemplates,
-        avaliableAmount,
-        nextProcess,
-        previousProcess,
-      } = processState;
-
-      if (!nextProcess) return;
+      const { process, movimentation, flowTemplates, avaliableAmount, nextProcess } = processState;
 
       try {
         // Cria execução de processo
         await createProcessExecution({
           amount,
           from_process_id: process.id,
-          process_id: nextProcess.id,
+          process_id: nextProcess?.id || null,
           movimentation_id: movimentation.id,
           product_id: movimentation.product.id,
           responsible_id: responsible.id,
@@ -68,29 +59,29 @@ export default function CreateProcessExecutionForm({
         });
 
         // Atualiza movimentation
-        const lastProcess = flowTemplates[flowTemplates.length - 1].process;
-        const isLastProcess = nextProcess.id === lastProcess.id;
-        const isAllAmount = avaliableAmount == amount;
+        // const lastProcess = flowTemplates[flowTemplates.length - 1].process;
+        // const isLastProcess = nextProcess?.id === lastProcess.id;
+        // const isAllAmount = amount + avaliableAmount == movimentation.amount;
 
-        // Primeira execução
-        if (movimentation.status === "PENDING") {
-          await updateMovimentation({
-            movimentationId: movimentation.id,
-            updateData: {
-              status: "IN_PROGRESS",
-            },
-          });
-        }
+        // // Primeira execução
+        // if (movimentation.status === "PENDING") {
+        //   await updateMovimentation({
+        //     movimentationId: movimentation.id,
+        //     updateData: {
+        //       status: "IN_PROGRESS",
+        //     },
+        //   });
+        // }
 
-        // Última execução
-        if (movimentation.status === "IN_PROGRESS" && isLastProcess && isAllAmount) {
-          await updateMovimentation({
-            movimentationId: movimentation.id,
-            updateData: {
-              status: "COMPLETED",
-            },
-          });
-        }
+        // // Última execução
+        // if (movimentation.status === "IN_PROGRESS" && isLastProcess && isAllAmount) {
+        //   await updateMovimentation({
+        //     movimentationId: movimentation.id,
+        //     updateData: {
+        //       status: "COMPLETED",
+        //     },
+        //   });
+        // }
 
         toast.success("Execução criada com sucesso!");
         closeDialog("create-process-execution");
@@ -104,7 +95,6 @@ export default function CreateProcessExecutionForm({
   });
 
   const isPending = isCreateExecutionPending || isUpdateMovimentationPending;
-  console.log(processState)
 
   return (
     <form

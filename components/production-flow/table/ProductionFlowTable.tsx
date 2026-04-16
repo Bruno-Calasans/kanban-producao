@@ -10,6 +10,7 @@ import DefaultBadge from "@/components/custom/badges/DefaultBadge";
 import ProductionFlowDropdownMenu from "./ProductionFlowDropdownMenu";
 import { Badge } from "@/components/ui/badge";
 import ProductionFlowProcesses from "./ProductionFlowProcesses";
+import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 
 type FlowTemplatePageProps = {
   productionFlows: ProductionFlow[];
@@ -33,6 +34,11 @@ const productionFlowColumns: ColumnDef<ProductionFlow>[] = [
   {
     accessorKey: "desc",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Desc" />,
+    cell: ({ row: { original: productionFlow } }) => (
+      <p title={productionFlow.desc || ""} className="overflow-hidden text-ellipsis">
+        {productionFlow.desc}
+      </p>
+    ),
   },
   {
     id: "processes",
@@ -41,20 +47,15 @@ const productionFlowColumns: ColumnDef<ProductionFlow>[] = [
       return <ProductionFlowProcesses productionFlow={original} />;
     },
   },
-
   {
     accessorKey: "created_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Criado em" />,
-    cell(props) {
-      return formatDateTimeCellValue(props.getValue());
-    },
+    cell: (props) => stringDateTimeToDate(props.getValue()),
   },
   {
     accessorKey: "updated_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado em" />,
-    cell: (props) => {
-      return formatDateTimeCellValue(props.getValue());
-    },
+    cell: (props) => stringDateTimeToDate(props.getValue()),
   },
   {
     id: "action",

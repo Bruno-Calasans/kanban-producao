@@ -8,6 +8,7 @@ import { Process } from "@/types/database.type";
 import ProcessSelector from "@/components/custom/ProcessSelector";
 
 type ProductionFlowProcessesFieldProps = {
+  defaultProcesses?: Process[];
   selectedProcesses?: Process[];
   onSelect: (processes: Process[]) => void;
 };
@@ -15,14 +16,7 @@ type ProductionFlowProcessesFieldProps = {
 export const ProductionFlowProcessesField = withForm({
   defaultValues: defaultProductionFlowValues,
   props: {} as ProductionFlowProcessesFieldProps,
-  render({ form, selectedProcesses, onSelect }) {
-    
-    const handleSelectedProcesses = (processes: Process[]) => {
-      onSelect(processes);
-      const processNames = processes.map((process) => process.name);
-      form.setFieldValue("processNames", processNames);
-    };
-
+  render({ form, defaultProcesses, selectedProcesses, onSelect }) {
     return (
       <form.Field
         name="processNames"
@@ -33,8 +27,13 @@ export const ProductionFlowProcessesField = withForm({
               Selecione os processos que fazem parte deste fluxo de produção.
             </FieldDescription>
             <ProcessSelector
+              defaultProcesses={defaultProcesses}
               selectedProcesses={selectedProcesses}
-              onSelect={handleSelectedProcesses}
+              onSelect={(processes) => {
+                const processNames = processes.map((process) => process.name);
+                form.setFieldValue("processNames", processNames);
+                onSelect(processes);
+              }}
             />
             <FieldDescription />
           </FieldSet>

@@ -47,7 +47,7 @@ export default function ProductionFlowDropdownMenu({
           </DropdownMenuItem>
         )}
 
-        <Link className="w-full" href={`/production-flow/edit/${productionFlow.id}`}>
+        <Link className="w-full" href={`/production-flows/edit/${productionFlow.id}`}>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <Edit2Icon />
             Editar

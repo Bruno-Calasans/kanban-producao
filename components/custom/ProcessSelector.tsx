@@ -16,13 +16,13 @@ import {
 } from "@/components/ui/combobox";
 import useGetAllProcesses from "@/hooks/process/useGetAllProcesses";
 import { Process } from "@/types/database.type";
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useMemo, useState } from "react";
 import Loader from "./Loader";
 import { sortBySequence } from "@/utils/sortBySequence";
 
 type ComboItem = {
+  id: string;
   label: string;
-  value: string;
 };
 
 type GroupedItems = {
@@ -32,34 +32,38 @@ type GroupedItems = {
 
 type ProductionFlowProcessesFieldProps = {
   selectedProcesses?: Process[];
+  defaultProcesses?: Process[];
   onSelect: (processes: Process[]) => void;
 };
 
 export default function ProcessSelector({
+  defaultProcesses,
   selectedProcesses,
   onSelect,
 }: ProductionFlowProcessesFieldProps) {
   const anchor = useComboboxAnchor();
   const { data, isPending } = useGetAllProcesses();
-  // const [selectedProcesses, setSelectedProcesses] = useState<Process[]>(defaultProcesses || []);
   const processes = data?.data || [];
+  const [hasDefault, setHasDefault] = useState<boolean>(false);
 
   const groupItems = () => {
     const groups: GroupedItems[] = [];
+
     processes.forEach((process) => {
       const hasGroup = groups.find((group) => group.value === process.departament.name);
+
       if (hasGroup) {
         hasGroup.items.push({
+          id: String(process.id),
           label: formatProcess(process),
-          value: formatProcess(process),
         });
       } else {
         groups.push({
           value: process.departament.name,
           items: [
             {
+              id: String(process.id),
               label: formatProcess(process),
-              value: formatProcess(process),
             },
           ],
         });
@@ -68,9 +72,8 @@ export default function ProcessSelector({
     return groups;
   };
 
-  const handleValueChange = (items: string[]) => {
-    const processNames = items.map((item) => item.split(" ")[1]);
-    const chosedProcesses = processes.filter((process) => processNames.includes(process.name));
+  const handleValueChange = (itemIds: string[]) => {
+    const chosedProcesses = processes.filter((process) => itemIds.includes(String(process.id)));
     onSelect(chosedProcesses);
   };
 
@@ -78,13 +81,14 @@ export default function ProcessSelector({
     return `(${process.sequence}) ${process.name}`;
   };
 
-  //   useEffect(() => {
-  //     if (defaultProcesses && defaultProcesses.length > 0) {
-  //       onSelect(defaultProcesses);
-  //     }
-  //   }, [defaultProcesses, onSelect]);
+  useEffect(() => {
+    if (defaultProcesses && defaultProcesses.length > 0 && !hasDefault) {
+      onSelect(defaultProcesses);
+      setHasDefault(true);
+    }
+  }, [defaultProcesses]);
 
-  const groups = groupItems();
+  const groups = useMemo(() => groupItems(), [processes]);
 
   if (isPending) return <Loader title="Carregando processos..." />;
 
@@ -93,8 +97,9 @@ export default function ProcessSelector({
       multiple
       items={groups}
       onValueChange={handleValueChange}
-      value={selectedProcesses?.sort(sortBySequence).map(formatProcess)}
+      value={selectedProcesses?.sort(sortBySequence).map((p) => String(p.id))}
     >
+      {/* Só redenriza */}
       <ComboboxChips
         ref={anchor}
         style={{
@@ -109,15 +114,17 @@ export default function ProcessSelector({
         <ComboboxChipsInput placeholder="Adicione processos" />
       </ComboboxChips>
 
+      {/* Select em si */}
       <ComboboxContent side="bottom" anchor={anchor}>
         <ComboboxEmpty>Nenhum processo encontrado.</ComboboxEmpty>
         <ComboboxList>
           {(group: GroupedItems, index) => (
             <ComboboxGroup key={group.value} items={group.items}>
               <ComboboxLabel>{group.value}</ComboboxLabel>
+
               <ComboboxCollection>
                 {(item: ComboItem) => (
-                  <ComboboxItem key={item.label} value={item.value}>
+                  <ComboboxItem key={item.id} value={item.id}>
                     {item.label}
                   </ComboboxItem>
                 )}

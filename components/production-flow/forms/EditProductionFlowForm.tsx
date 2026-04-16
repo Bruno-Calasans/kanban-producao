@@ -26,16 +26,20 @@ type CreateProductionFlowFormProps = {
 
 export default function EditProductionFlowForm({ productionFlow }: CreateProductionFlowFormProps) {
   const router = useRouter();
-  const { mutateAsync: updateProductionFlowAsync, isPending: isProductionFlowPending } =
+
+  const { mutateAsync: updateProductionFlow, isPending: isProductionFlowPending } =
     useUpdateProductionFlow();
+
   const {
     mutateAsync: createProductionFlowTemplateAsync,
     isPending: isCreateProductionFlowTemplatePending,
   } = useCreateProductionFlowTemplate();
+
   const {
     mutateAsync: deleteFlowTemplatesAsync,
     isPending: isDeleteProductionFlowTemplatesPending,
   } = useDeleteProductionFlowTemplates();
+
   const { data, isPending: isProductionFlowTemplatesPending } = useGetAllProductionFlowTemplates(
     productionFlow.id,
   );
@@ -61,42 +65,36 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
     },
     onSubmit: async ({ value }) => {
       try {
-        const { nameChanged, descChanged, useDefaultChanged, processesChanged } = checkChanges();
-
         // atualiza informações básicas do fluxo de produção (nome, descrição, usar padrão) sem mudar os processos
-        if (nameChanged || descChanged || useDefaultChanged) {
-          const { name, desc, useDefault } = value;
-          await updateProductionFlowAsync({
-            flowtemplateId: productionFlow.id,
-            updateData: {
-              name,
-              desc,
-              is_default: !!useDefault,
-            },
-          });
-        }
+
+        const { name, desc, useDefault } = value;
+        await updateProductionFlow({
+          flowtemplateId: productionFlow.id,
+          updateData: {
+            name,
+            desc,
+            is_default: !!useDefault,
+          },
+        });
 
         //  mudança apenas nos processos, sem mudança nas outras informações do fluxo de produção
-        if (processesChanged) {
-          // remove processos antigos
-          const templateIdsToDelete = productionFlowTemplates.map((template) => template.id);
-          await deleteFlowTemplatesAsync({
-            productionFlowTemplateIds: templateIdsToDelete,
-          });
+        // remove processos antigos
+        const templateIdsToDelete = productionFlowTemplates.map((template) => template.id);
+        await deleteFlowTemplatesAsync({
+          productionFlowTemplateIds: templateIdsToDelete,
+        });
 
-          // criar novos processos do fluxo de produção com os processos selecionados
-          await createProductionFlowTemplateAsync(
-            selectedProcesses.map((process) => ({
-              production_flow_id: productionFlow.id,
-              departament_id: process.departament_id,
-              process_id: process.id,
-              sequence: process.sequence,
-            })),
-          );
-        }
-
+        // criar novos processos do fluxo de produção com os processos selecionados
+        await createProductionFlowTemplateAsync(
+          selectedProcesses.map((process) => ({
+            production_flow_id: productionFlow.id,
+            departament_id: process.departament_id,
+            process_id: process.id,
+            sequence: process.sequence,
+          })),
+        );
         toast.success("Fluxo de produção atualizado com sucesso!");
-        router.push("/production-flow");
+        router.push("/production-flows");
       } catch (error) {
         errorHandler(error, {
           default: "Erro: não foi possível atualizar o fluxo de produção",
@@ -107,23 +105,6 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
     },
   });
 
-  const checkChanges = () => {
-    const nameChanged = form.getFieldValue("name") !== productionFlow.name;
-    const descChanged = form.getFieldValue("desc") !== productionFlow.desc;
-    const useDefaultChanged = form.getFieldValue("useDefault") !== productionFlow.is_default;
-    const processesChanged =
-      form.getFieldValue("processNames").toString() !==
-      defaultSelectedProcesses.map((process) => process.name).toString();
-
-    return {
-      nameChanged,
-      descChanged,
-      useDefaultChanged,
-      processesChanged,
-      hasAnyChange: nameChanged || descChanged || useDefaultChanged || processesChanged,
-    };
-  };
-
   const resetFormToDefaultValues = () => {
     form.reset({
       name: productionFlow.name,
@@ -132,18 +113,6 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
       processNames: defaultSelectedProcesses.map((process) => process.name) || [],
     });
   };
-
-  useEffect(() => {
-    if (!isProductionFlowTemplatesPending) {
-      resetFormToDefaultValues();
-      setSelectedProcesses(defaultSelectedProcesses);
-    }
-  }, [
-    isProductionFlowTemplatesPending,
-    productionFlow.desc,
-    productionFlow.is_default,
-    productionFlow.name,
-  ]);
 
   return (
     <form
@@ -160,6 +129,7 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
         {!isProductionFlowTemplatesPending && (
           <ProductionFlowProcessesField
             form={form}
+            defaultProcesses={defaultSelectedProcesses}
             selectedProcesses={selectedProcesses}
             onSelect={setSelectedProcesses}
           />
@@ -182,7 +152,7 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
               hiddenIcon
               disabled={state.isDefaultValue}
               isLoading={isPending}
-              label="Salvar alterações"
+              label="Salvar"
               loadingMsg="Salvando..."
             />
           )}

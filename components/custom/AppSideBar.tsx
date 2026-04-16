@@ -38,8 +38,8 @@ const items = [
     icon: ArrowLeftRightIcon,
   },
   {
-    name: "Fluxo de Produção",
-    url: "/production-flow",
+    name: "Fluxos de Produção",
+    url: "/production-flows",
     icon: FormIcon,
   },
   {

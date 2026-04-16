@@ -33,7 +33,7 @@ export default function CreateProductionFlowForm() {
         const { name, desc, useDefault } = value;
         const { data: createdProductionFlow } = await productionAsync({
           name,
-          desc,
+          desc: desc || "",
           is_default: !!useDefault,
         });
 
@@ -47,7 +47,7 @@ export default function CreateProductionFlowForm() {
         );
 
         toast.success("Fluxo de produção criado com sucesso!");
-        router.push("/production-flow");
+        router.push("/production-flows");
       } catch (error) {
         errorHandler(error, {
           default: "Erro: não foi possível criar o fluxo de produção",
@@ -69,7 +69,11 @@ export default function CreateProductionFlowForm() {
         <ProductionFlowNameField form={form} />
         <ProductionFlowDescField form={form} />
         <ProductionFlowUseDefaultField form={form} />
-        <ProductionFlowProcessesField form={form} onSelect={setSelectedProcesses} />
+        <ProductionFlowProcessesField
+          form={form}
+          selectedProcesses={selectedProcesses}
+          onSelect={setSelectedProcesses}
+        />
       </FieldGroup>
 
       <div

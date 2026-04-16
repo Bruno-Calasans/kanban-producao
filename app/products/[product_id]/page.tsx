@@ -3,7 +3,7 @@
 import BackButton from "@/components/custom/buttons/BackButton";
 import Loader from "@/components/custom/Loader";
 import PageTitle from "@/components/custom/PageTitle";
-import ProductDetailsTabs from "@/components/product/tabs/ProductDetailsTabs";
+import ProductDetailsTabs from "@/components/product/tabs/ProductInfoTabs";
 import useGetOneProduct from "@/hooks/product/useGetOneProduct";
 import { useParams } from "next/navigation";
 
@@ -26,11 +26,11 @@ export default function ProductInfoPage() {
     <section>
       <div className="flex justify-between">
         <PageTitle>Informações do Produto</PageTitle>
-        <BackButton to="/product" label="Voltar à página de produtos" />
+        <BackButton to="/products" label="Voltar à página de produtos" />
       </div>
       <div className="flex flex-col gap-1 mb-4">
         <p>
-          <strong>Produto:</strong> {product.name}
+          <strong>Nome:</strong> {product.name}
         </p>
         <p>
           <strong>Número de OP:</strong> {product.op}

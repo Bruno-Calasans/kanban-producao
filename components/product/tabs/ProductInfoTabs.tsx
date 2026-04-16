@@ -4,19 +4,19 @@ import { useState } from "react";
 import ProductProcessExecutationsTab from "./ProductProcessExecutationsTab";
 import ProductMovimentationsTab from "./ProductMovimentationsTab";
 
-type ProductDetailsTabsProps = {
+type ProductInfoTabsProps = {
   product: ProductWithProductionFlow;
 };
 
-type ProductDetailsTabs = "movimentation" | "process-execution";
+type ProductInfoTabs = "movimentation" | "process-execution";
 
-export default function ProductDetailsTabs({ product }: ProductDetailsTabsProps) {
-  const [selectedTab, setSelectedTab] = useState<ProductDetailsTabs>("movimentation");
+export default function ProductInfoTabs({ product }: ProductInfoTabsProps) {
+  const [selectedTab, setSelectedTab] = useState<ProductInfoTabs>("movimentation");
 
   return (
     <Tabs
       value={selectedTab}
-      onValueChange={(value) => setSelectedTab(value as ProductDetailsTabs)}
+      onValueChange={(value) => setSelectedTab(value as ProductInfoTabs)}
       defaultValue="movimentation"
     >
       <div className="flex justify-between">

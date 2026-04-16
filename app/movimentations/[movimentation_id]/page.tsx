@@ -7,6 +7,8 @@ import MovimentationTabs from "@/components/movimentation/tabs/MovimentationTab"
 import MovimentationStatusBadge from "@/components/custom/badges/MovimentationStatusBadge";
 import getOneMovimentation from "@/hooks/movimentation/useGetOneMovimentation";
 import { useParams } from "next/navigation";
+import Link from "next/link";
+import { InfoIcon } from "lucide-react";
 
 export default function MovimentationIdPage() {
   const params = useParams<{ movimentation_id: string }>();
@@ -33,8 +35,15 @@ export default function MovimentationIdPage() {
         <p>
           <strong>ID:</strong> #{movimentation.id}
         </p>
-        <p>
-          <strong>Produto:</strong> {movimentation.product.name}
+        <p className="flex gap-1">
+          <strong>Produto:</strong>{" "}
+          <Link
+            className="flex gap-1 justify-center items-center hover:underline"
+            href={`/products/${movimentation.product.id}`}
+          >
+            {movimentation.product.name}
+            <InfoIcon className="text-indigo-500" size={18} />
+          </Link>
         </p>
         <p>
           <strong>Quantidade:</strong> {movimentation.amount}

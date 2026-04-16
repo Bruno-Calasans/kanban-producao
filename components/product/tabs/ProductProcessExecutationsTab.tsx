@@ -31,5 +31,7 @@ export default function ProductProcessExecutationsTab({
       </section>
     );
   }
-  return <ProcessExecutationTable processExecutations={processExecutations} />;
+  return (
+    <ProcessExecutationTable hideMovimentationColumn processExecutions={processExecutations} />
+  );
 }

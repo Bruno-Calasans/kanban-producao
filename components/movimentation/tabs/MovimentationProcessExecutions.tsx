@@ -19,5 +19,5 @@ export function MovimentationProcessExecutions({
 
   if (error) return <div>Erro ao carregar execuções</div>;
 
-  return <ProcessExecutationTable processExecutions={processExecutions} />;
+  return <ProcessExecutationTable hideMovimentationColumn processExecutions={processExecutions} />;
 }

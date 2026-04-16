@@ -10,6 +10,7 @@ import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 
 type MovimentationPageProps = {
   processExecutions: ProcessExecutionPopulated[];
+  hideMovimentationColumn?: boolean;
 };
 
 const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
@@ -18,6 +19,12 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Data" />,
     cell: ({ row: { original: processExecution } }) =>
       stringDateTimeToDate(processExecution.created_at),
+  },
+  {
+    id: "movimentation.id",
+    accessorKey: "movimentation.id",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Movimentação" />,
+    cell: (props) => `#${props.getValue()}`,
   },
   {
     id: "from_process.name",
@@ -34,16 +41,16 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd." />,
   },
   {
+    id: "responsible.name",
+    accessorKey: "responsible.name",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Resp" />,
+  },
+  {
     accessorKey: "type",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Tipo" />,
     cell: ({ row: { original: processExecution } }) => (
       <ProcessExecutionTypeBadge processExecution={processExecution} />
     ),
-  },
-  {
-    id: "responsible.name",
-    accessorKey: "responsible.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Resp" />,
   },
   // {
   //   accessorKey: "status",
@@ -54,12 +61,19 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
   // },
 ];
 
-export default function ProcessExecutationTable({ processExecutions }: MovimentationPageProps) {
+export default function ProcessExecutationTable({
+  processExecutions,
+  hideMovimentationColumn,
+}: MovimentationPageProps) {
+  const filteredColumns = hideMovimentationColumn
+    ? processExecutationColumns.filter((column) => column.id != "movimentation.id")
+    : processExecutationColumns;
+
   return (
     <DataTable
       filterPlaceholder="Procurar Execução de processos"
       filterColumn="process.name"
-      columns={processExecutationColumns}
+      columns={filteredColumns}
       data={processExecutions}
     />
   );

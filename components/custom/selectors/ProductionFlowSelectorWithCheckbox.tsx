@@ -72,9 +72,9 @@ export default function ProductionFlowSelectorWithCheckbox({
         <Field orientation="horizontal">
           <Checkbox
             id="use-default-production-flow"
-            name="use-default-production-flow"
             checked={useDefault}
             onCheckedChange={handleUseDefault}
+            className="group-has-disabled/field:opacity-100"
           />
           <FieldContent>
             <FieldLabel>Usar fluxo de produção padrão</FieldLabel>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import { FieldGroup } from "@/components/ui/field";
@@ -21,7 +20,7 @@ type CreateResponsibleFormProps = {
 export default function UpdateResponsibleForm({ responsible }: CreateResponsibleFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateResponsible();
-  const [selectedDepartament, setSelectedDepartament] = useState<Departament | undefined>();
+  const [selectedDepartament, setSelectedDepartament] = useState<Departament>();
 
   const form = useAppForm({
     defaultValues: {
@@ -65,6 +64,7 @@ export default function UpdateResponsibleForm({ responsible }: CreateResponsible
         <ResponsibleNameField form={form} />
         <ResponsibleDepartamentName
           form={form}
+          defaultDepartament={responsible.departament}
           selectedDepartament={selectedDepartament}
           onDepartamentChange={setSelectedDepartament}
         />
@@ -72,7 +72,7 @@ export default function UpdateResponsibleForm({ responsible }: CreateResponsible
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={() => form.reset()} />
-        <SaveButton isLoading={isPending} />
+        <SaveButton hiddenIcon isLoading={isPending} />
       </div>
     </form>
   );

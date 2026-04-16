@@ -58,7 +58,7 @@ const items = [
     icon: CogIcon,
   },
   {
-    name: "Responsável",
+    name: "Responsáveis",
     url: "/responsibles",
     icon: BriefcaseBusinessIcon,
   },

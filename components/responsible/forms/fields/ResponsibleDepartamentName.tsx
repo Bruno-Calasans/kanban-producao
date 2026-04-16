@@ -4,6 +4,7 @@ import { defaultResponsibleFormValues, withForm } from "../responsibleFormContex
 import DepartamentSelector from "@/components/custom/selectors/DepartamentSelector";
 
 type DefaultDepartamentProcessFieldProps = {
+  defaultDepartament?: Departament;
   selectedDepartament?: Departament;
   onDepartamentChange: (departament?: Departament) => void;
 };
@@ -11,7 +12,7 @@ type DefaultDepartamentProcessFieldProps = {
 export const ResponsibleDepartamentName = withForm({
   defaultValues: defaultResponsibleFormValues,
   props: {} as DefaultDepartamentProcessFieldProps,
-  render({ form, selectedDepartament, onDepartamentChange }) {
+  render({ form, defaultDepartament, selectedDepartament, onDepartamentChange }) {
     return (
       <form.AppField
         name="departamentName"
@@ -22,6 +23,7 @@ export const ResponsibleDepartamentName = withForm({
             <Field id="responsible-departament" data-invalid={isInvalid}>
               <FieldLabel htmlFor={field.name}>Departamento</FieldLabel>
               <DepartamentSelector
+                defaultDepartament={defaultDepartament}
                 selectedDepartament={selectedDepartament}
                 onValueChange={(departament) => {
                   field.handleChange(departament?.name || "");

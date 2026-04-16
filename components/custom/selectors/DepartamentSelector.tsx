@@ -17,8 +17,7 @@ export default function DepartamentSelector({
 }: DepartamentSelectorProps) {
   const { data, isPending } = useGetAllDepartaments();
   const departaments = data ? data.data : [];
-  const defaultdepartament =
-    defaultDepartament || departaments.length > 0 ? departaments[0] : undefined;
+  const defaultdepartament = defaultDepartament || selectedDepartament || departaments[0];
 
   return (
     <SingleSelector<Departament>

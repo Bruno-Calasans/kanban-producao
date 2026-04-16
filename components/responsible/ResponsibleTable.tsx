@@ -14,19 +14,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 
 type ResponsiblePageProps = {
   responsibles: ResponsibleWithDepartament[];
 };
 
 const responsibleColumns: ColumnDef<ResponsibleWithDepartament>[] = [
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Data de criação" />,
-    cell(props) {
-      return formatDateTimeCellValue(props.getValue());
-    },
-  },
   {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
@@ -36,15 +30,17 @@ const responsibleColumns: ColumnDef<ResponsibleWithDepartament>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
   },
   {
+    accessorKey: "created_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Criado em" />,
+    cell: (props) => stringDateTimeToDate(props.getValue()),
+  },
+  {
     accessorKey: "updated_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Última atualização" />,
-    cell: (props) => {
-      return formatDateTimeCellValue(props.getValue());
-    },
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Atualizado em" />,
+    cell: (props) => stringDateTimeToDate(props.getValue()),
   },
   {
     id: "action",
-    header: "",
     cell: ({ row }) => {
       const responsible = row.original;
 

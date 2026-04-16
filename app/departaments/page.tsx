@@ -6,7 +6,7 @@ import { DepartamentTable } from "../../components/departament/table/Departament
 import CreateDepartamentDialog from "@/components/departament/dialogs/CreateDepartamentDialog";
 import Loader from "@/components/custom/Loader";
 
-export default function DepartamentPage() {
+export default function DepartamentsPage() {
   const { data, isLoading, error } = useGetAllDepartaments();
   const departaments = data?.data || [];
 

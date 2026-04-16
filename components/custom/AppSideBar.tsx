@@ -48,13 +48,13 @@ const items = [
     icon: ShirtIcon,
   },
   {
-    name: "Departamento",
-    url: "/departament",
+    name: "Departamentos",
+    url: "/departaments",
     icon: FactoryIcon,
   },
   {
-    name: "Processo",
-    url: "/process",
+    name: "Processos",
+    url: "/processes",
     icon: CogIcon,
   },
   {

@@ -6,7 +6,7 @@ import useGetAllProcesses from "@/hooks/process/useGetAllProcesses";
 import CreateProcessDialog from "@/components/process/dialogs/CreateProcessDialog";
 import ProcessTable from "@/components/process/table/ProcessTable";
 
-export default function ProcessPage() {
+export default function ProcessesPage() {
   const { data, isLoading, error } = useGetAllProcesses();
   const processes = data?.data || [];
 

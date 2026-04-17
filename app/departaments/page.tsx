@@ -5,26 +5,24 @@ import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments";
 import { DepartamentTable } from "../../components/departament/table/DepartamentTable";
 import CreateDepartamentDialog from "@/components/departament/dialogs/CreateDepartamentDialog";
 import Loader from "@/components/custom/Loader";
+import PageMsg from "@/components/custom/msgs/PageMsg";
 
 export default function DepartamentsPage() {
-  const { data, isLoading, error } = useGetAllDepartaments();
+  const { data, isPending, error } = useGetAllDepartaments();
   const departaments = data?.data || [];
 
-  if (isLoading) {
-    return (
-      <section>
-        <PageTitle>Departamentos</PageTitle>
-        <Loader title="Carregando departamentos..." />
-      </section>
-    );
+  if (isPending) {
+    return <Loader title="Carregando departamentos..." />;
   }
 
   if (error) {
     return (
-      <section>
-        <PageTitle>Departamentos</PageTitle>
-        <p>Ocorreu um erro ao carregar os departamentos.</p>
-      </section>
+      <PageMsg
+        title="Erro: não foi possível carregar os departamentos"
+        content="Algo deu errado ao carregar os departamentos"
+        backBtnLabel="Voltar à página inicial"
+        backBtnUrl="/"
+      />
     );
   }
 

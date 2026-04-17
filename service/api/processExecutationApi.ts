@@ -40,7 +40,12 @@ export async function getOneProcessExecution(processExecutionId: number) {
 }
 
 export async function createProcessExecution(createData: CreateProcessExecutionData) {
-  return await supabase.from("ProcessExecution").insert(createData).select().single().throwOnError();
+  return await supabase
+    .from("ProcessExecution")
+    .insert(createData)
+    .select()
+    .single()
+    .throwOnError();
 }
 
 export async function updateProcessExecution(
@@ -95,5 +100,23 @@ export async function getAllProcessExecutionsByMovimentation(movimentationId: nu
     )
     .eq("movimentation_id", movimentationId)
     .order("created_at", { ascending: false })
+    .throwOnError();
+}
+
+export async function getAllExecutionsByDepartament(departamentId: number) {
+  return await supabase
+    .from("ProcessExecution")
+    .select(
+      `
+      process:Process!process_id(departament_id),
+      from_process:Process!from_process_id(departament_id)
+    `,
+    )
+    .or(`departament_id.eq.${departamentId}`, {
+      foreignTable: "process",
+    })
+    .or(`departament_id.eq.${departamentId}`, {
+      foreignTable: "from_process",
+    })
     .throwOnError();
 }

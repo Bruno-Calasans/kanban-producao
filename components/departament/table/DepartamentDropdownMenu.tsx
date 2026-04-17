@@ -10,12 +10,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useGetAllMovimentationsByDepartament from "@/hooks/process-executation/useGetAllMovimentationsByDepartament";
 
 type DepartamentDropdownMenuProps = {
   departament: Departament;
 };
 
 export default function DepartamentDropdownMenu({ departament }: DepartamentDropdownMenuProps) {
+  const { data, error, isPending } = useGetAllMovimentationsByDepartament(departament.id);
+  const executions = data?.data || [];
+
+  const canEdit = !isPending && executions.length == 0;
+
+  console.log(executions)
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,12 +31,14 @@ export default function DepartamentDropdownMenu({ departament }: DepartamentDrop
       </DropdownMenuTrigger>
 
       <DropdownMenuContent side="bottom" align="end" className="w-fit">
-        <EditDepartamentDialog departament={departament}>
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <Edit2Icon />
-            Editar
-          </DropdownMenuItem>
-        </EditDepartamentDialog>
+        {canEdit && (
+          <EditDepartamentDialog departament={departament}>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <Edit2Icon />
+              Editar
+            </DropdownMenuItem>
+          </EditDepartamentDialog>
+        )}
 
         <DeleteDepartamentDialog departament={departament}>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>

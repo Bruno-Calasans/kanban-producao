@@ -1,19 +1,24 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
-import { Product, ProductWithProductionFlow } from "@/types/database.type";
+import { ProductWithProductionFlow } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
-import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import ProductTableDropdownMenu from "./ProductTableDropdownMenu";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 import { useRouter } from "next/navigation";
+import ActiveBadge from "@/components/custom/badges/ActiveBadge";
 
 type ProductPageProps = {
   products: ProductWithProductionFlow[];
 };
 
 const productColumns: ColumnDef<ProductWithProductionFlow>[] = [
+  {
+    accessorKey: "is_active",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Situação" />,
+    cell: (props) => <ActiveBadge isActive={!!props.getValue()} />,
+  },
   {
     accessorKey: "op",
     header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,

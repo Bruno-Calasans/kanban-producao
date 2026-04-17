@@ -18,12 +18,14 @@ import useDialog from "@/hooks/dialog/useDialog";
 import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
 import { useState } from "react";
 import { ProductionFlow, ProductWithProductionFlow } from "@/types/database.type";
+import useGetAllMovimentationsByProduct from "@/hooks/movimentation/useGetAllMovimentationsByProduct";
 
 type EditProductForm = {
   product: ProductWithProductionFlow;
+  canEditProductionFlow?: boolean;
 };
 
-export default function EditProductForm({ product }: EditProductForm) {
+export default function EditProductForm({ product, canEditProductionFlow }: EditProductForm) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateProduct();
   const [selectedProductionFlow, setSelectedProductionFlow] = useState<
@@ -77,11 +79,13 @@ export default function EditProductForm({ product }: EditProductForm) {
         <ProductOpField form={form} />
       </FieldGroup>
 
-      <ProductProductionFlowField
-        form={form}
-        defaultProductionFlow={product.production_flow}
-        onChangeProductionFlow={setSelectedProductionFlow}
-      />
+      {canEditProductionFlow && (
+        <ProductProductionFlowField
+          form={form}
+          defaultProductionFlow={product.production_flow}
+          onChangeProductionFlow={setSelectedProductionFlow}
+        />
+      )}
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={() => form.reset()} />

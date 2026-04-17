@@ -1,16 +1,26 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProductWithProductionFlow } from "@/types/database.type";
-import ProductProcessExecutationsTab from "@/components/product/tabs/ProductProcessExecutationsTab";
-import ProductMovimentationsTab from "@/components/product/tabs/ProductMovimentationsTab";
+import {
+  MovimentationPopulated,
+  ProcessExecutionPopulated,
+  ProductWithProductionFlow,
+} from "@/types/database.type";
+import MovimentationTable from "../movimentations/table/MovimentationTable";
+import ProcessExecutationTable from "./tables/ProcessExecutationTable";
 
 type ProductInfoTabsProps = {
   product: ProductWithProductionFlow;
+  movimentations: MovimentationPopulated[];
+  executions: ProcessExecutionPopulated[];
 };
 
 type ProductInfoTabs = "movimentation" | "process-execution";
 
-export default function ProductInfoTabs({ product }: ProductInfoTabsProps) {
+export default function ProductInfoTabs({
+  product,
+  executions,
+  movimentations,
+}: ProductInfoTabsProps) {
   const [selectedTab, setSelectedTab] = useState<ProductInfoTabs>("movimentation");
 
   return (
@@ -32,11 +42,11 @@ export default function ProductInfoTabs({ product }: ProductInfoTabsProps) {
       </div>
 
       <TabsContent value="movimentation">
-        <ProductMovimentationsTab product={product} />
+        <MovimentationTable hideProductColumn movimentations={movimentations} />
       </TabsContent>
 
       <TabsContent value="process-executation">
-        <ProductProcessExecutationsTab product={product} />
+        <ProcessExecutationTable hideMovimentationColumn processExecutions={executions} />
       </TabsContent>
     </Tabs>
   );

@@ -34,6 +34,7 @@ export default function CreateProductForm() {
           name,
           op,
           production_flow_id: selectedProductionFlow.id,
+          is_active: true,
         });
         toast.success("Produto criado com sucesso!");
         closeDialog("create-product");

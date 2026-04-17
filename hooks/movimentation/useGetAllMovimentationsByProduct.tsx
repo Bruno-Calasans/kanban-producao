@@ -1,13 +1,11 @@
-import { getAllMovimentationsByProduct } from "@/service/api/movimentationApi"
-import { useQuery } from "@tanstack/react-query"
-import { movimentationKeys } from "@/constants/movimentationKeys"
-
+import { getAllMovimentationsByProduct } from "@/service/api/movimentationApi";
+import { useQuery } from "@tanstack/react-query";
+import { movimentationKeys } from "@/constants/movimentationKeys";
 
 export default function useGetAllMovimentationsByProduct(productId: number) {
-    return useQuery({
-        queryKey: movimentationKeys.lists(),
-        queryFn: () => getAllMovimentationsByProduct(productId),
-        enabled: !!productId
-    })
-
+  return useQuery({
+    queryKey: movimentationKeys.list(productId),
+    queryFn: () => getAllMovimentationsByProduct(productId),
+    enabled: !!productId,
+  });
 }

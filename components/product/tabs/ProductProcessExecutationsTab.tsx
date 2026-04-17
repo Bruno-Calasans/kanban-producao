@@ -17,8 +17,7 @@ export default function ProductProcessExecutationsTab({
   if (isPending) {
     return (
       <section>
-        <PageTitle>Processos</PageTitle>
-        <Loader title="Carregando processos..." />
+        <Loader title="Carregando execuções..." />
       </section>
     );
   }
@@ -26,8 +25,7 @@ export default function ProductProcessExecutationsTab({
   if (error) {
     return (
       <section>
-        <PageTitle>Processos</PageTitle>
-        <p>Ocorreu um erro ao carregar os processos.</p>
+        <p>Ocorreu um erro ao carregar as execuções.</p>
       </section>
     );
   }

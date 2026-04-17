@@ -1,6 +1,7 @@
 "use client";
 
 import Loader from "@/components/custom/Loader";
+import CreateMovimentationDialog from "@/components/movimentations/dialogs/CreateMovimentationDialog";
 import MovimentationTable from "@/components/movimentations/table/MovimentationTable";
 import useGetAllMovimentationsByProduct from "@/hooks/movimentation/useGetAllMovimentationsByProduct";
 import { ProductWithProductionFlow } from "@/types/database.type";
@@ -17,5 +18,9 @@ export default function ProductMovimentationsTab({ product }: ProductMovimentati
 
   if (error) return <div>Erro ao carregar movimentações do produto</div>;
 
-  return <MovimentationTable hideProductColumn movimentations={movimentations} />;
+  return (
+    <div className="flex flex-col justify-end mt-2">
+      <MovimentationTable hideProductColumn movimentations={movimentations} />;
+    </div>
+  );
 }

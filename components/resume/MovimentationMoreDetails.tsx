@@ -3,11 +3,11 @@ import { MovimentationPopulated } from "@/types/database.type";
 import Loader from "../custom/Loader";
 import { Badge } from "@/components/ui/badge";
 
-type MoreDetailsProps = {
+type MovimentationMoreDetailsProps = {
   movimentation: MovimentationPopulated;
 };
 
-export default function MoreDetails({ movimentation }: MoreDetailsProps) {
+export default function MovimentationMoreDetails({ movimentation }: MovimentationMoreDetailsProps) {
   const { processStates, isError, isPending } = useProcessState({ movimentation });
 
   if (isPending) return <Loader title="Carregando..." />;

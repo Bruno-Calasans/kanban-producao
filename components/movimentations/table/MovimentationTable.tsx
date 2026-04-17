@@ -7,6 +7,7 @@ import type { MovimentationPopulated } from "@/types/database.type";
 import { MovimentationTableDropdownMenu } from "./MovimentationTableDropdownMenu";
 import MovimentationStatusBadge from "../../custom/badges/MovimentationStatusBadge";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
+import { useRouter } from "next/navigation";
 
 type MovimentationPageProps = {
   movimentations: MovimentationPopulated[];
@@ -59,6 +60,7 @@ export default function MovimentationTable({
   movimentations,
   hideProductColumn,
 }: MovimentationPageProps) {
+  const router = useRouter();
   const filteredColumns = hideProductColumn
     ? movimentationColumns.filter((column) => column.id != "product.name")
     : movimentationColumns;
@@ -69,6 +71,9 @@ export default function MovimentationTable({
       filterColumn="id"
       columns={filteredColumns}
       data={movimentations}
+      onClickCell={({ column, row: { original } }) =>
+        column.id != "action" && router.push(`/movimentations/${original.id}`)
+      }
     />
   );
 }

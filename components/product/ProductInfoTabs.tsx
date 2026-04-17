@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductWithProductionFlow } from "@/types/database.type";
-import { useState } from "react";
-import ProductProcessExecutationsTab from "./ProductProcessExecutationsTab";
-import ProductMovimentationsTab from "./ProductMovimentationsTab";
+import ProductProcessExecutationsTab from "@/components/product/tabs/ProductProcessExecutationsTab";
+import ProductMovimentationsTab from "@/components/product/tabs/ProductMovimentationsTab";
 
 type ProductInfoTabsProps = {
   product: ProductWithProductionFlow;
@@ -26,7 +26,7 @@ export default function ProductInfoTabs({ product }: ProductInfoTabsProps) {
           </TabsTrigger>
 
           <TabsTrigger className="m-2" value="process-executation">
-            Execuções de Processos
+            Histórico de Execuções
           </TabsTrigger>
         </TabsList>
       </div>

@@ -9,6 +9,9 @@ import {
   getSortedRowModel,
   ColumnFiltersState,
   getFilteredRowModel,
+  RowData,
+  Row,
+  Cell,
 } from "@tanstack/react-table";
 
 import {
@@ -23,7 +26,6 @@ import DataTablePagination from "./DataTablePagination";
 import { useState } from "react";
 import DataTableFilter from "./DataTableFilter";
 import { cn } from "@/lib/utils";
-import { on } from "events";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,7 +36,8 @@ interface DataTableProps<TData, TValue> {
   hidePagination?: boolean;
   onEdit?: (row: TData) => void;
   onDelete?: (row: TData) => void;
-  onClickRow?: (row: TData) => void;
+  onClickRow?: (rowModel: Row<TData>) => void;
+  onClickCell?: (cell: Cell<TData, unknown>) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -45,6 +48,7 @@ export function DataTable<TData, TValue>({
   className,
   hidePagination,
   onClickRow,
+  onClickCell,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -93,10 +97,10 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => onClickRow && onClickRow(row.original)}
+                  onClick={() => onClickRow && onClickRow(row)}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} onClick={() => onClickCell && onClickCell(cell)}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

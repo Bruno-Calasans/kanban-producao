@@ -3,7 +3,7 @@ import CancelButton from "@/components/custom/buttons/CancelButton";
 import DeleteButton from "@/components/custom/buttons/DeleteButton";
 import useDialog from "@/hooks/dialog/useDialog";
 import useDeleteProduct from "@/hooks/product/useDeleteProduct";
-import { Product, ProductWithProductionFlow } from "@/types/database.type";
+import { ProductWithProductionFlow } from "@/types/database.type";
 import errorHandler from "@/utils/errorHandler";
 import { toast } from "sonner";
 

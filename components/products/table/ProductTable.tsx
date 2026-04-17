@@ -7,6 +7,7 @@ import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import ProductTableDropdownMenu from "./ProductTableDropdownMenu";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
+import { useRouter } from "next/navigation";
 
 type ProductPageProps = {
   products: ProductWithProductionFlow[];
@@ -43,12 +44,17 @@ const productColumns: ColumnDef<ProductWithProductionFlow>[] = [
 ];
 
 export default function ProductTable({ products }: ProductPageProps) {
+  const router = useRouter();
+
   return (
     <DataTable
       filterPlaceholder="Procurar produto"
       filterColumn="name"
       columns={productColumns}
       data={products}
+      onClickCell={({ column, row: { original } }) =>
+        column.id != "action" && router.push(`/products/${original.id}`)
+      }
     />
   );
 }

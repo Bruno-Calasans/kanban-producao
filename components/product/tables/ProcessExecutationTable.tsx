@@ -42,6 +42,7 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
   },
   {
     id: "responsible.name",
+    accessorFn: ({ responsible }) => responsible?.name || "",
     accessorKey: "responsible.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Resp" />,
   },
@@ -52,13 +53,6 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
       <ProcessExecutionTypeBadge processExecution={processExecution} />
     ),
   },
-  // {
-  //   accessorKey: "status",
-  //   header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-  //   cell: ({ row: { original: processExecution } }) => (
-  //     <ProcessStatusBadge status={processExecution.status} />
-  //   ),
-  // },
 ];
 
 export default function ProcessExecutationTable({

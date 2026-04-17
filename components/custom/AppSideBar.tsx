@@ -21,8 +21,6 @@ import {
   CogIcon,
   BriefcaseBusinessIcon,
   Settings2Icon,
-  FileClockIcon,
-  Plus,
   FormIcon,
 } from "lucide-react";
 

@@ -32,7 +32,7 @@ export default function BackButton({
         disabled={isLoading || disabled}
         className="m-0 p-2 cursor-pointer text-white hover:text-white bg-indigo-500 hover:bg-indigo-400"
       >
-        {!hiddenIcon && !isLoading && <ChevronLeftIcon className="m-0 ml-2" />}
+        {!hiddenIcon && !isLoading && <ChevronLeftIcon className="p-0 m-0" />}
         {!canLoad ? defaultLabel : null}
         {canLoad ? defaultLoadingMsg : null}
       </Button>

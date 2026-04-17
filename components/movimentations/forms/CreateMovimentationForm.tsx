@@ -9,12 +9,16 @@ import { defaultMovimentationFormValues, useAppForm, formSchema } from "./movime
 import handleFormError from "@/utils/errorHandler";
 import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup";
 import useDialog from "@/hooks/dialog/useDialog";
-import { Product, ProductWithProductionFlow } from "@/types/database.type";
+import { ProductWithProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
 
-export default function CreateMovimentationForm() {
+type CreateMovimentationFormProps = {
+  defaultProduct?: ProductWithProductionFlow;
+};
+
+export default function CreateMovimentationForm({ defaultProduct }: CreateMovimentationFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync: createMovimentation, isPending: isCreateMovimentationPending } =
     useCreateMovimentation();
@@ -80,12 +84,13 @@ export default function CreateMovimentationForm() {
         form.handleSubmit();
       }}
     >
-      <MovimentationProductNameField form={form} selectedProduct={product} onChange={setProduct} />
+      <MovimentationProductNameField
+        form={form}
+        defaultProduct={defaultProduct}
+        selectedProduct={product}
+        onChange={setProduct}
+      />
 
-      {/* Aviso se produto não tem quantidade para mover */}
-      {/* {product && !canMoveProuct && <CantMoveProductWarn product={product} />} */}
-
-      {/* Campo de quantidade, checkbox  de quantidade máxima */}
       {product && <MovimentationAmountFieldGroup form={form} selectedProduct={product} />}
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

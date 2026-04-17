@@ -8,7 +8,7 @@ type EditButtonProps = {
   isLoading?: boolean;
   disabled?: boolean;
   hiddenIcon?: boolean;
-  to: string;
+  to?: string;
 };
 
 export default function EditButton({
@@ -23,18 +23,32 @@ export default function EditButton({
   const defaultLoadingMsg = loadingMsg || "Voltando...";
   const canLoad = isLoading && !disabled;
 
+  if (to)
+    return (
+      <Link className="w-fit" href={to}>
+        <Button
+          id="back-button"
+          className="cursor-pointer text-white hover:text-white"
+          type="submit"
+          disabled={isLoading || disabled}
+        >
+          {!hiddenIcon && !isLoading && <Edit2Icon className="ml-2" />}
+          {!canLoad ? defaultLabel : null}
+          {canLoad ? defaultLoadingMsg : null}
+        </Button>
+      </Link>
+    );
+
   return (
-    <Link className="w-fit" href={to}>
-      <Button
-        id="back-button"
-        className="cursor-pointer text-white hover:text-white"
-        type="submit"
-        disabled={isLoading || disabled}
-      >
-        {!hiddenIcon && !isLoading && <Edit2Icon className="ml-2" />}
-        {!canLoad ? defaultLabel : null}
-        {canLoad ? defaultLoadingMsg : null}
-      </Button>
-    </Link>
+    <Button
+      id="back-button"
+      className="cursor-pointer text-white hover:text-white"
+      type="submit"
+      disabled={isLoading || disabled}
+    >
+      {!hiddenIcon && !isLoading && <Edit2Icon className="ml-2" />}
+      {!canLoad ? defaultLabel : null}
+      {canLoad ? defaultLoadingMsg : null}
+    </Button>
   );
 }

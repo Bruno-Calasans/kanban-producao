@@ -15,19 +15,19 @@ export type SelectorItem = {
 
 type DataItem = {
   id: number;
-}
+};
 
 type SelectorProps<T extends DataItem> = {
-  data: T[]
+  data: T[];
   selectedData?: T;
-  defaultData?: T
+  defaultData?: T;
   placeholder?: React.ReactNode;
   noItemFoundMsg?: React.ReactNode;
-  isLoading?: boolean
-  loadingMsg?: string
-  labelSelector: keyof T
-  disabled?: boolean | "indeterminate"
-  onChange: (data?: T) => void
+  isLoading?: boolean;
+  loadingMsg?: string;
+  labelSelector: keyof T;
+  disabled?: boolean | "indeterminate";
+  onChange: (data?: T) => void;
   onChangeItem?: (item?: SelectorItem) => void;
 };
 
@@ -44,30 +44,34 @@ export function SingleSelector<T extends DataItem>({
   onChangeItem,
   onChange,
 }: SelectorProps<T>) {
+  const items: SelectorItem[] = data.map((dataItem) => ({
+    id: dataItem.id,
+    label: dataItem[labelSelector] as string,
+  }));
+  const defaultItem = defaultData
+    ? { id: defaultData.id, label: defaultData[labelSelector] }
+    : undefined;
 
-  const items: SelectorItem[] = data.map(dataItem => ({ id: dataItem.id, label: dataItem[labelSelector] as string }))
-  const defaultItem = defaultData ? { id: defaultData.id, label: defaultData[labelSelector] } : undefined
-
-  const getData = (item?: SelectorItem) => data.find(dpt => dpt.id == item?.id)
+  const getData = (item?: SelectorItem) => data.find((dpt) => dpt.id == item?.id);
 
   const getValue = () => {
-    if (selectedData) return String(selectedData.id)
-    if (defaultItem) return String(defaultItem.id)
-    return ""
-  }
+    if (selectedData) return String(selectedData.id);
+    if (defaultItem) return String(defaultItem.id);
+    return "";
+  };
 
   const valueChangeHandler = (itemId: string) => {
     const foundItem = items.find((item) => String(item.id) == itemId);
-    const foundData = getData(foundItem)
+    const foundData = getData(foundItem);
     onChange(foundData);
     onChangeItem && onChangeItem(foundItem);
   };
 
   useEffect(() => {
-    if (defaultData) valueChangeHandler(String(defaultData.id))
-  }, [defaultData])
+    if (defaultData && !isLoading) valueChangeHandler(String(defaultData.id));
+  }, [defaultData, isLoading]);
 
-  if (isLoading) return <Loader title={loadingMsg || "Carregando items"} horizontal />
+  if (isLoading) return <Loader title={loadingMsg || "Carregando items"} horizontal />;
 
   if (items.length == 0) return noItemFoundMsg || <div>Nenhum item encontrado</div>;
 

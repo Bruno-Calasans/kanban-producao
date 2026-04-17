@@ -18,6 +18,10 @@ type MovimentationTableDropdownMenuProps = {
 export function MovimentationTableDropdownMenu({
   movimentation,
 }: MovimentationTableDropdownMenuProps) {
+  const canEdit = movimentation.status == "PENDING";
+  const canDelete = movimentation.status == "PENDING";
+  const canCancel = movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,7 +36,7 @@ export function MovimentationTableDropdownMenu({
           </DropdownMenuItem>
         </Link>
 
-        {movimentation.status == "PENDING" && (
+        {canEdit && (
           <EditMovimentationDialog movimentation={movimentation}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Edit2Icon />
@@ -41,7 +45,7 @@ export function MovimentationTableDropdownMenu({
           </EditMovimentationDialog>
         )}
 
-        {movimentation.status !== "CANCELLED" && movimentation.status != "COMPLETED" && (
+        {canCancel && (
           <CancelMovimentationDialog movimentation={movimentation}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <BanIcon />
@@ -50,12 +54,14 @@ export function MovimentationTableDropdownMenu({
           </CancelMovimentationDialog>
         )}
 
-        <DeleteMovimentationDialog movimentation={movimentation}>
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <Trash2Icon />
-            Excluir
-          </DropdownMenuItem>
-        </DeleteMovimentationDialog>
+        {canDelete && (
+          <DeleteMovimentationDialog movimentation={movimentation}>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <Trash2Icon />
+              Excluir
+            </DropdownMenuItem>
+          </DeleteMovimentationDialog>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

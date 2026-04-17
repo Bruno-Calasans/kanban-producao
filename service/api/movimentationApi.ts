@@ -57,7 +57,7 @@ export async function updateMovimentation(
     .update(updateData)
     .eq("id", movimentationId)
     .select()
-    .single()
+    .maybeSingle()
     .throwOnError();
 }
 

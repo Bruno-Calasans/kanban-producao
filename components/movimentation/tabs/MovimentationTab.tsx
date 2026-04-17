@@ -1,18 +1,28 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MovimentationPopulated } from "@/types/database.type";
+import {
+  MovimentationPopulated,
+  ProcessExecutionPopulated,
+  ProcessState,
+} from "@/types/database.type";
 import { useState } from "react";
-import MovimentationActionsTab from "./MovimentationActionsTab";
-import { MovimentationProcessExecutions } from "./MovimentationProcessExecutions";
+import ProcessStateTable from "../table/ProcessStateTable";
+import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 
 type MovimentationTabsProps = {
   movimentation: MovimentationPopulated;
+  processStates: ProcessState[];
+  processExecutions: ProcessExecutionPopulated[];
 };
 
 const TABS = ["ACTIONS", "HISTORY"];
 
-export default function MovimentationTabs({ movimentation }: MovimentationTabsProps) {
+export default function MovimentationTabs({
+  movimentation,
+  processStates,
+  processExecutions,
+}: MovimentationTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
 
   return (
@@ -20,21 +30,21 @@ export default function MovimentationTabs({ movimentation }: MovimentationTabsPr
       <div className="flex justify-between">
         <TabsList className="w-full">
           <TabsTrigger className="m-2" value={TABS[0]}>
-            AÇÕES
+            Ações
           </TabsTrigger>
 
           <TabsTrigger className="m-2" value={TABS[1]}>
-            HISTÓRICO DE EXECUÇÕES
+            Histórico de Execuções
           </TabsTrigger>
         </TabsList>
       </div>
 
       <TabsContent value={TABS[0]}>
-        <MovimentationActionsTab movimentation={movimentation} />
+        <ProcessStateTable processStates={processStates} />
       </TabsContent>
 
       <TabsContent value={TABS[1]}>
-        <MovimentationProcessExecutions movimentation={movimentation} />
+        <ProcessExecutationTable hideMovimentationColumn processExecutions={processExecutions} />;
       </TabsContent>
     </Tabs>
   );

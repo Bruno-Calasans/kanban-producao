@@ -1,8 +1,6 @@
 "use client";
 
 import { toast } from "sonner";
-import MoveButton from "@/components/custom/buttons/MoveButton";
-import useCreateMovimentation from "@/hooks/movimentation/useCreateMovimentation";
 import { useState } from "react";
 import { MovimentationProductNameField } from "./fields/MovimentationProductNameField";
 import { useAppForm, formSchema, MovimentationFormSchema } from "./movimentationFormContext";
@@ -11,6 +9,8 @@ import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountField
 import useDialog from "@/hooks/dialog/useDialog";
 import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
+import SaveButton from "@/components/custom/buttons/SaveButton";
+import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
 
 type EditMovimentationFormProps = {
   movimentation: MovimentationPopulated;
@@ -18,7 +18,7 @@ type EditMovimentationFormProps = {
 
 export default function EditMovimentationForm({ movimentation }: EditMovimentationFormProps) {
   const { closeDialog } = useDialog();
-  const { mutateAsync, isPending } = useCreateMovimentation();
+  const { mutateAsync: updateMovimentation, isPending } = useUpdateMovimentation();
   const [product, setProduct] = useState<ProductWithProductionFlow>();
 
   const form = useAppForm({
@@ -34,12 +34,15 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
       if (!product) return;
       const { amount } = value;
       try {
-        await mutateAsync({
-          product_id: product.id,
-          amount,
-          status: "PENDING",
+        await updateMovimentation({
+          movimentationId: movimentation.id,
+          updateData: {
+            product_id: product.id,
+            amount,
+            status: "PENDING",
+          },
         });
-        toast.success("Movimentação editada com sucesso!");
+        toast.success("Movimentação atualizado com sucesso!");
         closeDialog("edit-movimentation");
         form.reset();
       } catch (error) {
@@ -74,7 +77,7 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={resetForm} />
-        <MoveButton isLoading={isPending} hiddenIcon />
+        <SaveButton isLoading={isPending} hiddenIcon />
       </div>
     </form>
   );

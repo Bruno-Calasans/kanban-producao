@@ -11,10 +11,10 @@ import {
 } from "@/types/database.type";
 import useGetAllProductionFlowTemplates from "../production-flow-template/useGetAllProductionFlowTemplates";
 import useGetAllProcessExecutionsByMovimentation from "../process-executation/useGetAllProcessExecutionsByMovimentation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 type UseProcessStateProps = {
-  movimentation: MovimentationPopulated;
+  movimentation?: MovimentationPopulated;
 };
 
 type ProcessStatusData = {
@@ -29,13 +29,13 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     data: flowTemplateData,
     error: flowTemplateError,
     isPending: isFlowTemplatePending,
-  } = useGetAllProductionFlowTemplates(movimentation.product.production_flow_id);
+  } = useGetAllProductionFlowTemplates(movimentation?.product.production_flow_id);
 
   const {
     data: processExecutionsData,
     error: processExecutionError,
     isPending: isProcessExecutionsPending,
-  } = useGetAllProcessExecutionsByMovimentation(movimentation.id);
+  } = useGetAllProcessExecutionsByMovimentation(movimentation?.id);
 
   const processExecutions = processExecutionsData?.data || [];
   const flowTemplates = flowTemplateData?.data || [];
@@ -48,6 +48,8 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     currentProcess,
     lastProcess,
   }: ProcessStatusData): ProcessExecutionStatus => {
+    if (!movimentation) return "ERROR";
+
     const hasExecutions = executions.length > 0;
     const isLastProcess = lastProcess.id == currentProcess.id;
     // Execução está ordenada da mais recente primeiro, por isso a primeira execução
@@ -62,7 +64,8 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
   };
 
   const getProcessStates = () => {
-    if (isPending) return [];
+    if (isPending || !movimentation || isError) return [];
+
     const states: ProcessState[] = [];
     const lastProcess = flowTemplates[flowTemplates.length - 1].process;
 
@@ -116,6 +119,12 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
   };
 
   const getNextAndPreviousProcesses = (process: ProcessWithDepartament) => {
+    if (!movimentation)
+      return {
+        previousProcess: null,
+        nextProcess: null,
+      };
+
     let previousProcess: ProcessWithDepartament | null = null;
     let nextProcess: ProcessWithDepartament | null = null;
 
@@ -142,13 +151,13 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
   };
 
   const processStates = useMemo(() => {
-    if (isPending) return [];
-    if (!flowTemplates.length || !processExecutions) return [];
+    if (isPending || isError || !movimentation || !flowTemplates.length || !processExecutions)
+      return [];
     return getProcessStates();
   }, [
-    movimentation.id,
-    movimentation.status,
-    movimentation.amount,
+    movimentation?.id,
+    movimentation?.status,
+    movimentation?.amount,
     processExecutions,
     flowTemplates,
     isPending,

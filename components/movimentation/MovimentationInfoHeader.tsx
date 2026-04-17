@@ -6,14 +6,19 @@ import BackButton from "@/components/custom/buttons/BackButton";
 import CustomDialog from "../custom/CustomDialog";
 import { Button } from "../ui/button";
 import EditMovimentationForm from "../movimentations/forms/EditMovimentationForm";
-import { Edit2Icon, Trash2Icon } from "lucide-react";
+import { Edit2Icon, Trash2Icon, BanIcon } from "lucide-react";
 import DeleteMovimentationDialog from "../movimentations/dialogs/DeleteMovimentationDialog";
+import CancelMovimentationDialog from "../movimentations/dialogs/CancelMovimentationDialog";
 
 type MovimentationInfoHeadergProps = {
   movimentation: MovimentationPopulated;
 };
 
 export default function MovimentationInfoHeaderg({ movimentation }: MovimentationInfoHeadergProps) {
+  const canEdit = movimentation.status == "PENDING";
+  const canDelete = movimentation.status == "PENDING";
+  const canCancel = movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
+
   return (
     <div>
       <div className="flex justify-between">
@@ -34,40 +39,59 @@ export default function MovimentationInfoHeaderg({ movimentation }: Movimentatio
             {movimentation.product.name}
           </Link>
         </p>
-        <p>
-          <strong>Quantidade:</strong> {movimentation.amount}
-        </p>
         <p className="flex gap-1 items-start text-center">
           <strong>Status:</strong> <MovimentationStatusBadge movimentation={movimentation} />
+        </p>
+        <p>
+          <strong>Quantidade:</strong> {movimentation.amount}
         </p>
       </div>
 
       <div className="flex gap-2 mb-4 border-black">
-        <CustomDialog
-          id="edit-movimentation"
-          title="Editar Movimentação"
-          trigger={
-            <Button disabled={movimentation.status != "PENDING"} className="m-0" size="xs">
-              <Edit2Icon />
-              Editar
-            </Button>
-          }
-        >
-          <EditMovimentationForm movimentation={movimentation} />
-        </CustomDialog>
+        {canEdit && (
+          <CustomDialog
+            id="edit-movimentation"
+            title="Editar Movimentação"
+            trigger={
+              <Button className="m-0" size="xs">
+                <Edit2Icon />
+                Editar
+              </Button>
+            }
+          >
+            <EditMovimentationForm movimentation={movimentation} />
+          </CustomDialog>
+        )}
 
-        <CustomDialog
-          id="delete-movimentation"
-          title="Excluir Movimentação"
-          trigger={
-            <Button variant="destructive" className="m-0" size="xs">
-              <Trash2Icon />
-              Excluir
-            </Button>
-          }
-        >
-          <DeleteMovimentationDialog movimentation={movimentation} />
-        </CustomDialog>
+        {canCancel && (
+          <CustomDialog
+            id="cancel-movimentation"
+            title="Editar Movimentação"
+            trigger={
+              <Button variant="destructive" className="m-0" size="xs">
+                <BanIcon />
+                Cancelar
+              </Button>
+            }
+          >
+            <CancelMovimentationDialog movimentation={movimentation} />
+          </CustomDialog>
+        )}
+
+        {canDelete && (
+          <CustomDialog
+            id="delete-movimentation"
+            title="Excluir Movimentação"
+            trigger={
+              <Button variant="destructive" className="m-0" size="xs">
+                <Trash2Icon />
+                Excluir
+              </Button>
+            }
+          >
+            <DeleteMovimentationDialog movimentation={movimentation} />
+          </CustomDialog>
+        )}
       </div>
     </div>
   );

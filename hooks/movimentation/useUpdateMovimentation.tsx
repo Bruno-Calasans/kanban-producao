@@ -10,7 +10,7 @@ export default function useUpdateMovimentation() {
       updateMovimentation(data.movimentationId, data.updateData),
     onSuccess: ({ data: movimentation }) => {
       queryClient.invalidateQueries({
-        queryKey: movimentationKeys.detail(movimentation.id),
+        queryKey: movimentationKeys.details(),
         exact: false,
       });
     },

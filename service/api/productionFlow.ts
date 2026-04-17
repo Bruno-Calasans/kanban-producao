@@ -12,11 +12,11 @@ export async function getAllProductionFlows() {
     .throwOnError();
 }
 
-export async function getOneProductionFlow(templateId: number) {
+export async function getOneProductionFlow(productionFlowId: number) {
   return await supabase
     .from("ProductionFlow")
     .select("*")
-    .eq("id", templateId)
+    .eq("id", productionFlowId)
     .maybeSingle()
     .throwOnError();
 }
@@ -25,28 +25,32 @@ export async function createProductionFlow(data: CreateProductionFlowData) {
   return await supabase.from("ProductionFlow").insert(data).select().single().throwOnError();
 }
 
-export async function updateProductionFlow(templateId: number, data: UpdateproductionFlowData) {
+export async function updateProductionFlow(
+  productionFlowId: number,
+  data: UpdateproductionFlowData,
+) {
   return await supabase
     .from("ProductionFlow")
     .update(data)
-    .eq("id", templateId)
+    .eq("id", productionFlowId)
     .select()
     .single()
     .throwOnError();
 }
 
-export async function deleteProductionFlow(templateId: number) {
-  return await supabase.from("ProductionFlow").delete().eq("id", templateId).throwOnError();
+export async function deleteProductionFlow(productionFlowId: number) {
+  return await supabase.from("ProductionFlow").delete().eq("id", productionFlowId).throwOnError();
 }
 
-export async function setDefaultProductionFlow(templateId: number) {
+export async function setDefaultProductionFlow(productionFlowId: number) {
   return await supabase
     .from("ProductionFlow")
     .update({ is_default: true })
-    .eq("id", templateId)
+    .eq("id", productionFlowId)
     .throwOnError();
 }
 
 export async function getDefaultProductionFlow() {
   return await supabase.from("ProductionFlow").select("*").limit(1).eq("is_default", true).single();
 }
+

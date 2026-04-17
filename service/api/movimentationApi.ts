@@ -76,3 +76,15 @@ export async function getAllMovimentationsByProduct(productId: number) {
     .eq("product_id", productId)
     .throwOnError();
 }
+
+export async function getAllMovimentationsByProductionFlow(productionFlowId: number) {
+  return await supabase
+    .from("Movimentation")
+    .select(
+      `
+        *,
+        product:Product!inner(*)`,
+    )
+    .eq("product.production_flow_id", productionFlowId)
+    .throwOnError();
+}

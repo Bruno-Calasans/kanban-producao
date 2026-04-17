@@ -69,7 +69,7 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
 
         const { name, desc, useDefault } = value;
         await updateProductionFlow({
-          flowtemplateId: productionFlow.id,
+          productionFlowId: productionFlow.id,
           updateData: {
             name,
             desc,

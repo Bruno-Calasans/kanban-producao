@@ -5,12 +5,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ProductionFlow } from "@/types/database.type";
-import { Edit2Icon, EllipsisVerticalIcon, FlagIcon, Trash2Icon } from "lucide-react";
+import {
+  CheckIcon,
+  Edit2Icon,
+  EllipsisVerticalIcon,
+  FlagIcon,
+  Trash2Icon,
+  XIcon,
+} from "lucide-react";
 import DeleteProductionFlowDialog from "../dialogs/DeleteProductionFlowDialog";
 import Link from "next/link";
-import { toast } from "sonner";
-import errorHandler from "@/utils/errorHandler";
 import useSetDefaultProductionFlow from "@/hooks/production-flow/useSetDefaultProductionFlow";
+import useActiveProductionFlow from "@/hooks/production-flow/useActiveProductionFlow";
+import useGetlAllMovimentationsByProductionFlow from "@/hooks/movimentation/useGetlAllMovimentationsByProductionFlow";
 
 type ProductionFlowDropdownMenuProps = {
   productionFlow: ProductionFlow;
@@ -19,19 +26,27 @@ type ProductionFlowDropdownMenuProps = {
 export default function ProductionFlowDropdownMenu({
   productionFlow,
 }: ProductionFlowDropdownMenuProps) {
-  const { mutateAsync, isPending } = useSetDefaultProductionFlow();
+  const { toggleActive } = useActiveProductionFlow({ productionFlow });
+  const {
+    data: movimentationData,
+    error: productionFlowerror,
+    isPending: isProductsPending,
+  } = useGetlAllMovimentationsByProductionFlow(productionFlow.id);
+  const movimentations = movimentationData?.data || [];
 
-  const handleSetDefault = async () => {
-    if (isPending) return;
-    try {
-      await mutateAsync({ productionFlowId: productionFlow.id });
-      toast.success("Fluxo de produção padrão atualizado com sucesso.");
-    } catch (error) {
-      errorHandler(error, {
-        default: "Error: não foi possível definir fluxo de produção padrão.",
-      });
-    }
-  };
+  const {
+    setDefault,
+    error: defaultProductionFlowError,
+    isPending: isDefaultProductionFlowPending,
+  } = useSetDefaultProductionFlow({
+    productionFlowId: productionFlow.id,
+  });
+
+  const isError = productionFlowerror || defaultProductionFlowError;
+  const isPending = isProductsPending || isDefaultProductionFlowPending;
+  const canMarkAsDefault = productionFlow.is_active && !productionFlow.is_default;
+  const canEdit = movimentations.length == 0;
+  const canDelete = movimentations.length == 0;
 
   return (
     <DropdownMenu>
@@ -40,25 +55,44 @@ export default function ProductionFlowDropdownMenu({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-fit" side="bottom" align="end">
-        {productionFlow.is_default ? null : (
-          <DropdownMenuItem onSelect={handleSetDefault}>
+        {canMarkAsDefault && (
+          <DropdownMenuItem onSelect={setDefault}>
             <FlagIcon />
             Marcar como padrão
           </DropdownMenuItem>
         )}
 
-        <Link className="w-full" href={`/production-flows/edit/${productionFlow.id}`}>
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <Edit2Icon />
-            Editar
-          </DropdownMenuItem>
-        </Link>
-        <DeleteProductionFlowDialog productionFlow={productionFlow}>
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <Trash2Icon />
-            Excluir
-          </DropdownMenuItem>
-        </DeleteProductionFlowDialog>
+        {canEdit && (
+          <Link className="w-full" href={`/production-flows/edit/${productionFlow.id}`}>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <Edit2Icon />
+              Editar
+            </DropdownMenuItem>
+          </Link>
+        )}
+
+        <DropdownMenuItem onSelect={toggleActive}>
+          {productionFlow.is_active ? (
+            <>
+              <XIcon />
+              Desativar
+            </>
+          ) : (
+            <>
+              <CheckIcon />
+              Ativar
+            </>
+          )}
+        </DropdownMenuItem>
+
+        {canDelete && (
+          <DeleteProductionFlowDialog productionFlow={productionFlow}>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <Trash2Icon />
+              Excluir
+            </DropdownMenuItem>
+          </DeleteProductionFlowDialog>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

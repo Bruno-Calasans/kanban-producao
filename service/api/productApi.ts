@@ -31,3 +31,11 @@ export async function updateProduct(productId: number, updateData: UpdateProduct
 export async function deleteProduct(productId: number) {
   return await supabase.from("Product").delete().eq("id", productId).throwOnError();
 }
+
+export async function getAllProductsByProductionFlow(productionFlowId: number) {
+  return await supabase
+    .from("Product")
+    .select("*")
+    .eq("production_flow_id", productionFlowId)
+    .throwOnError();
+}

@@ -1,30 +1,28 @@
 "use client";
 
 import Loader from "@/components/custom/Loader";
+import PageMsg from "@/components/custom/msgs/PageMsg";
 import PageTitle from "@/components/custom/PageTitle";
 import CreateProductionFlowDialog from "@/components/production-flow/dialogs/CreateProductionFlowDialog";
 import ProductionFlowTable from "@/components/production-flow/table/ProductionFlowTable";
 import useGetAllFlowTemplates from "@/hooks/production-flow/useGetAllProductionFlow";
 
 export default function ProductionFlowsPage() {
-  const { data, isLoading, error } = useGetAllFlowTemplates();
+  const { data, isPending, error } = useGetAllFlowTemplates();
   const productionFlows = data?.data || [];
 
-  if (isLoading) {
-    return (
-      <section>
-        <PageTitle>Fluxos de Produção</PageTitle>
-        <Loader title="Carregando Fluxos.." />
-      </section>
-    );
+  if (isPending) {
+    return <Loader title="Carregando Fluxos.." />;
   }
 
   if (error) {
     return (
-      <section>
-        <PageTitle>Fluxos de Produção</PageTitle>
-        <p>Ocorreu um erro ao carregar os fluxos de produção</p>
-      </section>
+      <PageMsg
+        title="Erro ao carregar fluxos"
+        content="Não foi possível carregar os fluxos de produção"
+        backBtnLabel="Voltar à página de fluxos"
+        backBtnUrl="/production-flows"
+      />
     );
   }
 

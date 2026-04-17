@@ -1,17 +1,36 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productionFlowKeys } from "@/constants/productionFlowKeys";
-import { setDefaultProductionFlow } from "@/service/api/productionFlow";
+import { toast } from "sonner";
+import useUpdateProductionFlow from "./useUpdateProductionFlow";
+import errorHandler from "@/utils/errorHandler";
 
-export default function useSetDefaultProductionFlow() {
-  const queryClient = useQueryClient();
+type UseSetDefaultProductionFlowProps = {
+  productionFlowId: number;
+};
 
-  return useMutation({
-    mutationFn: (data: { productionFlowId: number }) =>
-      setDefaultProductionFlow(data.productionFlowId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: productionFlowKeys.lists(),
+export default function useSetDefaultProductionFlow({
+  productionFlowId,
+}: UseSetDefaultProductionFlowProps) {
+  const { mutateAsync: updateProductionFlow, error, isPending } = useUpdateProductionFlow();
+
+  const setDefault = async () => {
+    if (isPending) return;
+    try {
+      await updateProductionFlow({
+        productionFlowId,
+        updateData: {
+          is_default: true,
+        },
       });
-    },
-  });
+      toast.success("Fluxo de produção padrão atualizado com sucesso.");
+    } catch (error) {
+      errorHandler(error, {
+        default: "Error: não foi possível definir fluxo de produção padrão.",
+      });
+    }
+  };
+
+  return {
+    setDefault,
+    isPending,
+    error,
+  };
 }

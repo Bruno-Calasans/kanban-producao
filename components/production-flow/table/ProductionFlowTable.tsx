@@ -7,9 +7,10 @@ import DataTableColumnHeader from "@/components/custom/data-table/DataTableColum
 import sortByDefault from "@/utils/sortByDefault";
 import DefaultBadge from "@/components/custom/badges/DefaultBadge";
 import ProductionFlowDropdownMenu from "./ProductionFlowDropdownMenu";
-import { Badge } from "@/components/ui/badge";
 import ProductionFlowProcesses from "./ProductionFlowProcesses";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
+import ActiveBadge from "@/components/custom/badges/ActiveBadge";
+import sortByIsActive from "@/utils/sortByIsActive";
 
 type FlowTemplatePageProps = {
   productionFlows: ProductionFlow[];
@@ -45,6 +46,16 @@ const productionFlowColumns: ColumnDef<ProductionFlow>[] = [
     cell: ({ row: { original } }) => {
       return <ProductionFlowProcesses productionFlow={original} />;
     },
+  },
+  {
+    accessorKey: "is_active",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Ativo" />,
+    sortingFn: (rowA, rowB) => sortByIsActive(rowA.original, rowB.original),
+    cell: ({
+      row: {
+        original: { is_active },
+      },
+    }) => <ActiveBadge isActive={is_active} />,
   },
   {
     accessorKey: "created_at",

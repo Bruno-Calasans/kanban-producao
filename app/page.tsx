@@ -32,8 +32,6 @@ export default function Home() {
 
   const groups = useMemo(() => groupMovimentations(), [movimentations]);
 
-  console.log(movimentations);
-
   if (isPending) {
     return (
       <section>

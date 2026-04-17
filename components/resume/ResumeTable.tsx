@@ -4,6 +4,9 @@ import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ProductMovimentation } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
+import MovimentationStatusBadge from "../custom/badges/MovimentationStatusBadge";
+import MoreDetails from "./MoreDetails";
+import Link from "next/link";
 
 type ProductPageProps = {
   productMovimentations: ProductMovimentation[];
@@ -18,19 +21,76 @@ const productColumns: ColumnDef<ProductMovimentation>[] = [
     id: "product.name",
     accessorKey: "product.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Produto" />,
+    cell: ({
+      row: {
+        original: { product },
+      },
+    }) => (
+      <Link className="hover:underline" href={`/products/${product.id}`}>
+        {product.name}
+      </Link>
+    ),
   },
   {
     id: "movimentations",
     accessorFn: ({ movimentations }) => movimentations.length,
     header: ({ column }) => <DataTableColumnHeader column={column} title="Movimentações" />,
-    cell({ row: { original } }) {
-      return original.movimentations.length;
+    cell({
+      row: {
+        original: { movimentations },
+      },
+    }) {
+      return movimentations ? movimentations.length : 0;
     },
   },
   {
     id: "last-movimentation",
-    accessorFn: ({ movimentations }) => `#${movimentations[movimentations.length - 1].id}`,
+    accessorFn: ({ movimentations }) =>
+      movimentations.length > 0 ? `#${movimentations[movimentations.length - 1].id}` : "",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Última movimentação" />,
+    cell: ({
+      row: {
+        original: { movimentations },
+      },
+    }) => {
+      const lastMovimentation =
+        movimentations.length > 0 ? movimentations[movimentations.length - 1] : undefined;
+      return (
+        <Link
+          className="flex gap-1 hover:underline"
+          href={`/movimentations/${lastMovimentation?.id}`}
+        >
+          #{lastMovimentation?.id}
+        </Link>
+      );
+    },
+  },
+  {
+    id: "last-movimentation-status",
+    accessorFn: ({ movimentations }) =>
+      movimentations.length > 0 ? `${movimentations[movimentations.length - 1].status}` : undefined,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    cell: ({
+      row: {
+        original: { movimentations },
+      },
+    }) =>
+      movimentations.length > 0 ? (
+        <MovimentationStatusBadge movimentation={movimentations[movimentations.length - 1]} />
+      ) : null,
+  },
+  {
+    id: "details",
+    header: "Detalhes",
+    cell: ({
+      row: {
+        original: { movimentations },
+      },
+    }) => {
+      const lastMovimentation =
+        movimentations.length > 0 ? movimentations[movimentations.length - 1] : undefined;
+      return lastMovimentation ? <MoreDetails movimentation={lastMovimentation} /> : null;
+    },
   },
   // {
   //   id: "action",

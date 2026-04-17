@@ -13,7 +13,7 @@ import { useAppForm, ConfigurationFormSchema, formSchema } from "./form/configur
 
 export default function ConfigurationForm() {
   const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow>();
-  const { mutateAsync: setDefaultProductionFlow, isPending } = useSetDefaultProductionFlow();
+  const { setDefault, isPending } = useSetDefaultProductionFlow();
 
   const form = useAppForm({
     defaultValues: {
@@ -25,9 +25,7 @@ export default function ConfigurationForm() {
     onSubmit: async () => {
       try {
         if (selectedProductionFlow) {
-          await setDefaultProductionFlow({
-            productionFlowId: selectedProductionFlow.id,
-          });
+          await setDefault(selectedProductionFlow.id);
           toast.success("Fluxo de produção padrão atualizado com sucesso!");
           form.reset();
         }

@@ -17,7 +17,8 @@ export default function ProductionFlowSelector({
 }: ProductionFlowSelectorProps) {
   const { data, isPending } = useGetAllProductionFlow();
   const productionFlows = data ? data.data : [];
-  const defaultFlow = defaultProductionFlow || productionFlows.find((flow) => flow.is_default);
+  const defaultFlow =
+    defaultProductionFlow || productionFlows.find((flow) => flow.is_default) || productionFlows[0];
 
   return (
     <SingleSelector<ProductionFlow>

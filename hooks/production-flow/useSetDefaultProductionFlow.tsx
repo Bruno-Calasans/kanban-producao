@@ -2,16 +2,10 @@ import { toast } from "sonner";
 import useUpdateProductionFlow from "./useUpdateProductionFlow";
 import errorHandler from "@/utils/errorHandler";
 
-type UseSetDefaultProductionFlowProps = {
-  productionFlowId: number;
-};
-
-export default function useSetDefaultProductionFlow({
-  productionFlowId,
-}: UseSetDefaultProductionFlowProps) {
+export default function useSetDefaultProductionFlow() {
   const { mutateAsync: updateProductionFlow, error, isPending } = useUpdateProductionFlow();
 
-  const setDefault = async () => {
+  const setDefault = async (productionFlowId: number) => {
     if (isPending) return;
     try {
       await updateProductionFlow({

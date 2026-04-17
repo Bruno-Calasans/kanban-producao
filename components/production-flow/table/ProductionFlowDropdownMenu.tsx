@@ -38,9 +38,7 @@ export default function ProductionFlowDropdownMenu({
     setDefault,
     error: defaultProductionFlowError,
     isPending: isDefaultProductionFlowPending,
-  } = useSetDefaultProductionFlow({
-    productionFlowId: productionFlow.id,
-  });
+  } = useSetDefaultProductionFlow();
 
   const isError = productionFlowerror || defaultProductionFlowError;
   const isPending = isProductsPending || isDefaultProductionFlowPending;
@@ -56,7 +54,7 @@ export default function ProductionFlowDropdownMenu({
 
       <DropdownMenuContent className="w-fit" side="bottom" align="end">
         {canMarkAsDefault && (
-          <DropdownMenuItem onSelect={setDefault}>
+          <DropdownMenuItem onSelect={() => setDefault(productionFlow.id)}>
             <FlagIcon />
             Marcar como padrão
           </DropdownMenuItem>

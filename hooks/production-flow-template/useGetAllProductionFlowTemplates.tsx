@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { productionFlowTemplateKeys } from "@/constants/productionFlowTemplateKeys";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
 
-export default function useGetAllProductionFlowTemplates(productionFlowId: number) {
+export default function useGetAllProductionFlowTemplates(productionFlowId: number | undefined) {
   return useQuery({
     queryKey: productionFlowTemplateKeys.list(productionFlowId),
-    queryFn: () => getAllProductionFlowTemplates(productionFlowId),
+    queryFn: () => getAllProductionFlowTemplates(productionFlowId!),
     enabled: !!productionFlowId,
   });
 }

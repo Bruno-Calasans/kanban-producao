@@ -5,6 +5,7 @@ export type Departament = Database["public"]["Tables"]["Departament"]["Row"];
 export type Product = Database["public"]["Tables"]["Product"]["Row"];
 export type ProductWithProductionFlow = Omit<Product, "production_flow_id"> & {
   production_flow: ProductionFlow;
+  production_flow_id: number;
 };
 
 export type Process = Database["public"]["Tables"]["Process"]["Row"];
@@ -35,9 +36,9 @@ export type ProcessExecutionPopulated = Omit<
 > & {
   movimentation: Movimentation;
   product: Product;
-  process: Process;
-  from_process: Process;
-  responsible: Responsible;
+  process: Process | null;
+  from_process: Process | null;
+  responsible: Responsible | null;
 };
 
 export type ProcessExecutionType = ProcessExecution["type"];

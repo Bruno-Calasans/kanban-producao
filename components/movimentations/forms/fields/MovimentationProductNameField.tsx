@@ -1,7 +1,7 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import ProductSelector from "@/components/custom/ProductSelector";
-import { ProductWithProductionFlow } from "@/types/database.type";
+import { ProductWithProductionFlow, Product } from "@/types/database.type";
 
 type MovimentationProductNameFieldProps = {
   selectedProduct?: ProductWithProductionFlow;

@@ -29,8 +29,8 @@ export default function CreateDepartamentForm() {
         form.reset();
       } catch (error) {
         errorHandler(error, {
-          duplicate: "Erro: departamento com esse nome ou sequência já existe.",
           default: "Erro: não foi possível criar o departamento.",
+          duplicate: "Erro: departamento com esse nome ou sequência já existe.",
         });
       }
     },

@@ -16,7 +16,7 @@ export default function EditProductionFlowPage() {
     data,
     error: productionFlowError,
     isPending: productionFlowPending,
-  } = useGetOneProductionFlow(params.id);
+  } = useGetOneProductionFlow(Number(params.id));
   const productionFlow = data?.data;
 
   const {

@@ -1,9 +1,9 @@
-import { ProcessExecution } from "@/types/database.type";
+import { ProcessExecution, ProcessExecutionPopulated } from "@/types/database.type";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 import { Badge } from "@/components/ui/badge";
 
 type ProcessExecutionBadgeProps = {
-  processExecution: ProcessExecution;
+  processExecution: ProcessExecutionPopulated;
 };
 
 export default function ProcessExecutionTypeBadge({

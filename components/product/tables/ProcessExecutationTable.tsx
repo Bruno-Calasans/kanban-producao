@@ -5,7 +5,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import type { ProcessExecutionPopulated } from "@/types/database.type";
 import ProcessExecutionTypeBadge from "@/components/process-execution/badges/ProcessExecutionTypeBadge";
-import ProcessStatusBadge from "@/components/process-execution/badges/ProcessExecutionStatusBadge";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 
 type MovimentationPageProps = {

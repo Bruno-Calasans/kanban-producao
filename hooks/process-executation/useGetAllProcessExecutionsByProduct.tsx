@@ -2,10 +2,10 @@ import { getAllProcessExecutionsByProduct } from "@/service/api/processExecutati
 import { useQuery } from "@tanstack/react-query";
 import { processExecutationKeys } from "@/constants/processExecutationKeys";
 
-export default function useGetAllProcessExecutionsByProduct(productId: number) {
+export default function useGetAllProcessExecutionsByProduct(productId: number | undefined) {
   return useQuery({
     queryKey: processExecutationKeys.lists(),
-    queryFn: () => getAllProcessExecutionsByProduct(productId),
+    queryFn: () => getAllProcessExecutionsByProduct(productId!),
     enabled: !!productId,
   });
 }

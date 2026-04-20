@@ -50,7 +50,9 @@ export const ReprocessAmountField = withForm({
                       autoComplete="off"
                       type="number"
                       disabled={useMaxAmount}
-                      onFocus={(e) => !form.state.isTouched && field.handleChange("")}
+                      onFocus={(e) =>
+                        !form.state.isTouched && field.handleChange("" as unknown as number)
+                      }
                     />
                     <FieldDescription>
                       Define a quantidade que será refeita para o processo anterior.

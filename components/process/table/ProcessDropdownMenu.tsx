@@ -8,8 +8,8 @@ import { CheckIcon, Edit2Icon, EllipsisVerticalIcon, Trash2Icon, XIcon } from "l
 import DeleteProcessDialog from "../dialogs/DeleteProcessDialog";
 import EditProcessDialog from "../dialogs/EditProcessDialog";
 import { ProcessWithDepartament } from "@/types/database.type";
-import useGetAllProcessExecutionsByProcess from "@/hooks/process-executation/useGetAllProcessExecutionsByProcess";
 import useActiveProcess from "@/hooks/process/useActiveProcess";
+import useGetAllTemplatesFlowByProcess from "@/hooks/production-flow-template/useGetAllTemplatesFlowByProcess";
 
 type ProcessDropdownMenuProps = {
   process: ProcessWithDepartament;
@@ -24,16 +24,16 @@ export default function ProcessDropdownMenu({ process }: ProcessDropdownMenuProp
 
   const {
     data,
-    error: isExectuionsError,
-    isPending: isExecutionsPending,
-  } = useGetAllProcessExecutionsByProcess(process.id);
+    error: isTemplatesError,
+    isPending: iTemplatesPending,
+  } = useGetAllTemplatesFlowByProcess(process.id);
 
-  const executions = data?.data || [];
-  const isPending = isActivepending || isExecutionsPending;
-  const isError = activeError || isExectuionsError;
+  const templates = data?.data || [];
+  const isPending = isActivepending || iTemplatesPending;
+  const isError = activeError || isTemplatesError;
   const canEdit = !isPending && process.is_active;
-  const canDelete = !isPending && !isError && executions.length == 0;
-  const hideFields = !isPending && executions.length > 0;
+  const canDelete = !isPending && !isError && templates.length == 0;
+  const hideFields = !isPending && templates.length > 0;
 
   return (
     <DropdownMenu>

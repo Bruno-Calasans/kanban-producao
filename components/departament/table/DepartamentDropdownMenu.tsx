@@ -10,8 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useGetAllMovimentationsByDepartament from "@/hooks/process-executation/useGetAllMovimentationsByDepartament";
 import useActiveDepartament from "@/hooks/departament/useActiveDepartament";
+import useGetlAllFlowTemplatesByDepartament from "@/hooks/production-flow-template/useGetlAllFlowTemplatesByDepartament";
 
 type DepartamentDropdownMenuProps = {
   departament: Departament;
@@ -20,22 +20,24 @@ type DepartamentDropdownMenuProps = {
 export default function DepartamentDropdownMenu({ departament }: DepartamentDropdownMenuProps) {
   const {
     toggleActive,
-    error: activeDepartamentError,
-    isPending: isActiveDepartamentPending,
+    error: activeError,
+    isPending: isActivePending,
   } = useActiveDepartament({
     departament,
   });
   const {
     data,
-    error: departamentMovimentationsError,
-    isPending: isDepartamentMovimentationsPending,
-  } = useGetAllMovimentationsByDepartament(departament.id);
+    error: templatesError,
+    isPending: isTemplatesPending,
+  } = useGetlAllFlowTemplatesByDepartament(departament.id);
 
-  const executions = data?.data || [];
-  const isPending = isActiveDepartamentPending || isDepartamentMovimentationsPending;
-  const isError = activeDepartamentError || departamentMovimentationsError;
-  const canEdit = !isPending && !isError && executions.length == 0;
-  const canDelete = !isPending && !isError && executions.length == 0;
+  const templates = data?.data || [];
+  const isPending = isActivePending || isTemplatesPending;
+  const isError = activeError || templatesError;
+
+  const canEdit = !isPending && departament.is_active;
+  const canDelete = !isPending && templates.length == 0;
+  const hideFields = !isPending && templates.length > 0;
 
   return (
     <DropdownMenu>
@@ -45,7 +47,7 @@ export default function DepartamentDropdownMenu({ departament }: DepartamentDrop
 
       <DropdownMenuContent side="bottom" align="end" className="w-fit">
         {canEdit && (
-          <EditDepartamentDialog departament={departament}>
+          <EditDepartamentDialog departament={departament} hideSequenceField={hideFields}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Edit2Icon />
               Editar

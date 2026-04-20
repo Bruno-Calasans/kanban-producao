@@ -5,15 +5,17 @@ import type { Departament } from "@/types/database.type";
 type EditDepartamentDialogProps = {
   departament: Departament;
   children?: React.ReactNode;
+  hideSequenceField?: boolean;
 };
 
 export default function EditDepartamentDialog({
   departament,
+  hideSequenceField,
   children,
 }: EditDepartamentDialogProps) {
   return (
     <CustomDialog id="edit-departament" title="Editar departamento" trigger={children}>
-      <EditDepartamentForm departament={departament} />
+      <EditDepartamentForm departament={departament} hideSequenceField={hideSequenceField} />
     </CustomDialog>
   );
 }

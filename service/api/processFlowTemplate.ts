@@ -44,3 +44,23 @@ export async function deleteFlowTemplates(flowTemplateIds: number[]) {
     .in("id", flowTemplateIds)
     .throwOnError();
 }
+
+export async function getAllFlowTemplatesByProcess(processId: number) {
+  return await supabase
+    .from("ProductionFlowTemplate")
+    .select("process_id")
+    .eq("process_id", processId)
+    .throwOnError();
+}
+
+export async function getAllFlowTemplatesByDepartament(departamentId: number) {
+  return await supabase
+    .from("ProductionFlowTemplate")
+    .select(
+      `
+    process:Process!inner(departament_id)
+  `,
+    )
+    .eq("process.departament_id", departamentId)
+    .throwOnError();
+}

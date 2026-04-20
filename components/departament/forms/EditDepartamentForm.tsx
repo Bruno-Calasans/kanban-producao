@@ -14,9 +14,13 @@ import useDialog from "@/hooks/dialog/useDialog";
 
 type DepartamentFormProps = {
   departament: Departament;
+  hideSequenceField?: boolean;
 };
 
-export default function EditDepartamentForm({ departament }: DepartamentFormProps) {
+export default function EditDepartamentForm({
+  departament,
+  hideSequenceField,
+}: DepartamentFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateDepartament();
 
@@ -54,7 +58,7 @@ export default function EditDepartamentForm({ departament }: DepartamentFormProp
     >
       <FieldGroup>
         <DepartamentNameField form={form} />
-        <DepartamentSequenceField form={form} />
+        {!hideSequenceField && <DepartamentSequenceField form={form} />}
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

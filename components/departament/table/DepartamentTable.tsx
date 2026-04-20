@@ -6,6 +6,7 @@ import DataTableColumnHeader from "@/components/custom/data-table/DataTableColum
 import type { Departament } from "@/types/database.type";
 import DepartamentDropdownMenu from "./DepartamentDropdownMenu";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
+import ActiveBadge from "@/components/custom/badges/ActiveBadge";
 
 type DepartamentPageProps = {
   departaments: Departament[];
@@ -19,6 +20,15 @@ const DepartmentColumns: ColumnDef<Departament>[] = [
   {
     accessorKey: "sequence",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
+  },
+  {
+    accessorKey: "is_active",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Ativo" />,
+    cell: ({
+      row: {
+        original: { is_active },
+      },
+    }) => <ActiveBadge isActive={is_active} />,
   },
   {
     accessorKey: "created_at",

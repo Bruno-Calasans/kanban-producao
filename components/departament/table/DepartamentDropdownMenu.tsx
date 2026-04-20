@@ -37,8 +37,6 @@ export default function DepartamentDropdownMenu({ departament }: DepartamentDrop
   const canEdit = !isPending && !isError && executions.length == 0;
   const canDelete = !isPending && !isError && executions.length == 0;
 
-  console.log(departament.name, executions);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

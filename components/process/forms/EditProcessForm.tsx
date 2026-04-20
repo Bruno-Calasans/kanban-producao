@@ -16,9 +16,15 @@ import { ProcessSequenceField } from "./fields/ProcessSequenceField";
 
 type EditProcessFormProps = {
   process: ProcessWithDepartament;
+  hideSequenceField?: boolean;
+  hideDepartamentField?: boolean;
 };
 
-export default function EditProcessForm({ process }: EditProcessFormProps) {
+export default function EditProcessForm({
+  process,
+  hideSequenceField,
+  hideDepartamentField,
+}: EditProcessFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateProcess();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament | undefined>(
@@ -68,13 +74,16 @@ export default function EditProcessForm({ process }: EditProcessFormProps) {
     >
       <FieldGroup>
         <ProcessNameField form={form} />
-        <ProcessSequenceField form={form} />
-        <ProcessDepartamentField
-          form={form}
-          selectedDepartament={selectedDepartament}
-          defaultDepartament={process.departament}
-          onChangeDepartament={setSelectedDepartament}
-        />
+
+        {!hideSequenceField && <ProcessSequenceField form={form} />}
+        {!hideDepartamentField && (
+          <ProcessDepartamentField
+            form={form}
+            selectedDepartament={selectedDepartament}
+            defaultDepartament={process.departament}
+            onChangeDepartament={setSelectedDepartament}
+          />
+        )}
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

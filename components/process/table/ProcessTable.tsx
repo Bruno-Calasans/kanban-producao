@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import ProcessDropdownMenu from "@/components/process/table/ProcessDropdownMenu";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
+import ActiveBadge from "@/components/custom/badges/ActiveBadge";
 
 type ProcessPageProps = {
   processes: ProcessWithDepartament[];
@@ -24,6 +25,15 @@ const processColumns: ColumnDef<ProcessWithDepartament>[] = [
     id: "departament.name",
     accessorKey: "departament.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
+  },
+  {
+    accessorKey: "is_active",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Ativo" />,
+    cell: ({
+      row: {
+        original: { is_active },
+      },
+    }) => <ActiveBadge isActive={is_active} />,
   },
   {
     accessorKey: "created_at",

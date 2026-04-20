@@ -123,3 +123,17 @@ export async function getAllExecutionsByDepartament(departamentId: number) {
   data = data.filter(({ process, from_process }) => process != null && from_process != null);
   return { data, ...rest };
 }
+
+export async function getAllExecutionsByProcess(processId: number) {
+  return await supabase
+    .from("ProcessExecution")
+    .select(
+      `
+      process_id,
+      from_process_id,
+      type
+    `,
+    )
+    .or(`process_id.eq.${processId}, from_process_id.eq.${processId}`)
+    .throwOnError();
+}

@@ -12,6 +12,15 @@ export async function getAllProcesses() {
     .throwOnError();
 }
 
+export async function getAllActiveProcesses() {
+  return await supabase
+    .from("Process")
+    .select("*, departament:Departament(*)")
+    .eq("is_active", true)
+    .order("sequence", { ascending: true })
+    .throwOnError();
+}
+
 export async function getAllProcessesByDepartamentId(departamentId: number) {
   return await supabase
     .from("Process")

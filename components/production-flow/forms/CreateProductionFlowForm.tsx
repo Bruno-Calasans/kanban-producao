@@ -35,6 +35,7 @@ export default function CreateProductionFlowForm() {
           name,
           desc: desc || "",
           is_default: !!useDefault,
+          is_active: true,
         });
 
         await mutateTemplateAsync(

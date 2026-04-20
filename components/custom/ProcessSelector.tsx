@@ -14,11 +14,11 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@/components/ui/combobox";
-import useGetAllProcesses from "@/hooks/process/useGetAllProcesses";
 import { Process } from "@/types/database.type";
-import { useEffect, useEffectEvent, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Loader from "./Loader";
 import { sortBySequence } from "@/utils/sortBySequence";
+import useGetAllActiveProcesses from "@/hooks/process/useGetAllActiveProcesses";
 
 type ComboItem = {
   id: string;
@@ -42,7 +42,7 @@ export default function ProcessSelector({
   onSelect,
 }: ProductionFlowProcessesFieldProps) {
   const anchor = useComboboxAnchor();
-  const { data, isPending } = useGetAllProcesses();
+  const { data, isPending } = useGetAllActiveProcesses();
   const processes = data?.data || [];
   const [hasDefault, setHasDefault] = useState<boolean>(false);
 

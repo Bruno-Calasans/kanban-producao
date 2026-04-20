@@ -163,6 +163,8 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     isPending,
   ]);
 
+  console.log(processStates)
+
   return {
     processStates,
     isPending,

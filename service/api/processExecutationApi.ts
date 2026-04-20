@@ -145,3 +145,14 @@ export async function getAllExecutionsByResponsible(responsibleId: number) {
     .eq("responsible_id", responsibleId)
     .throwOnError();
 }
+
+export async function updateInitialExecution(movimentationId: number, amount: number) {
+  return await supabase
+    .from("ProcessExecution")
+    .update({
+      amount,
+    })
+    .eq("movimentation_id", movimentationId)
+    .eq("type", "INIT")
+    .throwOnError();
+}

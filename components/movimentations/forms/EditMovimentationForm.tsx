@@ -11,6 +11,7 @@ import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/datab
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
 import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
+import useUpdateInicialExecution from "@/hooks/process-executation/useUpdateInicialExecution";
 
 type EditMovimentationFormProps = {
   movimentation: MovimentationPopulated;
@@ -18,7 +19,10 @@ type EditMovimentationFormProps = {
 
 export default function EditMovimentationForm({ movimentation }: EditMovimentationFormProps) {
   const { closeDialog } = useDialog();
-  const { mutateAsync: updateMovimentation, isPending } = useUpdateMovimentation();
+  const { mutateAsync: updateMovimentation, isPending: isMovimentationPending } =
+    useUpdateMovimentation();
+  const { mutateAsync: updateInitialExecution, isPending: isExecutionPending } =
+    useUpdateInicialExecution();
   const [product, setProduct] = useState<ProductWithProductionFlow>();
 
   const form = useAppForm({
@@ -42,6 +46,15 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
             status: "PENDING",
           },
         });
+
+        //  atualiza execução inicial
+        if (amount != movimentation.amount) {
+          await updateInitialExecution({
+            movimentationId: movimentation.id,
+            amount,
+          });
+        }
+
         toast.success("Movimentação atualizado com sucesso!");
         closeDialog("edit-movimentation");
         form.reset();
@@ -57,6 +70,8 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
     form.reset();
     setProduct(undefined);
   };
+
+  const isPending = isMovimentationPending || isExecutionPending;
 
   return (
     <form

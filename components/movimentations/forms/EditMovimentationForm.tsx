@@ -7,7 +7,7 @@ import { useAppForm, formSchema, MovimentationFormSchema } from "./movimentation
 import handleFormError from "@/utils/errorHandler";
 import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup";
 import useDialog from "@/hooks/dialog/useDialog";
-import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/database.type";
+import { MovimentationPopulated, Product, ProductWithProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
 import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
@@ -85,7 +85,7 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
       <MovimentationProductNameField
         form={form}
         selectedProduct={product}
-        defaultProduct={movimentation.product}
+        defaultProduct={movimentation.product as ProductWithProductionFlow}
         onChange={setProduct}
       />
       {product && <MovimentationAmountFieldGroup form={form} selectedProduct={product} />}

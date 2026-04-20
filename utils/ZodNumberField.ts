@@ -6,7 +6,11 @@ type ZodNumberFieldProps = {
   requiredError?: string;
 };
 
-export default function ZodNumberField({ min, minError, requiredError }: ZodNumberFieldProps) {
+export default function ZodNumberField({
+  min,
+  minError,
+  requiredError,
+}: ZodNumberFieldProps): z.ZodType<number, any> {
   return z.preprocess(
     (val) => {
       if (val === "") return undefined;

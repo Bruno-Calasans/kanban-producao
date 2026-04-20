@@ -13,19 +13,19 @@ const queryClient = new QueryClient();
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider defaultOpen={false}>
-      <AppSidebar />
-      <SidebarTrigger />
-      <ContentContainer>
-        <Toaster />
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
+    <TooltipProvider>
+      <SidebarProvider defaultOpen={false}>
+        <AppSidebar />
+        <SidebarTrigger />
+        <ContentContainer>
+          <Toaster />
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false} />
 
-          <DialogProvider>
-            <TooltipProvider>{children}</TooltipProvider>
-          </DialogProvider>
-        </QueryClientProvider>
-      </ContentContainer>
-    </SidebarProvider>
+            <DialogProvider>{children}</DialogProvider>
+          </QueryClientProvider>
+        </ContentContainer>
+      </SidebarProvider>
+    </TooltipProvider>
   );
 }

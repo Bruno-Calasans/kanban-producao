@@ -11,6 +11,7 @@ import {
   SidebarGroupLabel,
   SidebarGroupAction,
   SidebarGroupContent,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 import {
@@ -23,10 +24,11 @@ import {
   Settings2Icon,
   FormIcon,
 } from "lucide-react";
+import CustomTooltip from "./CustomTooltip";
 
 const items = [
   {
-    name: "Resumo",
+    name: "Home",
     url: "/",
     icon: HomeIcon,
   },
@@ -68,20 +70,35 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const { open } = useSidebar();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent className="p-2">
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.name}>
-              <SidebarMenuButton asChild>
-                <a href={item.url}>
-                  <item.icon />
-                  <span>{item.name}</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {items.map((item) =>
+            open ? (
+              <SidebarMenuItem key={item.name}>
+                <SidebarMenuButton asChild>
+                  <a href={item.url}>
+                    <item.icon />
+                    <span>{item.name}</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ) : (
+              <CustomTooltip key={item.name} content={item.name} side="right">
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <a href={item.url}>
+                      <item.icon />
+                      <span>{item.name}</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </CustomTooltip>
+            ),
+          )}
         </SidebarMenu>
       </SidebarContent>
 

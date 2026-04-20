@@ -15,9 +15,13 @@ import { useAppForm, formSchema, ResponsibleFormSchema } from "./responsibleForm
 
 type CreateResponsibleFormProps = {
   responsible: ResponsibleWithDepartament;
+  hideDepartamentField?: boolean;
 };
 
-export default function UpdateResponsibleForm({ responsible }: CreateResponsibleFormProps) {
+export default function UpdateResponsibleForm({
+  responsible,
+  hideDepartamentField,
+}: CreateResponsibleFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateResponsible();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament>();
@@ -62,12 +66,14 @@ export default function UpdateResponsibleForm({ responsible }: CreateResponsible
     >
       <FieldGroup>
         <ResponsibleNameField form={form} />
-        <ResponsibleDepartamentName
-          form={form}
-          defaultDepartament={responsible.departament}
-          selectedDepartament={selectedDepartament}
-          onDepartamentChange={setSelectedDepartament}
-        />
+        {!hideDepartamentField && (
+          <ResponsibleDepartamentName
+            form={form}
+            defaultDepartament={responsible.departament}
+            selectedDepartament={selectedDepartament}
+            onDepartamentChange={setSelectedDepartament}
+          />
+        )}
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

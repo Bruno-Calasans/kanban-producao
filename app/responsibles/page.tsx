@@ -3,8 +3,9 @@
 import PageTitle from "@/components/custom/PageTitle";
 import Loader from "@/components/custom/Loader";
 import useGetAllResponsibles from "@/hooks/responsible/useGetAllResponsibles";
-import CreateResponsibleDialog from "@/components/responsible/dialogs/CreateResponsibleDialog";
-import ResponsibleTable from "@/components/responsible/ResponsibleTable";
+import CreateResponsibleDialog from "@/components/responsibles/dialogs/CreateResponsibleDialog";
+import ResponsibleTable from "@/components/responsibles/table/ResponsibleTable";
+import PageMsg from "@/components/custom/msgs/PageMsg";
 
 export default function ResponsiblePage() {
   const { data, isLoading, error } = useGetAllResponsibles();
@@ -13,7 +14,6 @@ export default function ResponsiblePage() {
   if (isLoading) {
     return (
       <section>
-        <PageTitle>Responsáveis</PageTitle>
         <Loader title="Carregando Responsáveis..." />
       </section>
     );
@@ -21,10 +21,12 @@ export default function ResponsiblePage() {
 
   if (error) {
     return (
-      <section>
-        <PageTitle>Responsáveis</PageTitle>
-        <p>Ocorreu um erro ao carregar os responsáveis.</p>
-      </section>
+      <PageMsg
+        title="Erro ao carregar responsáveis"
+        content="Não foi possível carregar os responsáveis. Tente novamente."
+        backBtnLabel="Voltar à página inical"
+        backBtnUrl="/"
+      />
     );
   }
 

@@ -137,3 +137,11 @@ export async function getAllExecutionsByProcess(processId: number) {
     .or(`process_id.eq.${processId}, from_process_id.eq.${processId}`)
     .throwOnError();
 }
+
+export async function getAllExecutionsByResponsible(responsibleId: number) {
+  return await supabase
+    .from("ProcessExecution")
+    .select("responsible_id")
+    .eq("responsible_id", responsibleId)
+    .throwOnError();
+}

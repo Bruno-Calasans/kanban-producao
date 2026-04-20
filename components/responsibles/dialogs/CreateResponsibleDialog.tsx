@@ -1,6 +1,6 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import AddButton from "@/components/custom/buttons/AddButton";
-import CreateResponsibleForm from "@/components/responsible/forms/CreateResponsibleForm";
+import CreateResponsibleForm from "@/components/responsibles/forms/CreateResponsibleForm";
 
 export default function CreateResponsibleDialog() {
   return (

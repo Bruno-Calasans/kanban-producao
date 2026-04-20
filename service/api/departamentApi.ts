@@ -12,6 +12,15 @@ export async function getAllDepartaments() {
     .throwOnError();
 }
 
+export async function getAllActiveDepartaments() {
+  return await supabase
+    .from("Departament")
+    .select("*")
+    .eq("is_active", true)
+    .order("sequence", { ascending: true })
+    .throwOnError();
+}
+
 export async function getOneDepartament(departamentId: number) {
   return await supabase
     .from("Departament")

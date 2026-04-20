@@ -5,26 +5,24 @@ import Loader from "@/components/custom/Loader";
 import useGetAllProducts from "@/hooks/product/useGetAllProducts";
 import CreateProductDialog from "@/components/products/dialogs/CreateProductDialog";
 import ProductTable from "@/components/products/table/ProductTable";
+import PageMsg from "@/components/custom/msgs/PageMsg";
 
 export default function ProductPage() {
   const { data, isLoading, error } = useGetAllProducts();
   const products = data?.data || [];
 
   if (isLoading) {
-    return (
-      <section>
-        <PageTitle>Produtos</PageTitle>
-        <Loader title="Carregando produtos..." />
-      </section>
-    );
+    return <Loader title="Carregando produtos..." />;
   }
 
   if (error) {
     return (
-      <section>
-        <PageTitle>Produtos</PageTitle>
-        <p>Ocorreu um erro ao carregar os produtos.</p>
-      </section>
+      <PageMsg
+        title="Erro"
+        content="Algo deu errado ao carregar os produtos"
+        backBtnLabel="Voltar à página inicial"
+        backBtnUrl="/"
+      />
     );
   }
 

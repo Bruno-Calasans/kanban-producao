@@ -15,11 +15,6 @@ type ProductPageProps = {
 
 const productColumns: ColumnDef<ProductWithProductionFlow>[] = [
   {
-    accessorKey: "is_active",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Situação" />,
-    cell: (props) => <ActiveBadge isActive={!!props.getValue()} />,
-  },
-  {
     accessorKey: "op",
     header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,
   },
@@ -31,6 +26,11 @@ const productColumns: ColumnDef<ProductWithProductionFlow>[] = [
     id: "production_flow.name",
     accessorKey: "production_flow.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Fluxo" />,
+  },
+  {
+    accessorKey: "is_active",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Ativo" />,
+    cell: (props) => <ActiveBadge isActive={!!props.getValue()} />,
   },
   {
     accessorKey: "created_at",

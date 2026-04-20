@@ -30,13 +30,15 @@ export default function CreateResponsibleForm() {
         await mutateAsync({
           name: value.name,
           departament_id: selectedDepartament.id,
+          is_active: true,
         });
         toast.success("Responsável criado com sucesso!");
         closeDialog("create-responsible");
         form.reset();
       } catch (error) {
         errorHandler(error, {
-          default: "Erro: não foi possível criar o responsável",
+          default: "Erro: não foi possível criar o responsável.",
+          duplicate: "Erro: responsável com esse nome já existe.",
         });
       }
     },

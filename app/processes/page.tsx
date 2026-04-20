@@ -5,26 +5,24 @@ import Loader from "@/components/custom/Loader";
 import useGetAllProcesses from "@/hooks/process/useGetAllProcesses";
 import CreateProcessDialog from "@/components/process/dialogs/CreateProcessDialog";
 import ProcessTable from "@/components/process/table/ProcessTable";
+import PageMsg from "@/components/custom/msgs/PageMsg";
 
 export default function ProcessesPage() {
   const { data, isLoading, error } = useGetAllProcesses();
   const processes = data?.data || [];
 
   if (isLoading) {
-    return (
-      <section>
-        <PageTitle>Processos</PageTitle>
-        <Loader title="Carregando processos..." />
-      </section>
-    );
+    return <Loader title="Carregando processos..." />;
   }
 
   if (error) {
     return (
-      <section>
-        <PageTitle>Processos</PageTitle>
-        <p>Ocorreu um erro ao carregar os processos.</p>
-      </section>
+      <PageMsg
+        title="Erro"
+        content="Algo deu errado ao carregar os processos"
+        backBtnLabel="Voltar à página inicial"
+        backBtnUrl="/"
+      />
     );
   }
 

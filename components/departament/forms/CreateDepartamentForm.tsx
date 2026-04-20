@@ -23,7 +23,7 @@ export default function CreateDepartamentForm() {
     },
     onSubmit: async ({ value }) => {
       try {
-        await mutateAsync(value);
+        await mutateAsync({ ...value, is_active: true });
         toast.success("Departamento criado com sucesso!");
         closeDialog("create-departament");
         form.reset();

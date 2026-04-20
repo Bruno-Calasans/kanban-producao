@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ProductionFlow } from "@/types/database.type";
-import useGetAllProductionFlow from "@/hooks/production-flow/useGetAllProductionFlow";
 import { useState } from "react";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { SingleSelector } from "./SingleSelector";
+import useGetAllActiveProductionFlows from "@/hooks/production-flow/useGetAllActiveProductionFlows";
 
 type ProductionFlowSelectorWithCheckboxProps = {
   defaultProductionFlow?: ProductionFlow;
@@ -23,7 +23,7 @@ export default function ProductionFlowSelectorWithCheckbox({
   const [useDefault, setUseDefault] = useState<boolean | "indeterminate">(
     defaultProductionFlow ? false : true,
   );
-  const { data, isPending } = useGetAllProductionFlow();
+  const { data, isPending } = useGetAllActiveProductionFlows();
   const productionFlows = data ? data.data : [];
   const hasDefault = productionFlows.find((flow) => flow.is_default);
   const defaultflow = defaultProductionFlow || hasDefault || productionFlows[0];

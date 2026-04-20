@@ -18,7 +18,7 @@ export default function DepartamentsPage() {
   if (error) {
     return (
       <PageMsg
-        title="Erro: não foi possível carregar os departamentos"
+        title="Erro"
         content="Algo deu errado ao carregar os departamentos"
         backBtnLabel="Voltar à página inicial"
         backBtnUrl="/"

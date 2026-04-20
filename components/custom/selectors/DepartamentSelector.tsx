@@ -1,8 +1,8 @@
 import { Departament } from "@/types/database.type";
 import { SingleSelector } from "./SingleSelector";
 import { Button } from "@/components/ui/button";
-import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments";
 import Link from "next/link";
+import useGetAllActiveDepartaments from "@/hooks/departament/useGetAllActiveDepartaments";
 
 type DepartamentSelectorProps = {
   selectedDepartament?: Departament;
@@ -15,7 +15,7 @@ export default function DepartamentSelector({
   defaultDepartament,
   onValueChange,
 }: DepartamentSelectorProps) {
-  const { data, isPending } = useGetAllDepartaments();
+  const { data, isPending } = useGetAllActiveDepartaments();
   const departaments = data ? data.data : [];
   const defaultdepartament = defaultDepartament || selectedDepartament || departaments[0];
 

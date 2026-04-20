@@ -33,6 +33,7 @@ export default function CreateProcessForm() {
           name: name,
           sequence: sequence,
           departament_id: selectedDepartament.id,
+          is_active: true,
         });
         toast.success("Processo criado com sucesso!");
         closeDialog("create-process");
@@ -40,7 +41,7 @@ export default function CreateProcessForm() {
       } catch (error) {
         errorHandler(error, {
           default: "Erro: não foi possível criar o processo.",
-          duplicate: "Erro: nome ou sequência do processo já existe.",
+          duplicate: "Erro: processo com esse nome ou sequência já existe.",
         });
       }
     },

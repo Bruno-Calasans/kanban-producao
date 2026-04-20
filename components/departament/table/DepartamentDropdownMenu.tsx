@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit2Icon, EllipsisVerticalIcon, FlagIcon, Trash2Icon } from "lucide-react";
+import { CheckIcon, Edit2Icon, EllipsisVerticalIcon, Trash2Icon, XIcon } from "lucide-react";
 import EditDepartamentDialog from "../dialogs/EditDepartamentDialog";
 import { Departament } from "@/types/database.type";
 import DeleteDepartamentDialog from "../dialogs/DeleteDepartamentDialog";
@@ -11,18 +11,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useGetAllMovimentationsByDepartament from "@/hooks/process-executation/useGetAllMovimentationsByDepartament";
+import useActiveDepartament from "@/hooks/departament/useActiveDepartament";
 
 type DepartamentDropdownMenuProps = {
   departament: Departament;
 };
 
 export default function DepartamentDropdownMenu({ departament }: DepartamentDropdownMenuProps) {
-  const { data, error, isPending } = useGetAllMovimentationsByDepartament(departament.id);
+  const {
+    toggleActive,
+    error: activeDepartamentError,
+    isPending: isActiveDepartamentPending,
+  } = useActiveDepartament({
+    departament,
+  });
+  const {
+    data,
+    error: departamentMovimentationsError,
+    isPending: isDepartamentMovimentationsPending,
+  } = useGetAllMovimentationsByDepartament(departament.id);
+
   const executions = data?.data || [];
+  const isPending = isActiveDepartamentPending || isDepartamentMovimentationsPending;
+  const isError = activeDepartamentError || departamentMovimentationsError;
+  const canEdit = !isPending && !isError && executions.length == 0;
+  const canDelete = !isPending && !isError && executions.length == 0;
 
-  const canEdit = !isPending && executions.length == 0;
-
-  console.log(executions)
+  console.log(departament.name, executions);
 
   return (
     <DropdownMenu>
@@ -40,12 +55,28 @@ export default function DepartamentDropdownMenu({ departament }: DepartamentDrop
           </EditDepartamentDialog>
         )}
 
-        <DeleteDepartamentDialog departament={departament}>
-          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <Trash2Icon />
-            Excluir
-          </DropdownMenuItem>
-        </DeleteDepartamentDialog>
+        <DropdownMenuItem onSelect={toggleActive}>
+          {departament.is_active ? (
+            <>
+              <XIcon />
+              Desativar
+            </>
+          ) : (
+            <>
+              <CheckIcon />
+              Ativar
+            </>
+          )}
+        </DropdownMenuItem>
+
+        {canDelete && (
+          <DeleteDepartamentDialog departament={departament}>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <Trash2Icon />
+              Excluir
+            </DropdownMenuItem>
+          </DeleteDepartamentDialog>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

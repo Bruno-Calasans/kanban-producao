@@ -104,7 +104,7 @@ export async function getAllProcessExecutionsByMovimentation(movimentationId: nu
 }
 
 export async function getAllExecutionsByDepartament(departamentId: number) {
-  return await supabase
+  let { data, ...rest } = await supabase
     .from("ProcessExecution")
     .select(
       `
@@ -112,11 +112,14 @@ export async function getAllExecutionsByDepartament(departamentId: number) {
       from_process:Process!from_process_id(departament_id)
     `,
     )
-    .or(`departament_id.eq.${departamentId}`, {
+    .or(`and(departament_id.eq.${departamentId}, departament_id.not.is.null)`, {
       foreignTable: "process",
     })
-    .or(`departament_id.eq.${departamentId}`, {
+    .or(`and(departament_id.eq.${departamentId}, departament_id.not.is.null)`, {
       foreignTable: "from_process",
     })
     .throwOnError();
+
+  data = data.filter(({ process, from_process }) => process != null && from_process != null);
+  return { data, ...rest };
 }

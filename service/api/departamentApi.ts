@@ -1,10 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
+import { Departament } from "@/types/database.type";
 
-export type CreateDepartamentData = {
-  name: string;
-  sequence: number;
-};
-
+export type CreateDepartamentData = Omit<Departament, "id" | "created_at" | "updated_at">;
 export type UpdateDepartamentData = Partial<CreateDepartamentData>;
 
 export async function getAllDepartaments() {

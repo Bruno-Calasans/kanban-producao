@@ -1,6 +1,6 @@
-import useGetAllProducts from "@/hooks/product/useGetAllProducts";
 import { Product, ProductWithProductionFlow } from "@/types/database.type";
 import { SingleSelector } from "./selectors/SingleSelector";
+import useGetAllActiveProducts from "@/hooks/product/useGetAllActiveProducts";
 
 type ProductSelectorProps = {
   selectedProduct?: ProductWithProductionFlow;
@@ -13,7 +13,7 @@ export default function ProductSelector({
   defaultProduct,
   onChangeProduct,
 }: ProductSelectorProps) {
-  const { data, isPending } = useGetAllProducts();
+  const { data, isPending } = useGetAllActiveProducts();
   const products = data ? data.data : [];
 
   return (

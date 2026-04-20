@@ -11,6 +11,14 @@ export async function getAllProducts() {
     .throwOnError();
 }
 
+export async function getAllActiveProducts() {
+  return await supabase
+    .from("Product")
+    .select("*, production_flow:ProductionFlow!production_flow_id(*)")
+    .eq("is_active", true)
+    .throwOnError();
+}
+
 export async function getOneProduct(productId: number) {
   return await supabase
     .from("Product")

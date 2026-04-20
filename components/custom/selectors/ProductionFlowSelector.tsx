@@ -1,8 +1,8 @@
 import { ProductionFlow } from "@/types/database.type";
 import { SingleSelector } from "./SingleSelector";
-import useGetAllProductionFlow from "@/hooks/production-flow/useGetAllProductionFlow";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import useGetAllActiveProductionFlows from "@/hooks/production-flow/useGetAllActiveProductionFlows";
 
 type ProductionFlowSelectorProps = {
   selectedProductionFlow?: ProductionFlow;
@@ -15,7 +15,7 @@ export default function ProductionFlowSelector({
   defaultProductionFlow,
   onValueChange,
 }: ProductionFlowSelectorProps) {
-  const { data, isPending } = useGetAllProductionFlow();
+  const { data, isPending } = useGetAllActiveProductionFlows();
   const productionFlows = data ? data.data : [];
   const defaultFlow =
     defaultProductionFlow || productionFlows.find((flow) => flow.is_default) || productionFlows[0];

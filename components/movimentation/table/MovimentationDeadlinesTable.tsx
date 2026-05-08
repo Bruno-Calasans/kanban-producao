@@ -12,8 +12,7 @@ import useDepartamentState, {
 } from "@/hooks/departament-state/useDepartamentState";
 
 type MovimentationDeadlineState = {
-  processStates: ProcessState[];
-  movimentationDeadlines: MovimentationDeadlinePopulated[];
+  departamentStates: DepartamentState[];
 };
 
 const processColumns: ColumnDef<DepartamentState>[] = [
@@ -61,14 +60,8 @@ const processColumns: ColumnDef<DepartamentState>[] = [
 ];
 
 export default function MovimentationDeadlinesTable({
-  movimentationDeadlines,
-  processStates,
+  departamentStates,
 }: MovimentationDeadlineState) {
-  const { departamentStates } = useDepartamentState({
-    movimentationDeadlines: movimentationDeadlines,
-    movimentationProcessStates: processStates,
-  });
-
   return (
     <DataTable
       filterPlaceholder="Procurar departamento"

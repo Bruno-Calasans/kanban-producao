@@ -9,6 +9,7 @@ import PageMsg from "@/components/custom/msgs/PageMsg";
 import useProcessState from "@/hooks/process-state/useProcessState";
 import useGetAllProcessExecutionsByMovimentation from "@/hooks/process-executation/useGetAllProcessExecutionsByMovimentation";
 import useGetAllMovimentationDeadlinesByMovimentation from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlinesByMovimentation";
+import useDepartamentState from "@/hooks/departament-state/useDepartamentState";
 
 export default function MovimentationIdPage() {
   const params = useParams<{ movimentation_id: string }>();
@@ -39,6 +40,11 @@ export default function MovimentationIdPage() {
     isPending: isDeadlinePending,
   } = useGetAllMovimentationDeadlinesByMovimentation(movimentation?.id);
   const deadlines = deadlineData?.data || [];
+
+  const { departamentStates } = useDepartamentState({
+    movimentationDeadlines: deadlines,
+    movimentationProcessStates: processStates,
+  });
 
   const isPending =
     movimentationPending || isProcessStatesPending || isExecutionPending || isDeadlinePending;
@@ -78,7 +84,7 @@ export default function MovimentationIdPage() {
         movimentation={movimentation}
         processStates={processStates}
         processExecutions={processExecutions}
-        movimentationDeadlines={deadlines}
+        departamentStates={departamentStates}
       />
     </section>
   );

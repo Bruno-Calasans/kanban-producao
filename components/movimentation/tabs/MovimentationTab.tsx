@@ -2,7 +2,6 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  MovimentationDeadlinePopulated,
   MovimentationPopulated,
   ProcessExecutionPopulated,
   ProcessState,
@@ -11,12 +10,13 @@ import { useState } from "react";
 import ProcessStateTable from "../table/ProcessStateTable";
 import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
+import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 
 type MovimentationTabsProps = {
   movimentation: MovimentationPopulated;
   processStates: ProcessState[];
   processExecutions: ProcessExecutionPopulated[];
-  movimentationDeadlines: MovimentationDeadlinePopulated[];
+  departamentStates: DepartamentState[];
 };
 
 const TABS = ["ACTIONS", "DEADLINE", "HISTORY"];
@@ -24,7 +24,7 @@ const TABS = ["ACTIONS", "DEADLINE", "HISTORY"];
 export default function MovimentationTabs({
   processStates,
   processExecutions,
-  movimentationDeadlines,
+  departamentStates,
 }: MovimentationTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
 
@@ -51,11 +51,7 @@ export default function MovimentationTabs({
       </TabsContent>
 
       <TabsContent value={TABS[1]}>
-        <MovimentationDeadlinesTable
-          movimentationDeadlines={movimentationDeadlines}
-          processStates={processStates}
-        />
-        ;
+        <MovimentationDeadlinesTable departamentStates={departamentStates} />;
       </TabsContent>
 
       <TabsContent value={TABS[2]}>

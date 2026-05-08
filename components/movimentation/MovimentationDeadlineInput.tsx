@@ -6,13 +6,16 @@ import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUp
 import errorHandler from "@/utils/errorHandler";
 import { toast } from "sonner";
 import { useState } from "react";
-import { setDate } from "date-fns";
 
 type ProcessExecutionActionsProps = {
   deadline?: MovimentationDeadlinePopulated | null;
+  disabled?: boolean;
 };
 
-export default function MovimentationDeadlineInput({ deadline }: ProcessExecutionActionsProps) {
+export default function MovimentationDeadlineInput({
+  deadline,
+  disabled,
+}: ProcessExecutionActionsProps) {
   const startDate = deadline?.expected_at ? new Date(deadline?.expected_at) : undefined;
   const [currentDate, setCurrentDate] = useState<Date | undefined>(startDate);
 
@@ -47,6 +50,7 @@ export default function MovimentationDeadlineInput({ deadline }: ProcessExecutio
       currentDate={currentDate}
       onChangeDate={onChangeDate}
       placeholder={startDate ? "" : "Selecione o prazo"}
+      disabled={disabled}
     />
   );
 }

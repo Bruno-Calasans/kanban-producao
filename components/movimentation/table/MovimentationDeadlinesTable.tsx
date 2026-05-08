@@ -45,9 +45,9 @@ const processColumns: ColumnDef<DepartamentState>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Prazo" />,
     cell: ({
       row: {
-        original: { deadline },
+        original: { deadline, status },
       },
-    }) => <MovimentationDeadlineInput deadline={deadline} />,
+    }) => <MovimentationDeadlineInput deadline={deadline} disabled={status == "COMPLETED"} />,
   },
   {
     accessorKey: "status",

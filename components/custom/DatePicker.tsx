@@ -35,11 +35,17 @@ function isValidDate(date: Date | undefined) {
 
 type DatePickerInputProps = {
   currentDate?: Date;
-  onChangeDate?: (date?: Date) => void;
   placeholder?: string;
+  disabled?: boolean;
+  onChangeDate?: (date?: Date) => void;
 };
 
-export function DatePickerInput({ currentDate, placeholder, onChangeDate }: DatePickerInputProps) {
+export function DatePickerInput({
+  currentDate,
+  placeholder,
+  disabled,
+  onChangeDate,
+}: DatePickerInputProps) {
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState<Date | undefined>(currentDate);
   const [value, setValue] = useState(formatDate(currentDate));
@@ -66,9 +72,10 @@ export function DatePickerInput({ currentDate, placeholder, onChangeDate }: Date
               setOpen(true);
             }
           }}
+          disabled={disabled}
         />
         <InputGroupAddon align="inline-end">
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open && !disabled} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <InputGroupButton
                 id="date-picker"

@@ -65,8 +65,8 @@ export default function useDepartamentState({
     processStates: ProcessState[],
     deadline?: MovimentationDeadlinePopulated,
   ): { status: DepartamentStateStatus; expiredDays: number } => {
-    const pendingStates = processStates.map((state) => state.status == "PENDING");
-    const inProgressStates = processStates.map((state) => state.status == "IN_PROGRESS");
+    const pendingStates = processStates.filter((state) => state.status == "PENDING");
+    const inProgressStates = processStates.filter((state) => state.status == "IN_PROGRESS");
 
     const isPending = pendingStates.length > 0 && inProgressStates.length == 0;
     const InProgress = inProgressStates.length > 0;

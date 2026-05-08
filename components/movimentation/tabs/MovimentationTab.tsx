@@ -22,7 +22,6 @@ type MovimentationTabsProps = {
 const TABS = ["ACTIONS", "DEADLINE", "HISTORY"];
 
 export default function MovimentationTabs({
-  movimentation,
   processStates,
   processExecutions,
   movimentationDeadlines,

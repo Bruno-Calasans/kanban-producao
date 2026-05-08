@@ -58,3 +58,13 @@ export type ProductMovimentation = {
   product: Product;
   movimentations: MovimentationPopulated[];
 };
+
+export type MovimentationDeadline = Database["public"]["Tables"]["MovimentationDeadline"]["Row"];
+
+export type MovmentationDeadlinePopulated = Omit<
+  MovimentationDeadline,
+  "departament_id" | "movimenttion_id"
+> & {
+  departament: Departament;
+  movimentation: Movimentation;
+};

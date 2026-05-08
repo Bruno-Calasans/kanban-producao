@@ -3,8 +3,8 @@ import Link from "next/link";
 import MovimentationStatusBadge from "@/components/custom/badges/MovimentationStatusBadge";
 import PageTitle from "@/components/custom/PageTitle";
 import BackButton from "@/components/custom/buttons/BackButton";
-import CustomDialog from "../custom/CustomDialog";
-import { Button } from "../ui/button";
+import CustomDialog from "@/components/custom/CustomDialog";
+import { Button } from "@/components/ui/button";
 import EditMovimentationForm from "../movimentations/forms/EditMovimentationForm";
 import { Edit2Icon, Trash2Icon, BanIcon } from "lucide-react";
 import DeleteMovimentationDialog from "../movimentations/dialogs/DeleteMovimentationDialog";
@@ -38,6 +38,9 @@ export default function MovimentationInfoHeaderg({ movimentation }: Movimentatio
           >
             {movimentation.product.name}
           </Link>
+        </p>
+        <p className="flex gap-1 items-start text-center">
+          <strong>OP:</strong> {movimentation.product.op}
         </p>
         <p className="flex gap-1 items-start text-center">
           <strong>Status:</strong> <MovimentationStatusBadge movimentation={movimentation} />

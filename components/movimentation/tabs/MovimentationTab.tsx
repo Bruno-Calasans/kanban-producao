@@ -11,6 +11,7 @@ import ProcessStateTable from "../table/ProcessStateTable";
 import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
 import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
+import { Badge } from "@/components/ui/badge";
 
 type MovimentationTabsProps = {
   movimentation: MovimentationPopulated;
@@ -27,6 +28,7 @@ export default function MovimentationTabs({
   departamentStates,
 }: MovimentationTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
+  const expiredDepartaments = departamentStates.filter((dpt) => dpt.status === "EXPIRED");
 
   return (
     <Tabs value={selectedTab} onValueChange={setSelectedTab}>
@@ -37,7 +39,10 @@ export default function MovimentationTabs({
           </TabsTrigger>
 
           <TabsTrigger className="m-2" value={TABS[1]}>
-            Prazos
+            Prazos{" "}
+            <Badge className="flex justify-center items-center rounded-full w-2 h-4 text-xs bg-red-500">
+              {expiredDepartaments.length}
+            </Badge>
           </TabsTrigger>
 
           <TabsTrigger className="m-2" value={TABS[2]}>

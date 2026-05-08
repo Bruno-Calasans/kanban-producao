@@ -7,6 +7,7 @@ import type { Departament } from "@/types/database.type";
 import DepartamentDropdownMenu from "./DepartamentDropdownMenu";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 import ActiveBadge from "@/components/custom/badges/ActiveBadge";
+import ExternalBadge from "@/components/custom/badges/ExternalBadge";
 
 type DepartamentPageProps = {
   departaments: Departament[];
@@ -14,13 +15,23 @@ type DepartamentPageProps = {
 
 const DepartmentColumns: ColumnDef<Departament>[] = [
   {
+    accessorKey: "sequence",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
+  },
+  {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
   },
   {
-    accessorKey: "sequence",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
+    accessorKey: "is_external",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Externo" />,
+    cell: ({
+      row: {
+        original: { is_external },
+      },
+    }) => <ExternalBadge isExternal={is_external} />,
   },
+
   {
     accessorKey: "is_active",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Ativo" />,

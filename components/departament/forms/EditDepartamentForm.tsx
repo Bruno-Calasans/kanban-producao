@@ -11,15 +11,18 @@ import handleFormError from "@/utils/errorHandler";
 import { DepartamentNameField } from "./fields/DepartamentNameField";
 import { DepartamentSequenceField } from "./fields/DepartamentSequenceField";
 import useDialog from "@/hooks/dialog/useDialog";
+import { DepartamentIsExternalCheckboxField } from "./fields/DepartamentIsExternalCheckboxField";
 
 type DepartamentFormProps = {
   departament: Departament;
   hideSequenceField?: boolean;
+  hideExternalField?: boolean;
 };
 
 export default function EditDepartamentForm({
   departament,
   hideSequenceField,
+  hideExternalField,
 }: DepartamentFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateDepartament();
@@ -28,14 +31,23 @@ export default function EditDepartamentForm({
     defaultValues: {
       name: departament.name,
       sequence: departament.sequence,
+      isExternal: departament.is_external,
     } as DepartamentFormSchema,
     validators: {
       onSubmit: formSchema,
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
+      const { name, sequence, isExternal } = value;
       try {
-        await mutateAsync({ id: departament.id, updateData: value });
+        await mutateAsync({
+          id: departament.id,
+          updateData: {
+            name,
+            sequence,
+            is_external: isExternal,
+          },
+        });
         toast.success("Departamento atualizado com sucesso!");
         closeDialog("edit-departament");
         form.reset();
@@ -59,6 +71,7 @@ export default function EditDepartamentForm({
       <FieldGroup>
         <DepartamentNameField form={form} />
         {!hideSequenceField && <DepartamentSequenceField form={form} />}
+        {!hideExternalField && <DepartamentIsExternalCheckboxField form={form} />}
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

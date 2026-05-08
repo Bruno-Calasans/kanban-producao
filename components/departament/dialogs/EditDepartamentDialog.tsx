@@ -6,16 +6,22 @@ type EditDepartamentDialogProps = {
   departament: Departament;
   children?: React.ReactNode;
   hideSequenceField?: boolean;
+  hideExternalField?: boolean;
 };
 
 export default function EditDepartamentDialog({
   departament,
   hideSequenceField,
+  hideExternalField,
   children,
 }: EditDepartamentDialogProps) {
   return (
     <CustomDialog id="edit-departament" title="Editar departamento" trigger={children}>
-      <EditDepartamentForm departament={departament} hideSequenceField={hideSequenceField} />
+      <EditDepartamentForm
+        departament={departament}
+        hideSequenceField={hideSequenceField}
+        hideExternalField={hideExternalField}
+      />
     </CustomDialog>
   );
 }

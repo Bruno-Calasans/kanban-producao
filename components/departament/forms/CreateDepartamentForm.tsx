@@ -10,6 +10,7 @@ import { DepartamentNameField } from "./fields/DepartamentNameField";
 import { DepartamentSequenceField } from "./fields/DepartamentSequenceField";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
+import { DepartamentIsExternalCheckboxField } from "./fields/DepartamentIsExternalCheckboxField";
 
 export default function CreateDepartamentForm() {
   const { closeDialog } = useDialog();
@@ -21,9 +22,9 @@ export default function CreateDepartamentForm() {
       onSubmit: formSchema,
       onChange: formSchema,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async ({ value: { name, sequence, isExternal } }) => {
       try {
-        await mutateAsync({ ...value, is_active: true });
+        await mutateAsync({ name, sequence, is_external: isExternal, is_active: true });
         toast.success("Departamento criado com sucesso!");
         closeDialog("create-departament");
         form.reset();
@@ -47,6 +48,7 @@ export default function CreateDepartamentForm() {
       <FieldGroup>
         <DepartamentNameField form={form} />
         <DepartamentSequenceField form={form} />
+        <DepartamentIsExternalCheckboxField form={form} />
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

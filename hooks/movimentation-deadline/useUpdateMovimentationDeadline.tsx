@@ -15,7 +15,7 @@ export default function useUpdateMovimentationDeadline() {
     }) => updateMovimentationDeadline(data.movimentationDeadlineId, data.updateData),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: movimentationDeadlineKeys.details(),
+        queryKey: movimentationDeadlineKeys.lists(),
         exact: false,
       });
     },

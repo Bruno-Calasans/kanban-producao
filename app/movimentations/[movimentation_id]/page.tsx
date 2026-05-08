@@ -8,6 +8,7 @@ import MovimentationInfoHeader from "@/components/movimentation/MovimentationInf
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import useProcessState from "@/hooks/process-state/useProcessState";
 import useGetAllProcessExecutionsByMovimentation from "@/hooks/process-executation/useGetAllProcessExecutionsByMovimentation";
+import useGetAllMovimentationDeadlinesByMovimentation from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlinesByMovimentation";
 
 export default function MovimentationIdPage() {
   const params = useParams<{ movimentation_id: string }>();
@@ -32,8 +33,16 @@ export default function MovimentationIdPage() {
   } = useGetAllProcessExecutionsByMovimentation(movimentation?.id);
   const processExecutions = executionsData?.data || [];
 
-  const isPending = movimentationPending || isProcessStatesPending || isExecutionPending;
-  const isError = movimentationError || processStatesError || executionsError;
+  const {
+    data: deadlineData,
+    error: deadlineError,
+    isPending: isDeadlinePending,
+  } = useGetAllMovimentationDeadlinesByMovimentation(movimentation?.id);
+  const deadlines = deadlineData?.data || [];
+
+  const isPending =
+    movimentationPending || isProcessStatesPending || isExecutionPending || isDeadlinePending;
+  const isError = movimentationError || processStatesError || executionsError || deadlineError;
 
   if (isPending) return <Loader title="Carregando movimentação..." />;
 
@@ -69,6 +78,7 @@ export default function MovimentationIdPage() {
         movimentation={movimentation}
         processStates={processStates}
         processExecutions={processExecutions}
+        movimentationDeadlines={deadlines}
       />
     </section>
   );

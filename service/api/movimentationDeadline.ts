@@ -20,7 +20,21 @@ export async function getAllMovimentationDeadlines() {
     .throwOnError();
 }
 
-export async function getOneMovmentationDeadline(movimentationDeadlineId: number) {
+export async function getAllMovimentationDeadlinesByMovimentation(movimentationId: number) {
+  return await supabase
+    .from("MovimentationDeadline")
+    .select(
+      `
+        *, 
+        movimentation:Movimentation!movimentation_id(*),
+        departament:Departament!departament_id(*)
+    `,
+    )
+    .eq("movimentation_id", movimentationId)
+    .throwOnError();
+}
+
+export async function getOneMovimentationDeadline(movimentationDeadlineId: number) {
   return await supabase
     .from("Product")
     .select(

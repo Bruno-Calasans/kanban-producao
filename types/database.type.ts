@@ -61,7 +61,7 @@ export type ProductMovimentation = {
 
 export type MovimentationDeadline = Database["public"]["Tables"]["MovimentationDeadline"]["Row"];
 
-export type MovmentationDeadlinePopulated = Omit<
+export type MovimentationDeadlinePopulated = Omit<
   MovimentationDeadline,
   "departament_id" | "movimenttion_id"
 > & {

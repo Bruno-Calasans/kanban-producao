@@ -13,6 +13,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
+import { TimePicker } from "./date-time-picker/time-picker";
 
 function formatDate(date: Date | undefined) {
   if (!date) {
@@ -76,7 +77,7 @@ export function DatePickerInput({
             }
           }}
           onKeyDown={(e) => {
-            e.preventDefault()
+            e.preventDefault();
             if (e.key === "ArrowDown") {
               e.preventDefault();
               setOpen(true);

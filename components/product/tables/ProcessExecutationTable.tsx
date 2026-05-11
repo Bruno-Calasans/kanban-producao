@@ -6,6 +6,7 @@ import DataTableColumnHeader from "@/components/custom/data-table/DataTableColum
 import type { ProcessExecutionPopulated } from "@/types/database.type";
 import ProcessExecutionTypeBadge from "@/components/process-execution/badges/ProcessExecutionTypeBadge";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
+import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 
 type MovimentationPageProps = {
   processExecutions: ProcessExecutionPopulated[];
@@ -13,12 +14,6 @@ type MovimentationPageProps = {
 };
 
 const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
-  {
-    accessorKey: "created_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Data" />,
-    cell: ({ row: { original: processExecution } }) =>
-      stringDateTimeToDate(processExecution.created_at),
-  },
   {
     id: "movimentation.id",
     accessorKey: "movimentation.id",
@@ -44,6 +39,18 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
     accessorFn: ({ responsible }) => responsible?.name || "",
     accessorKey: "responsible.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Resp" />,
+  },
+  {
+    accessorKey: "started_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Data de Início" />,
+    cell: ({ row: { original: processExecution } }) =>
+      processExecution.started_at ? formatDateTimeCellValue(processExecution.started_at) : null,
+  },
+  {
+    accessorKey: "finished_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Data de Término" />,
+    cell: ({ row: { original: processExecution } }) =>
+      processExecution.finished_at ? formatDateTimeCellValue(processExecution.finished_at) : null,
   },
   {
     accessorKey: "type",

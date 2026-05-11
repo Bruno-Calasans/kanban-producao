@@ -14,7 +14,7 @@ import useCreateProcessExecution from "@/hooks/process-executation/useCreateProc
 import { ExecutionAmountField } from "./fields/ExecutionAmountField";
 import { ExecutionResponsibleField } from "./fields/ExecutionResponsibleField";
 import ExecutionState from "../../ExecutionStateMsg";
-import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
+import { ExecutionDatesField } from "./fields/ExecutionDatesField";
 
 type CreateProcessExecutionFormProps = {
   processState: ProcessState;
@@ -40,7 +40,7 @@ export default function CreateProcessExecutionForm({
     },
     onSubmit: async ({ value }) => {
       if (!responsible) return;
-      const { amount } = value;
+      const { amount, started_at, finished_at } = value;
       const { process, movimentation, nextProcess } = processState;
 
       try {
@@ -54,6 +54,8 @@ export default function CreateProcessExecutionForm({
           responsible_id: responsible.id,
           status: "SUCCESS",
           type: "TRANSFER",
+          started_at: started_at?.toISOString() || null,
+          finished_at: finished_at?.toISOString() || null,
         });
 
         toast.success("Execução criada com sucesso!");
@@ -79,6 +81,7 @@ export default function CreateProcessExecutionForm({
     >
       <ExecutionState from_process={processState.process} to_process={processState.nextProcess} />
       <FieldGroup>
+        <ExecutionDatesField form={form} />
         <ExecutionAmountField form={form} maxAmount={processState.avaliableAmount} />
         <ExecutionResponsibleField
           form={form}

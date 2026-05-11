@@ -11,10 +11,9 @@ import { useState } from "react";
 import ProcessStateTable from "../table/ProcessStateTable";
 import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
-import useDepartamentState, {
-  DepartamentState,
-} from "@/hooks/departament-state/useDepartamentState";
+import useDepartamentState from "@/hooks/departament-state/useDepartamentState";
 import { Badge } from "@/components/ui/badge";
+import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
 
 type MovimentationTabsProps = {
   movimentation: MovimentationPopulated;
@@ -65,6 +64,12 @@ export default function MovimentationTabs({
       </TabsContent>
 
       <TabsContent value={TABS[1]}>
+        {expiredDepartaments.length > 0 && (
+          <ErrorAlert
+            title="Há departamentos com prazos expirados"
+            description="Existem departamentos com prazos expirados."
+          />
+        )}
         <MovimentationDeadlinesTable departamentStates={departamentStates} />
       </TabsContent>
 

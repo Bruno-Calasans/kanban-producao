@@ -32,7 +32,7 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
-        disabled={status == "COMPLETED"}
+        disabled={status == "COMPLETED" || movimentation.status == "CANCELLED"}
       />
     ),
   },
@@ -48,7 +48,9 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
-        disabled={status != "COMPLETED" || !deadline?.started_at}
+        disabled={
+          status != "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
+        }
       />
     ),
   },
@@ -64,7 +66,9 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
-        disabled={status == "COMPLETED" || !deadline?.started_at}
+        disabled={
+          status == "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
+        }
       />
     ),
   },

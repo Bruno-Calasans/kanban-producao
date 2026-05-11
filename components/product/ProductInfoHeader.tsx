@@ -9,6 +9,9 @@ import EditProductForm from "@/components/products/forms/EditProductForm";
 import DeleteProductDialog from "@/components/products/dialogs/DeleteProductDialog";
 import useActiveProduct from "@/hooks/product/useActiveProduct";
 import ActiveBadge from "../custom/badges/ActiveBadge";
+import { ActionAlert } from "../custom/alerts/ActionAlert";
+import { is } from "date-fns/locale";
+import Loader from "../custom/Loader";
 
 type ProductInfoHeaderProps = {
   product: ProductWithProductionFlow;
@@ -77,24 +80,34 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
           </>
         )}
 
-        <Button
-          id="toggle-active-button"
-          onClick={toggleActive}
-          className="m-0 bg-slate-500 hover:bg-slate-600"
-          size="xs"
-        >
-          {product.is_active ? (
-            <>
-              <XIcon />
-              Desativar
-            </>
-          ) : (
-            <>
-              <CheckIcon />
-              Ativar
-            </>
-          )}
-        </Button>
+        {product.is_active ? (
+          <Button
+            id="toggle-active-button"
+            className="m-0 bg-slate-500 hover:bg-slate-600"
+            size="xs"
+            onClick={toggleActive}
+          >
+            <CheckIcon />
+            Desativar
+          </Button>
+        ) : (
+          <ActionAlert
+            title="Produto desativado"
+            description="O produto está desativado. Ative-o para poder criar movimentações."
+            actionLabel={
+              <Button
+                id="toggle-active-button"
+                className="m-0 bg-slate-500 hover:bg-slate-600"
+                size="xs"
+                disabled={isPending}
+              >
+                <CheckIcon />
+                Ativar
+              </Button>
+            }
+            onAction={toggleActive}
+          />
+        )}
 
         {canDeleteProduct && (
           <CustomDialog

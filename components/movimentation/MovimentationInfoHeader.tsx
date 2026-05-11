@@ -9,6 +9,7 @@ import EditMovimentationForm from "../movimentations/forms/EditMovimentationForm
 import { Edit2Icon, Trash2Icon, BanIcon } from "lucide-react";
 import DeleteMovimentationDialog from "../movimentations/dialogs/DeleteMovimentationDialog";
 import CancelMovimentationDialog from "../movimentations/dialogs/CancelMovimentationDialog";
+import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
 
 type MovimentationInfoHeadergProps = {
   movimentation: MovimentationPopulated;
@@ -50,7 +51,7 @@ export default function MovimentationInfoHeaderg({ movimentation }: Movimentatio
         </p>
       </div>
 
-      <div className="flex gap-2 mb-4 border-black">
+      <div className="flex gap-2 border-black mb-4">
         {canEdit && (
           <CustomDialog
             id="edit-movimentation"
@@ -94,6 +95,12 @@ export default function MovimentationInfoHeaderg({ movimentation }: Movimentatio
           >
             <DeleteMovimentationDialog movimentation={movimentation} />
           </CustomDialog>
+        )}
+        {movimentation.status === "CANCELLED" && (
+          <ErrorAlert
+            title="Movimentação Cancelada"
+            description={`Esta movimentação foi cancelada dia ${new Date(movimentation.updated_at).toLocaleDateString()}. Você não pode realizar mais ações ou definir prazos para esta movimentação.`}
+          />
         )}
       </div>
     </div>

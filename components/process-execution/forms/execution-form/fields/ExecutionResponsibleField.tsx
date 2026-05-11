@@ -1,6 +1,6 @@
 import { Field } from "@/components/ui/field";
 import { defaultExecutionFormValues, withForm } from "../processExecutionFormContext";
-import { FieldError, FieldLabel } from "@/components/ui/field";
+import { FieldError, FieldLabel, FieldDescription } from "@/components/ui/field";
 import ResponsibleSelector from "@/components/custom/selectors/ResponsibleSelector";
 import { Departament, Responsible } from "@/types/database.type";
 
@@ -21,7 +21,7 @@ export const ExecutionResponsibleField = withForm({
           const hasDefaultValue = defaultExecutionFormValues[field.name] == field.state.value;
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
-            <Field >
+            <Field>
               <FieldLabel htmlFor={field.name}>Responsável</FieldLabel>
               <ResponsibleSelector
                 departament={departament}
@@ -32,6 +32,9 @@ export const ExecutionResponsibleField = withForm({
                 }}
               />
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              <FieldDescription>
+                Selecione o responsável do departamento de origem pela execução do processo.
+              </FieldDescription>
             </Field>
           );
         }}

@@ -11,7 +11,9 @@ import { useState } from "react";
 import ProcessStateTable from "../table/ProcessStateTable";
 import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
-import useDepartamentState from "@/hooks/departament-state/useDepartamentState";
+import useDepartamentState, {
+  DepartamentState,
+} from "@/hooks/departament-state/useDepartamentState";
 import { Badge } from "@/components/ui/badge";
 import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
 
@@ -20,22 +22,17 @@ type MovimentationTabsProps = {
   processStates: ProcessState[];
   processExecutions: ProcessExecutionPopulated[];
   deadlines: MovimentationDeadlinePopulated[];
+  departamentStates: DepartamentState[];
 };
 
 const TABS = ["ACTIONS", "DEADLINE", "HISTORY"];
 
 export default function MovimentationTabs({
-  movimentation,
-  deadlines,
   processStates,
   processExecutions,
+  departamentStates,
 }: MovimentationTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
-  const { departamentStates } = useDepartamentState({
-    movimentation,
-    movimentationDeadlines: deadlines,
-    movimentationProcessStates: processStates,
-  });
   const expiredDepartaments = departamentStates.filter((dpt) => dpt.status === "EXPIRED");
 
   return (
@@ -64,12 +61,6 @@ export default function MovimentationTabs({
       </TabsContent>
 
       <TabsContent value={TABS[1]}>
-        {expiredDepartaments.length > 0 && (
-          <ErrorAlert
-            title="Há departamentos com prazos expirados"
-            description="Existem departamentos com prazos expirados."
-          />
-        )}
         <MovimentationDeadlinesTable departamentStates={departamentStates} />
       </TabsContent>
 

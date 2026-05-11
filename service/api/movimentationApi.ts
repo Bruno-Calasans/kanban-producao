@@ -25,7 +25,7 @@ export async function getOneMovimentationById(id: number) {
         product:Product!product_id(*)`,
     )
     .eq("id", id)
-    .single()
+    .maybeSingle()
     .throwOnError();
 }
 
@@ -88,4 +88,3 @@ export async function getAllMovimentationsByProductionFlow(productionFlowId: num
     .eq("product.production_flow_id", productionFlowId)
     .throwOnError();
 }
-

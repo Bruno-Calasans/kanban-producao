@@ -10,15 +10,21 @@ import { Edit2Icon, Trash2Icon, BanIcon } from "lucide-react";
 import DeleteMovimentationDialog from "../movimentations/dialogs/DeleteMovimentationDialog";
 import CancelMovimentationDialog from "../movimentations/dialogs/CancelMovimentationDialog";
 import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
+import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 
 type MovimentationInfoHeadergProps = {
   movimentation: MovimentationPopulated;
+  departamentStates: DepartamentState[];
 };
 
-export default function MovimentationInfoHeaderg({ movimentation }: MovimentationInfoHeadergProps) {
+export default function MovimentationInfoHeaderg({
+  movimentation,
+  departamentStates,
+}: MovimentationInfoHeadergProps) {
   const canEdit = movimentation.status == "PENDING";
   const canDelete = movimentation.status == "PENDING";
   const canCancel = movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
+  const expiredDepartaments = departamentStates.filter((dpt) => dpt.status === "EXPIRED");
 
   return (
     <div>
@@ -51,7 +57,8 @@ export default function MovimentationInfoHeaderg({ movimentation }: Movimentatio
         </p>
       </div>
 
-      <div className="flex gap-2 border-black mb-4">
+      {/* Botões de ação da movimentação */}
+      <div className="flex gap-2 border-black">
         {canEdit && (
           <CustomDialog
             id="edit-movimentation"
@@ -96,10 +103,21 @@ export default function MovimentationInfoHeaderg({ movimentation }: Movimentatio
             <DeleteMovimentationDialog movimentation={movimentation} />
           </CustomDialog>
         )}
-        {movimentation.status === "CANCELLED" && (
+      </div>
+
+      {/* Alertas da movimentação */}
+      <div className="flex gap-2 flex-col my-3">
+        {movimentation.status == "CANCELLED" && (
           <ErrorAlert
             title="Movimentação Cancelada"
             description={`Esta movimentação foi cancelada dia ${new Date(movimentation.updated_at).toLocaleDateString()}. Você não pode realizar mais ações ou definir prazos para esta movimentação.`}
+          />
+        )}
+
+        {expiredDepartaments.length > 0 && (
+          <ErrorAlert
+            title="Departamento expirado"
+            description="Existem departamentos com prazos expirados. Verifique a aba de prazos para mais detalhes."
           />
         )}
       </div>

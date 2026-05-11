@@ -1,53 +1,23 @@
 "use client";
 
 import Loader from "@/components/custom/Loader";
-import MovimentationTabs from "@/components/movimentation/tabs/MovimentationTab";
 import getOneMovimentation from "@/hooks/movimentation/useGetOneMovimentation";
-import { useParams } from "next/navigation";
-import MovimentationInfoHeader from "@/components/movimentation/MovimentationInfoHeader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
-import useProcessState from "@/hooks/process-state/useProcessState";
-import useGetAllProcessExecutionsByMovimentation from "@/hooks/process-executation/useGetAllProcessExecutionsByMovimentation";
-import useGetAllMovimentationDeadlinesByMovimentation from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlinesByMovimentation";
-import useDepartamentState from "@/hooks/departament-state/useDepartamentState";
+import MovimentationPageContent from "@/components/movimentation/MovimentationPageContent";
+import { useParams } from "next/navigation";
 
 export default function MovimentationIdPage() {
   const params = useParams<{ movimentation_id: string }>();
-
   const {
     data: movimentationData,
-    error: movimentationError,
-    isPending: movimentationPending,
+    error,
+    isPending,
   } = getOneMovimentation(Number(params.movimentation_id));
   const movimentation = movimentationData?.data;
 
-  const {
-    processStates,
-    isPending: isProcessStatesPending,
-    isError: processStatesError,
-  } = useProcessState({ movimentation });
-
-  const {
-    data: executionsData,
-    error: executionsError,
-    isPending: isExecutionPending,
-  } = useGetAllProcessExecutionsByMovimentation(movimentation?.id);
-  const processExecutions = executionsData?.data || [];
-
-  const {
-    data: deadlineData,
-    error: deadlineError,
-    isPending: isDeadlinePending,
-  } = useGetAllMovimentationDeadlinesByMovimentation(movimentation?.id);
-  const deadlines = deadlineData?.data || [];
-
-  const isPending =
-    movimentationPending || isProcessStatesPending || isExecutionPending || isDeadlinePending;
-  const isError = movimentationError || processStatesError || executionsError || deadlineError;
-
   if (isPending) return <Loader title="Carregando movimentação..." />;
 
-  if (isError)
+  if (error)
     return (
       <PageMsg
         title="Erro ao carregar movimentação"
@@ -72,15 +42,5 @@ export default function MovimentationIdPage() {
       />
     );
 
-  return (
-    <section>
-      <MovimentationInfoHeader movimentation={movimentation} />
-      <MovimentationTabs
-        movimentation={movimentation}
-        processStates={processStates}
-        processExecutions={processExecutions}
-        deadlines={deadlines}
-      />
-    </section>
-  );
+  return <MovimentationPageContent movimentation={movimentation} />;
 }

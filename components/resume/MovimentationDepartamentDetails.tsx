@@ -1,7 +1,13 @@
 import { MovimentationPopulated } from "@/types/database.type";
 import Loader from "../custom/Loader";
 import useGetAllMovimentationDeadlinesByMovimentation from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlinesByMovimentation";
-import { InfoIcon, CheckIcon, ClockCheckIcon, ClipboardClockIcon, ClockAlert } from "lucide-react";
+import {
+  InfoIcon,
+  ClockCheckIcon,
+  ClipboardClockIcon,
+  ClockAlert,
+  TriangleAlertIcon,
+} from "lucide-react";
 import CustomTooltip from "../custom/CustomTooltip";
 
 type MovimentationDepartamentDetailsProps = {
@@ -42,14 +48,14 @@ export default function MovimentationDepartamentDetails({
   if (expiredDeadlines.length == 0)
     return (
       <CustomTooltip side="left" content="Nenhum prazo expirado.">
-        <ClockCheckIcon className="h-5 w-5" />
+        <ClockCheckIcon className="text-emerald-800 h-5 w-5" />
       </CustomTooltip>
     );
 
   if (aboutToExpireDeadlines.length > 0)
     return (
       <CustomTooltip side="left" content="Prazos perto de expirar">
-        <ClockAlert className="h-5 w-5" />
+        <TriangleAlertIcon className="text-amber-500 h-5 w-5" />
       </CustomTooltip>
     );
 

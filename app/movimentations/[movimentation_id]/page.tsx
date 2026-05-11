@@ -41,11 +41,6 @@ export default function MovimentationIdPage() {
   } = useGetAllMovimentationDeadlinesByMovimentation(movimentation?.id);
   const deadlines = deadlineData?.data || [];
 
-  const { departamentStates } = useDepartamentState({
-    movimentationDeadlines: deadlines,
-    movimentationProcessStates: processStates,
-  });
-
   const isPending =
     movimentationPending || isProcessStatesPending || isExecutionPending || isDeadlinePending;
   const isError = movimentationError || processStatesError || executionsError || deadlineError;
@@ -84,7 +79,7 @@ export default function MovimentationIdPage() {
         movimentation={movimentation}
         processStates={processStates}
         processExecutions={processExecutions}
-        departamentStates={departamentStates}
+        deadlines={deadlines}
       />
     </section>
   );

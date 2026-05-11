@@ -34,6 +34,7 @@ interface DataTableProps<TData, TValue> {
   filterPlaceholder?: string;
   className?: string;
   hidePagination?: boolean;
+  hideSearch?: boolean;
   onEdit?: (row: TData) => void;
   onDelete?: (row: TData) => void;
   onClickRow?: (rowModel: Row<TData>) => void;
@@ -47,6 +48,7 @@ export function DataTable<TData, TValue>({
   filterPlaceholder,
   className,
   hidePagination,
+  hideSearch,
   onClickRow,
   onClickCell,
 }: DataTableProps<TData, TValue>) {
@@ -71,7 +73,9 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       {/* Filtro da tabela */}
-      <DataTableFilter placeholder={filterPlaceholder} column={filterColumn} table={table} />
+      {!hideSearch && (
+        <DataTableFilter placeholder={filterPlaceholder} column={filterColumn} table={table} />
+      )}
 
       {/* Tabela em si */}
       <div className={cn("overflow-hidden rounded-md border mt-2", className)}>

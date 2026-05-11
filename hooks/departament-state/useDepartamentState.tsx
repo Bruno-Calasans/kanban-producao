@@ -1,10 +1,18 @@
 "use client";
 
-import { Departament, MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
+import {
+  Departament,
+  Movimentation,
+  MovimentationDeadlinePopulated,
+  MovimentationPopulated,
+  ProcessState,
+} from "@/types/database.type";
+import { useMemo } from "react";
 
 export type DepartamentStateStatus = "IN_PROGRESS" | "PENDING" | "COMPLETED" | "EXPIRED";
 
 export type DepartamentState = {
+  movimentation: MovimentationPopulated;
   departament: Departament;
   deadline?: MovimentationDeadlinePopulated;
   processStates: ProcessState[];
@@ -17,11 +25,13 @@ export type ProcessStateByDepartament = {
 };
 
 type UseDepartamentStateProps = {
+  movimentation: MovimentationPopulated;
   movimentationProcessStates: ProcessState[];
   movimentationDeadlines: MovimentationDeadlinePopulated[];
 };
 
 export default function useDepartamentState({
+  movimentation,
   movimentationProcessStates,
   movimentationDeadlines,
 }: UseDepartamentStateProps) {
@@ -50,6 +60,7 @@ export default function useDepartamentState({
       const { status, expiredDays } = getDepartamentStatus(departamentProcessStates, deadline);
 
       departamentStates.push({
+        movimentation,
         departament: currentDepartament,
         processStates: processStateByDepartament[departamentKey],
         deadline,
@@ -90,7 +101,12 @@ export default function useDepartamentState({
     return { status: "COMPLETED", expiredDays: 0 };
   };
 
-  const departamentStates = getDepartamentStates();
+  const departamentStates = useMemo(
+    () => getDepartamentStates(),
+    [movimentation, movimentationProcessStates, movimentationDeadlines],
+  );
+
+  console.log("departamentStates", departamentStates);
 
   return { departamentStates };
 }

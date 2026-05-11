@@ -1,15 +1,14 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
-import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 import MovimentationDeadlineStatusBadge from "@/components/custom/badges/MovimentationDeadlineStatus";
-import MovimentationDeadlineInput from "../MovimentationDeadlineInput";
-import useDepartamentState, {
-  DepartamentState,
-} from "@/hooks/departament-state/useDepartamentState";
+import MovimentationDeadlineInput from "../inputs/MovimentationDeadlineInput";
+import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
+import MovimentationDeadlineStartsAtInput from "../inputs/MovimentationDeadlineStartsAtInput";
+import MovimentationDeadlineEndsAtInput from "../inputs/MovimentationDeadlineEndsAtInput";
+import { de } from "date-fns/locale";
 
 type MovimentationDeadlineState = {
   departamentStates: DepartamentState[];
@@ -26,27 +25,48 @@ const processColumns: ColumnDef<DepartamentState>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Começou em" />,
     cell: ({
       row: {
-        original: { deadline },
+        original: { movimentation, departament, deadline, status },
       },
-    }) => (deadline?.started_at ? formatDateTimeCellValue(deadline.started_at) : null),
+    }) => (
+      <MovimentationDeadlineStartsAtInput
+        movimentation={movimentation}
+        departament={departament}
+        deadline={deadline}
+        disabled={status == "COMPLETED"}
+      />
+    ),
   },
   {
     accessorKey: "finished_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
     cell: ({
       row: {
-        original: { deadline },
+        original: { movimentation, departament, deadline, status },
       },
-    }) => (deadline?.finished_at ? formatDateTimeCellValue(deadline.finished_at) : null),
+    }) => (
+      <MovimentationDeadlineEndsAtInput
+        movimentation={movimentation}
+        departament={departament}
+        deadline={deadline}
+        disabled={status != "COMPLETED" || !deadline?.started_at}
+      />
+    ),
   },
   {
     accessorKey: "expected_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Prazo" />,
     cell: ({
       row: {
-        original: { deadline, status },
+        original: { movimentation, departament, deadline, status },
       },
-    }) => <MovimentationDeadlineInput deadline={deadline} disabled={status == "COMPLETED"} />,
+    }) => (
+      <MovimentationDeadlineInput
+        movimentation={movimentation}
+        departament={departament}
+        deadline={deadline}
+        disabled={status == "COMPLETED" || !deadline?.started_at}
+      />
+    ),
   },
   {
     accessorKey: "status",

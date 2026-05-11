@@ -2,6 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  MovimentationDeadlinePopulated,
   MovimentationPopulated,
   ProcessExecutionPopulated,
   ProcessState,
@@ -10,24 +11,32 @@ import { useState } from "react";
 import ProcessStateTable from "../table/ProcessStateTable";
 import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
-import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
+import useDepartamentState, {
+  DepartamentState,
+} from "@/hooks/departament-state/useDepartamentState";
 import { Badge } from "@/components/ui/badge";
 
 type MovimentationTabsProps = {
   movimentation: MovimentationPopulated;
   processStates: ProcessState[];
   processExecutions: ProcessExecutionPopulated[];
-  departamentStates: DepartamentState[];
+  deadlines: MovimentationDeadlinePopulated[];
 };
 
 const TABS = ["ACTIONS", "DEADLINE", "HISTORY"];
 
 export default function MovimentationTabs({
+  movimentation,
+  deadlines,
   processStates,
   processExecutions,
-  departamentStates,
 }: MovimentationTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
+  const { departamentStates } = useDepartamentState({
+    movimentation,
+    movimentationDeadlines: deadlines,
+    movimentationProcessStates: processStates,
+  });
   const expiredDepartaments = departamentStates.filter((dpt) => dpt.status === "EXPIRED");
 
   return (
@@ -56,11 +65,11 @@ export default function MovimentationTabs({
       </TabsContent>
 
       <TabsContent value={TABS[1]}>
-        <MovimentationDeadlinesTable departamentStates={departamentStates} />;
+        <MovimentationDeadlinesTable departamentStates={departamentStates} />
       </TabsContent>
 
       <TabsContent value={TABS[2]}>
-        <ProcessExecutationTable hideMovimentationColumn processExecutions={processExecutions} />;
+        <ProcessExecutationTable hideMovimentationColumn processExecutions={processExecutions} />
       </TabsContent>
     </Tabs>
   );

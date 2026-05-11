@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/input-group";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ptBR } from "date-fns/locale";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function formatDate(date: Date | undefined) {
   if (!date) {
@@ -37,6 +37,8 @@ type DatePickerInputProps = {
   currentDate?: Date;
   placeholder?: string;
   disabled?: boolean;
+  minDate?: Date;
+  maxDate?: Date;
   onChangeDate?: (date?: Date) => void;
 };
 
@@ -44,12 +46,19 @@ export function DatePickerInput({
   currentDate,
   placeholder,
   disabled,
+  minDate,
+  maxDate,
   onChangeDate,
 }: DatePickerInputProps) {
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState<Date | undefined>(currentDate);
   const [value, setValue] = useState(formatDate(currentDate));
   const now = new Date();
+
+  useEffect(() => {
+    setMonth(currentDate);
+    setValue(formatDate(currentDate));
+  }, [currentDate]);
 
   return (
     <Field className="mx-auto">
@@ -67,6 +76,7 @@ export function DatePickerInput({
             }
           }}
           onKeyDown={(e) => {
+            e.preventDefault()
             if (e.key === "ArrowDown") {
               e.preventDefault();
               setOpen(true);
@@ -92,6 +102,7 @@ export function DatePickerInput({
               align="end"
               alignOffset={-8}
               sideOffset={10}
+              side="top"
             >
               <Calendar
                 mode="single"
@@ -107,7 +118,8 @@ export function DatePickerInput({
                   onChangeDate && onChangeDate(date);
                 }}
                 disabled={{
-                  before: now,
+                  before: minDate,
+                  after: maxDate,
                 }}
               />
             </PopoverContent>

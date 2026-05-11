@@ -90,8 +90,8 @@ export default function useDepartamentState({
       currentDate.setHours(0, 0, 0, 0);
 
       const diffInMs = expectedDate.getTime() - currentDate.getTime();
-      isExpired = diffInMs < 0;
       const expiredDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+      isExpired = diffInMs < 0;
 
       if (isExpired) return { status: "EXPIRED", expiredDays: Math.abs(expiredDays) };
     }
@@ -105,8 +105,6 @@ export default function useDepartamentState({
     () => getDepartamentStates(),
     [movimentation, movimentationProcessStates, movimentationDeadlines],
   );
-
-  console.log("departamentStates", departamentStates);
 
   return { departamentStates };
 }

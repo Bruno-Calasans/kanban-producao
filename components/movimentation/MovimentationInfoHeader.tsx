@@ -116,7 +116,7 @@ export default function MovimentationInfoHeaderg({
 
         {expiredDepartaments.length > 0 && (
           <ErrorAlert
-            title="Departamento expirado"
+            title="Departamento com prazo expirado"
             description="Existem departamentos com prazos expirados. Verifique a aba de prazos para mais detalhes."
           />
         )}

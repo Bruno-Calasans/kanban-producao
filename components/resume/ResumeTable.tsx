@@ -7,6 +7,7 @@ import DataTableColumnHeader from "@/components/custom/data-table/DataTableColum
 import MovimentationStatusBadge from "../custom/badges/MovimentationStatusBadge";
 import MovimentationMoreDetails from "./MovimentationMoreDetails";
 import Link from "next/link";
+import MovimentationDepartamentDetails from "./MovimentationDepartamentDetails";
 
 type ProductPageProps = {
   productMovimentations: ProductMovimentation[];
@@ -57,9 +58,12 @@ const productColumns: ColumnDef<ProductMovimentation>[] = [
         movimentations.length > 0 ? movimentations[movimentations.length - 1] : undefined;
       return (
         <Link
-          className="flex gap-1 hover:underline"
+          className="flex gap-1 hover:underline items-center"
           href={`/movimentations/${lastMovimentation?.id}`}
         >
+          {lastMovimentation && (
+            <MovimentationDepartamentDetails movimentation={lastMovimentation} />
+          )}
           #{lastMovimentation?.id}
         </Link>
       );

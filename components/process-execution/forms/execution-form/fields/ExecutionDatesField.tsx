@@ -6,8 +6,7 @@ import {
   withForm,
   defaultExecutionFormValues,
 } from "@/components/process-execution/forms/execution-form/processExecutionFormContext";
-import { DatePickerInput } from "@/components/custom/DatePicker";
-import { TimePicker } from "@/components/custom/date-time-picker/time-picker";
+import { Input } from "@/components/ui/input";
 
 export const ExecutionDatesField = withForm({
   defaultValues: defaultExecutionFormValues,
@@ -22,15 +21,11 @@ export const ExecutionDatesField = withForm({
             return (
               <Field data-invalid={isInvalid}>
                 <FieldLabel htmlFor={field.name}>Data de Início</FieldLabel>
-                <DatePickerInput
-                  currentDate={(field.state.value as Date) || undefined}
-                  onChangeDate={(value) => field.handleChange((value as Date) || undefined)}
-                />
-                <TimePicker
-                  date={(field.state.value as Date) || undefined}
-                  setDate={(value) => field.handleChange((value as Date) || undefined)}
-                  hideIcons
-                  hideSecond
+                <Input
+                  name={field.name}
+                  type="datetime-local"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
                 />
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -47,16 +42,13 @@ export const ExecutionDatesField = withForm({
                 return (
                   <Field>
                     <FieldLabel htmlFor={field.name}>Data de término</FieldLabel>
-                    <DatePickerInput
-                      currentDate={(field.state.value as Date) || undefined}
-                      onChangeDate={(value) => field.handleChange((value as Date) || undefined)}
-                      minDate={started_at || undefined}
-                    />
-                    <TimePicker
-                      date={(field.state.value as Date) || undefined}
-                      setDate={(value) => field.handleChange((value as Date) || undefined)}
-                      hideIcons
-                      hideSecond
+                    <Input
+                      name={field.name}
+                      type="datetime-local"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      disabled={!started_at}
+                      min={started_at}
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>

@@ -6,8 +6,8 @@ export const formSchema = z.object({
   amount: ZodNumberField({ min: 1, minError: "Quantidade mínima é 1" }),
   responsible: z.string().nonempty("Responsável é obrigatório"),
   useMaxAmount: z.boolean(),
-  started_at: z.date().nullable(),
-  finished_at: z.date().nullable(),
+  started_at: z.string().optional(),
+  finished_at: z.string().optional(),
 });
 
 export type ExecutionFormSchema = z.infer<typeof formSchema>;
@@ -16,8 +16,8 @@ export const defaultExecutionFormValues: ExecutionFormSchema = {
   amount: 1,
   responsible: "",
   useMaxAmount: true,
-  started_at: null,
-  finished_at: null,
+  started_at: "",
+  finished_at: "",
 };
 
 export const { fieldContext, formContext, useFieldContext, useFormContext } =

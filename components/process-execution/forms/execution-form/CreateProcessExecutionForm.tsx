@@ -33,6 +33,8 @@ export default function CreateProcessExecutionForm({
       amount: processState.avaliableAmount,
       responsible: "",
       useMaxAmount: true,
+      started_at: "",
+      finished_at: "",
     } as ExecutionFormSchema,
     validators: {
       onSubmit: formSchema,
@@ -54,8 +56,8 @@ export default function CreateProcessExecutionForm({
           responsible_id: responsible.id,
           status: "SUCCESS",
           type: "TRANSFER",
-          started_at: started_at?.toISOString() || null,
-          finished_at: finished_at?.toISOString() || null,
+          started_at: started_at ? new Date(started_at).toISOString() : null,
+          finished_at: finished_at ? new Date(finished_at).toISOString() : null,
         });
 
         toast.success("Execução criada com sucesso!");

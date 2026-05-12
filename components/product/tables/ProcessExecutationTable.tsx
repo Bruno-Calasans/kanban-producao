@@ -42,13 +42,13 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
   },
   {
     accessorKey: "started_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Data de Início" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Data: Início" />,
     cell: ({ row: { original: processExecution } }) =>
       processExecution.started_at ? formatDateTimeCellValue(processExecution.started_at) : null,
   },
   {
     accessorKey: "finished_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Data de Término" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Data:Término" />,
     cell: ({ row: { original: processExecution } }) =>
       processExecution.finished_at ? formatDateTimeCellValue(processExecution.finished_at) : null,
   },

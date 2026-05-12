@@ -12,6 +12,9 @@ import {
   SidebarGroupAction,
   SidebarGroupContent,
   useSidebar,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 
 import {
@@ -23,6 +26,9 @@ import {
   BriefcaseBusinessIcon,
   Settings2Icon,
   FormIcon,
+  CalendarIcon,
+  CalendarMinus2Icon,
+  CalendarDaysIcon,
 } from "lucide-react";
 import CustomTooltip from "./CustomTooltip";
 
@@ -99,18 +105,41 @@ export function AppSidebar() {
               </CustomTooltip>
             ),
           )}
+
+          {/* Calendário */}
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <a href="/calendar">
+                <CalendarIcon />
+                <span>Calendário</span>
+              </a>
+            </SidebarMenuButton>
+
+            {/* Submenus */}
+            <SidebarMenuSub>
+              <SidebarMenuSubItem>
+                <SidebarMenuSubButton asChild>
+                  <a className="flex" href="/calendar/weekly">
+                    <CalendarMinus2Icon />
+                    <span>Semanal</span>
+                  </a>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            </SidebarMenuSub>
+
+            <SidebarMenuSub>
+              <SidebarMenuSubItem>
+                <SidebarMenuSubButton asChild>
+                  <a className="flex" href="/calendar/monthly">
+                    <CalendarDaysIcon />
+                    <span>Mensal</span>
+                  </a>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            </SidebarMenuSub>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
-
-      {/* <SidebarGroup>
-                <SidebarGroupLabel>Application</SidebarGroupLabel>
-                <SidebarGroupAction>
-                    <Plus /> <span className="sr-only">Add Project</span>
-                </SidebarGroupAction>
-                <SidebarGroupContent>
-                    <p>teste</p>
-                </SidebarGroupContent>
-            </SidebarGroup> */}
 
       <SidebarFooter />
     </Sidebar>

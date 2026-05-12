@@ -14,7 +14,23 @@ export async function getAllMovimentationDeadlines() {
       `
         *, 
         movimentation:Movimentation!movimentation_id(*),
-        departament:Departament!departament_id(*),
+        departament:Departament!departament_id(*)
+    `,
+    )
+    .throwOnError();
+}
+
+export async function getAllMovimentationDeadlinesWithProduct() {
+  return await supabase
+    .from("MovimentationDeadline")
+    .select(
+      `
+        *, 
+        movimentation:Movimentation!movimentation_id(
+          *,
+          product:Product!product_id(*)
+        ),
+        departament:Departament!departament_id(*)
     `,
     )
     .throwOnError();

@@ -36,6 +36,28 @@ export async function getAllMovimentationDeadlinesWithProduct() {
     .throwOnError();
 }
 
+export async function getAllMovimentationDeadlinesInRange(fromDate: Date, toDate: Date) {
+  const from = fromDate.toISOString();
+  const to = toDate.toISOString();
+
+  return await supabase
+    .from("MovimentationDeadline")
+    .select(
+      `
+        *, 
+        movimentation:Movimentation!movimentation_id(  
+        *,
+          product:Product!product_id(*)
+        ),
+        departament:Departament!departament_id(*)
+    `,
+    )
+    .or(`started_at.gte.${from},expected_at.lte.${to}`)
+    // .lte("expected_at", to)
+    .is("finished_at", null)
+    .throwOnError();
+}
+
 export async function getAllMovimentationDeadlinesByMovimentation(movimentationId: number) {
   return await supabase
     .from("MovimentationDeadline")

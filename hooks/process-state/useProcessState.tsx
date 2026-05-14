@@ -164,6 +164,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
   ]);
 
   return {
+    processExecutions,
     processStates,
     isPending,
     isError,

@@ -148,7 +148,11 @@ export default function WeeklyDeadlineTable() {
               formatDate(weekDay) != formatDate(expectedDate)
             ) {
               startedDeadlines.push(
-                <WeekDeadlineCard key={departament.name + deadline.id} deadline={deadline} />,
+                <WeekDeadlineCard
+                  key={departament.name + deadline.id}
+                  deadline={deadline}
+                  day={weekDay}
+                />,
               );
             }
 
@@ -158,6 +162,7 @@ export default function WeeklyDeadlineTable() {
                 <WeekDeadlineCard
                   key={departament.name + deadline.id}
                   deadline={deadline}
+                  day={weekDay}
                   isExpected
                 />,
               );

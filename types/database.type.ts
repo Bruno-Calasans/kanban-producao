@@ -66,6 +66,5 @@ export type MovimentationDeadlinePopulated = Omit<
   "departament_id" | "movimenttion_id"
 > & {
   departament: Departament;
-  movimentation: Movimentation;
-  product: Product
+  movimentation: MovimentationPopulated;
 };

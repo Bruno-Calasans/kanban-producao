@@ -15,6 +15,7 @@ import useGetAllMovimentationDeadlineInRange from "@/hooks/movimentation-deadlin
 import useWeek from "@/hooks/use-week/useWeek";
 import { MovimentationDeadlinePopulated } from "@/types/database.type";
 import { formatDate } from "@/utils/formatDate";
+import { isToday, isWithinInterval } from "date-fns";
 
 type DeadlineByDepartament = {
   [key in number]: MovimentationDeadlinePopulated[];
@@ -57,20 +58,45 @@ export default function WeeklyDeadlineTable() {
     const groups: DeadlineByDate = {};
 
     for (const deadline of deadlines) {
-      const startedAtString = formatDate(new Date(deadline.started_at));
-      const expectedAtString = formatDate(new Date(deadline.expected_at));
-
       for (const weekDay of weekDays) {
         const weekDateString = formatDate(weekDay);
-        const dateInThisDay =
-          startedAtString === weekDateString || expectedAtString === weekDateString;
 
-        if (!dateInThisDay) continue;
+        const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
+        const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
 
-        if (groups[weekDateString]) {
-          groups[weekDateString].push(deadline);
-        } else {
-          groups[weekDateString] = [deadline];
+        let hasDeadlineInThisWeekDay = false;
+
+        // Tem dia para começar, mas não tem diz pra terminar
+        if (startedDate && !expectedDate) {
+          const lessOrEqualsToWeekDay = startedDate.getTime() <= weekDay.getTime();
+          hasDeadlineInThisWeekDay = lessOrEqualsToWeekDay;
+        }
+
+        // Tem prazo para terminar, mas não tem dia para começar
+        if (expectedDate && !startedDate) {
+          const isEqualToWeekDay = formatDate(expectedDate) == formatDate(weekDay);
+          hasDeadlineInThisWeekDay = isEqualToWeekDay;
+        }
+
+        // Tem dia para começar e terminar
+        if (startedDate && expectedDate) {
+          hasDeadlineInThisWeekDay = isWithinInterval(weekDay, {
+            start: startedDate,
+            end: expectedDate,
+          });
+        }
+
+        if (!hasDeadlineInThisWeekDay) {
+          if (!groups[weekDateString]) groups[weekDateString] = [];
+          continue;
+        }
+
+        if (hasDeadlineInThisWeekDay) {
+          if (groups[weekDateString]) {
+            groups[weekDateString].push(deadline);
+          } else {
+            groups[weekDateString] = [deadline];
+          }
         }
       }
     }
@@ -80,6 +106,8 @@ export default function WeeklyDeadlineTable() {
 
   const deadlinesByDepartamentGroup = groupDeadlinesByDepartament();
   const deadlinesByWeekDay = groupDeadlinesByWeekDay();
+
+  console.log(deadlinesByWeekDay);
 
   const renderCells = () => {
     const rows: React.ReactNode[] = [];
@@ -100,40 +128,46 @@ export default function WeeklyDeadlineTable() {
       // Outras células
       for (const weekDay of weekDays) {
         const weekDayString = formatDate(weekDay);
-        const deadlineInThisWeek = deadlinesByWeekDay[weekDayString];
+        const deadlinesInThisDayWeek = deadlinesByWeekDay[weekDayString];
+        let startedDeadlines: React.ReactNode[] = [];
+        let endDeadlines: React.ReactNode[] = [];
 
-        if (deadlineInThisWeek) {
-          const startDeadlines = deadlineInThisWeek
-            .filter(
-              (deadline) =>
-                formatDate(new Date(deadline.started_at)) == weekDayString &&
-                deadline.departament.id === departament.id,
-            )
-            .map((deadline) => (
-              <WeekDeadlineCard
-                key={weekDayString + departament.name + String(deadline.id)}
-                deadline={deadline}
-              />
-            ));
+        if (deadlinesInThisDayWeek.length > 0) {
+          for (const deadline of deadlines) {
+            const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
+            const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
 
-          const endDeadlines = deadlineInThisWeek
-            .filter(
-              (deadline) =>
-                formatDate(new Date(deadline.expected_at)) == weekDayString &&
-                deadline.departament.id === departament.id,
-            )
-            .map((deadline) => (
-              <WeekDeadlineCard
-                key={weekDayString + departament.name + String(deadline.id)}
-                deadline={deadline}
-                isExpected
-              />
-            ));
+            // Dias para fazer
+            if (
+              startedDate &&
+              expectedDate &&
+              isWithinInterval(weekDay, {
+                start: startedDate,
+                end: expectedDate,
+              }) &&
+              formatDate(weekDay) != formatDate(expectedDate)
+            ) {
+              startedDeadlines.push(
+                <WeekDeadlineCard key={departament.name + deadline.id} deadline={deadline} />,
+              );
+            }
+
+            // Dias que terminar
+            if (expectedDate && formatDate(expectedDate) == formatDate(weekDay)) {
+              endDeadlines.push(
+                <WeekDeadlineCard
+                  key={departament.name + deadline.id}
+                  deadline={deadline}
+                  isExpected
+                />,
+              );
+            }
+          }
 
           cells.push(
-            <TableCell key={weekDayString + departament.name + new Date().toLocaleTimeString()}>
+            <TableCell key={weekDayString + departament.name + new Date().getTime()}>
               <div>
-                {startDeadlines}
+                {startedDeadlines}
                 {endDeadlines}
               </div>
             </TableCell>,
@@ -172,7 +206,7 @@ export default function WeeklyDeadlineTable() {
                 className="w-[150px]  p-2 font-semibold bg-muted/50"
               >
                 <p className="flex flex-col">{DAYS_OF_WEEK[day.getDay() - 1]}</p>
-                <p>({day.toLocaleDateString()})</p>
+                <p>{isToday(day) ? "Hoje" : formatDate(day)}</p>
               </TableHead>
             ))}
           </TableRow>

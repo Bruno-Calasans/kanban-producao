@@ -2,6 +2,7 @@ import { MovimentationDeadlinePopulated } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useWeeklyDeadline } from "@/context/useWeeklyDeadline";
 
 export type WeekDeadlineCardProps = {
   deadline: MovimentationDeadlinePopulated;
@@ -9,7 +10,10 @@ export type WeekDeadlineCardProps = {
 };
 
 export default function WeekDeadlineCard({ deadline, isExpected }: WeekDeadlineCardProps) {
-  const { departament, movimentation } = deadline;
+  const { movimentation } = deadline;
+  const { selectedDeadline, setSelectedDeadline } = useWeeklyDeadline();
+
+  const isSameDeadline = selectedDeadline?.id == deadline.id;
 
   return (
     <Badge
@@ -17,7 +21,11 @@ export default function WeekDeadlineCard({ deadline, isExpected }: WeekDeadlineC
       className={cn(
         "flex flex-co h-fit rounded-none p-3 mt-2 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
         isExpected && "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
+        isSameDeadline && "border-blue-700 ",
+        isSameDeadline && isExpected && "border-red-700 ",
       )}
+      onMouseMove={() => setSelectedDeadline(deadline)}
+      onMouseOut={() => setSelectedDeadline(null)}
     >
       <Link
         className={cn(

@@ -8,7 +8,6 @@ import MovimentationDeadlineInput from "../inputs/MovimentationDeadlineInput";
 import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import MovimentationDeadlineStartsAtInput from "../inputs/MovimentationDeadlineStartsAtInput";
 import MovimentationDeadlineEndsAtInput from "../inputs/MovimentationDeadlineEndsAtInput";
-import { de } from "date-fns/locale";
 
 type MovimentationDeadlineState = {
   departamentStates: DepartamentState[];
@@ -37,24 +36,6 @@ const processColumns: ColumnDef<DepartamentState>[] = [
     ),
   },
   {
-    accessorKey: "finished_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
-    cell: ({
-      row: {
-        original: { movimentation, departament, deadline, status },
-      },
-    }) => (
-      <MovimentationDeadlineEndsAtInput
-        movimentation={movimentation}
-        departament={departament}
-        deadline={deadline}
-        disabled={
-          status != "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
-        }
-      />
-    ),
-  },
-  {
     accessorKey: "expected_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Prazo" />,
     cell: ({
@@ -71,6 +52,25 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         }
       />
     ),
+  },
+  {
+    accessorKey: "finished_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
+    cell: ({
+      row: {
+        original: { movimentation, departament, deadline, status },
+      },
+    }) => (
+      <MovimentationDeadlineEndsAtInput
+        movimentation={movimentation}
+        departament={departament}
+        deadline={deadline}
+        disabled={
+          status == "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
+        }
+      />
+    ),
+    
   },
   {
     accessorKey: "status",

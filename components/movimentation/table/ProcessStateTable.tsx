@@ -18,6 +18,11 @@ const processColumns: ColumnDef<ProcessState>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
   },
   {
+    id: "process.departament.name",
+    accessorKey: "process.departament.name",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
+  },
+  {
     id: "process.name",
     accessorKey: "process.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
@@ -33,7 +38,6 @@ const processColumns: ColumnDef<ProcessState>[] = [
       <ProcessStatusBadge status={processState.status} />
     ),
   },
-
   {
     id: "actions",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Ações" />,

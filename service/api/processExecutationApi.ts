@@ -1,8 +1,16 @@
 import { supabase } from "@/lib/supabase/client";
-import { ProcessExecution } from "@/types/database.type";
+import { ProcessExecution, ProcessState } from "@/types/database.type";
 
 export type CreateProcessExecutionData = Omit<ProcessExecution, "id" | "created_at" | "updated_at">;
 export type UpdateProcessExecutionData = Partial<CreateProcessExecutionData>;
+export type MoveNextProcessDate = {
+  processStates: ProcessState[];
+  responsibleId: number | null;
+  startedAt: string | null;
+  finished_at: string | null;
+  refWeekDate?: string | null;
+  amount?: number;
+};
 
 export async function getAllProcessExecutions() {
   return await supabase
@@ -155,4 +163,39 @@ export async function updateInitialExecution(movimentationId: number, amount: nu
     .eq("movimentation_id", movimentationId)
     .eq("type", "INIT")
     .throwOnError();
+}
+
+export async function moveToNextDepartament({
+  processStates,
+  startedAt,
+  finished_at,
+  responsibleId,
+  amount,
+  refWeekDate,
+}: MoveNextProcessDate) {
+  for (const state of processStates) {
+    if (state.avaliableAmount == 0 && !state.nextProcess) continue;
+
+    const isFirstProcess = state.previousProcess == null;
+    const isFirstNextDepartamentProcess =
+      state.nextProcess!.departament.id != state.process.departament.id;
+    let tempAmount = isFirstProcess ? state.avaliableAmount : state.avaliableAmount + (amount || 0);
+    const amountToMove = amount && amount > 0 && amount <= tempAmount ? amount : tempAmount;
+
+    const data = await createProcessExecution({
+      amount: amountToMove,
+      from_process_id: state.process.id,
+      movimentation_id: state.movimentation.id,
+      process_id: state.nextProcess!.id,
+      product_id: state.movimentation.product.id,
+      responsible_id: responsibleId,
+      started_at: startedAt,
+      finished_at: finished_at,
+      type: "TRANSFER",
+      status: "SUCCESS",
+      ref_week_date: refWeekDate && isFirstNextDepartamentProcess ? refWeekDate : null,
+    });
+
+    if (isFirstNextDepartamentProcess) return data;
+  }
 }

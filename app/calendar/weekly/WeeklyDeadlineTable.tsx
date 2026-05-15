@@ -107,8 +107,6 @@ export default function WeeklyDeadlineTable() {
   const deadlinesByDepartamentGroup = groupDeadlinesByDepartament();
   const deadlinesByWeekDay = groupDeadlinesByWeekDay();
 
-  console.log(deadlinesByWeekDay);
-
   const renderCells = () => {
     const rows: React.ReactNode[] = [];
 
@@ -151,7 +149,9 @@ export default function WeeklyDeadlineTable() {
                 <WeekDeadlineCard
                   key={departament.name + deadline.id}
                   deadline={deadline}
-                  day={weekDay}
+                  departament={departament}
+                  weekDay={weekDay}
+                  weekDays={weekDays}
                 />,
               );
             }
@@ -162,7 +162,9 @@ export default function WeeklyDeadlineTable() {
                 <WeekDeadlineCard
                   key={departament.name + deadline.id}
                   deadline={deadline}
-                  day={weekDay}
+                  departament={departament}
+                  weekDay={weekDay}
+                  weekDays={weekDays}
                   isExpected
                 />,
               );

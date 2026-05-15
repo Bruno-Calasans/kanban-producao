@@ -53,6 +53,7 @@ export default function useDepartamentState({
     for (const departamentKey of Object.keys(processStateByDepartament)) {
       const departamentProcessStates = processStateByDepartament[departamentKey];
       const currentDepartament = processStateByDepartament[departamentKey][0].process.departament;
+
       const deadline = movimentationDeadlines.find(
         (deadline) => deadline.departament.id === currentDepartament.id,
       );
@@ -83,9 +84,10 @@ export default function useDepartamentState({
     const InProgress = inProgressStates.length > 0;
     let isExpired = false;
 
+    // Tem prazo
     if (deadline && deadline.expected_at) {
       const expectedDate = new Date(deadline.expected_at);
-      const currentDate = new Date();
+      const currentDate = deadline.finished_at ? new Date(deadline.finished_at) : new Date();
       expectedDate.setHours(0, 0, 0, 0);
       currentDate.setHours(0, 0, 0, 0);
 

@@ -28,7 +28,7 @@ export default function MovimentationDeadlineEndsAtInput({
 }: ProcessExecutionActionsProps) {
   const startDate = deadline?.started_at ? new Date(deadline?.started_at) : undefined;
   const endDate = deadline?.finished_at ? new Date(deadline?.finished_at) : undefined;
-  const maxDate = deadline?.expected_at ? new Date(deadline?.expected_at) : undefined;
+  // const maxDate = deadline?.expected_at ? new Date(deadline?.expected_at) : undefined;
 
   const {
     mutateAsync: updateMovimentationDeadline,
@@ -92,7 +92,7 @@ export default function MovimentationDeadlineEndsAtInput({
       <DatePickerInput
         currentDate={endDate}
         minDate={startDate}
-        maxDate={maxDate}
+        // maxDate={maxDate}
         onChangeDate={onChangeDate}
         placeholder={endDate ? "" : "Data de término"}
         disabled={disabled}

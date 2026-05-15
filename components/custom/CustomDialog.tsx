@@ -45,6 +45,7 @@ export default function CustomDialog({
         style={{
           maxWidth: maxContentWidth,
         }}
+        onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogHeader>
           <DialogTitle className="font-bold text-lg">{title}</DialogTitle>

@@ -53,8 +53,6 @@ export async function getAllMovimentationDeadlinesInRange(fromDate: Date, toDate
     `,
     )
     .or(`started_at.gte.${from},expected_at.lte.${to}`)
-    // .lte("expected_at", to)
-    .is("finished_at", null)
     .throwOnError();
 }
 

@@ -63,8 +63,13 @@ export type MovimentationDeadline = Database["public"]["Tables"]["MovimentationD
 
 export type MovimentationDeadlinePopulated = Omit<
   MovimentationDeadline,
-  "departament_id" | "movimenttion_id"
+  "departament_id" | "movimention_id"
 > & {
   departament: Departament;
   movimentation: MovimentationPopulated;
+};
+
+export type Meta = Database["public"]["Tables"]["Meta"]["Row"];
+export type MetaPopulated = Omit<Meta, "deadline_id"> & {
+  deadline: MovimentationDeadline;
 };

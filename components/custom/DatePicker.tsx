@@ -19,6 +19,8 @@ function formatDate(date: Date | undefined) {
     return "";
   }
 
+  date = new Date(date);
+
   return date.toLocaleDateString("pt-Br", {
     day: "2-digit",
     month: "long",
@@ -37,8 +39,8 @@ type DatePickerInputProps = {
   currentDate?: Date;
   placeholder?: string;
   disabled?: boolean;
-  minDate?: Date;
-  maxDate?: Date;
+  minDate?: Date | string;
+  maxDate?: Date | string;
   onChangeDate?: (date?: Date) => void;
 };
 
@@ -103,6 +105,7 @@ export function DatePickerInput({
               alignOffset={-8}
               sideOffset={10}
               side="top"
+              onFocusOutside={(e) => e.preventDefault()}
             >
               <Calendar
                 mode="single"

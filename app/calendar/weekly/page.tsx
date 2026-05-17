@@ -1,7 +1,7 @@
 "use client";
 
 import { WeeklyDeadlineContextProvider } from "@/context/SelectedWeekDeadlineContext";
-import WeeklyDeadlineTable from "./WeeklyDeadlineTable";
+import WeeklyDeadlineTable from "../../../components/calendar/weekly/WeeklyDeadlineTable";
 
 export default function MonthlyCalendarPage() {
   return (

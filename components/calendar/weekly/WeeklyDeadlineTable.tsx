@@ -127,64 +127,67 @@ export default function WeeklyDeadlineTable() {
       for (const weekDay of weekDays) {
         const weekDayString = formatDate(weekDay);
         const deadlinesInThisDayWeek = deadlinesByWeekDay[weekDayString];
-        let startedDeadlines: React.ReactNode[] = [];
-        let endDeadlines: React.ReactNode[] = [];
+        const startedDeadlines: React.ReactNode[] = [];
+        const endDeadlines: React.ReactNode[] = [];
 
-        if (deadlinesInThisDayWeek.length > 0) {
-          for (const deadline of deadlines) {
-            const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
-            const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
+        if (deadlinesInThisDayWeek.length == 0) {
+          cells.push(<TableCell key={weekDayString}></TableCell>);
+          continue;
+        }
 
-            // Dias para fazer
-            if (
-              startedDate &&
-              expectedDate &&
-              isWithinInterval(weekDay, {
-                start: startedDate,
-                end: expectedDate,
-              }) &&
-              formatDate(weekDay) != formatDate(expectedDate)
-            ) {
-              startedDeadlines.push(
-                <WeekDeadlineCard
-                  key={departament.name + deadline.id}
-                  deadline={deadline}
-                  departament={departament}
-                  weekDay={weekDay}
-                  weekDays={weekDays}
-                />,
-              );
-            }
+        for (const deadline of deadlines) {
+          const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
+          const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
+          const isWeekDayAtExpectedDate =
+            expectedDate && formatDate(weekDay) == formatDate(expectedDate);
 
-            // Dias que terminar
-            if (expectedDate && formatDate(expectedDate) == formatDate(weekDay)) {
-              endDeadlines.push(
-                <WeekDeadlineCard
-                  key={departament.name + deadline.id}
-                  deadline={deadline}
-                  departament={departament}
-                  weekDay={weekDay}
-                  weekDays={weekDays}
-                  isExpected
-                />,
-              );
-            }
+          // Dias para fazer
+          if (
+            startedDate &&
+            expectedDate &&
+            isWithinInterval(weekDay, {
+              start: startedDate,
+              end: expectedDate,
+            }) &&
+            !isWeekDayAtExpectedDate
+          ) {
+            startedDeadlines.push(
+              <WeekDeadlineCard
+                key={departament.name + deadline.id}
+                deadline={deadline}
+                departament={departament}
+                weekDay={weekDay}
+                weekDays={weekDays}
+              />,
+            );
           }
 
-          cells.push(
-            <TableCell key={weekDayString + departament.name + new Date().getTime()}>
-              <div>
-                {startedDeadlines}
-                {endDeadlines}
-              </div>
-            </TableCell>,
-          );
-        } else {
-          cells.push(<TableCell key={weekDayString}></TableCell>);
+          // Dias que terminar
+          if (expectedDate && isWeekDayAtExpectedDate) {
+            endDeadlines.push(
+              <WeekDeadlineCard
+                key={departament.name + deadline.id}
+                deadline={deadline}
+                departament={departament}
+                weekDay={weekDay}
+                weekDays={weekDays}
+                isExpected
+              />,
+            );
+          }
         }
+
+        cells.push(
+          <TableCell key={weekDayString + departament.name + new Date().getTime()}>
+            <div>
+              {startedDeadlines}
+              {endDeadlines}
+            </div>
+          </TableCell>,
+        );
       }
 
-      rows.push(<TableRow key={departamentKey}>{cells}</TableRow>);
+      rows.push(<TableRow key={departament.id}>{cells}</TableRow>);
     }
 
     return rows;

@@ -9,7 +9,6 @@ import { DatePickerInput } from "../../custom/DatePicker";
 import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
 import errorHandler from "@/utils/errorHandler";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
 import useCreateMovimentationDeadline from "@/hooks/movimentation-deadline/useCreateMovimentationDeadline";
 import Loader from "../../custom/Loader";
 
@@ -92,7 +91,7 @@ export default function MovimentationDeadlineEndsAtInput({
       <DatePickerInput
         currentDate={endDate}
         minDate={startDate}
-        // maxDate={maxDate}
+        maxDate={new Date()}
         onChangeDate={onChangeDate}
         placeholder={endDate ? "" : "Data de término"}
         disabled={disabled}

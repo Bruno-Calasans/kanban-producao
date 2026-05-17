@@ -66,11 +66,10 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         departament={departament}
         deadline={deadline}
         disabled={
-          status == "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
+          status != "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
         }
       />
     ),
-    
   },
   {
     accessorKey: "status",

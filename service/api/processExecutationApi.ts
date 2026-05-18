@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { supabase } from "@/lib/supabase/client";
 import { ProcessExecution, ProcessState } from "@/types/database.type";
 
@@ -173,14 +174,19 @@ export async function moveToNextDepartament({
   amount,
   refWeekDate,
 }: MoveNextProcessDate) {
+  let movedAmount = 0;
+
   for (const state of processStates) {
-    if (state.avaliableAmount == 0 && !state.nextProcess) continue;
+    if (!state.nextProcess) continue;
 
     const isFirstProcess = state.previousProcess == null;
+
     const isFirstNextDepartamentProcess =
       state.nextProcess!.departament.id != state.process.departament.id;
-    let tempAmount = isFirstProcess ? state.avaliableAmount : state.avaliableAmount + (amount || 0);
+
+    const tempAmount = isFirstProcess ? state.avaliableAmount : state.avaliableAmount + movedAmount;
     const amountToMove = amount && amount > 0 && amount <= tempAmount ? amount : tempAmount;
+    if (movedAmount == 0) movedAmount = amountToMove;
 
     const data = await createProcessExecution({
       amount: amountToMove,

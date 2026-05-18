@@ -40,19 +40,15 @@ export default function WeekDeadlineCard({
     data,
     isPending: isMetasPending,
     error: metaError,
-  } = useGetAllMetasInRange(firstDayOfWeek, lastDayOfWeek);
+  } = useGetAllMetasInRange(firstDayOfWeek, lastDayOfWeek, deadline.id);
 
   const metasInThisWeek = data?.data || [];
-  const metasInThisWeekDay = metasInThisWeek.filter(
-    (meta) => formatDate(new Date(meta.ref_date)) == formatDate(weekDay),
-  );
-  const amountDoneInThisWeek = metasInThisWeekDay
-    .map((meta) => meta.amount_done)
-    .reduce((curr, prev) => curr + prev, 0);
 
   const metaInThisDay = metasInThisWeek.find(
     (meta) => formatDate(new Date(meta.ref_date + "T00:00:00")) == formatDate(weekDay),
   );
+
+  console.log(deadline.id, metaInThisDay)
 
   // Quando passar o mouse em cima de um card
   const isSameDeadline = selectedDeadline?.id == deadline.id;
@@ -74,9 +70,7 @@ export default function WeekDeadlineCard({
   const metaAmount =
     metaInThisDay && metaInThisDay.expected_amount
       ? metaInThisDay.expected_amount
-      : Number.parseInt(
-          String((totalAmount - amountDoneInThisWeek) / (daysAmount - metasInThisWeek.length)),
-        );
+      : Number.parseInt(String(departamentAvaliableAmount / (daysAmount - metasInThisWeek.length)));
 
   const expectedDate = expected_at ? new Date(expected_at) : undefined;
   const finishedDate = finished_at ? new Date(finished_at) : undefined;
@@ -87,7 +81,7 @@ export default function WeekDeadlineCard({
   finishedDate?.setHours(0, 0, 0, 0);
 
   const isExpired = expectedDate && expectedDate.getTime() < today.getTime();
-  const isFinished = finishedDate;
+  const isFinished = !!finishedDate;
   const isMetaDone = amountDoneInThisDay >= metaAmount;
   const isMetaIncomplete =
     !isFinished &&
@@ -110,8 +104,8 @@ export default function WeekDeadlineCard({
       metaWeekDate={weekDay}
       deadline={deadline}
       departamentAvaliableAmount={departamentAvaliableAmount}
-      hideFinishAction={departamentAvaliableAmount > 0}
-      hideFinishMetaAction={isMetaIncomplete || isMetaDone}
+      hideFinishAction={departamentAvaliableAmount > 0 || isFinished}
+      hideFinishMetaAction={!isMetaIncomplete && isFinished}
     >
       <Badge
         asChild

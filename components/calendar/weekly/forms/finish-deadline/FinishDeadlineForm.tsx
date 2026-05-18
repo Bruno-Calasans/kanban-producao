@@ -50,6 +50,7 @@ export default function FinishDeadlineForm({ deadline }: FinishDeadlineFormProps
 
   const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
   const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
+  const today = new Date();
 
   return (
     <form
@@ -70,7 +71,9 @@ export default function FinishDeadlineForm({ deadline }: FinishDeadlineFormProps
         </p>
         <p>
           <span className="font-bold">Dias em atraso:</span>{" "}
-          {expectedDate && startedDate ? differenceInDays(expectedDate, new Date()) : "N/A"}
+          {expectedDate && startedDate && expectedDate.getTime() < today.getTime()
+            ? differenceInDays(today, expectedDate)
+            : "N/A"}
         </p>
         <p>
           <span className="font-bold">Dias restantes:</span>{" "}

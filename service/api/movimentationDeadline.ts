@@ -62,7 +62,7 @@ export async function getAllMovimentationDeadlinesByMovimentation(movimentationI
     .select(
       `
         *, 
-        movimentation:Movimentation!movimentation_id(*),
+        movimentation:Movimentation!movimentation_id(*, product:Product!product_id(*)),
         departament:Departament!departament_id(*)
     `,
     )

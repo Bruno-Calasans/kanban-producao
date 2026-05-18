@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { metaKeys } from "@/constants/metaKeys";
 import { getAllMetasInRange } from "@/service/api/metaApi";
 
-export default function useGetAllMetasInRange(fromDate: Date, toDate: Date) {
+export default function useGetAllMetasInRange(fromDate: Date, toDate: Date, deadlineId: number) {
   return useQuery({
-    queryKey: metaKeys.lists(),
-    queryFn: () => getAllMetasInRange(fromDate, toDate),
+    queryKey: metaKeys.list(deadlineId),
+    queryFn: () => getAllMetasInRange(fromDate, toDate, deadlineId),
     enabled: !!fromDate && !!toDate,
   });
 }

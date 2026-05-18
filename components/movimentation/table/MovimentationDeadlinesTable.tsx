@@ -31,7 +31,9 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
-        disabled={status == "COMPLETED" || movimentation.status == "CANCELLED"}
+        disabled={
+          status == "COMPLETED" || movimentation.status == "CANCELLED" || !!deadline?.finished_at
+        }
       />
     ),
   },
@@ -48,7 +50,10 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         departament={departament}
         deadline={deadline}
         disabled={
-          status == "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
+          status == "COMPLETED" ||
+          !!!deadline?.started_at ||
+          movimentation.status == "CANCELLED" ||
+          !!deadline?.finished_at
         }
       />
     ),
@@ -58,15 +63,16 @@ const processColumns: ColumnDef<DepartamentState>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
     cell: ({
       row: {
-        original: { movimentation, departament, deadline, status },
+        original: { movimentation, departament, deadline, status, movimentationProcessStates },
       },
     }) => (
       <MovimentationDeadlineEndsAtInput
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
+        movimentationProcessStates={movimentationProcessStates}
         disabled={
-          status != "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
+          status == "COMPLETED" || !deadline?.started_at || movimentation.status == "CANCELLED"
         }
       />
     ),

@@ -2,22 +2,23 @@
 
 import {
   Departament,
-  Movimentation,
   MovimentationDeadlinePopulated,
   MovimentationPopulated,
   ProcessState,
 } from "@/types/database.type";
 import { useMemo } from "react";
+import { differenceInDays } from "date-fns";
 
-export type DepartamentStateStatus = "IN_PROGRESS" | "PENDING" | "COMPLETED" | "EXPIRED";
+export type DepartamenStatus = "IN_PROGRESS" | "PENDING" | "COMPLETED" | "EXPIRED";
 
 export type DepartamentState = {
   movimentation: MovimentationPopulated;
   departament: Departament;
   deadline?: MovimentationDeadlinePopulated;
   processStates: ProcessState[];
-  status: DepartamentStateStatus;
+  status: DepartamenStatus;
   expiredDays: number;
+  movimentationProcessStates: ProcessState[];
 };
 
 export type ProcessStateByDepartament = {
@@ -67,6 +68,7 @@ export default function useDepartamentState({
         deadline,
         status,
         expiredDays,
+        movimentationProcessStates,
       });
     }
 
@@ -76,31 +78,32 @@ export default function useDepartamentState({
   const getDepartamentStatus = (
     processStates: ProcessState[],
     deadline?: MovimentationDeadlinePopulated,
-  ): { status: DepartamentStateStatus; expiredDays: number } => {
-    const pendingStates = processStates.filter((state) => state.status == "PENDING");
-    const inProgressStates = processStates.filter((state) => state.status == "IN_PROGRESS");
+  ): { status: DepartamenStatus; expiredDays: number } => {
+    let dptStatus: { status: DepartamenStatus; expiredDays: number } = {
+      expiredDays: 0,
+      status: "COMPLETED",
+    };
 
-    const isPending = pendingStates.length > 0 && inProgressStates.length == 0;
-    const InProgress = inProgressStates.length > 0;
-    let isExpired = false;
+    const pendingStates = processStates.filter((state) => state.status === "PENDING");
+    const progressStates = processStates.filter((state) => state.status === "IN_PROGRESS");
+
+    if (pendingStates.length > 0 && progressStates.length == 0) dptStatus.status = "PENDING";
+    if (progressStates.length > 0) dptStatus.status = "IN_PROGRESS";
 
     // Tem prazo
-    if (deadline && deadline.expected_at) {
+    if (deadline && deadline.expected_at && !deadline.finished_at) {
       const expectedDate = new Date(deadline.expected_at);
-      const currentDate = deadline.finished_at ? new Date(deadline.finished_at) : new Date();
+      const currentDate = new Date();
       expectedDate.setHours(0, 0, 0, 0);
       currentDate.setHours(0, 0, 0, 0);
 
-      const diffInMs = expectedDate.getTime() - currentDate.getTime();
-      const expiredDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
-      isExpired = diffInMs < 0;
+      const diffInDays = differenceInDays(expectedDate, currentDate);
+      const isExpired = diffInDays < 0;
 
-      if (isExpired) return { status: "EXPIRED", expiredDays: Math.abs(expiredDays) };
+      if (isExpired) dptStatus = { status: "EXPIRED", expiredDays: Math.abs(diffInDays) };
     }
 
-    if (isPending) return { status: "PENDING", expiredDays: 0 };
-    if (InProgress) return { status: "IN_PROGRESS", expiredDays: 0 };
-    return { status: "COMPLETED", expiredDays: 0 };
+    return dptStatus;
   };
 
   const departamentStates = useMemo(

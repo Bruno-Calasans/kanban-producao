@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase/client";
 import { Meta } from "@/types/database.type";
+import { format } from "date-fns";
 
 export type CreateMetaData = Omit<Meta, "id" | "created_at" | "updated_at">;
 
@@ -41,13 +42,15 @@ export async function deleteMeta(metaId: number) {
   return await supabase.from("Meta").delete().eq("id", metaId).throwOnError();
 }
 
-export async function getAllMetasInRange(from: Date, to: Date) {
-  const fromDate = from.toISOString();
-  const toDate = to.toISOString();
+export async function getAllMetasInRange(from: Date, to: Date, deadlineId: number) {
+  const fromDate = format(from, "yyyy-MM-dd");
+  const toDate = format(to, "yyyy-MM-dd");
 
   return await supabase
     .from("Meta")
     .select("*, deadline:MovimentationDeadline!deadline_id(*)")
-    .or(`ref_date.gte.${fromDate},ref_date.lte.${toDate}`)
+    .eq("deadline_id", deadlineId)
+    .gte("ref_date", fromDate)
+    .lte("ref_date", toDate)
     .throwOnError();
 }

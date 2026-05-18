@@ -125,6 +125,8 @@ export function DatePickerInput({
                   {
                     before: minDate as Date | undefined,
                     after: maxDate as Date | undefined,
+                    // Desativa domingo
+                    dayOfWeek: [0, 7],
                   } as any
                 }
               />

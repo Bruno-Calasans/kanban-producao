@@ -9,7 +9,6 @@ export type MoveNextProcessDate = {
   responsibleId: number | null;
   startedAt: string | null;
   finished_at: string | null;
-  refWeekDate?: string | null;
   amount?: number;
 };
 
@@ -172,7 +171,6 @@ export async function moveToNextDepartament({
   finished_at,
   responsibleId,
   amount,
-  refWeekDate,
 }: MoveNextProcessDate) {
   let movedAmount = 0;
 
@@ -199,7 +197,6 @@ export async function moveToNextDepartament({
       finished_at: finished_at,
       type: "TRANSFER",
       status: "SUCCESS",
-      ref_week_date: refWeekDate && isFirstNextDepartamentProcess ? refWeekDate : null,
     });
 
     if (isFirstNextDepartamentProcess) return data;

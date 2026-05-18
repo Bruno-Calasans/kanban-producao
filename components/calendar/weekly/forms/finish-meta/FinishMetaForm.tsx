@@ -19,7 +19,6 @@ import { MetaAmountField } from "./fields/MetaAmountField";
 import { MetaDatesField } from "./fields/MetaDatesField";
 import { MetaResponsibleField } from "./fields/MetaResponsibleField";
 import usecreateMeta from "@/hooks/meta/useCreateMeta";
-import { addDays } from "date-fns";
 
 type MoveNextDepartamentFormProps = {
   processStates: ProcessState[];
@@ -68,7 +67,6 @@ export default function FinishMetaForm({
           finished_at: finishedAtString,
           startedAt: startedAtString,
           responsibleId: responsible ? responsible.id : null,
-          refWeekDate: metaWeekDate.toISOString(),
         });
 
         await createMeta({
@@ -91,7 +89,6 @@ export default function FinishMetaForm({
   });
 
   const isPending = isNextDepartamentPending || isMetaPending;
-  const maxAmount = processStates[0].movimentation.amount;
 
   return (
     <form
@@ -101,7 +98,6 @@ export default function FinishMetaForm({
         form.handleSubmit();
       }}
     >
-      {/* <ExecutionState from_process={processState.process} to_process={processState.nextProcess} /> */}
       <FieldGroup>
         <MetaDatesField form={form} />
         <MetaAmountField

@@ -3,7 +3,7 @@ import { createFormHook, createFormHookContexts } from "@tanstack/react-form-nex
 import * as z from "zod";
 
 export const formSchema = z.object({
-  finished_at: z.string(),
+  finished_at: z.string().optional(),
 });
 
 export type FinishDeadlineFormSchema = z.infer<typeof formSchema>;

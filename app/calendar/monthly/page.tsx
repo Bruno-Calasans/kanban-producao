@@ -12,16 +12,27 @@ import DepartamentItemSelector, {
   DepartamentItem,
 } from "@/components/calendar/DepartamentItemSelector";
 import DeadlineCard from "@/components/calendar/DeadlineCard";
+import { formatDate } from "@/utils/formatDate";
 
 export default function MonthlyCalendarPage() {
-  const { data, isPending, error, status } = useGetAllMovimentationDeadlinesWithProduct();
+  const { data, isPending, error } = useGetAllMovimentationDeadlinesWithProduct();
   const deadlines = data?.data || [];
-  const notEndDeadlines = deadlines.filter((deadline) => !deadline.finished_at);
   const [selectedDepartaments, setSelectedDepartaments] = React.useState<DepartamentItem[]>([]);
 
-  const startDeadlineDates = notEndDeadlines.map((deadline) => new Date(deadline?.started_at));
-  const finishedDeadlineDates = deadlines.map((deadline) => new Date(deadline?.finished_at));
-  const deadlineDates = notEndDeadlines.map((deadline) => new Date(deadline?.expected_at));
+  const notEndDeadlines = deadlines.filter((deadline) => !deadline.finished_at);
+
+  const startDeadlineDates = notEndDeadlines
+    .filter((deadline) => deadline.started_at != null)
+    .map((deadline) => new Date(deadline.started_at!));
+
+  const finishedDeadlineDates = deadlines
+    .filter((deadline) => deadline.finished_at != null)
+    .map((deadline) => new Date(deadline.finished_at!));
+
+  const deadlineDates = notEndDeadlines
+    .filter((deadline) => deadline.expected_at != null)
+    .map((deadline) => new Date(deadline.expected_at!));
+
   const selectedDeadlines = notEndDeadlines.filter((deadline) =>
     selectedDepartaments.some((departament) => departament.value === deadline.departament.id),
   );
@@ -39,7 +50,7 @@ export default function MonthlyCalendarPage() {
     );
 
   return (
-    <div>
+    <section>
       <PageTitle>Calendário Mensal</PageTitle>
 
       <DepartamentItemSelector
@@ -86,18 +97,15 @@ export default function MonthlyCalendarPage() {
               components={{
                 DayButton: ({ children, modifiers, day, ...props }) => {
                   const deadlinesInThisDay = deadlineDates.filter(
-                    (deadlineDate) =>
-                      deadlineDate.toLocaleDateString() === day.date.toLocaleDateString(),
+                    (deadlineDate) => formatDate(deadlineDate) == formatDate(day.date),
                   );
 
                   const startedDealinesInThisDay = startDeadlineDates.filter(
-                    (deadlineDate) =>
-                      deadlineDate.toLocaleDateString() === day.date.toLocaleDateString(),
+                    (deadlineDate) => formatDate(deadlineDate) == formatDate(day.date),
                   );
 
                   const finishedDeadlineDatesInThisDay = finishedDeadlineDates.filter(
-                    (deadlineDate) =>
-                      deadlineDate.toLocaleDateString() === day.date.toLocaleDateString(),
+                    (deadlineDate) => formatDate(deadlineDate) == formatDate(day.date),
                   );
 
                   if (finishedDeadlineDatesInThisDay.length > 0) {
@@ -106,7 +114,7 @@ export default function MonthlyCalendarPage() {
                         {children}
                         <Badge
                           variant="ghost"
-                          className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 mt-1 "
+                          className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 mt-1"
                         >
                           {finishedDeadlineDatesInThisDay.length} término(s)
                         </Badge>
@@ -153,6 +161,6 @@ export default function MonthlyCalendarPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </section>
   );
 }

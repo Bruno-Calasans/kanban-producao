@@ -85,7 +85,6 @@ export default function MovimentationDeadlineEndsAtInput({
           finished_at: date.toISOString(),
           started_at: null,
           expected_at: null,
-          status: "IN_PROGRESS",
         });
         toast.success("Data de término criada");
       } catch (error) {

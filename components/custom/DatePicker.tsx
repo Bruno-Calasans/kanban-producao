@@ -13,8 +13,9 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
+import { Matcher } from "react-day-picker";
 
-function formatDate(date: Date | undefined) {
+function formatDate(date: Date | string | undefined) {
   if (!date) {
     return "";
   }
@@ -36,7 +37,7 @@ function isValidDate(date: Date | undefined) {
 }
 
 type DatePickerInputProps = {
-  currentDate?: Date;
+  currentDate?: Date | string;
   placeholder?: string;
   disabled?: boolean;
   minDate?: Date | string;
@@ -53,7 +54,7 @@ export function DatePickerInput({
   onChangeDate,
 }: DatePickerInputProps) {
   const [open, setOpen] = useState(false);
-  const [month, setMonth] = useState<Date | undefined>(currentDate);
+  const [month, setMonth] = useState<Date | string | undefined>(currentDate);
   const [value, setValue] = useState(formatDate(currentDate));
   const now = new Date();
 
@@ -109,21 +110,23 @@ export function DatePickerInput({
             >
               <Calendar
                 mode="single"
-                selected={currentDate}
+                selected={currentDate as Date | undefined}
                 locale={ptBR}
                 lang="PtBr"
                 startMonth={now}
-                month={month}
+                month={month as Date | undefined}
                 onMonthChange={setMonth}
                 onSelect={(date) => {
                   setValue(formatDate(date));
                   setOpen(false);
                   onChangeDate && onChangeDate(date);
                 }}
-                disabled={{
-                  before: minDate,
-                  after: maxDate,
-                }}
+                disabled={
+                  {
+                    before: minDate as Date | undefined,
+                    after: maxDate as Date | undefined,
+                  } as any
+                }
               />
             </PopoverContent>
           </Popover>

@@ -16,7 +16,7 @@ export default function useMoveToNextDepartament() {
 
       if (data) {
         queryClient.invalidateQueries({
-          queryKey: movimentationKeys.list(data?.data.movimentation_id),
+          queryKey: movimentationKeys.list(data.data.movimentation_id),
           exact: false,
         });
       }

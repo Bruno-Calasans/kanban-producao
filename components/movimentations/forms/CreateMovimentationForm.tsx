@@ -55,6 +55,8 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
           product_id: product.id,
           type: "INIT",
           status: "SUCCESS",
+          started_at: new Date().toISOString(),
+          finished_at: new Date().toISOString(),
         });
 
         toast.success("Produto movimentado com sucesso!");

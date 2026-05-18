@@ -89,15 +89,15 @@ export default function WeekDeadlineCard({
         >
           <div className="flex flex-col items-start gap-1.5">
             <p className="font-bold mb-1 text-lg">{movimentation.product.name}</p>
-            <p className="flex gap-0.5 items-center justify-center">
+            <p className="flex gap-0.5 items-center justify-center text-xs">
               <TargetIcon size={16} />
               <span className="font-bold">META DIÁRIA:</span> {metaAmount}
             </p>
-            <p className="flex gap-0.5 items-center justify-center">
+            <p className="flex gap-0.5 items-center justify-center text-xs">
               <ShirtIcon size={16} />
               <span className="font-bold">FEITO:</span> {amountDoneInThisDay}
             </p>
-            <p className="flex gap-0.5 items-center justify-center">
+            <p className="flex gap-0.5 items-center justify-center text-xs">
               <HashIcon size={16} />
               <span className="font-bold">RESTANTE:</span>
               {departamentAvaliableAmount} DE {totalAmount}

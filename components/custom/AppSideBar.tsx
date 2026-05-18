@@ -108,12 +108,23 @@ export function AppSidebar() {
 
           {/* Calendário */}
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <a href="/calendar">
-                <CalendarIcon />
-                <span>Calendário</span>
-              </a>
-            </SidebarMenuButton>
+            {open ? (
+              <SidebarMenuButton asChild className="w-full">
+                <a href="/calendar" className="w-full">
+                  <CalendarIcon />
+                  <span>Calendário</span>
+                </a>
+              </SidebarMenuButton>
+            ) : (
+              <CustomTooltip content="Calendário" side="right">
+                <SidebarMenuButton asChild className="w-full">
+                  <a href="/calendar" className="w-full">
+                    <CalendarIcon />
+                    <span>Calendário</span>
+                  </a>
+                </SidebarMenuButton>
+              </CustomTooltip>
+            )}
 
             {/* Submenus */}
             <SidebarMenuSub>

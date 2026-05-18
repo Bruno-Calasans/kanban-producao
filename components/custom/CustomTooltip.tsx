@@ -8,13 +8,16 @@ type CustomTooltipProps = {
   children: React.ReactNode;
   content: React.ReactNode;
   side?: Side;
+  disabled?: boolean;
 };
 
-export default function CustomTooltip({ children, content, side }: CustomTooltipProps) {
+export default function CustomTooltip({ children, content, side, disabled }: CustomTooltipProps) {
   return (
     <Tooltip>
       <TooltipTrigger>{children}</TooltipTrigger>
-      <TooltipContent side={side || "top"}>{content}</TooltipContent>
+      <TooltipContent hidden={disabled} side={side || "top"}>
+        {content}
+      </TooltipContent>
     </Tooltip>
   );
 }

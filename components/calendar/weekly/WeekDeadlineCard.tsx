@@ -64,16 +64,21 @@ export default function WeekDeadlineCard({
       <Badge
         asChild
         className={cn(
-          "flex flex-co h-fit rounded-none p-3 mt-2",
-          !isExpired && !isFinished && "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-          isSameDeadline && !isExpired && !isMetaIncomplete && "border-blue-700 ",
+          "flex flex-co h-fit rounded-none p-3 mt-2 transition-all",
+          !isExpired &&
+            !isFinished &&
+            "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
+          isSameDeadline && !isExpired && !isFinished && !isMetaIncomplete && "border-blue-700 ",
           isExpired && !isFinished && "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
-          isSameDeadline && isExpired && "border-red-700",
-          isMetaIncomplete && "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-30",
-          isSameDeadline && isMetaIncomplete && "border-amber-700",
-          isSameDeadline && (isFinished || isMetaDone) && " border-emerald-700",
+          isSameDeadline && isExpired && !isFinished && "border-red-700",
+          !isExpired &&
+            !isFinished &&
+            isMetaIncomplete &&
+            "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-30",
+          isSameDeadline && !isExpired && !isFinished && isMetaIncomplete && "border-amber-700",
           (isFinished || isMetaDone) &&
             "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+          isSameDeadline && (isFinished || isMetaDone) && " border-emerald-700",
         )}
         onMouseMove={() => setSelectedDeadline(deadline)}
         onMouseOut={() => setSelectedDeadline(null)}

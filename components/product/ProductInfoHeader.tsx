@@ -12,6 +12,7 @@ import ActiveBadge from "../custom/badges/ActiveBadge";
 import { ActionAlert } from "../custom/alerts/ActionAlert";
 import { is } from "date-fns/locale";
 import Loader from "../custom/Loader";
+import GoToCalendarButton from "../custom/buttons/GoToCalendarButton";
 
 type ProductInfoHeaderProps = {
   product: ProductWithProductionFlow;
@@ -30,7 +31,10 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
       {/* Cabeçalho */}
       <div className="flex justify-between">
         <PageTitle>Informações do Produto</PageTitle>
-        <BackButton to="/products" label="Voltar à página de produtos" />
+        <div className="flex  justify-end items-end gap-1">
+          <BackButton to="/products" label="Voltar à página de produtos" />
+          <GoToCalendarButton to="/calendar/weekly" label="Ver calendário semanal" />
+        </div>
       </div>
 
       {/* Informações do Produto */}

@@ -11,6 +11,7 @@ import DeleteMovimentationDialog from "../movimentations/dialogs/DeleteMovimenta
 import CancelMovimentationDialog from "../movimentations/dialogs/CancelMovimentationDialog";
 import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
 import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
+import GoToCalendarButton from "../custom/buttons/GoToCalendarButton";
 
 type MovimentationInfoHeadergProps = {
   movimentation: MovimentationPopulated;
@@ -30,7 +31,10 @@ export default function MovimentationInfoHeaderg({
     <div>
       <div className="flex justify-between">
         <PageTitle>Informações da Movimentação</PageTitle>
-        <BackButton to="/movimentations" label="Voltar à página de Movimentações" />
+        <div className="flex  justify-end items-end gap-1">
+          <BackButton to="/movimentations" label="Voltar à página de Movimentações" />
+          <GoToCalendarButton to="/calendar/weekly" label="Ver calendário semanal" />
+        </div>
       </div>
 
       <div className="flex flex-col gap-1 mb-4">

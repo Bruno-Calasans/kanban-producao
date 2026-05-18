@@ -13,6 +13,7 @@ import {
 import { DAYS_OF_WEEK } from "@/constants/date";
 import useGetAllMovimentationDeadlineInRange from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlineInRange";
 import useWeek from "@/hooks/use-week/useWeek";
+import { cn } from "@/lib/utils";
 import { MovimentationDeadlinePopulated } from "@/types/database.type";
 import { formatDate } from "@/utils/formatDate";
 import { isToday, isWithinInterval } from "date-fns";
@@ -213,7 +214,10 @@ export default function WeeklyDeadlineTable() {
             {weekDays.map((day) => (
               <TableHead
                 key={day.toISOString()}
-                className="w-[150px]  p-2 font-semibold bg-muted/50"
+                className={cn(
+                  "w-[150px]  p-2 font-semibold bg-muted/50",
+                  isToday(day) && "bg-black/60 text-white",
+                )}
               >
                 <p className="flex flex-col">{DAYS_OF_WEEK[day.getDay() - 1]}</p>
                 <p>{isToday(day) ? "Hoje" : formatDate(day)}</p>

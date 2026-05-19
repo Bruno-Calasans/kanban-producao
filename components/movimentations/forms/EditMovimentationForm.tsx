@@ -7,7 +7,7 @@ import { useAppForm, formSchema, MovimentationFormSchema } from "./movimentation
 import handleFormError from "@/utils/errorHandler";
 import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup";
 import useDialog from "@/hooks/dialog/useDialog";
-import { MovimentationPopulated, Product, ProductWithProductionFlow } from "@/types/database.type";
+import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
 import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
@@ -15,9 +15,13 @@ import useUpdateInicialExecution from "@/hooks/process-executation/useUpdateInic
 
 type EditMovimentationFormProps = {
   movimentation: MovimentationPopulated;
+  hideAmountField?: boolean;
 };
 
-export default function EditMovimentationForm({ movimentation }: EditMovimentationFormProps) {
+export default function EditMovimentationForm({
+  movimentation,
+  hideAmountField,
+}: EditMovimentationFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync: updateMovimentation, isPending: isMovimentationPending } =
     useUpdateMovimentation();
@@ -29,14 +33,17 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
     defaultValues: {
       productName: movimentation.product.name,
       amount: movimentation.amount,
+      useMaxAmount: false,
     } as MovimentationFormSchema,
     validators: {
       onSubmit: formSchema,
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
+      console.log(product);
       if (!product) return;
       const { amount } = value;
+
       try {
         await updateMovimentation({
           movimentationId: movimentation.id,
@@ -87,8 +94,9 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
         selectedProduct={product}
         defaultProduct={movimentation.product as ProductWithProductionFlow}
         onChange={setProduct}
+        disabled
       />
-      {product && <MovimentationAmountFieldGroup form={form} selectedProduct={product} />}
+      <MovimentationAmountFieldGroup form={form} />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={resetForm} />

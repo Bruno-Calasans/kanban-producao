@@ -8,17 +8,15 @@ import {
 } from "@/components/ui/field";
 import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Product } from "@/types/database.type";
 
 type MovimentationAmountFieldGroupProps = {
-  selectedProduct: Product;
+  disabled?: boolean;
 };
 
 export const MovimentationAmountFieldGroup = withForm({
   defaultValues: defaultMovimentationFormValues,
   props: {} as MovimentationAmountFieldGroupProps,
-  render({ form, selectedProduct }) {
+  render({ form, disabled }) {
     return (
       <form.Field
         name="amount"
@@ -39,6 +37,7 @@ export const MovimentationAmountFieldGroup = withForm({
                 placeholder="Quantidade a ser movimentada"
                 autoComplete="off"
                 type="number"
+                disabled={disabled}
               />
               <FieldDescription>Quantidade que você quer produzir.</FieldDescription>
 

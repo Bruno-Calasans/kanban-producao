@@ -6,13 +6,14 @@ import { ProductWithProductionFlow, Product } from "@/types/database.type";
 type MovimentationProductNameFieldProps = {
   selectedProduct?: ProductWithProductionFlow;
   defaultProduct?: ProductWithProductionFlow;
+  disabled?: boolean;
   onChange(product?: ProductWithProductionFlow): void;
 };
 
 export const MovimentationProductNameField = withForm({
   defaultValues: defaultMovimentationFormValues,
   props: {} as MovimentationProductNameFieldProps,
-  render({ form, selectedProduct, defaultProduct, onChange }) {
+  render({ form, selectedProduct, defaultProduct, disabled, onChange }) {
     return (
       <form.Field
         name="productName"
@@ -28,6 +29,7 @@ export const MovimentationProductNameField = withForm({
                   field.handleChange(product?.name || "");
                   onChange(product);
                 }}
+                disabled={disabled}
               />
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </Field>

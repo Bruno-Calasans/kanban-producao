@@ -88,7 +88,7 @@ export default function WeekDeadlineCard({
           href={`/movimentations/${movimentation.id}`}
         >
           <div className="flex flex-col items-start gap-1.5">
-            <p className="font-bold mb-1 text-lg">{movimentation.product.name}</p>
+            <p className="font-bold mb-1 text-md">{movimentation.product.name}</p>
             <p className="flex gap-0.5 items-center justify-center text-xs">
               <TargetIcon size={16} />
               <span className="font-bold">META DIÁRIA:</span> {metaAmount}

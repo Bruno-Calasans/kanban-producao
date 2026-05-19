@@ -5,12 +5,14 @@ import useGetAllActiveProducts from "@/hooks/product/useGetAllActiveProducts";
 type ProductSelectorProps = {
   selectedProduct?: ProductWithProductionFlow;
   defaultProduct?: ProductWithProductionFlow;
+  disabled?: boolean;
   onChangeProduct(product?: ProductWithProductionFlow): void;
 };
 
 export default function ProductSelector({
   selectedProduct,
   defaultProduct,
+  disabled,
   onChangeProduct,
 }: ProductSelectorProps) {
   const { data, isPending } = useGetAllActiveProducts();
@@ -27,6 +29,7 @@ export default function ProductSelector({
       loadingMsg="Carregando produtos..."
       placeholder="Escolha um produto"
       noItemFoundMsg="Nenhum produto encontrado"
+      disabled={disabled}
     />
   );
 }

@@ -3,11 +3,7 @@ import { createFormHook, createFormHookContexts } from "@tanstack/react-form-nex
 import * as z from "zod";
 
 export const formSchema = z.object({
-  name: z
-    .string()
-    .nonempty("Nome do produto é obrigatório.")
-    .min(5, "Nome do produto deve ter pelo menos 5 caracteres.")
-    .toUpperCase(),
+  name: z.string().nonempty("Nome do produto é obrigatório.").toUpperCase(),
   op: ZodNumberField({ min: 0, minError: "OP deve ser maior que 0." }),
   productionFlow: z.string().nonempty("Fluxo de produção é obrigatório"),
 });

@@ -54,7 +54,7 @@ export default function ProductTable({ products }: ProductPageProps) {
   return (
     <DataTable
       filterPlaceholder="Procurar produto"
-      filterColumn="name"
+      filterColumn={["name", "op"]}
       columns={productColumns}
       data={products}
       onClickCell={({ column, row: { original } }) =>

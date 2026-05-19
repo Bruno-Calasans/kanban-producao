@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filterColumn: string;
+  filterColumn: string | string[];
   filterPlaceholder?: string;
   className?: string;
   hidePagination?: boolean;
@@ -58,6 +58,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const table = useReactTable({
     data,
@@ -68,9 +69,17 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: (row, columnId, filterValue) => {
+      return (filterColumn instanceof Array ? filterColumn : [filterColumn]).some((column) => {
+        const value = row.getValue(column)?.toString()?.toLowerCase();
+        return value?.includes(filterValue.toLowerCase());
+      });
+    },
     state: {
       sorting,
       columnFilters,
+      globalFilter,
     },
   });
 
@@ -83,9 +92,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       {/* Filtro da tabela */}
-      {!hideSearch && (
-        <DataTableFilter placeholder={filterPlaceholder} column={filterColumn} table={table} />
-      )}
+      {!hideSearch && <DataTableFilter placeholder={filterPlaceholder} table={table} />}
 
       {/* Tabela em si */}
       <div className={cn("overflow-hidden rounded-md border mt-2", className)}>

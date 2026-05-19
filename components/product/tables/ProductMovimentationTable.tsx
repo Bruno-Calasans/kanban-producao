@@ -21,11 +21,11 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
       return <p>#{movimentation.id}</p>;
     },
   },
-  {
-    id: "product.name",
-    accessorKey: "product.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Produto" />,
-  },
+  // {
+  //   id: "product.name",
+  //   accessorKey: "product.name",
+  //   header: ({ column }) => <DataTableColumnHeader column={column} title="Produto" />,
+  // },
   {
     accessorKey: "amount",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd." />,

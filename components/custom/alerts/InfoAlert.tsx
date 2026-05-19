@@ -1,9 +1,9 @@
-import { CircleXIcon } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import { CustomAlert } from "./CustomAlert";
 import { cn } from "@/lib/utils";
 import { ClassValue } from "clsx";
 
-type ErroAlertProps = {
+type InfoAlertProps = {
   title: string;
   description: string;
   alertIcon?: React.ReactNode;
@@ -21,7 +21,7 @@ type ErroAlertProps = {
   onAction?: () => void;
 };
 
-export function ErrorAlert({
+export function InfoAlert({
   title,
   description,
   alertIcon,
@@ -31,22 +31,24 @@ export function ErrorAlert({
   isDestructive,
   actionLabel,
   onAction,
-}: ErroAlertProps) {
+}: InfoAlertProps) {
   return (
     <CustomAlert
       title={title}
       description={description}
-      alertIcon={alertIcon || <CircleXIcon />}
+      alertIcon={alertIcon || <InfoIcon />}
       closeIcon={closeIcon}
       hideCloseButton={hideCloseButton}
       isDestructive={isDestructive}
+      actionLabel={actionLabel}
+      onAction={onAction}
       classNames={{
         container: cn(
-          "border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-50 mb-3",
+          "border-indigo-200 bg-indigo-50 text-indigo-900 dark:border-indigo-900 dark:bg-indigo-950 dark:text-indigo-50 mb-3",
           classNames?.container,
         ),
         title: cn(classNames?.title),
-        description: cn("text-red-800", classNames?.title),
+        description: cn("text-indigo-800", classNames?.title),
       }}
     />
   );

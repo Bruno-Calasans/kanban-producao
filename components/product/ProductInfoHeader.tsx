@@ -8,9 +8,10 @@ import EditProductForm from "@/components/products/forms/EditProductForm";
 import DeleteProductDialog from "@/components/products/dialogs/DeleteProductDialog";
 import useActiveProduct from "@/hooks/product/useActiveProduct";
 import ActiveBadge from "@/components/custom/badges/ActiveBadge";
-import { ActionAlert } from "@/components/custom/alerts/ActionAlert";
 import GoToCalendarButton from "@/components/custom/buttons/GoToCalendarButton";
 import CreateProductMovimentationDialog from "./dialogs/CreateProductMovimentationDialog";
+import { InfoAlert } from "../custom/alerts/InfoAlert";
+import { CustomAlert } from "../custom/alerts/CustomAlert";
 
 type ProductInfoHeaderProps = {
   product: ProductWithProductionFlow;
@@ -52,7 +53,7 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
       </div>
 
       {/* Dialogs */}
-      <div className="flex items-center-safe mb-4 gap-2">
+      <div className="flex items-start mb-4 gap-2">
         {canEdit && (
           <>
             <CreateProductMovimentationDialog product={product} />
@@ -74,7 +75,7 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
           </>
         )}
 
-        {product.is_active ? (
+        {product.is_active && (
           <Button
             id="toggle-active-button"
             className="m-0 bg-slate-500 hover:bg-slate-600"
@@ -84,10 +85,29 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
             <CheckIcon />
             Desativar
           </Button>
-        ) : (
-          <ActionAlert
+        )}
+
+        {canDeleteProduct && (
+          <CustomDialog
+            id="delete-product"
+            title="Excluir Produto"
+            trigger={
+              <Button variant="destructive" className="self-start m-0" size="xs">
+                <Trash2Icon />
+                Excluir
+              </Button>
+            }
+          >
+            <DeleteProductDialog product={product} />
+          </CustomDialog>
+        )}
+      </div>
+
+      <div id="product-alerts" className="flex flex-col gap-2 mb-3">
+        {!product.is_active && (
+          <CustomAlert
             title="Produto desativado"
-            description="O produto está desativado. Ative-o para poder criar movimentações."
+            description="Ative-o para poder criar movimentações ou editá-lo."
             actionLabel={
               <Button
                 id="toggle-active-button"
@@ -100,25 +120,21 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
               </Button>
             }
             onAction={toggleActive}
+            classNames={{
+              container:
+                "border-slate-200 bg-slate-50 text-slate-900 dark:border-slate-900 dark:bg-slate-950 dark:text-slate-50",
+            }}
           />
         )}
 
-        {canDeleteProduct && (
-          <CustomDialog
-            id="delete-product"
-            title="Excluir Produto"
-            trigger={
-              <Button variant="destructive" className="m-0" size="xs">
-                <Trash2Icon />
-                Excluir
-              </Button>
-            }
-          >
-            <DeleteProductDialog product={product} />
-          </CustomDialog>
+        {movimentations.length === 0 && product.is_active && (
+          <InfoAlert
+            title="Nenhuma movimentação criada"
+            description='Clique no botão "Nova movimentação" para poder criar uma movimentação do produto.'
+            actionLabel={<CreateProductMovimentationDialog product={product} />}
+          />
         )}
       </div>
-
     </div>
   );
 }

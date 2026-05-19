@@ -1,24 +1,55 @@
-import { AlertTriangleIcon, XIcon } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useState } from "react";
+import { TriangleAlertIcon } from "lucide-react";
+import { CustomAlert } from "./CustomAlert";
+import { cn } from "@/lib/utils";
+import { ClassValue } from "clsx";
 
 type WarningAlertProps = {
   title: string;
   description: string;
+  alertIcon?: React.ReactNode;
+  hideCloseButton?: boolean;
+  closeIcon?: React.ReactNode;
+  classNames?: {
+    container?: ClassValue;
+    title?: ClassValue;
+    description?: ClassValue;
+    action?: ClassValue;
+  };
+  close?: boolean;
+  isDestructive?: boolean;
+  actionLabel?: React.ReactNode;
+  onAction?: () => void;
 };
 
-export function WarningAlert({ title, description }: WarningAlertProps) {
-  const [close, setClose] = useState(false);
-
+export function WarningAlert({
+  title,
+  description,
+  alertIcon,
+  hideCloseButton,
+  closeIcon,
+  classNames,
+  isDestructive,
+  actionLabel,
+  onAction,
+}: WarningAlertProps) {
   return (
-    <Alert
-      hidden={close}
-      className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50"
-    >
-      <AlertTriangleIcon />
-      <AlertTitle>{title}</AlertTitle>
-      <AlertDescription>{description}</AlertDescription>
-      <XIcon onClick={() => setClose(true)} className="absolute right-2 top-2" />
-    </Alert>
+    <CustomAlert
+      title={title}
+      description={description}
+      alertIcon={alertIcon || <TriangleAlertIcon />}
+      closeIcon={closeIcon}
+      hideCloseButton={hideCloseButton}
+      isDestructive={isDestructive}
+      actionLabel={actionLabel}
+      onAction={onAction}
+      classNames={{
+        container: cn(
+          "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50 mb-3",
+          classNames?.container,
+        ),
+        title: cn(classNames?.title),
+        description: cn("text-amber-800", classNames?.title),
+      }}
+    />
   );
 }

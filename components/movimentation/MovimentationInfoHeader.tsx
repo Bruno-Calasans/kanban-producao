@@ -1,4 +1,4 @@
-import { MovimentationPopulated } from "@/types/database.type";
+import { MovimentationDeadlinePopulated, MovimentationPopulated } from "@/types/database.type";
 import Link from "next/link";
 import MovimentationStatusBadge from "@/components/custom/badges/MovimentationStatusBadge";
 import PageTitle from "@/components/custom/PageTitle";
@@ -12,15 +12,18 @@ import CancelMovimentationDialog from "../movimentations/dialogs/CancelMovimenta
 import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
 import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import GoToCalendarButton from "../custom/buttons/GoToCalendarButton";
+import { InfoAlert } from "../custom/alerts/InfoAlert";
 
 type MovimentationInfoHeadergProps = {
   movimentation: MovimentationPopulated;
   departamentStates: DepartamentState[];
+  deadlines: MovimentationDeadlinePopulated[];
 };
 
 export default function MovimentationInfoHeaderg({
   movimentation,
   departamentStates,
+  deadlines,
 }: MovimentationInfoHeadergProps) {
   const canEdit = movimentation.status == "PENDING";
   const canDelete = movimentation.status == "PENDING";
@@ -110,7 +113,14 @@ export default function MovimentationInfoHeaderg({
       </div>
 
       {/* Alertas da movimentação */}
-      <div className="flex gap-2 flex-col my-3">
+      <div id="movimentation-alerts" className="flex gap-2 flex-col my-3">
+        {deadlines.length == 0 && (
+          <InfoAlert
+            title="Movimentação sem prazo definido"
+            description="Nenhum departamento tem prazo de entrega. Vá na aba 'Prazos' e defina os prazos para os departamentos."
+          />
+        )}
+
         {movimentation.status == "CANCELLED" && (
           <ErrorAlert
             title="Movimentação Cancelada"

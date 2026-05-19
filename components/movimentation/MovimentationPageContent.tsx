@@ -59,6 +59,7 @@ export default function MovimentationPageContent({ movimentation }: Movimentatio
       <MovimentationInfoHeader
         movimentation={movimentation}
         departamentStates={departamentStates}
+        deadlines={deadlines}
       />
       <MovimentationTabs
         movimentation={movimentation}

@@ -103,7 +103,7 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
         )}
       </div>
 
-      <div id="product-alerts" className="flex flex-col gap-2 mb-3">
+      <div id="product-alerts" className="flex flex-col gap-2 my-3">
         {!product.is_active && (
           <CustomAlert
             title="Produto desativado"

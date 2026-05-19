@@ -10,11 +10,13 @@ import useGetAllActiveProductionFlows from "@/hooks/production-flow/useGetAllAct
 
 type ProductionFlowSelectorWithCheckboxProps = {
   defaultProductionFlow?: ProductionFlow;
+  disabled?: boolean;
   onValueChange(productionFlow?: ProductionFlow): void;
 };
 
 export default function ProductionFlowSelectorWithCheckbox({
   defaultProductionFlow,
+  disabled,
   onValueChange,
 }: ProductionFlowSelectorWithCheckboxProps) {
   const [selectedProductionFlow, setSelectedProductionFlow] = useState<
@@ -41,7 +43,7 @@ export default function ProductionFlowSelectorWithCheckbox({
   return (
     <div className="flex flex-col gap-3">
       <SingleSelector<ProductionFlow>
-        disabled={useDefault}
+        disabled={disabled || useDefault}
         data={productionFlows}
         selectedData={
           !useDefault ? selectedProductionFlow : productionFlows.find((flow) => flow.is_default)
@@ -75,6 +77,7 @@ export default function ProductionFlowSelectorWithCheckbox({
             checked={useDefault}
             onCheckedChange={handleUseDefault}
             className="group-has-disabled/field:opacity-100"
+            disabled={disabled}
           />
           <FieldContent>
             <FieldLabel>Usar fluxo de produção padrão</FieldLabel>

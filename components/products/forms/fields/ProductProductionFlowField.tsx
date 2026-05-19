@@ -6,28 +6,31 @@ import ProductionFlowSelectorWithCheckbox from "@/components/custom/selectors/Pr
 
 type ProductProductionFlowFieldProps = {
   defaultProductionFlow?: ProductionFlow;
+  disabled?: boolean;
   onChangeProductionFlow: (productionFlow?: ProductionFlow) => void;
 };
 
 export const ProductProductionFlowField = withForm({
   defaultValues: defaultProductFormValues,
   props: {} as ProductProductionFlowFieldProps,
-  render({ form, defaultProductionFlow, onChangeProductionFlow }) {
+  render({ form, defaultProductionFlow, disabled, onChangeProductionFlow }) {
     return (
       <form.Field
         name="productionFlow"
         children={(field) => {
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
-            <Field className="mt-4">
+            <Field className="mt-4" hidden={disabled}>
               <FieldLabel htmlFor={field.name}>Fluxo de Produção</FieldLabel>
               <ProductionFlowSelectorWithCheckbox
+                disabled={disabled}
                 defaultProductionFlow={defaultProductionFlow}
                 onValueChange={(productionFlow) => {
                   field.handleChange(productionFlow?.name || "");
                   onChangeProductionFlow(productionFlow);
                 }}
               />
+
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </Field>
           );

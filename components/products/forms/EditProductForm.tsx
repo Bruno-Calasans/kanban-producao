@@ -18,24 +18,24 @@ import useDialog from "@/hooks/dialog/useDialog";
 import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
 import { useState } from "react";
 import { ProductionFlow, ProductWithProductionFlow } from "@/types/database.type";
-import useGetAllMovimentationsByProduct from "@/hooks/movimentation/useGetAllMovimentationsByProduct";
 
 type EditProductForm = {
   product: ProductWithProductionFlow;
-  canEditProductionFlow?: boolean;
+  hideProductionFlowSelector?: boolean;
 };
 
-export default function EditProductForm({ product, canEditProductionFlow }: EditProductForm) {
+export default function EditProductForm({ product, hideProductionFlowSelector }: EditProductForm) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateProduct();
-  const [selectedProductionFlow, setSelectedProductionFlow] = useState<
-    ProductionFlow | undefined
-  >();
+  const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow | undefined>(
+    hideProductionFlowSelector ? product.production_flow : undefined,
+  );
 
   const form = useAppForm({
     defaultValues: {
       name: product.name,
       op: product.op || defaultProductFormValues.op,
+      productionFlow: product.production_flow.name,
     } as ProductSchema,
     validators: {
       onSubmit: formSchema,
@@ -79,7 +79,7 @@ export default function EditProductForm({ product, canEditProductionFlow }: Edit
         <ProductOpField form={form} />
       </FieldGroup>
 
-      {canEditProductionFlow && (
+      {!hideProductionFlowSelector && (
         <ProductProductionFlowField
           form={form}
           defaultProductionFlow={product.production_flow}

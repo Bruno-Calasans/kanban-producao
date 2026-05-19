@@ -21,7 +21,7 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
   const { toggleActive, isPending } = useActiveProduct({ product });
 
   const canEdit = product.is_active;
-  const canEditProductionFlow = movimentations.length == 0;
+  const hideProductionFlowSelector = movimentations.length > 0;
   const canDeleteProduct = movimentations.length == 0;
 
   return (
@@ -66,7 +66,10 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
                 </Button>
               }
             >
-              <EditProductForm canEditProductionFlow={canEditProductionFlow} product={product} />
+              <EditProductForm
+                product={product}
+                hideProductionFlowSelector={hideProductionFlowSelector}
+              />
             </CustomDialog>
           </>
         )}
@@ -115,6 +118,7 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
           </CustomDialog>
         )}
       </div>
+
     </div>
   );
 }

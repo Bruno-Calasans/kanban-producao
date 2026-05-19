@@ -3,16 +3,14 @@ import PageTitle from "@/components/custom/PageTitle";
 import BackButton from "@/components/custom/buttons/BackButton";
 import { Button } from "@/components/ui/button";
 import CustomDialog from "@/components/custom/CustomDialog";
-import CreateMovimentationForm from "@/components/movimentations/forms/CreateMovimentationForm";
-import { ArrowLeftRightIcon, CheckIcon, Edit2Icon, Trash2Icon, XIcon } from "lucide-react";
+import { CheckIcon, Edit2Icon, Trash2Icon } from "lucide-react";
 import EditProductForm from "@/components/products/forms/EditProductForm";
 import DeleteProductDialog from "@/components/products/dialogs/DeleteProductDialog";
 import useActiveProduct from "@/hooks/product/useActiveProduct";
-import ActiveBadge from "../custom/badges/ActiveBadge";
-import { ActionAlert } from "../custom/alerts/ActionAlert";
-import { is } from "date-fns/locale";
-import Loader from "../custom/Loader";
-import GoToCalendarButton from "../custom/buttons/GoToCalendarButton";
+import ActiveBadge from "@/components/custom/badges/ActiveBadge";
+import { ActionAlert } from "@/components/custom/alerts/ActionAlert";
+import GoToCalendarButton from "@/components/custom/buttons/GoToCalendarButton";
+import CreateProductMovimentationDialog from "./dialogs/CreateProductMovimentationDialog";
 
 type ProductInfoHeaderProps = {
   product: ProductWithProductionFlow;
@@ -57,18 +55,7 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
       <div className="flex items-center-safe mb-4 gap-2">
         {canEdit && (
           <>
-            <CustomDialog
-              id="create-movimentation"
-              title="Criar movimentação"
-              trigger={
-                <Button disabled={!product.is_active} className="m-0" size="xs">
-                  <ArrowLeftRightIcon />
-                  Nova movimentação
-                </Button>
-              }
-            >
-              <CreateMovimentationForm defaultProduct={product} />
-            </CustomDialog>
+            <CreateProductMovimentationDialog product={product} />
             <CustomDialog
               id="edit-product"
               title="Editar Produto"

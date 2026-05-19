@@ -3,28 +3,31 @@
 import { toast } from "sonner";
 import MoveButton from "@/components/custom/buttons/MoveButton";
 import useCreateMovimentation from "@/hooks/movimentation/useCreateMovimentation";
-import { useState } from "react";
-import { MovimentationProductNameField } from "./fields/MovimentationProductNameField";
-import { defaultMovimentationFormValues, useAppForm, formSchema } from "./movimentationFormContext";
+import {
+  defaultMovimentationFormValues,
+  useAppForm,
+  formSchema,
+} from "./ProductMovimentationFormContext";
 import handleFormError from "@/utils/errorHandler";
-import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup";
 import useDialog from "@/hooks/dialog/useDialog";
 import { ProductWithProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
+import { ProductProductMovimentationAmountField } from "./fields/ProductMovimentationAmountField";
 
-type CreateMovimentationFormProps = {
-  defaultProduct?: ProductWithProductionFlow;
+type CreateProductMovimentationFormProps = {
+  product: ProductWithProductionFlow;
 };
 
-export default function CreateMovimentationForm({ defaultProduct }: CreateMovimentationFormProps) {
+export default function CreateProductMovimentationForm({
+  product,
+}: CreateProductMovimentationFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync: createMovimentation, isPending: isCreateMovimentationPending } =
     useCreateMovimentation();
   const { mutateAsync: createProcessExecution, isPending: isCreateProcessExecutionPending } =
     useCreateProcessExecution();
-  const [product, setProduct] = useState<ProductWithProductionFlow>();
 
   const form = useAppForm({
     defaultValues: defaultMovimentationFormValues,
@@ -60,7 +63,7 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
         });
 
         toast.success("Produto movimentado com sucesso!");
-        closeDialog("create-movimentation");
+        closeDialog("create-product-movimentation");
         form.reset();
       } catch (error) {
         handleFormError(error, {
@@ -72,29 +75,20 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
 
   const resetForm = () => {
     form.reset();
-    setProduct(undefined);
   };
 
   const isPending = isCreateMovimentationPending || isCreateProcessExecutionPending;
 
   return (
     <form
-      id="create-movimentation-form"
+      id="create-product-movimentation-form"
       className="flex flex-col gap-6"
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();
       }}
     >
-      <MovimentationProductNameField
-        form={form}
-        defaultProduct={defaultProduct}
-        selectedProduct={product}
-        onChange={setProduct}
-        disabled
-      />
-
-      <MovimentationAmountFieldGroup form={form} />
+      <ProductProductMovimentationAmountField form={form} />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={resetForm} />

@@ -1,49 +1,49 @@
 "use client";
 
 import { toast } from "sonner";
-import { useState } from "react";
-import { MovimentationProductNameField } from "./fields/MovimentationProductNameField";
-import { useAppForm, formSchema, MovimentationFormSchema } from "./movimentationFormContext";
+import MoveButton from "@/components/custom/buttons/MoveButton";
+import {
+  ProductMovimentationFormContextchema,
+  useAppForm,
+  formSchema,
+} from "./ProductMovimentationFormContext";
 import handleFormError from "@/utils/errorHandler";
-import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup";
 import useDialog from "@/hooks/dialog/useDialog";
-import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/database.type";
+import { MovimentationPopulated } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
-import SaveButton from "@/components/custom/buttons/SaveButton";
+import { ProductProductMovimentationAmountField } from "./fields/ProductMovimentationAmountField";
 import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
 import useUpdateInicialExecution from "@/hooks/process-executation/useUpdateInicialExecution";
 
-type EditMovimentationFormProps = {
+type EditProductMovimentationFormProps = {
   movimentation: MovimentationPopulated;
 };
 
-export default function EditMovimentationForm({ movimentation }: EditMovimentationFormProps) {
+export default function EditProductMovimentationForm({
+  movimentation,
+}: EditProductMovimentationFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync: updateMovimentation, isPending: isMovimentationPending } =
     useUpdateMovimentation();
   const { mutateAsync: updateInitialExecution, isPending: isExecutionPending } =
     useUpdateInicialExecution();
-  const [product, setProduct] = useState<ProductWithProductionFlow>();
 
   const form = useAppForm({
     defaultValues: {
-      productName: movimentation.product.name,
       amount: movimentation.amount,
-      useMaxAmount: false,
-    } as MovimentationFormSchema,
+    } as ProductMovimentationFormContextchema,
     validators: {
       onSubmit: formSchema,
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      if (!product) return;
       const { amount } = value;
 
       try {
         await updateMovimentation({
           movimentationId: movimentation.id,
           updateData: {
-            product_id: product.id,
+            product_id: movimentation.product.id,
             amount,
             status: "PENDING",
           },
@@ -58,11 +58,11 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
         }
 
         toast.success("Movimentação atualizado com sucesso!");
-        closeDialog("edit-movimentation");
+        closeDialog("edit-product-movimentation");
         form.reset();
       } catch (error) {
         handleFormError(error, {
-          default: "Erro: não foi possível atualizar a movimentação. Tente novamente",
+          default: "Erro: não foi possível atualizar a movimentação do produto. Tente novamente",
         });
       }
     },
@@ -70,32 +70,24 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
 
   const resetForm = () => {
     form.reset();
-    setProduct(undefined);
   };
 
   const isPending = isMovimentationPending || isExecutionPending;
 
   return (
     <form
-      id="edit-movimentation-form"
+      id="edit-product-movimentation-form"
       className="flex flex-col gap-6"
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();
       }}
     >
-      <MovimentationProductNameField
-        form={form}
-        selectedProduct={product}
-        defaultProduct={movimentation.product as ProductWithProductionFlow}
-        onChange={setProduct}
-        disabled
-      />
-      <MovimentationAmountFieldGroup form={form} />
+      <ProductProductMovimentationAmountField form={form} />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={resetForm} />
-        <SaveButton isLoading={isPending} hiddenIcon />
+        <MoveButton title="Salvar" isLoading={isPending} hiddenIcon />
       </div>
     </form>
   );

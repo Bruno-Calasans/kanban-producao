@@ -5,8 +5,8 @@ import {
   ProcessExecutionPopulated,
   ProductWithProductionFlow,
 } from "@/types/database.type";
-import MovimentationTable from "../movimentations/table/MovimentationTable";
 import ProcessExecutationTable from "./tables/ProcessExecutationTable";
+import ProductMovimentationTable from "./tables/ProductMovimentationTable";
 
 type ProductInfoTabsProps = {
   product: ProductWithProductionFlow;
@@ -42,7 +42,7 @@ export default function ProductInfoTabs({
       </div>
 
       <TabsContent value="movimentation">
-        <MovimentationTable hideProductColumn movimentations={movimentations} />
+        <ProductMovimentationTable movimentations={movimentations} />
       </TabsContent>
 
       <TabsContent value="process-executation">

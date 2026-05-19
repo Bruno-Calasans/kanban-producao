@@ -1,6 +1,6 @@
 import { updateInitialExecution } from "@/service/api/processExecutationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { processExecutationKeys } from "@/constants/processExecutationKeys";
+import { movimentationKeys } from "@/constants/movimentationKeys";
 
 export default function useUpdateInicialExecution() {
   const queryClient = useQueryClient();
@@ -10,7 +10,7 @@ export default function useUpdateInicialExecution() {
       updateInitialExecution(data.movimentationId, data.amount),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: processExecutationKeys.lists(),
+        queryKey: movimentationKeys.lists(),
       });
     },
   });

@@ -12,19 +12,13 @@ import type { Departament, ProcessWithDepartament } from "@/types/database.type"
 import handleFormError from "@/utils/errorHandler";
 import { ProcessNameField } from "./fields/ProcessNameField";
 import { ProcessDepartamentField } from "./fields/ProcessDepartamentField";
-import { ProcessSequenceField } from "./fields/ProcessSequenceField";
 
 type EditProcessFormProps = {
   process: ProcessWithDepartament;
-  hideSequenceField?: boolean;
   hideDepartamentField?: boolean;
 };
 
-export default function EditProcessForm({
-  process,
-  hideSequenceField,
-  hideDepartamentField,
-}: EditProcessFormProps) {
+export default function EditProcessForm({ process, hideDepartamentField }: EditProcessFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateProcess();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament | undefined>(
@@ -34,7 +28,6 @@ export default function EditProcessForm({
   const form = useAppForm({
     defaultValues: {
       name: process.name,
-      sequence: process.sequence,
       departamentName: process.departament.name,
     } as ProcessFormSchema,
     validators: {
@@ -48,7 +41,6 @@ export default function EditProcessForm({
           id: process.id,
           updateData: {
             name: value.name,
-            sequence: value.sequence,
             departament_id: selectedDepartament.id,
           },
         });
@@ -75,7 +67,6 @@ export default function EditProcessForm({
       <FieldGroup>
         <ProcessNameField form={form} />
 
-        {!hideSequenceField && <ProcessSequenceField form={form} />}
         {!hideDepartamentField && (
           <ProcessDepartamentField
             form={form}

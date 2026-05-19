@@ -13,23 +13,27 @@ type ProcessStateTableProps = {
 
 const processColumns: ColumnDef<ProcessState>[] = [
   {
-    id: "process.sequence",
-    accessorKey: "process.sequence",
+    id: "template.sequence",
+    accessorKey: "template.sequence",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
-  },
-  {
-    id: "process.departament.name",
-    accessorKey: "process.departament.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
+    enableSorting: false,
   },
   {
     id: "process.name",
     accessorKey: "process.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
+    enableSorting: false,
+  },
+  {
+    id: "process.departament.name",
+    accessorKey: "process.departament.name",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
+    enableSorting: false,
   },
   {
     accessorKey: "avaliableAmount",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd. Disponível" />,
+    enableSorting: false,
   },
   {
     accessorKey: "status",
@@ -37,6 +41,7 @@ const processColumns: ColumnDef<ProcessState>[] = [
     cell: ({ row: { original: processState } }) => (
       <ProcessStatusBadge status={processState.status} />
     ),
+    enableSorting: false,
   },
   {
     id: "actions",
@@ -44,6 +49,7 @@ const processColumns: ColumnDef<ProcessState>[] = [
     cell: ({ row: { original: processState } }) => {
       return <ProcessExecutionActions processState={processState} />;
     },
+    enableSorting: false,
   },
 ];
 

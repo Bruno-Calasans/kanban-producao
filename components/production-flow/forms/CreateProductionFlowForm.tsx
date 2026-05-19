@@ -11,7 +11,7 @@ import useCreateProductionFlow from "@/hooks/production-flow/useCreateProduction
 import { ProductionFlowDescField } from "./fields/ProductionFlowDescField";
 import { ProductionFlowProcessesField } from "./fields/ProductionFlowProcessesField";
 import { useState } from "react";
-import { Process } from "@/types/database.type";
+import { Process, ProcessWithDepartament } from "@/types/database.type";
 import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
 import { useRouter } from "next/navigation";
 import { ProductionFlowUseDefaultField } from "./fields/ProductionFlowUseDefaultField";
@@ -19,7 +19,7 @@ import { ProductionFlowUseDefaultField } from "./fields/ProductionFlowUseDefault
 export default function CreateProductionFlowForm() {
   const { mutateAsync: productionAsync, isPending } = useCreateProductionFlow();
   const { mutateAsync: mutateTemplateAsync } = useCreateProductionFlowTemplate();
-  const [selectedProcesses, setSelectedProcesses] = useState<Process[]>([]);
+  const [selectedProcesses, setSelectedProcesses] = useState<ProcessWithDepartament[]>([]);
   const router = useRouter();
 
   const form = useAppForm({
@@ -39,11 +39,11 @@ export default function CreateProductionFlowForm() {
         });
 
         await mutateTemplateAsync(
-          selectedProcesses.map((process) => ({
+          selectedProcesses.map((process, index) => ({
             production_flow_id: createdProductionFlow.id,
-            departament_id: process.departament_id,
+            departament_id: process.departament.id,
             process_id: process.id,
-            sequence: process.sequence,
+            sequence: index,
           })),
         );
 
@@ -57,6 +57,8 @@ export default function CreateProductionFlowForm() {
       }
     },
   });
+
+  console.log(selectedProcesses);
 
   return (
     <form

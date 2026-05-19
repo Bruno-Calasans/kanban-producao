@@ -76,12 +76,15 @@ const productionFlowColumns: ColumnDef<ProductionFlow>[] = [
 ];
 
 export default function ProductionFlowTable({ productionFlows }: FlowTemplatePageProps) {
+  const pageSizes = [5, 10, 15, 20, 25];
   return (
     <DataTable
       filterPlaceholder="Procurar fluxos"
       filterColumn="name"
       columns={productionFlowColumns}
       data={productionFlows}
+      pageSizes={pageSizes}
+      defaultPageSize={pageSizes[0]}
     />
   );
 }

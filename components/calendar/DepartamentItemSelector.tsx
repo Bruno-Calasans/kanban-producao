@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { MovimentationDeadlinePopulated } from "@/types/database.type";
-import { sortBySequence } from "@/utils/sortBySequence";
 import { useEffect, useState } from "react";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 export type DepartamentItem = {
   label: string;
   value: number;
-  sequence: number;
 };
 
 type DepartamentItemSelectorProps = {
@@ -27,14 +26,13 @@ export default function DepartamentItemSelector({
     const item = {
       label: deadline.departament.name,
       value: deadline.departament.id,
-      sequence: deadline.departament.sequence,
     };
     return item;
   });
 
   const uniqueDepartamentItems = Array.from(
     new Map(departamentItems.map((item) => [item.value, item])).values(),
-  ).sort(sortBySequence);
+  );
 
   const handleDepartamentSelect = (item: DepartamentItem) => {
     let selectedItems: DepartamentItem[] = [];

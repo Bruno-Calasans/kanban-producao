@@ -111,6 +111,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
           status,
           previousProcess,
           nextProcess,
+          template,
         }),
       );
     }

@@ -12,9 +12,9 @@ type ProductionFlowProcessesProps = {
 
 export default function ProductionFlowProcesses({ productionFlow }: ProductionFlowProcessesProps) {
   const { data, isPending } = useGetAllProductionFlowTemplates(productionFlow.id);
-  const productionFlowTemplates = data?.data || [];
-  const processes = productionFlowTemplates.flatMap((template) => template.process);
-  const canShowExpandButton = processes.length > 3;
+  const templates = data?.data || [];
+
+  const canShowExpandButton = templates.length > 3;
   const [expand, setExpand] = useState(false);
 
   if (isPending) return <Loader title="Carregando processos" />;
@@ -22,9 +22,9 @@ export default function ProductionFlowProcesses({ productionFlow }: ProductionFl
   return (
     <div>
       <div className={cn("flex flex-col gap-1 overflow-hidden max-h-20", expand && "max-h-fit")}>
-        {processes.map((process) => (
-          <Badge key={process.id}>
-            {process.sequence} - {process.name}
+        {templates.map((template) => (
+          <Badge key={template.id}>
+            {template.sequence} - {template.process.name}
           </Badge>
         ))}
       </div>

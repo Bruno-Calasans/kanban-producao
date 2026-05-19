@@ -43,11 +43,7 @@ export default function ProcessDropdownMenu({ process }: ProcessDropdownMenuProp
 
       <DropdownMenuContent side="bottom" align="end">
         {canEdit && (
-          <EditProcessDialog
-            process={process}
-            hideDepartamentField={hideFields}
-            hideSequenceField={hideFields}
-          >
+          <EditProcessDialog process={process} hideDepartamentField={hideFields}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Edit2Icon />
               Editar

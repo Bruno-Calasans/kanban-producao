@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/preserve-manual-memoization */
 import {
   Combobox,
   ComboboxChip,
@@ -14,7 +16,7 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@/components/ui/combobox";
-import { Process } from "@/types/database.type";
+import { Process, ProcessWithDepartament } from "@/types/database.type";
 import { useEffect, useMemo, useState } from "react";
 import Loader from "./Loader";
 import { sortBySequence } from "@/utils/sortBySequence";
@@ -31,15 +33,17 @@ type GroupedItems = {
 };
 
 type ProductionFlowProcessesFieldProps = {
-  selectedProcesses?: Process[];
-  defaultProcesses?: Process[];
-  onSelect: (processes: Process[]) => void;
+  selectedProcesses?: ProcessWithDepartament[];
+  defaultProcesses?: ProcessWithDepartament[];
+  onSelect: (processes: ProcessWithDepartament[]) => void;
+  formatter?: (process: ProcessWithDepartament) => string;
 };
 
 export default function ProcessSelector({
   defaultProcesses,
   selectedProcesses,
   onSelect,
+  formatter,
 }: ProductionFlowProcessesFieldProps) {
   const anchor = useComboboxAnchor();
   const { data, isPending } = useGetAllActiveProcesses();
@@ -55,7 +59,7 @@ export default function ProcessSelector({
       if (hasGroup) {
         hasGroup.items.push({
           id: String(process.id),
-          label: formatProcess(process),
+          label: formatter ? formatter(process) : formatProcess(process),
         });
       } else {
         groups.push({
@@ -63,7 +67,7 @@ export default function ProcessSelector({
           items: [
             {
               id: String(process.id),
-              label: formatProcess(process),
+              label: formatter ? formatter(process) : formatProcess(process),
             },
           ],
         });
@@ -77,8 +81,8 @@ export default function ProcessSelector({
     onSelect(chosedProcesses);
   };
 
-  const formatProcess = (process: Process) => {
-    return `(${process.sequence}) ${process.name}`;
+  const formatProcess = (process: ProcessWithDepartament) => {
+    return `${process.name}`;
   };
 
   useEffect(() => {
@@ -97,7 +101,7 @@ export default function ProcessSelector({
       multiple
       items={groups}
       onValueChange={handleValueChange}
-      value={selectedProcesses?.sort(sortBySequence).map((p) => String(p.id))}
+      value={selectedProcesses?.map((p) => String(p.id))}
     >
       {/* Só redenriza */}
       <ComboboxChips
@@ -108,7 +112,9 @@ export default function ProcessSelector({
       >
         <ComboboxValue>
           {selectedProcesses?.map((item) => (
-            <ComboboxChip key={item.id}>{formatProcess(item)}</ComboboxChip>
+            <ComboboxChip key={item.id}>
+              {formatter ? formatter(item) : formatProcess(item)}
+            </ComboboxChip>
           ))}
         </ComboboxValue>
         <ComboboxChipsInput placeholder="Adicione processos" />

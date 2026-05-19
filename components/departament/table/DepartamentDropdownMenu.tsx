@@ -47,11 +47,7 @@ export default function DepartamentDropdownMenu({ departament }: DepartamentDrop
 
       <DropdownMenuContent side="bottom" align="end" className="w-fit">
         {canEdit && (
-          <EditDepartamentDialog
-            departament={departament}
-            hideSequenceField={hideFields}
-            hideExternalField={hideFields}
-          >
+          <EditDepartamentDialog departament={departament} hideExternalField={hideFields}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Edit2Icon />
               Editar

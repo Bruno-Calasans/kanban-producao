@@ -4,13 +4,13 @@
 
 import { FieldLegend, FieldSet, FieldDescription } from "@/components/ui/field";
 import { defaultProductionFlowValues, withForm } from "../ProductionFlowFormContext";
-import { Process } from "@/types/database.type";
-import ProcessSelector from "@/components/custom/ProcessSelector";
+import { Process, ProcessWithDepartament } from "@/types/database.type";
+import ProcessSortable from "../../ProcessSortable";
 
 type ProductionFlowProcessesFieldProps = {
-  defaultProcesses?: Process[];
-  selectedProcesses?: Process[];
-  onSelect: (processes: Process[]) => void;
+  defaultProcesses?: ProcessWithDepartament[];
+  selectedProcesses?: ProcessWithDepartament[];
+  onSelect: (processes: ProcessWithDepartament[]) => void;
 };
 
 export const ProductionFlowProcessesField = withForm({
@@ -26,15 +26,16 @@ export const ProductionFlowProcessesField = withForm({
             <FieldDescription>
               Selecione os processos que fazem parte deste fluxo de produção.
             </FieldDescription>
-            <ProcessSelector
+            <ProcessSortable
               defaultProcesses={defaultProcesses}
               selectedProcesses={selectedProcesses}
               onSelect={(processes) => {
                 const processNames = processes.map((process) => process.name);
-                form.setFieldValue("processNames", processNames);
+                field.setValue(processNames);
                 onSelect(processes);
               }}
             />
+
             <FieldDescription />
           </FieldSet>
         )}

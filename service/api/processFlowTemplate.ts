@@ -22,18 +22,7 @@ export async function getAllProductionFlowTemplates(productionFlowId: number) {
         `,
     )
     .eq("production_flow_id", productionFlowId)
-    .order("sequence", { ascending: true, referencedTable: "process" })
-    .throwOnError();
-}
-
-export async function updateFlowTemplate(
-  flowTemplateId: number,
-  data: UpdateProductionFlowTemplateData,
-) {
-  return await supabase
-    .from("ProductionFlowTemplate")
-    .upsert([])
-    .eq("id", flowTemplateId)
+    .order("sequence", { ascending: true })
     .throwOnError();
 }
 

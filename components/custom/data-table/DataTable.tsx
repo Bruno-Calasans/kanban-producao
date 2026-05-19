@@ -23,7 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataTablePagination from "./DataTablePagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DataTableFilter from "./DataTableFilter";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +35,8 @@ interface DataTableProps<TData, TValue> {
   className?: string;
   hidePagination?: boolean;
   hideSearch?: boolean;
+  pageSizes?: number[];
+  defaultPageSize?: number;
   onEdit?: (row: TData) => void;
   onDelete?: (row: TData) => void;
   onClickRow?: (rowModel: Row<TData>) => void;
@@ -49,6 +51,8 @@ export function DataTable<TData, TValue>({
   className,
   hidePagination,
   hideSearch,
+  pageSizes,
+  defaultPageSize,
   onClickRow,
   onClickCell,
 }: DataTableProps<TData, TValue>) {
@@ -69,6 +73,12 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
+
+  useEffect(() => {
+    if (defaultPageSize) {
+      table.setPageSize(defaultPageSize);
+    }
+  }, [defaultPageSize]);
 
   return (
     <div>
@@ -102,6 +112,7 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => onClickRow && onClickRow(row)}
+                  className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} onClick={() => onClickCell && onClickCell(cell)}>
@@ -122,7 +133,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Paginação da tabela */}
-      {!hidePagination && <DataTablePagination table={table} />}
+      {!hidePagination && <DataTablePagination table={table} pageSizes={pageSizes} />}
     </div>
   );
 }

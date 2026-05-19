@@ -11,8 +11,8 @@ import errorHandler from "@/utils/errorHandler";
 import { ProductionFlowNameField } from "./fields/ProductionFlowNameField";
 import { ProductionFlowDescField } from "./fields/ProductionFlowDescField";
 import { ProductionFlowProcessesField } from "./fields/ProductionFlowProcessesField";
-import { useEffect, useState } from "react";
-import { Process, ProductionFlow } from "@/types/database.type";
+import { useState } from "react";
+import { ProcessWithDepartament, ProductionFlow } from "@/types/database.type";
 import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
 import { useRouter } from "next/navigation";
 import { ProductionFlowUseDefaultField } from "./fields/ProductionFlowUseDefaultField";
@@ -43,7 +43,7 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
   const { data, isPending: isProductionFlowTemplatesPending } = useGetAllProductionFlowTemplates(
     productionFlow.id,
   );
-  const [selectedProcesses, setSelectedProcesses] = useState<Process[]>([]);
+  const [selectedProcesses, setSelectedProcesses] = useState<ProcessWithDepartament[]>([]);
 
   const productionFlowTemplates = data?.data || [];
   const defaultSelectedProcesses = productionFlowTemplates.map((template) => template.process);
@@ -86,11 +86,11 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
 
         // criar novos processos do fluxo de produção com os processos selecionados
         await createProductionFlowTemplateAsync(
-          selectedProcesses.map((process) => ({
+          selectedProcesses.map((process, index) => ({
             production_flow_id: productionFlow.id,
-            departament_id: process.departament_id,
+            departament_id: process.departament.id,
             process_id: process.id,
-            sequence: process.sequence,
+            sequence: index,
           })),
         );
         toast.success("Fluxo de produção atualizado com sucesso!");
@@ -137,7 +137,7 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
       </FieldGroup>
 
       <div
-        id="create-product-form-buttons"
+        id="edit-production-flow-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
         <ClearButton

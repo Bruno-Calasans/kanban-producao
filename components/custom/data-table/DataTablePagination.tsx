@@ -12,9 +12,13 @@ import {
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
+  pageSizes?: number[];
 }
 
-export default function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
+export default function DataTablePagination<TData>({
+  table,
+  pageSizes,
+}: DataTablePaginationProps<TData>) {
   const maxSize = table.getFilteredRowModel().rows.length;
   const pageSize = table.getState().pagination.pageSize;
 
@@ -36,7 +40,7 @@ export default function DataTablePagination<TData>({ table }: DataTablePaginatio
               <SelectValue placeholder={pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 25, 30, 40, 50].map((pageSize) => (
+              {(pageSizes || [5, 10, 20, 25, 30, 40, 50]).map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>

@@ -15,10 +15,6 @@ type DepartamentPageProps = {
 
 const DepartmentColumns: ColumnDef<Departament>[] = [
   {
-    accessorKey: "sequence",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
   },

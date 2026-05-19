@@ -18,10 +18,6 @@ const processColumns: ColumnDef<ProcessWithDepartament>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Processo" />,
   },
   {
-    accessorKey: "sequence",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
-  },
-  {
     id: "departament.name",
     accessorKey: "departament.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,

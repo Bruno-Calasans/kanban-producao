@@ -8,7 +8,7 @@ export async function getAllProcesses() {
   return await supabase
     .from("Process")
     .select("*, departament:Departament(*)")
-    .order("sequence", { ascending: true })
+    .order("created_at", { ascending: true })
     .throwOnError();
 }
 
@@ -17,7 +17,7 @@ export async function getAllActiveProcesses() {
     .from("Process")
     .select("*, departament:Departament(*)")
     .eq("is_active", true)
-    .order("sequence", { ascending: true })
+    .order("created_at", { ascending: true })
     .throwOnError();
 }
 

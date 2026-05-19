@@ -8,7 +8,7 @@ export async function getAllDepartaments() {
   return await supabase
     .from("Departament")
     .select("*")
-    .order("sequence", { ascending: true })
+    .order("created_at", { ascending: true })
     .throwOnError();
 }
 
@@ -17,7 +17,7 @@ export async function getAllActiveDepartaments() {
     .from("Departament")
     .select("*")
     .eq("is_active", true)
-    .order("sequence", { ascending: true })
+    .order("created_at", { ascending: true })
     .throwOnError();
 }
 

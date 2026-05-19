@@ -10,7 +10,6 @@ import { Departament } from "@/types/database.type";
 import { defaultProcessFormValues, useAppForm, formSchema } from "./ProcessFormContext";
 import errorHandler from "@/utils/errorHandler";
 import { ProcessNameField } from "./fields/ProcessNameField";
-import { ProcessSequenceField } from "./fields/ProcessSequenceField";
 import { ProcessDepartamentField } from "./fields/ProcessDepartamentField";
 import useDialog from "@/hooks/dialog/useDialog";
 
@@ -28,10 +27,9 @@ export default function CreateProcessForm() {
     onSubmit: async ({ value }) => {
       try {
         if (!selectedDepartament) return;
-        const { name, sequence } = value;
+        const { name } = value;
         await mutateAsync({
           name: name,
-          sequence: sequence,
           departament_id: selectedDepartament.id,
           is_active: true,
         });
@@ -57,7 +55,6 @@ export default function CreateProcessForm() {
     >
       <FieldGroup>
         <ProcessNameField form={form} />
-        <ProcessSequenceField form={form} />
         <ProcessDepartamentField
           form={form}
           selectedDepartament={selectedDepartament}

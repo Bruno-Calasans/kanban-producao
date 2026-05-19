@@ -52,6 +52,7 @@ export type ProcessState = {
   movimentation: MovimentationPopulated;
   previousProcess: ProcessWithDepartament | null;
   nextProcess: ProcessWithDepartament | null;
+  template: ProductionFlowTemplate;
 };
 
 export type ProductMovimentation = {

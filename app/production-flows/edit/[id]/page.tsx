@@ -7,10 +7,9 @@ import PageTitle from "@/components/custom/PageTitle";
 import EditProductionFlowForm from "@/components/production-flow/forms/EditProductionFlowForm";
 import useGetlAllMovimentationsByProductionFlow from "@/hooks/movimentation/useGetlAllMovimentationsByProductionFlow";
 import useGetOneProductionFlow from "@/hooks/production-flow/useGetOneProductionFlow";
-import { useParams, useRouter, redirect } from "next/navigation";
+import { useParams, redirect } from "next/navigation";
 
 export default function EditProductionFlowPage() {
-  const router = useRouter();
   const params = useParams<{ id: string }>();
   const {
     data,

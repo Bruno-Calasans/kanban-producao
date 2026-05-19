@@ -32,7 +32,7 @@ export default function ProductTableDropdownMenu({ product }: ProductTableDropdo
 
   const isPending = isPendingUpdate || isProductMovimentationsPending;
   const canEdit = !isPending && product.is_active;
-  const canEditProductionFlow = !isPending && movimentations.length == 0;
+  const hideProductionFlowSelector = !isPending && movimentations.length == 0;
   const canDeleteProduct = !isPending && movimentations.length == 0;
 
   return (
@@ -50,7 +50,10 @@ export default function ProductTableDropdownMenu({ product }: ProductTableDropdo
         </Link>
 
         {canEdit && (
-          <EditProductDialog canEditProductionFlow={canEditProductionFlow} product={product}>
+          <EditProductDialog
+            hideProductionFlowSelector={hideProductionFlowSelector}
+            product={product}
+          >
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Edit2Icon />
               Editar

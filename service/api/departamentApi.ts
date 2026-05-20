@@ -21,6 +21,26 @@ export async function getAllActiveDepartaments() {
     .throwOnError();
 }
 
+export async function getAllActiveExternalDepartaments() {
+  return await supabase
+    .from("Departament")
+    .select("*")
+    .eq("is_active", true)
+    .eq("is_external", true)
+    .order("created_at", { ascending: true })
+    .throwOnError();
+}
+
+export async function getAllActiveInternalDepartaments() {
+  return await supabase
+    .from("Departament")
+    .select("*")
+    .eq("is_active", true)
+    .eq("is_external", false)
+    .order("created_at", { ascending: true })
+    .throwOnError();
+}
+
 export async function getOneDepartament(departamentId: number) {
   return await supabase
     .from("Departament")

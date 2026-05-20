@@ -17,6 +17,7 @@ export default function MovimentationPageContent({ movimentation }: Movimentatio
     processStates,
     isPending: isProcessStatesPending,
     isError: processStatesError,
+    flowTemplates,
   } = useProcessState({ movimentation });
 
   const {
@@ -60,6 +61,8 @@ export default function MovimentationPageContent({ movimentation }: Movimentatio
         movimentation={movimentation}
         departamentStates={departamentStates}
         deadlines={deadlines}
+        processExecutions={processExecutions}
+        flowTemplates={flowTemplates}
       />
       <MovimentationTabs
         movimentation={movimentation}

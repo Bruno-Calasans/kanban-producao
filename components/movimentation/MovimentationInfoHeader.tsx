@@ -1,4 +1,9 @@
-import { MovimentationDeadlinePopulated, MovimentationPopulated } from "@/types/database.type";
+import {
+  MovimentationDeadlinePopulated,
+  MovimentationPopulated,
+  ProcessExecutionPopulated,
+  ProductionFlowTemplateWithProcess,
+} from "@/types/database.type";
 import Link from "next/link";
 import MovimentationStatusBadge from "@/components/custom/badges/MovimentationStatusBadge";
 import PageTitle from "@/components/custom/PageTitle";
@@ -6,29 +11,37 @@ import BackButton from "@/components/custom/buttons/BackButton";
 import CustomDialog from "@/components/custom/CustomDialog";
 import { Button } from "@/components/ui/button";
 import EditMovimentationForm from "../movimentations/forms/EditMovimentationForm";
-import { Edit2Icon, Trash2Icon, BanIcon } from "lucide-react";
+import { Edit2Icon, Trash2Icon, BanIcon, PlusIcon } from "lucide-react";
 import DeleteMovimentationDialog from "../movimentations/dialogs/DeleteMovimentationDialog";
 import CancelMovimentationDialog from "../movimentations/dialogs/CancelMovimentationDialog";
 import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
 import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import GoToCalendarButton from "../custom/buttons/GoToCalendarButton";
-import { InfoAlert } from "../custom/alerts/InfoAlert";
+import { InfoAlert } from "@/components/custom/alerts/InfoAlert";
+import ReturnProcessExecutionDialog from "../process-execution/dialogs/ReturnProcessExecutionDialog";
+import useExternalProcessState from "@/hooks/external-process-state/useExternalProcess";
 
 type MovimentationInfoHeadergProps = {
   movimentation: MovimentationPopulated;
   departamentStates: DepartamentState[];
   deadlines: MovimentationDeadlinePopulated[];
+  processExecutions: ProcessExecutionPopulated[];
+  flowTemplates: ProductionFlowTemplateWithProcess[];
 };
 
 export default function MovimentationInfoHeaderg({
   movimentation,
   departamentStates,
   deadlines,
+  processExecutions,
+  flowTemplates,
 }: MovimentationInfoHeadergProps) {
   const canEdit = movimentation.status == "PENDING";
   const canDelete = movimentation.status == "PENDING";
   const canCancel = movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
   const expiredDepartaments = departamentStates.filter((dpt) => dpt.status === "EXPIRED");
+  const { externalProcessStates } = useExternalProcessState({ movimentation, processExecutions });
+  const avaliableProcesses = flowTemplates.map((flow) => flow.process);
 
   return (
     <div>
@@ -66,6 +79,11 @@ export default function MovimentationInfoHeaderg({
 
       {/* Botões de ação da movimentação */}
       <div className="flex gap-2 border-black">
+        <Button className="m-0" size="xs">
+          <PlusIcon />
+          Adicionar processo
+        </Button>
+
         {canEdit && (
           <CustomDialog
             id="edit-movimentation"
@@ -134,6 +152,26 @@ export default function MovimentationInfoHeaderg({
             description="Existem departamentos com prazos expirados. Verifique a aba de prazos para mais detalhes."
           />
         )}
+
+        {externalProcessStates &&
+          movimentation.status != "CANCELLED" &&
+          externalProcessStates.map(
+            (state) =>
+              state.avaliableAmount > 0 && (
+                <InfoAlert
+                  key={state.process.id}
+                  title={`Peças externas: ${state.process.name}`}
+                  description={`Você tem ${state.avaliableAmount} na ${state.process.name}. Clique no botão "Retornar" para pegar de volta essas peças.`}
+                  actionLabel={
+                    <ReturnProcessExecutionDialog
+                      avaliableProcesses={avaliableProcesses}
+                      externalProcessState={state}
+                    />
+                  }
+                  hideCloseButton
+                />
+              ),
+          )}
       </div>
     </div>
   );

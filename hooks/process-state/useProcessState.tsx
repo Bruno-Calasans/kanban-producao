@@ -169,5 +169,6 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     processStates,
     isPending,
     isError,
+    flowTemplates,
   };
 }

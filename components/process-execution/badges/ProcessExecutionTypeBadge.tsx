@@ -13,27 +13,41 @@ export default function ProcessExecutionTypeBadge({
 
   if (type == "INIT")
     return (
-      <CustomTooltip content="Execução inicial do fluxo">
+      <CustomTooltip content="Primeira execução">
         <Badge>INICIAL</Badge>
       </CustomTooltip>
     );
 
   if (type == "REPROCESS")
     return (
-      <CustomTooltip content="Execução voltou ao processo anterior">
+      <CustomTooltip content="Voltou a um processo anterior">
         <Badge>REPROCESSO</Badge>
       </CustomTooltip>
     );
 
   if (type == "ADJUSTMENT")
     return (
-      <CustomTooltip content="Execução para corrigir quantidade">
+      <CustomTooltip content="Ajuste de quantidade">
         <Badge>AJUSTE</Badge>
       </CustomTooltip>
     );
 
+  if (type == "EXTERNAL")
+    return (
+      <CustomTooltip content="Movido a um processo externo">
+        <Badge>EXTERNO</Badge>
+      </CustomTooltip>
+    );
+
+  if (type == "RETURN")
+    return (
+      <CustomTooltip content="Voltou de um processo externo">
+        <Badge>RETORNO</Badge>
+      </CustomTooltip>
+    );
+
   return (
-    <CustomTooltip content="Execução normal">
+    <CustomTooltip content="Avançou para o próximo processo">
       <Badge>TRANSFERÊNCIA</Badge>
     </CustomTooltip>
   );

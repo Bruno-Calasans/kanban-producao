@@ -26,7 +26,7 @@ export async function getAllProcessesByDepartamentId(departamentId: number) {
     .from("Process")
     .select("*")
     .eq("departament_id", departamentId)
-    .order("sequence", { ascending: true })
+    .order("created_at", { ascending: true })
     .throwOnError();
 }
 

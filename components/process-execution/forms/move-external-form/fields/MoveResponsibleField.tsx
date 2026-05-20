@@ -1,0 +1,44 @@
+import { Field } from "@/components/ui/field";
+import { defaultMoveExternalFormValues, withForm } from "../moveExternalFormContext";
+import { FieldError, FieldLabel, FieldDescription } from "@/components/ui/field";
+import ResponsibleSelector from "@/components/custom/selectors/ResponsibleSelector";
+import { Departament, Responsible } from "@/types/database.type";
+
+type MoveResponsibleFieldProps = {
+  departament: Departament;
+  selectedResponsible?: Responsible;
+  onChangeResponsible: (responsible?: Responsible) => void;
+};
+
+export const MoveResponsibleField = withForm({
+  defaultValues: defaultMoveExternalFormValues,
+  props: {} as MoveResponsibleFieldProps,
+  render({ form, departament, selectedResponsible, onChangeResponsible }) {
+    return (
+      <form.Field
+        name="responsible"
+        children={(field) => {
+          const hasDefaultValue = defaultMoveExternalFormValues[field.name] == field.state.value;
+          const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+          return (
+            <Field>
+              <FieldLabel htmlFor={field.name}>Responsável</FieldLabel>
+              <ResponsibleSelector
+                departament={departament}
+                selectedResponsible={selectedResponsible}
+                onValueChange={(responsible) => {
+                  field.handleChange(responsible?.name || "");
+                  onChangeResponsible(responsible);
+                }}
+              />
+              {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              <FieldDescription>
+                Selecione o responsável do departamento de origem pela execução do processo.
+              </FieldDescription>
+            </Field>
+          );
+        }}
+      />
+    );
+  },
+});

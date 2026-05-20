@@ -3,7 +3,7 @@
 import { CalendarIcon } from "lucide-react";
 
 import { Calendar } from "@/components/ui/calendar";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field } from "@/components/ui/field";
 import {
   InputGroup,
   InputGroupAddon,
@@ -13,7 +13,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
-import { Matcher } from "react-day-picker";
 
 function formatDate(date: Date | string | undefined) {
   if (!date) {
@@ -42,6 +41,7 @@ type DatePickerInputProps = {
   disabled?: boolean;
   minDate?: Date | string;
   maxDate?: Date | string;
+  weekDays?: number[];
   onChangeDate?: (date?: Date) => void;
 };
 
@@ -51,6 +51,7 @@ export function DatePickerInput({
   disabled,
   minDate,
   maxDate,
+  weekDays,
   onChangeDate,
 }: DatePickerInputProps) {
   const [open, setOpen] = useState(false);
@@ -121,14 +122,23 @@ export function DatePickerInput({
                   setOpen(false);
                   onChangeDate && onChangeDate(date);
                 }}
-                disabled={
-                  {
-                    before: minDate as Date | undefined,
-                    after: maxDate as Date | undefined,
-                    // Desativa domingo
-                    dayOfWeek: [0, 7],
-                  } as any
-                }
+                disabled={(date: Date) => {
+                  let isDisable = false;
+                  const permittedWeekDays = weekDays || [1, 2, 3, 4, 5, 6];
+                  const isNotPermitted = !permittedWeekDays.includes(date.getDay());
+
+                  if (minDate) {
+                    const convertedDate = typeof minDate === "string" ? new Date(minDate) : minDate;
+                    isDisable = date.getTime() < convertedDate.getTime() || isNotPermitted;
+                  }
+
+                  if (maxDate) {
+                    const convertedDate = typeof maxDate === "string" ? new Date(maxDate) : maxDate;
+                    isDisable = date.getTime() > convertedDate.getTime() || isNotPermitted;
+                  }
+
+                  return isDisable;
+                }}
               />
             </PopoverContent>
           </Popover>

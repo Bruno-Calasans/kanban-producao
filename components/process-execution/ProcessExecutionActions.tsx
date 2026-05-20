@@ -3,6 +3,7 @@
 import { ProcessState } from "@/types/database.type";
 import CreateProcessExecutionDialog from "./dialogs/CreateProcessExecutionDialog";
 import CreateReprocessExecutionDialog from "./dialogs/CreateReprocessExecutionDialog";
+import MoveExternalProcessExecutionDialog from "./dialogs/MoveExternalProcessExecutionDialog";
 
 type ProcessExecutionActionsProps = {
   processState: ProcessState;
@@ -24,6 +25,7 @@ export default function ProcessExecutionActions({ processState }: ProcessExecuti
     <div className="flex gap-1">
       {nextProcess && <CreateProcessExecutionDialog processState={processState} />}
       {previousProcess && <CreateReprocessExecutionDialog processState={processState} />}
+      {nextProcess && <MoveExternalProcessExecutionDialog processState={processState} />}
     </div>
   );
 }

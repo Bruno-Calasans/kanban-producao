@@ -2,16 +2,13 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { useState } from "react";
-import { ProcessState, ProcessWithDepartament } from "@/types/database.type";
+import { ProcessState } from "@/types/database.type";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import ExecutionState from "../../ExecutionStateMsg";
-import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
 import { ReprocessExecutionSchema, useAppForm, formSchema } from "./reprocessExecutionFormContext";
 import { ReprocessAmountField } from "./fields/ReprocessAmountField";
 
@@ -36,8 +33,7 @@ export default function CreateReprocessForm({ processState }: CreateReprocessFor
     onSubmit: async ({ value }) => {
       try {
         const { amount } = value;
-        const { process, movimentation, flowTemplates, avaliableAmount, previousProcess } =
-          processState;
+        const { process, movimentation, previousProcess } = processState;
 
         if (!previousProcess) return;
 
@@ -70,7 +66,7 @@ export default function CreateReprocessForm({ processState }: CreateReprocessFor
 
   return (
     <form
-      id="create-reprocess-form"
+      id="reprocess-form"
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();

@@ -103,7 +103,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
       const { previousProcess, nextProcess } = getNextAndPreviousProcesses(currentProcess);
 
       states.push(
-        structuredClone({
+        {
           movimentation,
           flowTemplates: flowTemplates,
           process: currentProcess,
@@ -112,7 +112,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
           previousProcess,
           nextProcess,
           template,
-        }),
+        }
       );
     }
 

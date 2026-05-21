@@ -6,25 +6,36 @@ import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { ProcessState } from "@/types/database.type";
+import { ProcessState, ProcessWithDepartament } from "@/types/database.type";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
-import ExecutionState from "../../ExecutionStateMsg";
 import { ReprocessExecutionSchema, useAppForm, formSchema } from "./reprocessExecutionFormContext";
 import { ReprocessAmountField } from "./fields/ReprocessAmountField";
+import { ReprocessProcessField } from "./fields/ReprocessProcessField";
+import { useMemo, useState } from "react";
+import { ReprocessReasonField } from "./fields/ReprocessReasonField";
 
 type CreateReprocessFormrops = {
   processState: ProcessState;
+  processStates: ProcessState[];
 };
 
-export default function CreateReprocessForm({ processState }: CreateReprocessFormrops) {
+export default function CreateReprocessForm({
+  processState,
+  processStates,
+}: CreateReprocessFormrops) {
   const { closeDialog } = useDialog();
   const { mutateAsync: createProcessExecution, isPending: isCreateExecutionPending } =
     useCreateProcessExecution();
+  const [selectedProcess, setSelectedProcess] = useState<ProcessWithDepartament | undefined>(
+    processState.previousProcess || undefined,
+  );
 
   const form = useAppForm({
     defaultValues: {
       amount: processState.avaliableAmount,
       useMaxAmount: false,
+      processName: selectedProcess?.name || "",
+      reason: "",
     } as ReprocessExecutionSchema,
     validators: {
       onSubmit: formSchema,
@@ -35,19 +46,20 @@ export default function CreateReprocessForm({ processState }: CreateReprocessFor
         const { amount } = value;
         const { process, movimentation, previousProcess } = processState;
 
-        if (!previousProcess) return;
+        if (!selectedProcess) return;
 
         // Cria execução de processo
         await createProcessExecution({
           amount,
           from_process_id: process.id,
-          process_id: previousProcess.id,
+          process_id: selectedProcess.id,
           movimentation_id: movimentation.id,
           product_id: movimentation.product.id,
           responsible_id: null,
           started_at: new Date().toISOString(),
           finished_at: new Date().toISOString(),
           type: "REPROCESS",
+          reason: null,
         });
 
         toast.success("Reprocesso criado com sucesso!");
@@ -63,6 +75,18 @@ export default function CreateReprocessForm({ processState }: CreateReprocessFor
 
   const isPending = isCreateExecutionPending;
 
+  const avaliableProcesses = useMemo(() => {
+    return processStates
+      .filter(
+        ({ process, template }) =>
+          process.id != processState.process.id &&
+          template?.sequence &&
+          processState.template.sequence &&
+          template?.sequence < processState.template.sequence,
+      )
+      .map((state) => state.process);
+  }, [processStates, processState]);
+
   return (
     <form
       id="reprocess-form"
@@ -71,12 +95,15 @@ export default function CreateReprocessForm({ processState }: CreateReprocessFor
         form.handleSubmit();
       }}
     >
-      <ExecutionState
-        from_process={processState.process}
-        to_process={processState.previousProcess}
-      />
       <FieldGroup>
+        <ReprocessProcessField
+          form={form}
+          selectedProcess={selectedProcess}
+          avaliableProcesses={avaliableProcesses}
+          onChangeProcess={setSelectedProcess}
+        />
         <ReprocessAmountField form={form} maxAmount={processState.avaliableAmount} />
+        <ReprocessReasonField form={form} />
       </FieldGroup>
 
       <div

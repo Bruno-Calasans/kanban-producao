@@ -5,7 +5,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import type { ProcessExecutionPopulated } from "@/types/database.type";
 import ProcessExecutionTypeBadge from "@/components/process-execution/badges/ProcessExecutionTypeBadge";
-import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 
 type MovimentationPageProps = {
@@ -23,12 +22,12 @@ const processExecutationColumns: ColumnDef<ProcessExecutionPopulated>[] = [
   {
     id: "from_process.name",
     accessorKey: "from_process.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="De: processo" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="De" />,
   },
   {
     id: "process.name",
     accessorKey: "process.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Para: Processo" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Para" />,
   },
   {
     accessorKey: "amount",

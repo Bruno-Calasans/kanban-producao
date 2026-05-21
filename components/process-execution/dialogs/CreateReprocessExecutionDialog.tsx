@@ -6,10 +6,12 @@ import CreateReprocessForm from "../forms/reprocess-form/CreateReprocessForm";
 
 type CreateReprocessExecutionDialogProps = {
   processState: ProcessState;
+  processStates: ProcessState[];
 };
 
 export default function CreateReprocessExecutionDialog({
   processState,
+  processStates,
 }: CreateReprocessExecutionDialogProps) {
   return (
     <CustomDialog
@@ -22,7 +24,7 @@ export default function CreateReprocessExecutionDialog({
         </Button>
       }
     >
-      <CreateReprocessForm processState={processState} />
+      <CreateReprocessForm processStates={processStates} processState={processState} />
     </CustomDialog>
   );
 }

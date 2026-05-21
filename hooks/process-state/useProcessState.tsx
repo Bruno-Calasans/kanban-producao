@@ -65,6 +65,10 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
         // Soma entradas
         const currentInput = inputMap.get(processId) || 0;
         inputMap.set(processId, currentInput + execution.amount);
+
+        const currentExecutions = executionMap.get(processId) || [];
+        currentExecutions.push(execution);
+        executionMap.set(processId, currentExecutions);
       }
 
       // Tem saídas
@@ -74,11 +78,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
         // Soma saídas
         const currentInput = outputMap.get(processId) || 0;
         outputMap.set(processId, currentInput + execution.amount);
-      }
 
-      // Mapeia execuções por processo
-      const processId = execution.from_process?.id || execution.process?.id;
-      if (processId) {
         const currentExecutions = executionMap.get(processId) || [];
         currentExecutions.push(execution);
         executionMap.set(processId, currentExecutions);
@@ -170,6 +170,9 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     flowTemplates,
     isPending,
   ]);
+
+  console.log("Process States:", processStates);
+  console.log("Process Executions:", processExecutions);
 
   return {
     processExecutions,

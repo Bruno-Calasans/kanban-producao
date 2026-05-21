@@ -34,7 +34,9 @@ export default function ProcessExecutionActions({
       {nextProcess && !isAntiLastProcess && (
         <SkipProcessExecutionDialog processStates={processStates} processState={processState} />
       )}
-      {previousProcess && <CreateReprocessExecutionDialog processState={processState} />}
+      {previousProcess && (
+        <CreateReprocessExecutionDialog processStates={processStates} processState={processState} />
+      )}
       {nextProcess && <MoveExternalProcessExecutionDialog processState={processState} />}
     </div>
   );

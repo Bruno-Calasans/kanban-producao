@@ -12,6 +12,7 @@ import { ProcessState, ProcessWithDepartament } from "@/types/database.type";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { SkipAmountField } from "./fields/SkipAmountField";
 import { SkipProcessField } from "./fields/SkipProcessField";
+import { SkipReasonField } from "./fields/SkipReasonField";
 
 type SkipFormProps = {
   processStates: ProcessState[];
@@ -29,6 +30,7 @@ export default function SkipForm({ processStates, processState }: SkipFormProps)
       amount: processState.avaliableAmount,
       useMaxAmount: true,
       processName: "",
+      reason: "",
     } as SkipFormContextSchema,
     validators: {
       onSubmit: formSchema,
@@ -36,7 +38,7 @@ export default function SkipForm({ processStates, processState }: SkipFormProps)
     },
     onSubmit: async ({ value }) => {
       if (!selectedProcess) return;
-      const { amount } = value;
+      const { amount, reason } = value;
       const { process: currProcess, movimentation } = processState;
 
       try {
@@ -48,6 +50,7 @@ export default function SkipForm({ processStates, processState }: SkipFormProps)
           movimentation_id: movimentation.id,
           product_id: movimentation.product.id,
           type: "SKIP",
+          reason: reason || null,
           started_at: null,
           finished_at: null,
           responsible_id: null,
@@ -91,6 +94,7 @@ export default function SkipForm({ processStates, processState }: SkipFormProps)
           avaliableProcesses={avaliableProcesses}
         />
         <SkipAmountField form={form} maxAmount={processState.avaliableAmount} />
+        <SkipReasonField form={form} />
       </FieldGroup>
 
       <div id="skip-form-buttons" className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end">

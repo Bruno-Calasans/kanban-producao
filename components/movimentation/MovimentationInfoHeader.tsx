@@ -47,8 +47,7 @@ export default function MovimentationInfoHeaderg({
   const externalDeadlines = deadlines.filter(
     (deadline) => deadline.departament.is_external === true,
   );
-  console.log(externalDeadlines);
-
+  
   return (
     <div>
       <div className="flex justify-between">
@@ -85,7 +84,6 @@ export default function MovimentationInfoHeaderg({
 
       {/* Botões de ação da movimentação */}
       <div className="flex gap-2 border-black">
-
         {canEdit && (
           <CustomDialog
             id="edit-movimentation"

@@ -78,7 +78,7 @@ export default function FinishMetaForm({
           finished_at: finishedAtString,
         });
         toast.success("Meta criada com sucesso!");
-        closeDialog("finish-meta");
+        closeDialog(`finish-meta-${metaWeekDate.toISOString()}`);
         form.reset();
       } catch (error) {
         errorHandler(error, {

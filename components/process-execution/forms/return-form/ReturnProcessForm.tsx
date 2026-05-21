@@ -8,13 +8,11 @@ import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
-import { Departament, Process, ProcessWithDepartament } from "@/types/database.type";
+import { Departament, ProcessWithDepartament } from "@/types/database.type";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { ReturnAmountField } from "./fields/ReturnAmountField";
-import { ReturnDepartamentField } from "./fields/ReturnDepartamentField";
 import { ReturnProcessField } from "./fields/ReturnProcessField";
 import { ExternalProcessState } from "@/hooks/external-process-state/useExternalProcess";
-import { MetaDatesField } from "@/components/calendar/weekly/forms/finish-meta/fields/MetaDatesField";
 import { ReturnDatesField } from "./fields/ReturnDatesField";
 
 type ReturnProcessFormProps = {
@@ -55,15 +53,14 @@ export default function ReturnProcessForm({
           process_id: selectedProcess.id,
           movimentation_id: movimentation.id,
           product_id: movimentation.product.id,
-          status: "SUCCESS",
-          type: "RETURN",
           started_at: started_at ? new Date(started_at).toISOString() : null,
           finished_at: finished_at ? new Date(finished_at).toISOString() : null,
           responsible_id: null,
+          type: "RETURN",
         });
 
         toast.success("Retornado com sucesso!");
-        closeDialog(`return-${currProcess.id}`);
+        closeDialog(`return-process-execution-${externalProcessState.process.id}`);
         form.reset();
       } catch (error) {
         errorHandler(error, {

@@ -13,8 +13,7 @@ export default function CreateReprocessExecutionDialog({
 }: CreateReprocessExecutionDialogProps) {
   return (
     <CustomDialog
-      // não mexer, se não buga
-      id={`create-reprocess-${processState.process.id}`}
+      id={`create-reprocess-execution-${processState.process.id}`}
       title="Reprocessar Execução"
       trigger={
         <Button className="bg-amber-400 hover:bg-amber-500" size="xs">

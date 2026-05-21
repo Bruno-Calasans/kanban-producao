@@ -15,7 +15,7 @@ export default function MoveExternalProcessExecutionDialog({
 }: MoveExternalProcessExecutionDialogProps) {
   return (
     <CustomDialog
-      id={`move-external-${processState.process.id}`}
+      id={`move-external-process-execution-${processState.process.id}`}
       title="Mover para departamento externo"
       trigger={
         <Button
@@ -23,7 +23,7 @@ export default function MoveExternalProcessExecutionDialog({
           size="xs"
           onClick={(e) => e.currentTarget.blur()}
         >
-          Mover externo
+          Enviar para fora
           <MoveUpRightIcon />
         </Button>
       }

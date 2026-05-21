@@ -38,7 +38,7 @@ export default function FinishDeadlineForm({ deadline }: FinishDeadlineFormProps
           },
         });
         toast.success("Prazo finalizado com sucesso!");
-        closeDialog("finish-deadline");
+        closeDialog(`finish-deadline-${deadline.id}`);
         form.reset();
       } catch (error) {
         errorHandler(error, {

@@ -2,7 +2,6 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { formSchema, useAppForm, ExecutionFormSchema } from "./processExecutionFormContext";
 import { FieldGroup } from "@/components/ui/field";
@@ -54,14 +53,13 @@ export default function CreateProcessExecutionForm({
           movimentation_id: movimentation.id,
           product_id: movimentation.product.id,
           responsible_id: responsible.id,
-          status: "SUCCESS",
-          type: "TRANSFER",
           started_at: started_at ? new Date(started_at).toISOString() : null,
           finished_at: finished_at ? new Date(finished_at).toISOString() : null,
+          type: "TRANSFER",
         });
 
         toast.success("Execução criada com sucesso!");
-        closeDialog("create-process-execution");
+        closeDialog(`create-process-execution-${processState.process.id}`);
         form.reset();
       } catch (error) {
         errorHandler(error, {

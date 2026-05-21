@@ -19,17 +19,22 @@ export type DialogID =
   | "edit-movimentation"
   | "delete-movimentation"
   | "cancel-movimentation"
-  | "create-product-log"
-  | "edit-product-log"
-  | "delete-product-log"
   | "create-production-flow"
   | "edit-production-flow"
   | "delete-production-flow"
   | "create-process-execution"
   | "edit-process-execution"
   | "delete-process-execution"
-  | "create-reprocess-execution"
-  | string;
+  | `create-process-execution-${number}`
+  | `create-reprocess-execution-${number}`
+  | `skip-process-execution-${number}`
+  | `move-external-process-execution-${number}`
+  | `finish-deadline-${number}`
+  | `finish-meta-${number | string}`
+  | `return-process-execution-${number}`
+  | `create-movimentation-${number}`
+  | `edit-movimentation-${number}`
+  | `remove-movimentation-${number}`;
 
 export type DialogContext = {
   dialog: DialogID | null;

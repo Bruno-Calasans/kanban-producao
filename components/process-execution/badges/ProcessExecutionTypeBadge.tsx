@@ -20,7 +20,7 @@ export default function ProcessExecutionTypeBadge({
 
   if (type == "REPROCESS")
     return (
-      <CustomTooltip content="Voltou a um processo anterior">
+      <CustomTooltip content="Refeito">
         <Badge>REPROCESSO</Badge>
       </CustomTooltip>
     );
@@ -34,7 +34,7 @@ export default function ProcessExecutionTypeBadge({
 
   if (type == "EXTERNAL")
     return (
-      <CustomTooltip content="Movido a um processo externo">
+      <CustomTooltip content="Movido para um processo externo">
         <Badge>EXTERNO</Badge>
       </CustomTooltip>
     );
@@ -43,6 +43,13 @@ export default function ProcessExecutionTypeBadge({
     return (
       <CustomTooltip content="Voltou de um processo externo">
         <Badge>RETORNO</Badge>
+      </CustomTooltip>
+    );
+
+  if (type == "SKIP")
+    return (
+      <CustomTooltip content="Pulou um ou mais processo(s)">
+        <Badge>PULADO</Badge>
       </CustomTooltip>
     );
 

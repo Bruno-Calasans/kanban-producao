@@ -55,7 +55,6 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
       const { process: currProcess, movimentation } = processState;
 
       try {
-        // Cria execução de processo
         await createProcessExecution({
           amount,
           from_process_id: currProcess.id,
@@ -63,10 +62,9 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
           movimentation_id: movimentation.id,
           product_id: movimentation.product.id,
           responsible_id: null,
-          status: "SUCCESS",
-          type: "EXTERNAL",
           started_at: null,
           finished_at: null,
+          type: "EXTERNAL",
         });
 
         if (expectedAt) {
@@ -80,7 +78,7 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
         }
 
         toast.success("Movido com sucesso!");
-        closeDialog(`move-external-${currProcess.id}`);
+        closeDialog(`move-external-process-execution-${processState.process.id}`);
         form.reset();
       } catch (error) {
         errorHandler(error, {

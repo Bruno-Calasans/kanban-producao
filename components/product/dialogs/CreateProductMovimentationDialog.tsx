@@ -13,7 +13,7 @@ export default function CreateProductMovimentationDialog({
 }: CreateProductMovimentationDialogProps) {
   return (
     <CustomDialog
-      id="create-product-movimentation"
+      id={`create-movimentation-${product.id}`}
       title="Criar nova Movimentação de Produto"
       trigger={
         <Button disabled={!product.is_active} className="m-0" size="xs">

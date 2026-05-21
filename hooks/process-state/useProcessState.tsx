@@ -4,10 +4,11 @@
 import {
   MovimentationPopulated,
   Process,
-  ProcessExecution,
+  ProcessExecutionPopulated,
   ProcessExecutionStatus,
   ProcessState,
-  ProcessWithDepartament,
+  ProductionFlowTemplate,
+  ProductionFlowTemplateWithProcess,
 } from "@/types/database.type";
 import useGetAllProductionFlowTemplates from "../production-flow-template/useGetAllProductionFlowTemplates";
 import useGetAllProcessExecutionsByMovimentation from "../process-executation/useGetAllProcessExecutionsByMovimentation";
@@ -18,10 +19,12 @@ type UseProcessStateProps = {
 };
 
 type ProcessStatusData = {
-  executions: ProcessExecution[];
+  executions: ProcessExecutionPopulated[];
   avaliableAmount: number;
   currentProcess: Process;
   lastProcess: Process;
+  currentProcessTemplate: ProductionFlowTemplateWithProcess;
+  flowTemplates: ProductionFlowTemplate[];
 };
 
 export default function useProcessState({ movimentation }: UseProcessStateProps) {
@@ -39,29 +42,9 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
 
   const processExecutions = processExecutionsData?.data || [];
   const flowTemplates = flowTemplateData?.data || [];
+
   const isPending = isFlowTemplatePending || isProcessExecutionsPending;
   const isError = flowTemplateError || processExecutionError;
-
-  const getProcessStatus = ({
-    avaliableAmount,
-    executions,
-    currentProcess,
-    lastProcess,
-  }: ProcessStatusData): ProcessExecutionStatus => {
-    if (!movimentation) return "ERROR";
-
-    const hasExecutions = executions.length > 0;
-    const isLastProcess = lastProcess.id == currentProcess.id;
-    // Execução está ordenada da mais recente primeiro, por isso a primeira execução
-    const isFirstExecutionReprocess =
-      executions.length > 0 ? executions[0]?.type == "REPROCESS" : false;
-
-    if (!hasExecutions) return "PENDING";
-    else if (isFirstExecutionReprocess && avaliableAmount == 0) return "IN_PROGRESS";
-    else if (isLastProcess && avaliableAmount == movimentation.amount) return "SUCCESS";
-    else if (avaliableAmount > 0) return "IN_PROGRESS";
-    return "SUCCESS";
-  };
 
   const getProcessStates = () => {
     if (isPending || !movimentation || isError) return [];
@@ -69,86 +52,110 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     const states: ProcessState[] = [];
     const lastProcess = flowTemplates[flowTemplates.length - 1].process;
 
-    for (const template of flowTemplates) {
+    const inputMap = new Map<number, number>();
+    const outputMap = new Map<number, number>();
+    const executionMap = new Map<number, ProcessExecutionPopulated[]>();
+
+    // Agrupa execuções por processo e calcula somatório de entradas e saídas
+    for (const execution of processExecutions) {
+      // Tem entradas
+      if (execution.process) {
+        const processId = execution.process.id;
+
+        // Soma entradas
+        const currentInput = inputMap.get(processId) || 0;
+        inputMap.set(processId, currentInput + execution.amount);
+      }
+
+      // Tem saídas
+      if (execution.from_process) {
+        const processId = execution.from_process.id;
+
+        // Soma saídas
+        const currentInput = outputMap.get(processId) || 0;
+        outputMap.set(processId, currentInput + execution.amount);
+      }
+
+      // Mapeia execuções por processo
+      const processId = execution.from_process?.id || execution.process?.id;
+      if (processId) {
+        const currentExecutions = executionMap.get(processId) || [];
+        currentExecutions.push(execution);
+        executionMap.set(processId, currentExecutions);
+      }
+    }
+
+    // Calcula status de cada processo
+    for (let i = 0; i < flowTemplates.length; i++) {
+      const template = flowTemplates[i];
+
       const currentProcess = template.process;
 
-      const inExecutions = processExecutions.filter(
-        (exe) => exe.status === "SUCCESS" && exe.process?.id === currentProcess.id,
-      );
-      const outExecutions = processExecutions.filter(
-        (exe) => exe.status === "SUCCESS" && exe.from_process?.id === currentProcess.id,
-      );
+      const processId = currentProcess.id;
 
-      const inExecutionsSum = inExecutions
-        .map((exe) => exe.amount)
-        .reduce((total, curr) => total + curr, 0);
+      const input = inputMap.get(processId) || 0;
+      const output = outputMap.get(processId) || 0;
+      const avaliableAmount = input - output;
 
-      const outExecutionsSum = outExecutions
-        .map((exe) => exe.amount)
-        .reduce((total, curr) => total + curr, 0);
+      const executions = executionMap.get(processId) || [];
+      const hasExecutions = executions.length > 0;
 
-      // Define status do processo
-      const avaliableAmount = inExecutionsSum - outExecutionsSum;
+      const firstExecution = executions[0];
 
-      const status = getProcessStatus({
+      const isReprocess = firstExecution?.type === "REPROCESS";
+
+      const isLastProcess = currentProcess.id === lastProcess.id;
+
+      let status: ProcessExecutionStatus = "PENDING";
+
+      if (!hasExecutions) {
+        status = "PENDING";
+      } else if (isReprocess && avaliableAmount === 0) {
+        status = "IN_PROGRESS";
+      } else if (isLastProcess && avaliableAmount === movimentation.amount) {
+        status = "SUCCESS";
+      } else if (avaliableAmount > 0) {
+        status = "IN_PROGRESS";
+      } else {
+        status = "SUCCESS";
+      }
+
+      const previousProcess = i > 0 ? flowTemplates[i - 1].process : null;
+      const nextProcess = i < flowTemplates.length - 1 ? flowTemplates[i + 1].process : null;
+
+      states.push({
+        process: currentProcess,
+        movimentation,
+        flowTemplates,
         avaliableAmount,
-        currentProcess,
-        executions: processExecutions.filter(
-          (exe) =>
-            exe.process?.id == currentProcess.id || exe.from_process?.id == currentProcess.id,
-        ),
-        lastProcess,
+        status,
+        previousProcess,
+        nextProcess,
+        template,
+        executions,
       });
-
-      const { previousProcess, nextProcess } = getNextAndPreviousProcesses(currentProcess);
-
-      states.push(
-        {
-          movimentation,
-          flowTemplates: flowTemplates,
-          process: currentProcess,
-          avaliableAmount,
-          status,
-          previousProcess,
-          nextProcess,
-          template,
-        }
-      );
     }
+
+    // Checa por processos pulados
+    checkSkippedProcess(states);
 
     return states;
   };
 
-  const getNextAndPreviousProcesses = (process: ProcessWithDepartament) => {
-    if (!movimentation)
-      return {
-        previousProcess: null,
-        nextProcess: null,
-      };
+  const checkSkippedProcess = (processStates: ProcessState[]) => {
+    for (let i = 0; i < processStates.length; i++) {
+      const current = processStates[i];
 
-    let previousProcess: ProcessWithDepartament | null = null;
-    let nextProcess: ProcessWithDepartament | null = null;
+      const hasExecutions = current.executions.length > 0;
+      if (hasExecutions) continue;
 
-    const flowTemplatesSize = flowTemplates.length;
+      const afterStates = processStates.slice(i + 1);
+      const hasFlowAdvanced = afterStates.some((s) => s.executions.length > 0);
 
-    if (flowTemplatesSize == 0 || flowTemplatesSize == 1) {
-      previousProcess = null;
-      nextProcess = null;
-    } else {
-      const currentProcessIndex = flowTemplates.findIndex((flow) => flow.process.id == process.id);
-      const nextProcessIndex = currentProcessIndex + 1;
-      const previousProcessIndex = currentProcessIndex - 1;
-
-      nextProcess =
-        nextProcessIndex < flowTemplatesSize ? flowTemplates[nextProcessIndex].process : null;
-      previousProcess =
-        previousProcessIndex >= 0 ? flowTemplates[previousProcessIndex].process : null;
+      if (hasFlowAdvanced) {
+        current.status = "SKIPPED";
+      }
     }
-
-    return {
-      previousProcess,
-      nextProcess,
-    };
   };
 
   const processStates = useMemo(() => {

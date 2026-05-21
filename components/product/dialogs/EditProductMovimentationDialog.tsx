@@ -13,7 +13,7 @@ export default function EditProductMovimentationDialog({
 }: EditProductMovimentationDialogProps) {
   return (
     <CustomDialog
-      id="edit-product-movimentation"
+      id={`edit-movimentation-${movimentation.id}`}
       title="Editar Movimentação do produto"
       trigger={children}
     >

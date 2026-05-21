@@ -58,7 +58,7 @@ export default function EditProductMovimentationForm({
         }
 
         toast.success("Movimentação atualizado com sucesso!");
-        closeDialog("edit-product-movimentation");
+        closeDialog(`edit-movimentation-${movimentation.id}`);
         form.reset();
       } catch (error) {
         handleFormError(error, {

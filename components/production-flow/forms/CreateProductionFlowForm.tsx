@@ -58,8 +58,6 @@ export default function CreateProductionFlowForm() {
     },
   });
 
-  console.log(selectedProcesses);
-
   return (
     <form
       id="create-product-form"

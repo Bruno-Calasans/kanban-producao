@@ -56,14 +56,13 @@ export default function CreateProductMovimentationForm({
           movimentation_id: createdMovimentation.id,
           responsible_id: null,
           product_id: product.id,
-          type: "INIT",
-          status: "SUCCESS",
           started_at: new Date().toISOString(),
           finished_at: new Date().toISOString(),
+          type: "INIT",
         });
 
         toast.success("Produto movimentado com sucesso!");
-        closeDialog("create-product-movimentation");
+        closeDialog(`create-movimentation-${product.id}`);
         form.reset();
       } catch (error) {
         handleFormError(error, {

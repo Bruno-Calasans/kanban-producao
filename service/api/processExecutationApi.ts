@@ -196,7 +196,6 @@ export async function moveToNextDepartament({
       started_at: startedAt,
       finished_at: finished_at,
       type: "TRANSFER",
-      status: "SUCCESS",
     });
 
     if (isFirstNextDepartamentProcess) return data;

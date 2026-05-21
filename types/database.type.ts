@@ -42,7 +42,7 @@ export type ProcessExecutionPopulated = Omit<
 };
 
 export type ProcessExecutionType = ProcessExecution["type"];
-export type ProcessExecutionStatus = ProcessExecution["status"];
+export type ProcessExecutionStatus = "PENDING" | "SUCCESS" | "IN_PROGRESS" | "ERROR" | "SKIPPED";
 
 export type ProcessState = {
   process: ProcessWithDepartament;
@@ -53,6 +53,7 @@ export type ProcessState = {
   previousProcess: ProcessWithDepartament | null;
   nextProcess: ProcessWithDepartament | null;
   template: ProductionFlowTemplate;
+  executions: ProcessExecutionPopulated[];
 };
 
 export type ProductMovimentation = {

@@ -18,7 +18,7 @@ export default function ReturnProcessExecutionDialog({
 }: ReturnProcessExecutionDialogProps) {
   return (
     <CustomDialog
-      id="return"
+      id={`return-process-execution-${externalProcessState.process.id}`}
       title="Retornar produtos"
       trigger={
         <Button

@@ -45,14 +45,13 @@ export default function CreateReprocessForm({ processState }: CreateReprocessFor
           movimentation_id: movimentation.id,
           product_id: movimentation.product.id,
           responsible_id: null,
-          type: "REPROCESS",
-          status: "SUCCESS",
           started_at: new Date().toISOString(),
           finished_at: new Date().toISOString(),
+          type: "REPROCESS",
         });
 
         toast.success("Reprocesso criado com sucesso!");
-        closeDialog("create-process-execution");
+        closeDialog(`create-reprocess-execution-${processState.process.id}`);
         form.reset();
       } catch (error) {
         errorHandler(error, {

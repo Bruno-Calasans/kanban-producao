@@ -31,7 +31,7 @@ export default function ProcessExecutionActions({
   return (
     <div className="flex gap-1">
       {nextProcess && <CreateProcessExecutionDialog processState={processState} />}
-      {nextProcess && (
+      {nextProcess && !isAntiLastProcess && (
         <SkipProcessExecutionDialog processStates={processStates} processState={processState} />
       )}
       {previousProcess && <CreateReprocessExecutionDialog processState={processState} />}

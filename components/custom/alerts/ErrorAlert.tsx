@@ -40,6 +40,8 @@ export function ErrorAlert({
       closeIcon={closeIcon}
       hideCloseButton={hideCloseButton}
       isDestructive={isDestructive}
+      actionLabel={actionLabel}
+      onAction={onAction}
       classNames={{
         container: cn(
           "border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-50 mb-3",

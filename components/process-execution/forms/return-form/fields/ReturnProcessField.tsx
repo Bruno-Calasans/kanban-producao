@@ -1,40 +1,21 @@
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { ProcessWithDepartament } from "@/types/database.type";
 import { defaultReturnProcessFormValues, withForm } from "../returnProcessFormContext";
 import { SingleSelectorWithGroup } from "@/components/custom/selectors/SingleSelectorWithGroup";
+import { groupProcessesByDepartament } from "@/utils/groupProcessesByDepartament";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type ReturnProcessFieldProps = {
-  defaultProcess?: ProcessWithDepartament;
   selectedProcess?: ProcessWithDepartament;
   avaliableProcesses: ProcessWithDepartament[];
   onChangeProcess: (process?: ProcessWithDepartament) => void;
 };
 
-type ProcessByDepartament = {
-  [key in string]: ProcessWithDepartament[];
-};
-
 export const ReturnProcessField = withForm({
   defaultValues: defaultReturnProcessFormValues,
   props: {} as ReturnProcessFieldProps,
-  render({ form, defaultProcess, avaliableProcesses, selectedProcess, onChangeProcess }) {
-    const groupProcessesByDepartament = () => {
-      const groups: ProcessByDepartament = {};
-
-      for (const process of avaliableProcesses) {
-        const foundGroup = groups[process.departament.name];
-
-        if (foundGroup) {
-          foundGroup.push(process);
-        } else {
-          groups[process.departament.name] = [process];
-        }
-      }
-
-      return groups;
-    };
-
-    const groups = groupProcessesByDepartament();
+  render({ form, avaliableProcesses, selectedProcess, onChangeProcess }) {
+    const groups = groupProcessesByDepartament(avaliableProcesses);
 
     return (
       <form.Field
@@ -42,12 +23,13 @@ export const ReturnProcessField = withForm({
         children={(field) => {
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
-            <Field id="move-departament-process-field" data-invalid={isInvalid}>
-              <FieldLabel htmlFor={field.name}>Processo</FieldLabel>
-
+            <Field data-invalid={isInvalid}>
+              <FieldLabel className="gap-0" htmlFor={field.name}>
+                Processo <RequiredFieldTooltip />
+              </FieldLabel>
               <SingleSelectorWithGroup<ProcessWithDepartament>
                 data={avaliableProcesses}
-                placeholder="Selecione o processo de retorno"
+                placeholder="Selecione o processo"
                 dataGroup={groups}
                 labelSelector="name"
                 selectedData={selectedProcess}
@@ -56,7 +38,7 @@ export const ReturnProcessField = withForm({
                   onChangeProcess(process);
                 }}
               />
-
+              <FieldDescription>Escolhe para qual processo você quer retornar</FieldDescription>
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </Field>
           );

@@ -95,7 +95,7 @@ export function SingleSelectorWithGroup<T extends DataItem>({
       </SelectTrigger>
       <SelectContent position="item-aligned">
         {Object.keys(dataGroup).map((groupName) => (
-          <SelectGroup>
+          <SelectGroup key={groupName}>
             <SelectLabel>{groupName}</SelectLabel>
             {dataGroup[groupName].map((item) => (
               <SelectItem key={item.id} value={String(item.id)}>

@@ -1,36 +1,47 @@
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Departament, Process } from "@/types/database.type";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
+import { ProcessWithDepartament } from "@/types/database.type";
 import { defaultMoveExternalFormValues, withForm } from "../moveExternalFormContext";
-import SingleProcessSelector from "@/components/custom/selectors/SingleProcessSelector";
+import { SingleSelectorWithGroup } from "@/components/custom/selectors/SingleSelectorWithGroup";
+import { groupProcessesByDepartament } from "@/utils/groupProcessesByDepartament";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type MoveProcessFieldProps = {
-  departament: Departament;
-  defaultProcess?: Process;
-  selectedProcess?: Process;
-  onChangeProcess: (departament?: Process) => void;
+  processes: ProcessWithDepartament[];
+  selectedProcess?: ProcessWithDepartament;
+  isLoading?: boolean;
+  onChangeProcess: (process?: ProcessWithDepartament) => void;
 };
 
 export const MoveProcessField = withForm({
   defaultValues: defaultMoveExternalFormValues,
   props: {} as MoveProcessFieldProps,
-  render({ form, departament, defaultProcess, selectedProcess, onChangeProcess }) {
+  render({ form, selectedProcess, processes, isLoading, onChangeProcess }) {
+    const groups = groupProcessesByDepartament(processes);
     return (
       <form.Field
         name="externalProcessName"
         children={(field) => {
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
-            <Field id="move-departament-process-field" data-invalid={isInvalid}>
-              <FieldLabel htmlFor={field.name}>Processo</FieldLabel>
-              <SingleProcessSelector
-                departament={departament}
-                defaultProcess={defaultProcess}
-                selectedProcess={selectedProcess}
-                onValueChange={(process) => {
+            <Field data-invalid={isInvalid}>
+              <FieldLabel className="gap-0" htmlFor={field.name}>
+                Processo
+                <RequiredFieldTooltip />
+              </FieldLabel>
+              <SingleSelectorWithGroup<ProcessWithDepartament>
+                labelSelector="name"
+                data={processes}
+                dataGroup={groups}
+                selectedData={selectedProcess}
+                isLoading={isLoading}
+                loadingMsg="Carregando processos externos..."
+                placeholder="Selecione o processo"
+                onChange={(process) => {
                   field.handleChange(process?.name || "");
                   onChangeProcess(process);
                 }}
               />
+              <FieldDescription>Seleciona para qual processo deseja enviar</FieldDescription>
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </Field>
           );

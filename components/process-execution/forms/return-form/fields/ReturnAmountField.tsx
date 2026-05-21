@@ -15,6 +15,7 @@ import {
   defaultReturnProcessFormValues,
 } from "@/components/process-execution/forms/return-form/returnProcessFormContext";
 import { Checkbox } from "@/components/ui/checkbox";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type ReturnAmountFieldProps = {
   maxAmount: number;
@@ -38,7 +39,10 @@ export const ReturnAmountField = withForm({
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field id="execution-amount-field" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Quantidade</FieldLabel>
+                    <FieldLabel className="gap-0" htmlFor={field.name}>
+                      Quantidade
+                      <RequiredFieldTooltip />
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -55,9 +59,7 @@ export const ReturnAmountField = withForm({
                       disabled={useMaxAmount}
                       onFocus={(e) => field.handleChange("" as unknown as number)}
                     />
-                    <FieldDescription>
-                      Define a quantidade que será movida para próximo processo.
-                    </FieldDescription>
+                    <FieldDescription>Define a quantidade que será retornada</FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 );

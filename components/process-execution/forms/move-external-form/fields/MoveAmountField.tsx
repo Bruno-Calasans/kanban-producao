@@ -15,6 +15,7 @@ import {
   defaultMoveExternalFormValues,
 } from "@/components/process-execution/forms/move-external-form/moveExternalFormContext";
 import { Checkbox } from "@/components/ui/checkbox";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type MoveAmountFieldProps = {
   maxAmount: number;
@@ -37,8 +38,11 @@ export const MoveAmountField = withForm({
               children={(field) => {
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
-                  <Field id="execution-amount-field" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Quantidade</FieldLabel>
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel className="gap-0" htmlFor={field.name}>
+                      Quantidade
+                      <RequiredFieldTooltip />
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -56,7 +60,7 @@ export const MoveAmountField = withForm({
                       onFocus={(e) => field.handleChange("" as unknown as number)}
                     />
                     <FieldDescription>
-                      Define a quantidade que será movida para próximo processo.
+                      Define a quantidade que será movida para o processo externo.
                     </FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>

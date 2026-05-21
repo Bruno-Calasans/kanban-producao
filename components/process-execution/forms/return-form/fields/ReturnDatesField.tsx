@@ -103,7 +103,9 @@ export const ReturnDatesField = withForm({
             )}
           </form.Subscribe>
         </FieldGroup>
-        <FieldDescription className="mt-0">Quanto tempo levou terminar e começar</FieldDescription>
+        <FieldDescription className="mt-0">
+          Define quanto tempo levou para começar e terminar.
+        </FieldDescription>
       </FieldGroup>
     );
   },

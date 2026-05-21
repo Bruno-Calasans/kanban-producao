@@ -20,6 +20,7 @@ import GoToCalendarButton from "../custom/buttons/GoToCalendarButton";
 import { InfoAlert } from "@/components/custom/alerts/InfoAlert";
 import ReturnProcessExecutionDialog from "../process-execution/dialogs/ReturnProcessExecutionDialog";
 import useExternalProcessState from "@/hooks/external-process-state/useExternalProcess";
+import { differenceInDays } from "date-fns";
 
 type MovimentationInfoHeadergProps = {
   movimentation: MovimentationPopulated;
@@ -36,12 +37,17 @@ export default function MovimentationInfoHeaderg({
   processExecutions,
   flowTemplates,
 }: MovimentationInfoHeadergProps) {
+  const { externalProcessStates } = useExternalProcessState({ movimentation, processExecutions });
+
   const canEdit = movimentation.status == "PENDING";
   const canDelete = movimentation.status == "PENDING";
   const canCancel = movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
   const expiredDepartaments = departamentStates.filter((dpt) => dpt.status === "EXPIRED");
-  const { externalProcessStates } = useExternalProcessState({ movimentation, processExecutions });
   const avaliableProcesses = flowTemplates.map((flow) => flow.process);
+  const externalDeadlines = deadlines.filter(
+    (deadline) => deadline.departament.is_external === true,
+  );
+  console.log(externalDeadlines);
 
   return (
     <div>
@@ -79,10 +85,6 @@ export default function MovimentationInfoHeaderg({
 
       {/* Botões de ação da movimentação */}
       <div className="flex gap-2 border-black">
-        <Button className="m-0" size="xs">
-          <PlusIcon />
-          Adicionar processo
-        </Button>
 
         {canEdit && (
           <CustomDialog
@@ -154,14 +156,30 @@ export default function MovimentationInfoHeaderg({
         )}
 
         {externalProcessStates &&
+          externalProcessStates.length > 0 &&
           movimentation.status != "CANCELLED" &&
-          externalProcessStates.map(
-            (state) =>
-              state.avaliableAmount > 0 && (
-                <InfoAlert
+          externalProcessStates.map((state) => {
+            const hasDeadline = externalDeadlines.find(
+              (deadline) => deadline.departament.id === state.process.departament_id,
+            );
+
+            if (state.avaliableAmount === 0) return null;
+
+            const today = new Date();
+            const expiredDate =
+              hasDeadline && hasDeadline.expected_at
+                ? new Date(hasDeadline.expected_at)
+                : undefined;
+
+            const isExpired = expiredDate ? expiredDate.getTime() < today.getTime() : undefined;
+
+            if (isExpired)
+              return (
+                <ErrorAlert
                   key={state.process.id}
-                  title={`Peças externas: ${state.process.name}`}
-                  description={`Você tem ${state.avaliableAmount} na ${state.process.name}. Clique no botão "Retornar" para pegar de volta essas peças.`}
+                  title={`Peças no departamento externo com atraso de ${differenceInDays(today, expiredDate!)} dia(s)`}
+                  description={`Você tem ${state.avaliableAmount} peças na ${state.process.name} que deveria voltar ${expiredDate?.toLocaleDateString()}. 
+                Clique no botão "Retornar" para pegar de volta essas peças.`}
                   actionLabel={
                     <ReturnProcessExecutionDialog
                       avaliableProcesses={avaliableProcesses}
@@ -170,8 +188,24 @@ export default function MovimentationInfoHeaderg({
                   }
                   hideCloseButton
                 />
-              ),
-          )}
+              );
+
+            return (
+              <InfoAlert
+                key={state.process.id}
+                title={`Peças no departamento externo ${expiredDate ? ` com prazo de retorno ` + expiredDate?.toLocaleDateString() : undefined}`}
+                description={`Você tem ${state.avaliableAmount} peças na ${state.process.name}. 
+                Clique no botão "Retornar" para pegar de volta essas peças.`}
+                actionLabel={
+                  <ReturnProcessExecutionDialog
+                    avaliableProcesses={avaliableProcesses}
+                    externalProcessState={state}
+                  />
+                }
+                hideCloseButton
+              />
+            );
+          })}
       </div>
     </div>
   );

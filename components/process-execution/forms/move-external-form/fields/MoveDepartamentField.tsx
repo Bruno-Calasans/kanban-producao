@@ -19,7 +19,7 @@ export const MoveDepartamentField = withForm({
         children={(field) => {
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
-            <Field id="move-departament" data-invalid={isInvalid}>
+            <Field data-invalid={isInvalid}>
               <FieldLabel htmlFor={field.name}>Departamento</FieldLabel>
               <ExternalDepartamentSelector
                 defaultDepartament={defaultDepartament}

@@ -83,22 +83,18 @@ export default function ReturnProcessForm({
         form.handleSubmit();
       }}
     >
-      <ReturnDatesField form={form} />
-      <FieldGroup className="flex flex-row gap-3 mb-4">
+      <FieldGroup className="flex gap-5">
         <ReturnProcessField
           form={form}
           selectedProcess={selectedProcess}
           onChangeProcess={setSelectedProcess}
           avaliableProcesses={avaliableProcesses}
         />
+        <ReturnAmountField form={form} maxAmount={externalProcessState.avaliableAmount} />
+        <ReturnDatesField form={form} />
       </FieldGroup>
 
-      <ReturnAmountField form={form} maxAmount={externalProcessState.avaliableAmount} />
-
-      <div
-        id="create-move-external-form-buttons"
-        className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
-      >
+      <div id="return-form-buttons" className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end">
         <ConfirmButton
           hiddenIcon
           isLoading={isPending}

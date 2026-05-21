@@ -21,6 +21,16 @@ export async function getAllActiveProcesses() {
     .throwOnError();
 }
 
+export async function getAllActiveExternalProcesses() {
+  return await supabase
+    .from("Process")
+    .select("*, departament:Departament!inner(*)")
+    .eq("is_active", true)
+    .eq("departament.is_external", true)
+    .order("created_at", { ascending: true })
+    .throwOnError();
+}
+
 export async function getAllProcessesByDepartamentId(departamentId: number) {
   return await supabase
     .from("Process")

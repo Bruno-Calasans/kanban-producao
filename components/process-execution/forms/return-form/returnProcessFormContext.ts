@@ -5,7 +5,7 @@ import * as z from "zod";
 export const formSchema = z.object({
   amount: ZodNumberField({ min: 1, minError: "Quantidade mínima é 1" }),
   useMaxAmount: z.boolean(),
-  externalProcessName: z.string().nonempty("Nome do processo é obrigatório"),
+  externalProcessName: z.string().nonempty("Processo é obrigatório"),
   started_at: z.string().optional(),
   finished_at: z.string().optional(),
 });

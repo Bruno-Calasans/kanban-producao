@@ -3,16 +3,18 @@
 
 import { toast } from "sonner";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
-import { formSchema, useAppForm, MoveExternalFormSchema } from "./moveExternalFormContext";
+import { formSchema, useAppForm, defaultMoveExternalFormValues } from "./moveExternalFormContext";
 import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
-import { Departament, Process, ProcessState, Responsible } from "@/types/database.type";
+import { ProcessState, ProcessWithDepartament } from "@/types/database.type";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { MoveAmountField } from "./fields/MoveAmountField";
-import { MoveDepartamentField } from "./fields/MoveDepartamentField";
 import { MoveProcessField } from "./fields/MoveProcessField";
+import useGetAllActiveExternalProcesses from "@/hooks/process/useGetAllActiveExternalProcesses";
+import { ExternalDeadlineField } from "./fields/ExternalDeadlineField";
+import useCreateMovimentationDeadline from "@/hooks/movimentation-deadline/useCreateMovimentationDeadline";
 
 type MoveExternalFormProps = {
   processState: ProcessState;
@@ -20,24 +22,36 @@ type MoveExternalFormProps = {
 
 export default function MoveExternalForm({ processState }: MoveExternalFormProps) {
   const { closeDialog } = useDialog();
-  const { mutateAsync: createProcessExecution, isPending: isCreateExecutionPending } =
-    useCreateProcessExecution();
-  const [departament, setDepartament] = useState<Departament>();
-  const [process, setProcess] = useState<Process>();
+  const {
+    mutateAsync: createProcessExecution,
+    isPending: isExecutionPending,
+    error: executionError,
+  } = useCreateProcessExecution();
+
+  const {
+    mutateAsync: createDeadline,
+    isPending: isDeadlinePending,
+    error: deadlineError,
+  } = useCreateMovimentationDeadline();
+
+  const {
+    data,
+    isPending: isProcessesPending,
+    error: processError,
+  } = useGetAllActiveExternalProcesses();
+  const processes = data?.data || [];
+
+  const [process, setProcess] = useState<ProcessWithDepartament>();
 
   const form = useAppForm({
-    defaultValues: {
-      amount: processState.avaliableAmount,
-      useMaxAmount: true,
-      externalProcessName: "",
-    } as MoveExternalFormSchema,
+    defaultValues: { ...defaultMoveExternalFormValues, amount: processState.avaliableAmount },
     validators: {
       onSubmit: formSchema,
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      if (!departament || !process) return;
-      const { amount } = value;
+      if (!process) return;
+      const { amount, expectedAt } = value;
       const { process: currProcess, movimentation } = processState;
 
       try {
@@ -55,6 +69,16 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
           finished_at: null,
         });
 
+        if (expectedAt) {
+          await createDeadline({
+            departament_id: process.departament.id,
+            movimentation_id: movimentation.id,
+            expected_at: new Date(expectedAt).toISOString(),
+            started_at: null,
+            finished_at: null,
+          });
+        }
+
         toast.success("Movido com sucesso!");
         closeDialog(`move-external-${currProcess.id}`);
         form.reset();
@@ -66,49 +90,34 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
     },
   });
 
-  const isPending = isCreateExecutionPending;
+  const isPending = isExecutionPending || isProcessesPending || isDeadlinePending;
+  const isError = executionError || processError || deadlineError;
 
   return (
     <form
-      id="create-move-external-form"
+      id="move-external-form"
       onSubmit={(e) => {
         e.preventDefault();
         form.handleSubmit();
       }}
     >
-      {/* <ExecutionState from_process={processState.process} to_process={processState.nextProcess} /> */}
-
-      <FieldGroup className="flex flex-row gap-3 mb-4">
-        <MoveDepartamentField
+      <FieldGroup className="flex gap-4 mb-4">
+        <MoveProcessField
           form={form}
-          selectedDepartament={departament}
-          onChangeDepartament={setDepartament}
+          processes={processes}
+          selectedProcess={process}
+          onChangeProcess={setProcess}
+          isLoading={isProcessesPending}
         />
-        {departament && (
-          <MoveProcessField
-            form={form}
-            departament={departament}
-            selectedProcess={process}
-            onChangeProcess={setProcess}
-          />
-        )}
-        {/* {departament && (
-          <MoveResponsibleField
-            form={form}
-            departament={departament}
-            selectedResponsible={responsible}
-            onChangeResponsible={setResponsible}
-          />
-        )} */}
+        <MoveAmountField form={form} maxAmount={processState.avaliableAmount} />
+        <ExternalDeadlineField form={form} />
       </FieldGroup>
 
-      <MoveAmountField form={form} maxAmount={processState.avaliableAmount} />
-
       <div
-        id="create-move-external-form-buttons"
+        id="move-external-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
-        <ConfirmButton hiddenIcon isLoading={isPending} label="Mover" loadingMsg="Movendo..." />
+        <ConfirmButton label="Mover" loadingMsg="Movendo..." hiddenIcon isLoading={isPending} />
       </div>
     </form>
   );

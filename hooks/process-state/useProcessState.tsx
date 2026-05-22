@@ -110,15 +110,9 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
 
       if (!hasExecutions) {
         status = "PENDING";
-      }
-      // Tudo saiu por causa de reprocesso
-      // else if (isReprocess && avaliableAmount === 0) {
-      //   status = "IN_PROGRESS";
-      // }
-      // else if (isLastProcess && avaliableAmount === movimentation.amount) {
-      //   status = "SUCCESS";
-      // }
-      else if (avaliableAmount > 0) {
+      } else if (isLastProcess && avaliableAmount === movimentation.amount) {
+        status = "SUCCESS";
+      } else if (avaliableAmount > 0) {
         status = "IN_PROGRESS";
       } else {
         status = "SUCCESS";
@@ -175,7 +169,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
 
       // Soma tudo que saiu normalmente
       const outSum = outExecutions
-        .filter((exe) => exe.type === "TRANSFER" || exe.type === "RETURN")
+        .filter((exe) => exe.type === "TRANSFER" || exe.type === "EXTERNAL")
         .reduce((total, exe) => total + exe.amount, 0);
 
       // Soma tudo que saiu via reprocesso

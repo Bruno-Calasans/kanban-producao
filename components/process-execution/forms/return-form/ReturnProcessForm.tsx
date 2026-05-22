@@ -48,15 +48,19 @@ export default function ReturnProcessForm({
       try {
         // Cria execução de processo
         await createProcessExecution({
-          amount,
-          from_process_id: currProcess.id,
-          process_id: selectedProcess.id,
-          movimentation_id: movimentation.id,
-          product_id: movimentation.product.id,
-          started_at: started_at ? new Date(started_at).toISOString() : null,
-          finished_at: finished_at ? new Date(finished_at).toISOString() : null,
-          responsible_id: null,
-          type: "RETURN",
+          createData: {
+            amount,
+            from_process_id: currProcess.id,
+            process_id: selectedProcess.id,
+            movimentation_id: movimentation.id,
+            product_id: movimentation.product.id,
+            started_at: started_at ? new Date(started_at).toISOString() : null,
+            finished_at: finished_at ? new Date(finished_at).toISOString() : null,
+            type: "RETURN",
+            responsible_id: null,
+            reason: null,
+          },
+          movimentation,
         });
 
         toast.success("Retornado com sucesso!");

@@ -50,16 +50,19 @@ export default function CreateReprocessForm({
 
         // Cria execução de processo
         await createProcessExecution({
-          amount,
-          from_process_id: process.id,
-          process_id: selectedProcess.id,
-          movimentation_id: movimentation.id,
-          product_id: movimentation.product.id,
-          responsible_id: null,
-          started_at: new Date().toISOString(),
-          finished_at: new Date().toISOString(),
-          type: "REPROCESS",
-          reason: null,
+          createData: {
+            amount,
+            from_process_id: process.id,
+            process_id: selectedProcess.id,
+            movimentation_id: movimentation.id,
+            product_id: movimentation.product.id,
+            responsible_id: null,
+            started_at: new Date().toISOString(),
+            finished_at: new Date().toISOString(),
+            type: "REPROCESS",
+            reason: null,
+          },
+          movimentation,
         });
 
         toast.success("Reprocesso criado com sucesso!");

@@ -2,6 +2,7 @@ import {
   MovimentationDeadlinePopulated,
   MovimentationPopulated,
   ProcessExecutionPopulated,
+  ProcessState,
   ProductionFlowTemplateWithProcess,
 } from "@/types/database.type";
 import Link from "next/link";
@@ -28,6 +29,7 @@ type MovimentationInfoHeadergProps = {
   deadlines: MovimentationDeadlinePopulated[];
   processExecutions: ProcessExecutionPopulated[];
   flowTemplates: ProductionFlowTemplateWithProcess[];
+  processStates: ProcessState[];
 };
 
 export default function MovimentationInfoHeaderg({
@@ -36,18 +38,24 @@ export default function MovimentationInfoHeaderg({
   deadlines,
   processExecutions,
   flowTemplates,
+  processStates,
 }: MovimentationInfoHeadergProps) {
-  const { externalProcessStates } = useExternalProcessState({ movimentation, processExecutions });
+  const { externalProcessStates } = useExternalProcessState({
+    movimentation,
+    processExecutions,
+  });
 
-  const canEdit = movimentation.status == "PENDING";
-  const canDelete = movimentation.status == "PENDING";
-  const canCancel = movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
+  const movimentationStatus = movimentation.status;
+  const canEdit = movimentationStatus == "PENDING";
+  const canDelete = movimentationStatus == "PENDING";
+  const canCancel = movimentationStatus != "CANCELLED" && movimentationStatus != "COMPLETED";
+
   const expiredDepartaments = departamentStates.filter((dpt) => dpt.status === "EXPIRED");
   const avaliableProcesses = flowTemplates.map((flow) => flow.process);
   const externalDeadlines = deadlines.filter(
     (deadline) => deadline.departament.is_external === true,
   );
-  
+
   return (
     <div>
       <div className="flex justify-between">
@@ -139,7 +147,7 @@ export default function MovimentationInfoHeaderg({
           />
         )}
 
-        {movimentation.status == "CANCELLED" && (
+        {movimentationStatus == "CANCELLED" && (
           <ErrorAlert
             title="Movimentação Cancelada"
             description={`Esta movimentação foi cancelada dia ${new Date(movimentation.updated_at).toLocaleDateString()}. Você não pode realizar mais ações ou definir prazos para esta movimentação.`}
@@ -155,7 +163,7 @@ export default function MovimentationInfoHeaderg({
 
         {externalProcessStates &&
           externalProcessStates.length > 0 &&
-          movimentation.status != "CANCELLED" &&
+          movimentationStatus != "CANCELLED" &&
           externalProcessStates.map((state) => {
             const hasDeadline = externalDeadlines.find(
               (deadline) => deadline.departament.id === state.process.departament_id,

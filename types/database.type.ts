@@ -81,3 +81,5 @@ export type Meta = Database["public"]["Tables"]["Meta"]["Row"];
 export type MetaPopulated = Omit<Meta, "deadline_id"> & {
   deadline: MovimentationDeadline;
 };
+
+export type MovimentationStatus = Database["public"]["Tables"]["Movimentation"]["Row"]["status"];

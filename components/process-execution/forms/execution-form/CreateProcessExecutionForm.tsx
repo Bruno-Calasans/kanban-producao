@@ -47,15 +47,19 @@ export default function CreateProcessExecutionForm({
       try {
         // Cria execução de processo
         await createProcessExecution({
-          amount,
-          from_process_id: process.id,
-          process_id: nextProcess?.id || null,
-          movimentation_id: movimentation.id,
-          product_id: movimentation.product.id,
-          responsible_id: responsible.id,
-          started_at: started_at ? new Date(started_at).toISOString() : null,
-          finished_at: finished_at ? new Date(finished_at).toISOString() : null,
-          type: "TRANSFER",
+          createData: {
+            amount,
+            from_process_id: process.id,
+            process_id: nextProcess?.id || null,
+            movimentation_id: movimentation.id,
+            product_id: movimentation.product.id,
+            responsible_id: responsible.id,
+            started_at: started_at ? new Date(started_at).toISOString() : null,
+            finished_at: finished_at ? new Date(finished_at).toISOString() : null,
+            type: "TRANSFER",
+            reason: null,
+          },
+          movimentation,
         });
 
         toast.success("Execução criada com sucesso!");

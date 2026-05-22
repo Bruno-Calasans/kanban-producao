@@ -56,15 +56,19 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
 
       try {
         await createProcessExecution({
-          amount,
-          from_process_id: currProcess.id,
-          process_id: process.id,
-          movimentation_id: movimentation.id,
-          product_id: movimentation.product.id,
-          responsible_id: null,
-          started_at: null,
-          finished_at: null,
-          type: "EXTERNAL",
+          createData: {
+            amount,
+            from_process_id: currProcess.id,
+            process_id: process.id,
+            movimentation_id: movimentation.id,
+            product_id: movimentation.product.id,
+            responsible_id: null,
+            started_at: null,
+            finished_at: null,
+            reason: null,
+            type: "EXTERNAL",
+          },
+          movimentation,
         });
 
         if (expectedAt) {

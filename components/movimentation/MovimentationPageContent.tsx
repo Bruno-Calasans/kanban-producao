@@ -63,6 +63,7 @@ export default function MovimentationPageContent({ movimentation }: Movimentatio
         deadlines={deadlines}
         processExecutions={processExecutions}
         flowTemplates={flowTemplates}
+        processStates={processStates}
       />
       <MovimentationTabs
         movimentation={movimentation}

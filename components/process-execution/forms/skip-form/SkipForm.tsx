@@ -44,16 +44,19 @@ export default function SkipForm({ processStates, processState }: SkipFormProps)
       try {
         // Cria execução de processo
         await createProcessExecution({
-          amount,
-          from_process_id: currProcess.id,
-          process_id: selectedProcess.id,
-          movimentation_id: movimentation.id,
-          product_id: movimentation.product.id,
-          type: "SKIP",
-          reason: reason || null,
-          started_at: null,
-          finished_at: null,
-          responsible_id: null,
+          createData: {
+            amount,
+            from_process_id: currProcess.id,
+            process_id: selectedProcess.id,
+            movimentation_id: movimentation.id,
+            product_id: movimentation.product.id,
+            type: "SKIP",
+            reason: reason || null,
+            started_at: null,
+            finished_at: null,
+            responsible_id: null,
+          },
+          movimentation,
         });
 
         toast.success("Pulado com sucesso!");

@@ -88,6 +88,12 @@ export default function MovimentationInfoHeaderg({
         <p>
           <strong>Quantidade:</strong> {movimentation.amount}
         </p>
+
+        {movimentation.status === "COMPLETED" && (
+          <p>
+            <strong>Concluída em:</strong> {new Date(movimentation.updated_at).toLocaleDateString()}
+          </p>
+        )}
       </div>
 
       {/* Botões de ação da movimentação */}

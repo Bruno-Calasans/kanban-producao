@@ -125,7 +125,6 @@ export function checkSkippedProcess(processStates: ProcessState[]) {
 export function checkReprocesses(processStates: ProcessState[]) {
   for (const current of processStates) {
     const hasExecutions = current.executions.length > 0;
-
     if (!hasExecutions) continue;
 
     const outExecutions = current.executions.filter(
@@ -133,7 +132,7 @@ export function checkReprocesses(processStates: ProcessState[]) {
     );
 
     // Soma tudo que saiu normalmente
-    const outSum = outExecutions
+    const forwardSum = outExecutions
       .filter((exe) => exe.type === "TRANSFER" || exe.type === "EXTERNAL")
       .reduce((total, exe) => total + exe.amount, 0);
 
@@ -142,7 +141,18 @@ export function checkReprocesses(processStates: ProcessState[]) {
       .filter((exe) => exe.type === "REPROCESS")
       .reduce((total, exe) => total + exe.amount, 0);
 
-    if (reprocessSum > 0 && outSum === 0 && current.avaliableAmount === 0) {
+    const hasReprocess = reprocessSum > 0;
+    const hasPendingReprocess = reprocessSum > forwardSum;
+    const fullyReprocessed = reprocessSum > 0 && forwardSum === 0 && current.avaliableAmount === 0;
+    const partiallyReprocessed = reprocessSum > 0 && forwardSum > 0 && reprocessSum > forwardSum;
+
+    current.flags = {
+      hasReprocess,
+      hasPendingReprocess,
+      partiallyReprocessed,
+    };
+
+    if (fullyReprocessed) {
       current.status = "REPROCESSING";
     }
   }

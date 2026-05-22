@@ -50,6 +50,12 @@ export type ProcessExecutionStatus =
   | "SKIPPED"
   | "REPROCESSING";
 
+export type ProcessStateFlags = {
+  hasReprocess: boolean;
+  hasPendingReprocess: boolean;
+  partiallyReprocessed: boolean;
+};
+
 export type ProcessState = {
   process: ProcessWithDepartament;
   avaliableAmount: number;
@@ -60,6 +66,7 @@ export type ProcessState = {
   nextProcess: ProcessWithDepartament | null;
   template: ProductionFlowTemplateWithProcess;
   executions: ProcessExecutionPopulated[];
+  flags?: ProcessStateFlags;
 };
 
 export type ProductMovimentation = {

@@ -1,12 +1,17 @@
-import { ProcessExecutionStatus } from "@/types/database.type";
+import { ProcessExecutionStatus, ProcessState } from "@/types/database.type";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 import { Badge } from "@/components/ui/badge";
+import { CircleAlertIcon, TriangleAlertIcon } from "lucide-react";
 
 type ProcessExecutionStatusBadgeProps = {
-  status: ProcessExecutionStatus;
+  processState: ProcessState;
 };
 
-export default function ProcessExecutionStatusBadge({ status }: ProcessExecutionStatusBadgeProps) {
+export default function ProcessExecutionStatusBadge({
+  processState,
+}: ProcessExecutionStatusBadgeProps) {
+  const { status, flags } = processState;
+
   if (status == "PENDING")
     return (
       <CustomTooltip content="Processo ainda não começou" side="top">
@@ -16,15 +21,26 @@ export default function ProcessExecutionStatusBadge({ status }: ProcessExecution
 
   if (status == "IN_PROGRESS")
     return (
-      <CustomTooltip content="Processo começou, mas não terminou" side="top">
-        <Badge className="bg-indigo-400 text-white">FAZENDO</Badge>
-      </CustomTooltip>
+      <div className="relative w-fit cursor-default">
+        <CustomTooltip
+          content={flags?.hasPendingReprocess ? "Fazendo com reprocesso" : "Fazendo"}
+          side="top"
+        >
+          <Badge className="bg-indigo-400 text-white">FAZENDO</Badge>
+        </CustomTooltip>
+        {flags?.hasPendingReprocess && (
+          <CircleAlertIcon
+            className="text-white fill-red-500 absolute -top-1.5 -right-2"
+            size={18}
+          />
+        )}
+      </div>
     );
 
   if (status == "ERROR")
     return (
       <CustomTooltip content="Algo deu errado" side="top">
-        <Badge className="bg-gray-400 text-white">ERROR</Badge>
+        <Badge className="bg-red-400 text-white">ERROR</Badge>
       </CustomTooltip>
     );
 
@@ -37,14 +53,22 @@ export default function ProcessExecutionStatusBadge({ status }: ProcessExecution
 
   if (status == "REPROCESSING")
     return (
-      <CustomTooltip content="Está sendo refeito" side="top">
-        <Badge className="bg-orange-400 text-white">REPROCESSANDO</Badge>
+      <CustomTooltip content="Agurdando retrabalho" side="top">
+        <Badge className="bg-orange-600 text-white">REPROCESSO TOTAL</Badge>
       </CustomTooltip>
     );
 
   return (
-    <CustomTooltip content="Processo terminou" side="top">
-      <Badge className="bg-emerald-400 text-white">FEITO</Badge>
-    </CustomTooltip>
+    <div className="relative w-fit cursor-default">
+      <CustomTooltip
+        content={flags?.hasReprocess ? "Terminou com reprocesso" : "Terminou normalmente"}
+        side="top"
+      >
+        <Badge className="bg-emerald-400 text-white">FEITO</Badge>
+      </CustomTooltip>
+      {flags?.hasReprocess && (
+        <CircleAlertIcon className="text-white fill-red-500 absolute -top-1.5 -right-2" size={18} />
+      )}
+    </div>
   );
 }

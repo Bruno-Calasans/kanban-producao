@@ -40,7 +40,7 @@ export default function ProcessStateTable({ processStates }: ProcessStateTablePr
       accessorKey: "status",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
       cell: ({ row: { original: processState } }) => (
-        <ProcessStatusBadge status={processState.status} />
+        <ProcessStatusBadge processState={processState} />
       ),
       enableSorting: false,
     },

@@ -11,14 +11,12 @@ import useWeeklyDeadlineCard from "@/hooks/week-deadline-card/useWeeklyDeadlineC
 export type WeekDeadlineCardProps = {
   deadline: MovimentationDeadlinePopulated;
   departament: Departament;
-  isExpected?: boolean;
   weekDays: Date[];
   weekDay: Date;
 };
 
 export default function WeekDeadlineCard({
   deadline,
-  isExpected,
   departament,
   weekDay,
   weekDays,
@@ -41,8 +39,9 @@ export default function WeekDeadlineCard({
     isError,
   } = useWeeklyDeadlineCard({ deadline, weekDay, weekDays });
   const { selectedDeadline, setSelectedDeadline } = useWeeklyDeadline();
-
   const isSameDeadline = selectedDeadline?.id == deadline.id;
+
+  console.count("Rende");
 
   if (isPending) return <Loader title="Carregando..." />;
 
@@ -80,8 +79,8 @@ export default function WeekDeadlineCard({
             "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
           isSameDeadline && (isFinished || isMetaDone) && " border-emerald-700",
         )}
-        onMouseMove={() => setSelectedDeadline(deadline)}
-        onMouseOut={() => setSelectedDeadline(null)}
+        onMouseEnter={() => setSelectedDeadline(deadline)}
+        onMouseLeave={() => setSelectedDeadline(null)}
       >
         <Link
           className={cn("[a]:hover:bg-secondary hover:border transiton-all")}

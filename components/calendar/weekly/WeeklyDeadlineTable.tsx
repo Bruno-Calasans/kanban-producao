@@ -14,185 +14,77 @@ import { DAYS_OF_WEEK } from "@/constants/date";
 import useGetAllMovimentationDeadlineInRange from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlineInRange";
 import useWeek from "@/hooks/use-week/useWeek";
 import { cn } from "@/lib/utils";
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
-import { formatDate } from "@/utils/formatDate";
-import { isToday, isWithinInterval } from "date-fns";
-
-type DeadlineByDepartament = {
-  [key in number]: MovimentationDeadlinePopulated[];
-};
-
-type DeadlineByDate = {
-  [key in string]: MovimentationDeadlinePopulated[];
-};
+import { createCalendarMatrix } from "@/utils/createCalendarMatrix";
+import { normalizeWeekDays } from "@/utils/createNormalizedWeekDays";
+import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
+import { isToday } from "date-fns";
+import { useMemo } from "react";
 
 export default function WeeklyDeadlineTable() {
   const { weekDays, startDayOfWeek, endDayOfWeek, getCurrentWeek, getNextWeek, getPreviousWeek } =
     useWeek({
       startDate: new Date(),
     });
+
   const { data, isPending, error } = useGetAllMovimentationDeadlineInRange(
     startDayOfWeek,
     endDayOfWeek,
   );
   const deadlines = data?.data || [];
 
-  const groupDeadlinesByDepartament = () => {
-    const group: DeadlineByDepartament = {};
+  const normalizedWeekDays = useMemo(() => normalizeWeekDays(weekDays), [weekDays]);
 
-    for (const deadline of deadlines) {
-      const { departament } = deadline;
+  const deadlinesByDepartament = useMemo(() => groupDeadlinesByDepartament(deadlines), [deadlines]);
 
-      if (group[departament.id]) {
-        // Adiciona ao grupo se existe
-        group[departament.id].push(deadline);
-      } else {
-        // Cria se não existe
-        group[departament.id] = [deadline];
-      }
-    }
+  const calendarMatrix = useMemo(
+    () =>
+      createCalendarMatrix({
+        deadlines,
+        normalizedWeekDays,
+      }),
+    [deadlines, weekDays],
+  );
 
-    return group;
-  };
+  const createRows = () => {
+    const rows = [];
 
-  const groupDeadlinesByWeekDay = () => {
-    const groups: DeadlineByDate = {};
+    for (const [departmentId, departmentDeadlines] of deadlinesByDepartament) {
+      const department = departmentDeadlines[0].departament;
+      const weekMap = calendarMatrix.get(departmentId);
 
-    for (const deadline of deadlines) {
-      for (const weekDay of weekDays) {
-        const weekDateString = formatDate(weekDay);
+      rows.push(
+        <TableRow key={department.id}>
+          <TableHead className="w-[150px] font-semibold bg-muted/50">{department.name}</TableHead>
 
-        const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
-        const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
+          {normalizedWeekDays.map((day) => {
+            const deadlines = weekMap?.get(day.key);
 
-        let hasDeadlineInThisWeekDay = false;
-
-        // Tem dia para começar, mas não tem diz pra terminar
-        if (startedDate && !expectedDate) {
-          const lessOrEqualsToWeekDay = startedDate.getTime() <= weekDay.getTime();
-          hasDeadlineInThisWeekDay = lessOrEqualsToWeekDay;
-        }
-
-        // Tem prazo para terminar, mas não tem dia para começar
-        if (expectedDate && !startedDate) {
-          const isEqualToWeekDay = formatDate(expectedDate) == formatDate(weekDay);
-          hasDeadlineInThisWeekDay = isEqualToWeekDay;
-        }
-
-        // Tem dia para começar e terminar
-        if (startedDate && expectedDate) {
-          hasDeadlineInThisWeekDay = isWithinInterval(weekDay, {
-            start: startedDate,
-            end: expectedDate,
-          });
-        }
-
-        if (!hasDeadlineInThisWeekDay) {
-          if (!groups[weekDateString]) groups[weekDateString] = [];
-          continue;
-        }
-
-        if (hasDeadlineInThisWeekDay) {
-          if (groups[weekDateString]) {
-            groups[weekDateString].push(deadline);
-          } else {
-            groups[weekDateString] = [deadline];
-          }
-        }
-      }
-    }
-
-    return groups;
-  };
-
-  const deadlinesByDepartamentGroup = groupDeadlinesByDepartament();
-  const deadlinesByWeekDay = groupDeadlinesByWeekDay();
-
-  const renderCells = () => {
-    const rows: React.ReactNode[] = [];
-
-    for (const departamentKey of Object.keys(deadlinesByDepartamentGroup)) {
-      const cells: React.ReactNode[] = [];
-      const deadlines = deadlinesByDepartamentGroup[Number(departamentKey)];
-      const departament = deadlines[0].departament;
-
-      // Cria primeira célula da tabela
-      const firstCell = (
-        <TableHead key={departament.id} className="w-[150px] font-semibold bg-muted/50">
-          {departament.name}
-        </TableHead>
+            return (
+              <TableCell key={`${department.id}-${day.key}`}>
+                <div>
+                  {deadlines?.map((deadline) => (
+                    <WeekDeadlineCard
+                      key={`${department.id}-${deadline.id}-${day.key}`}
+                      deadline={deadline}
+                      departament={department}
+                      weekDay={day.date}
+                      weekDays={weekDays}
+                    />
+                  ))}
+                </div>
+              </TableCell>
+            );
+          })}
+        </TableRow>,
       );
-      cells.push(firstCell);
-
-      // Outras células
-      for (const weekDay of weekDays) {
-        const weekDayString = formatDate(weekDay);
-        const deadlinesInThisDayWeek = deadlinesByWeekDay[weekDayString];
-        const startedDeadlines: React.ReactNode[] = [];
-        const endDeadlines: React.ReactNode[] = [];
-
-        if (deadlinesInThisDayWeek.length == 0) {
-          cells.push(<TableCell key={weekDayString}></TableCell>);
-          continue;
-        }
-
-        for (const deadline of deadlines) {
-          const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
-          const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
-          const isWeekDayAtExpectedDate =
-            expectedDate && formatDate(weekDay) == formatDate(expectedDate);
-
-          // Dias para fazer
-          if (
-            startedDate &&
-            expectedDate &&
-            isWithinInterval(weekDay, {
-              start: startedDate,
-              end: expectedDate,
-            }) &&
-            !isWeekDayAtExpectedDate
-          ) {
-            startedDeadlines.push(
-              <WeekDeadlineCard
-                key={departament.name + deadline.id}
-                deadline={deadline}
-                departament={departament}
-                weekDay={weekDay}
-                weekDays={weekDays}
-              />,
-            );
-          }
-
-          // Dias que terminar
-          if (expectedDate && isWeekDayAtExpectedDate) {
-            endDeadlines.push(
-              <WeekDeadlineCard
-                key={departament.name + deadline.id}
-                deadline={deadline}
-                departament={departament}
-                weekDay={weekDay}
-                weekDays={weekDays}
-                isExpected
-              />,
-            );
-          }
-        }
-
-        cells.push(
-          <TableCell key={weekDayString + departament.name + new Date().getTime()}>
-            <div>
-              {startedDeadlines}
-              {endDeadlines}
-            </div>
-          </TableCell>,
-        );
-      }
-
-      rows.push(<TableRow key={departament.id}>{cells}</TableRow>);
     }
-
     return rows;
   };
+
+  const rows = useMemo(
+    () => createRows(),
+    [calendarMatrix, deadlinesByDepartament, normalizedWeekDays, weekDays],
+  );
 
   if (isPending) return <Loader title="Carregando prazos..." />;
 
@@ -209,24 +101,24 @@ export default function WeeklyDeadlineTable() {
 
       <Table>
         <TableHeader>
+          {/* Primeira linha */}
           <TableRow>
             <TableHead className="w-[150px] font-semibold bg-muted/50">DEPARTAMENTOS</TableHead>
-            {weekDays.map((day) => (
+            {normalizedWeekDays.map(({ key, date }) => (
               <TableHead
-                key={day.toISOString()}
+                key={key}
                 className={cn(
                   "w-[150px]  p-2 font-semibold bg-muted/50",
-                  isToday(day) && "bg-black/60 text-white",
+                  isToday(date) && "bg-black/60 text-white",
                 )}
               >
-                <p className="flex flex-col">{DAYS_OF_WEEK[day.getDay() - 1]}</p>
-                <p>{isToday(day) ? "Hoje" : formatDate(day)}</p>
+                <p className="flex flex-col">{DAYS_OF_WEEK[date.getDay() - 1]}</p>
+                <p>{isToday(date) ? "Hoje" : key}</p>
               </TableHead>
             ))}
           </TableRow>
         </TableHeader>
-
-        <TableBody>{renderCells()}</TableBody>
+        <TableBody>{rows}</TableBody>
       </Table>
     </section>
   );

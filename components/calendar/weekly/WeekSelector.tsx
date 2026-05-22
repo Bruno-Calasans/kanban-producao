@@ -3,9 +3,7 @@
 import PageTitle from "@/components/custom/PageTitle";
 import { Button } from "@/components/ui/button";
 import { MONTHS } from "@/constants/date";
-import useWeek from "@/hooks/use-week/useWeek";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useEffect } from "react";
 
 type WeekSelectorProps = {
   startDayOfWeek: Date;

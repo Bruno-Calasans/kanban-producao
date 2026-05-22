@@ -58,7 +58,7 @@ export type ProcessState = {
   movimentation: MovimentationPopulated;
   previousProcess: ProcessWithDepartament | null;
   nextProcess: ProcessWithDepartament | null;
-  template: ProductionFlowTemplate;
+  template: ProductionFlowTemplateWithProcess;
   executions: ProcessExecutionPopulated[];
 };
 

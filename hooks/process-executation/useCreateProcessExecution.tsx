@@ -1,7 +1,4 @@
-import {
-  CreateProcessExecutionData,
-  createProcessExecution,
-} from "@/service/api/processExecutationApi";
+import { CreateProcessExecutionData } from "@/service/api/processExecutationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { processExecutationKeys } from "@/constants/processExecutationKeys";
 import { movimentationKeys } from "@/constants/movimentationKeys";

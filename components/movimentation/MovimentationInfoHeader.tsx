@@ -66,7 +66,7 @@ export default function MovimentationInfoHeaderg({
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 mb-4">
+      <div className="flex flex-col gap-1 mb-2">
         <p>
           <strong>ID:</strong> #{movimentation.id}
         </p>

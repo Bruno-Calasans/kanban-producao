@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase/client";
 import { Movimentation } from "@/types/database.type";
 
 export type CreateMovimentationtData = Omit<Movimentation, "id" | "created_at" | "updated_at">;
-export type UpdateMovimentationData = Partial<CreateMovimentationtData>;
+export type UpdateMovimentationData = Partial<Movimentation>;
 export type DeleteMovimentationData = { movimentationId: number; productId: number };
 
 export async function getAllMovimentations() {
@@ -45,7 +45,17 @@ export async function getLastProductMovimentation(productId: number) {
 }
 
 export async function createMovimentation(data: CreateMovimentationtData) {
-  return await supabase.from("Movimentation").insert(data).select().single().throwOnError();
+  return await supabase
+    .from("Movimentation")
+    .insert(data)
+    .select(
+      `
+      *,
+      product:Product(*)
+    `,
+    )
+    .single()
+    .throwOnError();
 }
 
 export async function updateMovimentation(

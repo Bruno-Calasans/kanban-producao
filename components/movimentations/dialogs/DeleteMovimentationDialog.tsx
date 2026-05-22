@@ -5,6 +5,7 @@ import useDeleteMovimentation from "@/hooks/movimentation/useDeleteMovimentation
 import { toast } from "sonner";
 import type { MovimentationPopulated } from "@/types/database.type";
 import useDialog from "@/hooks/dialog/useDialog";
+import { useRouter } from "next/navigation";
 
 type DeleteMovimentationDialogProps = {
   movimentation: MovimentationPopulated;
@@ -17,6 +18,7 @@ export default function DeleteMovimentationDialog({
 }: DeleteMovimentationDialogProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useDeleteMovimentation();
+  const router = useRouter();
 
   const handleDelete = async () => {
     try {
@@ -26,6 +28,7 @@ export default function DeleteMovimentationDialog({
       });
       toast.success("Movimentação excluída com sucesso!");
       closeDialog("delete-movimentation");
+      router.push("/movimentations");
     } catch (error) {
       toast.error("Erro ao excluir movimentação. Tente novamente.");
     }

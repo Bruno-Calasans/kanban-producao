@@ -27,6 +27,7 @@ export default function CancelMovimentationDialog({
         movimentationId: movimentation.id,
         updateData: {
           status: "CANCELLED",
+          updated_at: new Date().toISOString(),
         },
       });
       toast.success("Movimentação cancelada com sucesso!");

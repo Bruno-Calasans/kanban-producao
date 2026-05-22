@@ -7,7 +7,7 @@ import {
   getAllProcessExecutionsByMovimentation,
 } from "@/service/api/processExecutationApi";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
-import { MovimentationPopulated } from "@/types/database.type";
+import { Movimentation, MovimentationPopulated } from "@/types/database.type";
 import calcMovimentationStatus from "@/utils/calcMovimentationStatus";
 import { calcProcessStates } from "@/utils/calcProcessStates";
 
@@ -44,6 +44,7 @@ export async function createExecution(
   if (movimentation.status != movimentationStatus) {
     await updateMovimentation(movimentation.id, {
       status: movimentationStatus,
+      updated_at: new Date().toISOString(),
     });
   }
 

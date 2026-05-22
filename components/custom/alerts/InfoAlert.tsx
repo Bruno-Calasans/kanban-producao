@@ -44,7 +44,7 @@ export function InfoAlert({
       onAction={onAction}
       classNames={{
         container: cn(
-          "border-indigo-200 bg-indigo-50 text-indigo-900 dark:border-indigo-900 dark:bg-indigo-950 dark:text-indigo-50 mb-3",
+          "border-indigo-200 bg-indigo-50 text-indigo-900 dark:border-indigo-900 dark:bg-indigo-950 dark:text-indigo-50 mb-0",
           classNames?.container,
         ),
         title: cn(classNames?.title),

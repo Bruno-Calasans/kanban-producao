@@ -43,9 +43,10 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
         await updateMovimentation({
           movimentationId: movimentation.id,
           updateData: {
-            product_id: product.id,
             amount,
+            product_id: product.id,
             status: "PENDING",
+            updated_at: new Date().toISOString(),
           },
         });
 

@@ -38,8 +38,8 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
       try {
         const { data: createdMovimentation } = await createMovimentation({
           product_id: product.id,
-          amount,
           status: "PENDING",
+          amount,
         });
 
         const { data: processFlows } = await getAllProductionFlowTemplates(
@@ -47,15 +47,19 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
         );
 
         await createProcessExecution({
-          from_process_id: null,
-          process_id: processFlows[0].process.id,
-          amount: createdMovimentation.amount,
-          movimentation_id: createdMovimentation.id,
-          responsible_id: null,
-          product_id: product.id,
-          started_at: new Date().toISOString(),
-          finished_at: new Date().toISOString(),
-          type: "INIT",
+          createData: {
+            from_process_id: null,
+            process_id: processFlows[0].process.id,
+            amount: createdMovimentation.amount,
+            movimentation_id: createdMovimentation.id,
+            responsible_id: null,
+            product_id: product.id,
+            reason: "",
+            type: "INIT",
+            started_at: new Date().toISOString(),
+            finished_at: new Date().toISOString(),
+          },
+          movimentation: createdMovimentation,
         });
 
         toast.success("Produto movimentado com sucesso!");

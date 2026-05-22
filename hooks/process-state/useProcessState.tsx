@@ -110,11 +110,15 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
 
       if (!hasExecutions) {
         status = "PENDING";
-      } else if (isReprocess && avaliableAmount === 0) {
-        status = "IN_PROGRESS";
-      } else if (isLastProcess && avaliableAmount === movimentation.amount) {
-        status = "SUCCESS";
-      } else if (avaliableAmount > 0) {
+      }
+      // Tudo saiu por causa de reprocesso
+      // else if (isReprocess && avaliableAmount === 0) {
+      //   status = "IN_PROGRESS";
+      // }
+      // else if (isLastProcess && avaliableAmount === movimentation.amount) {
+      //   status = "SUCCESS";
+      // }
+      else if (avaliableAmount > 0) {
         status = "IN_PROGRESS";
       } else {
         status = "SUCCESS";
@@ -138,6 +142,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
 
     // Checa por processos pulados
     checkSkippedProcess(states);
+    checkReprocesses(states);
 
     return states;
   };
@@ -158,6 +163,32 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     }
   };
 
+  const checkReprocesses = (processStates: ProcessState[]) => {
+    for (const current of processStates) {
+      const hasExecutions = current.executions.length > 0;
+
+      if (!hasExecutions) continue;
+
+      const outExecutions = current.executions.filter(
+        (exe) => exe.from_process?.id === current.process.id,
+      );
+
+      // Soma tudo que saiu normalmente
+      const outSum = outExecutions
+        .filter((exe) => exe.type === "TRANSFER" || exe.type === "RETURN")
+        .reduce((total, exe) => total + exe.amount, 0);
+
+      // Soma tudo que saiu via reprocesso
+      const reprocessSum = outExecutions
+        .filter((exe) => exe.type === "REPROCESS")
+        .reduce((total, exe) => total + exe.amount, 0);
+
+      if (reprocessSum > 0 && outSum === 0 && current.avaliableAmount === 0) {
+        current.status = "REPROCESSING";
+      }
+    }
+  };
+
   const processStates = useMemo(() => {
     if (isPending || isError || !movimentation || !flowTemplates.length || !processExecutions)
       return [];
@@ -170,9 +201,6 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     flowTemplates,
     isPending,
   ]);
-
-  console.log("Process States:", processStates);
-  console.log("Process Executions:", processExecutions);
 
   return {
     processExecutions,

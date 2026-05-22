@@ -42,7 +42,13 @@ export type ProcessExecutionPopulated = Omit<
 };
 
 export type ProcessExecutionType = ProcessExecution["type"];
-export type ProcessExecutionStatus = "PENDING" | "SUCCESS" | "IN_PROGRESS" | "ERROR" | "SKIPPED";
+export type ProcessExecutionStatus =
+  | "PENDING"
+  | "SUCCESS"
+  | "IN_PROGRESS"
+  | "ERROR"
+  | "SKIPPED"
+  | "REPROCESSING";
 
 export type ProcessState = {
   process: ProcessWithDepartament;

@@ -35,6 +35,13 @@ export default function ProcessExecutionStatusBadge({ status }: ProcessExecution
       </CustomTooltip>
     );
 
+  if (status == "REPROCESSING")
+    return (
+      <CustomTooltip content="Está sendo refeito" side="top">
+        <Badge className="bg-orange-400 text-white">REPROCESSANDO</Badge>
+      </CustomTooltip>
+    );
+
   return (
     <CustomTooltip content="Processo terminou" side="top">
       <Badge className="bg-emerald-400 text-white">FEITO</Badge>

@@ -44,7 +44,7 @@ export default function CreateReprocessForm({
     onSubmit: async ({ value }) => {
       try {
         const { amount } = value;
-        const { process, movimentation, previousProcess } = processState;
+        const { process, movimentation } = processState;
 
         if (!selectedProcess) return;
 

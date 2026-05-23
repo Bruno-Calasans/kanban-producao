@@ -21,7 +21,7 @@ export default function calcMovimentationStatus({
     return "REPROCESSING";
   }
 
-  if (processStates.some((s) => s.status === "IN_PROGRESS")) {
+  if (processStates.some((s) => s.status === "IN_PROGRESS" || s.status === "EXTERNAL")) {
     return "IN_PROGRESS";
   }
 

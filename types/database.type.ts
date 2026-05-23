@@ -48,12 +48,16 @@ export type ProcessExecutionStatus =
   | "IN_PROGRESS"
   | "ERROR"
   | "SKIPPED"
-  | "REPROCESSING";
+  | "REPROCESSING"
+  | "EXTERNAL";
 
 export type ProcessStateFlags = {
-  hasReprocess: boolean;
-  hasPendingReprocess: boolean;
-  partiallyReprocessed: boolean;
+  hasReprocess?: boolean;
+  hasPendingReprocess?: boolean;
+  partiallyReprocessed?: boolean;
+  hasExternal?: boolean;
+  hasPendingExternal?: boolean;
+  partiallyexternal?: boolean;
 };
 
 export type ProcessState = {

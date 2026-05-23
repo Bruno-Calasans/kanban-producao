@@ -58,6 +58,13 @@ export default function ProcessExecutionStatusBadge({
       </CustomTooltip>
     );
 
+  if (status == "EXTERNAL")
+    return (
+      <CustomTooltip content="Foi enviado para fora a partir daqui" side="top">
+        <Badge className="bg-purple-600 text-white">TERCEIRADO</Badge>
+      </CustomTooltip>
+    );
+
   return (
     <div className="relative w-fit cursor-default">
       <CustomTooltip

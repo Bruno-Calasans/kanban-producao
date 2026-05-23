@@ -39,8 +39,6 @@ export async function createExecution(
     processStates,
   });
 
-  console.log(movimentationStatus);
-
   if (movimentation.status != movimentationStatus) {
     await updateMovimentation(movimentation.id, {
       status: movimentationStatus,

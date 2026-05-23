@@ -102,6 +102,7 @@ export function calcProcessStates({
   // Checa por processos pulados
   checkSkippedProcess(states);
   checkReprocesses(states);
+  checkExernal(states);
 
   return states;
 }
@@ -154,6 +155,42 @@ export function checkReprocesses(processStates: ProcessState[]) {
 
     if (fullyReprocessed) {
       current.status = "REPROCESSING";
+    }
+  }
+}
+
+export function checkExernal(processStates: ProcessState[]) {
+  for (const current of processStates) {
+    const hasExecutions = current.executions.length > 0;
+    if (!hasExecutions) continue;
+
+    const outExecutions = current.executions.filter(
+      (exe) => exe.from_process?.id === current.process.id,
+    );
+
+    // Soma tudo que saiu normalmente
+    const forwardSum = outExecutions
+      .filter((exe) => exe.type === "TRANSFER" || exe.type === "REPROCESS")
+      .reduce((total, exe) => total + exe.amount, 0);
+
+    // Soma tudo que saiu via reprocesso
+    const externalSum = outExecutions
+      .filter((exe) => exe.type === "EXTERNAL")
+      .reduce((total, exe) => total + exe.amount, 0);
+
+    const hasExternal = externalSum > 0;
+    const hasPendingExternal = externalSum > forwardSum;
+    const fullYExternal = externalSum > 0 && forwardSum === 0 && current.avaliableAmount === 0;
+    const partiallyexternal = externalSum > 0 && forwardSum > 0 && externalSum > forwardSum;
+
+    current.flags = {
+      hasExternal,
+      hasPendingExternal,
+      partiallyexternal,
+    };
+
+    if (fullYExternal) {
+      current.status = "EXTERNAL";
     }
   }
 }

@@ -109,6 +109,8 @@ export default function WeeklyDeadlineTable() {
     [calendarMatrix, deadlinesByDepartament, normalizedWeekDays, weekDays],
   );
 
+  console.log(deadlines);
+
   const isPending =
     isMovimentationDeadlinePending ||
     isMovimentationExecutionTemplatePending ||

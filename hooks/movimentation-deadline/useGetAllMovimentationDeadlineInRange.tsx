@@ -4,7 +4,7 @@ import { getAllMovimentationDeadlinesInRange } from "@/service/api/movimentation
 
 export default function useGetAllMovimentationDeadlineInRange(fromDate: Date, toDate: Date) {
   return useQuery({
-    queryKey: movimentationDeadlineKeys.lists(),
+    queryKey: [...movimentationDeadlineKeys.lists(), fromDate.toDateString(), toDate.toDateString()],
     queryFn: () => getAllMovimentationDeadlinesInRange(fromDate, toDate),
     enabled: !!fromDate && !!toDate,
   });

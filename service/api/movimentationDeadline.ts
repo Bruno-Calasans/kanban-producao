@@ -38,6 +38,8 @@ export async function getAllMovimentationDeadlinesWithProduct() {
 }
 
 export async function getAllMovimentationDeadlinesInRange(fromDate: Date, toDate: Date) {
+  fromDate.setHours(0, 0, 0, 0);
+  toDate.setHours(0, 0, 0, 0);
   const from = fromDate.toISOString();
   const to = toDate.toISOString();
 
@@ -53,7 +55,8 @@ export async function getAllMovimentationDeadlinesInRange(fromDate: Date, toDate
         departament:Departament!departament_id(*)
     `,
     )
-    .or(`started_at.gte.${from},expected_at.lte.${to}`)
+    .lte("started_at", to)
+    .or(`expected_at.gte.${from},expected_at.is.null`)
     .throwOnError();
 }
 

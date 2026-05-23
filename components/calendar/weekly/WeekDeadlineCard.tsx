@@ -1,51 +1,49 @@
-import { Departament, MovimentationDeadlinePopulated } from "@/types/database.type";
+import {
+  Departament,
+  MetaPopulated,
+  MovimentationDeadlinePopulated,
+  ProcessState,
+} from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useWeeklyDeadline } from "@/context/useWeeklyDeadline";
 import WeekDeadlineCardContextMenu from "./WeekDeadlineCardContextMenu";
-import Loader from "@/components/custom/Loader";
 import { TargetIcon, ShirtIcon, HashIcon } from "lucide-react";
 import useWeeklyDeadlineCard from "@/hooks/week-deadline-card/useWeeklyDeadlineCard";
+import { useWeeklyDeadlineStore } from "@/store/weeklyDeadlineCardStore";
 
 export type WeekDeadlineCardProps = {
+  weekDay: Date;
   deadline: MovimentationDeadlinePopulated;
   departament: Departament;
-  weekDays: Date[];
-  weekDay: Date;
+  processStates: ProcessState[];
+  metasInThisWeek: MetaPopulated[];
 };
 
 export default function WeekDeadlineCard({
   deadline,
   departament,
   weekDay,
-  weekDays,
+  processStates,
+  metasInThisWeek,
 }: WeekDeadlineCardProps) {
-  const { movimentation } = deadline;
+  const setSelectedDeadlineId = useWeeklyDeadlineStore((state) => state.setSelectedDeadlineId);
+  const isSameDeadline = useWeeklyDeadlineStore(
+    (state) => state.selectedDeadlineId === deadline.id,
+  );
+
   const {
-    processStates,
-    metasInThisWeek,
-    metaInThisDay,
     totalAmount,
     amountDoneInThisDay,
-    daysAmount,
     departamentAvaliableAmount,
     metaAmount,
     isExpired,
     isFinished,
     isMetaDone,
     isMetaIncomplete,
-    isPending,
-    isError,
-  } = useWeeklyDeadlineCard({ deadline, weekDay, weekDays });
-  const { selectedDeadline, setSelectedDeadline } = useWeeklyDeadline();
-  const isSameDeadline = selectedDeadline?.id == deadline.id;
+  } = useWeeklyDeadlineCard({ deadline, metasInThisWeek, processStates, weekDay });
 
-  console.count("Rende");
-
-  if (isPending) return <Loader title="Carregando..." />;
-
-  if (isError) return <p>Erro ao carregar</p>;
+  const movimentation = deadline.movimentation;
 
   return (
     <WeekDeadlineCardContextMenu
@@ -63,7 +61,7 @@ export default function WeekDeadlineCard({
       <Badge
         asChild
         className={cn(
-          "flex flex-co h-fit rounded-none p-3 mt-2 transition-all",
+          "flex flex-co h-fit rounded-none p-3 mt-2",
           !isExpired &&
             !isFinished &&
             "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
@@ -79,11 +77,11 @@ export default function WeekDeadlineCard({
             "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
           isSameDeadline && (isFinished || isMetaDone) && " border-emerald-700",
         )}
-        onMouseEnter={() => setSelectedDeadline(deadline)}
-        onMouseLeave={() => setSelectedDeadline(null)}
+        onMouseEnter={() => setSelectedDeadlineId(deadline.id)}
+        onMouseLeave={() => setSelectedDeadlineId(null)}
       >
         <Link
-          className={cn("[a]:hover:bg-secondary hover:border transiton-all")}
+          className={cn("[a]:hover:bg-secondary hover:border")}
           href={`/movimentations/${movimentation.id}`}
         >
           <div className="flex flex-col items-start gap-1.5">

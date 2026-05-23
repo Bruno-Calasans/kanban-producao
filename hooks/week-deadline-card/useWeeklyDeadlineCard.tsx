@@ -1,39 +1,25 @@
 "use client";
 
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { MetaPopulated, MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
 import useGetAllMetasInRange from "../meta/useGetAllMetasInRange";
-import useProcessState from "../process-state/useProcessState";
 import { formatDate } from "@/utils/formatDate";
 import { differenceInDays } from "date-fns";
 import { useMemo } from "react";
 
 type UseWeeklyDeadlineCardProps = {
   deadline: MovimentationDeadlinePopulated;
-  weekDays: Date[];
   weekDay: Date;
+  processStates: ProcessState[];
+  metasInThisWeek: MetaPopulated[];
 };
 
 export default function useWeeklyDeadlineCard({
   deadline,
-  weekDays,
   weekDay,
+  processStates,
+  metasInThisWeek,
 }: UseWeeklyDeadlineCardProps) {
   const { movimentation, started_at, expected_at, finished_at } = deadline;
-  const {
-    processStates,
-    isPending: isProcessStatesPending,
-    isError: processStateError,
-  } = useProcessState({ movimentation });
-
-  const firstDayOfWeek = weekDays[0];
-  const lastDayOfWeek = weekDays[weekDays.length - 1];
-  const {
-    data,
-    isPending: isMetasPending,
-    error: metaError,
-  } = useGetAllMetasInRange(firstDayOfWeek, lastDayOfWeek, deadline.id);
-  const metasInThisWeek = data?.data || [];
-
   const metaInThisDay = metasInThisWeek.find(
     (meta) => formatDate(new Date(meta.ref_date + "T00:00:00")) == formatDate(weekDay),
   );
@@ -56,33 +42,28 @@ export default function useWeeklyDeadlineCard({
   const amountDoneInThisDay = metaInThisDay ? metaInThisDay.amount_done : 0;
 
   // Quantidade restante no departamento para fazer
-  const departamentAvaliableAmount = useMemo(
-    () =>
-      processStates
-        .filter((state) => state.process.departament.id == deadline.departament.id)
-        .map((state) => state.avaliableAmount)
-        .reduce((prev, curr) => prev + curr, 0),
-    [processStates],
-  );
+  const departamentAvaliableAmount = processStates
+    .filter((state) => state.process.departament.id === deadline.departament.id)
+    .reduce((prev, curr) => prev + curr.avaliableAmount, 0);
 
   // Meta diária
+  const remainingDays = Math.max(daysAmount - metasInThisWeek.length, 1);
+
   const metaAmount =
     metaInThisDay && metaInThisDay.expected_amount
       ? metaInThisDay.expected_amount
-      : Number.parseInt(String(departamentAvaliableAmount / (daysAmount - metasInThisWeek.length)));
+      : Number.parseInt(String(departamentAvaliableAmount / remainingDays));
 
   const isExpired = expectedDate && expectedDate.getTime() < today.getTime();
+
   const isFinished = !!finishedDate;
+
   const isMetaDone = amountDoneInThisDay >= metaAmount;
+
   const isMetaIncomplete =
     metaInThisDay && metaInThisDay.amount_done < metaInThisDay.expected_amount;
 
-  const isPending = isProcessStatesPending || isMetasPending;
-  const isError = processStateError || metaError;
-
   return {
-    processStates,
-    metasInThisWeek,
     metaInThisDay,
     totalAmount,
     amountDoneInThisDay,
@@ -93,7 +74,5 @@ export default function useWeeklyDeadlineCard({
     isFinished,
     isMetaDone,
     isMetaIncomplete,
-    isPending,
-    isError,
   };
 }

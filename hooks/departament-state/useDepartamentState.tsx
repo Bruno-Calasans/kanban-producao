@@ -36,6 +36,7 @@ export default function useDepartamentState({
   movimentationProcessStates,
   movimentationDeadlines,
 }: UseDepartamentStateProps) {
+  
   const getDepartamentStates = () => {
     const processStateByDepartament: ProcessStateByDepartament = {};
     const departamentStates: DepartamentState[] = [];

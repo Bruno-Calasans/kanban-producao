@@ -1,9 +1,11 @@
+import { isToday } from "date-fns";
 import { formatDate } from "./formatDate";
 
 export type NormalizedWeekDay = {
   date: Date;
   key: string;
   time: number;
+  isToday: boolean;
 };
 
 export function normalizeWeekDays(weekDays: Date[]): NormalizedWeekDay[] {
@@ -16,6 +18,7 @@ export function normalizeWeekDays(weekDays: Date[]): NormalizedWeekDay[] {
       date: normalized,
       key: formatDate(normalized),
       time: normalized.getTime(),
+      isToday: isToday(date),
     };
   });
 }

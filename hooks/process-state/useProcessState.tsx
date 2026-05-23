@@ -17,15 +17,6 @@ type UseProcessStateProps = {
   movimentation?: MovimentationPopulated;
 };
 
-type ProcessStatusData = {
-  executions: ProcessExecutionPopulated[];
-  avaliableAmount: number;
-  currentProcess: Process;
-  lastProcess: Process;
-  currentProcessTemplate: ProductionFlowTemplateWithProcess;
-  flowTemplates: ProductionFlowTemplate[];
-};
-
 export default function useProcessState({ movimentation }: UseProcessStateProps) {
   const {
     data: flowTemplateData,
@@ -46,9 +37,8 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
   const isError = flowTemplateError || processExecutionError;
 
   const processStates = useMemo(() => {
-    if (isPending || isError || !movimentation || !flowTemplates.length || !processExecutions)
+    if (isPending || isError || !movimentation || !flowTemplateData || !processExecutionsData)
       return [];
-
     return calcProcessStates({
       movimentation,
       flowTemplates,
@@ -58,9 +48,8 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     movimentation?.id,
     movimentation?.status,
     movimentation?.amount,
-    processExecutions,
-    flowTemplates,
-    isPending,
+    flowTemplateData,
+    flowTemplateData,
   ]);
 
   return {

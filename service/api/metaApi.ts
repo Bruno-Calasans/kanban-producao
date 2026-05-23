@@ -54,3 +54,16 @@ export async function getAllMetasInRange(from: Date, to: Date, deadlineId: numbe
     .lte("ref_date", toDate)
     .throwOnError();
 }
+
+export async function getAllMetasInRangeByDeadlines(from: Date, to: Date, deadlineIds: number[]) {
+  const fromDate = format(from, "yyyy-MM-dd");
+  const toDate = format(to, "yyyy-MM-dd");
+
+  return await supabase
+    .from("Meta")
+    .select("*, deadline:MovimentationDeadline!deadline_id(*)")
+    .in("deadline_id", deadlineIds)
+    .gte("ref_date", fromDate)
+    .lte("ref_date", toDate)
+    .throwOnError();
+}

@@ -12,13 +12,14 @@ import {
 } from "@/components/ui/table";
 import { DAYS_OF_WEEK } from "@/constants/date";
 import useGetAllMovimentationDeadlineInRange from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlineInRange";
+import useGetAllMovimentationsProcesStates from "@/hooks/movimentation-process-state/useGetAllMovimentationsProcesStates";
 import useWeek from "@/hooks/use-week/useWeek";
 import { cn } from "@/lib/utils";
 import { createCalendarMatrix } from "@/utils/createCalendarMatrix";
 import { normalizeWeekDays } from "@/utils/createNormalizedWeekDays";
 import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
-import { isToday } from "date-fns";
 import { useMemo } from "react";
+import useGroupAllMetasInRangeByDeadline from "@/hooks/deadline-meta/useGroupAllMetasInRangeByDeadline";
 
 export default function WeeklyDeadlineTable() {
   const { weekDays, startDayOfWeek, endDayOfWeek, getCurrentWeek, getNextWeek, getPreviousWeek } =
@@ -26,11 +27,26 @@ export default function WeeklyDeadlineTable() {
       startDate: new Date(),
     });
 
-  const { data, isPending, error } = useGetAllMovimentationDeadlineInRange(
-    startDayOfWeek,
-    endDayOfWeek,
-  );
-  const deadlines = data?.data || [];
+  const {
+    data: movimentationDeadlineData,
+    isPending: isMovimentationDeadlinePending,
+    error: movimentationDeadlineError,
+  } = useGetAllMovimentationDeadlineInRange(startDayOfWeek, endDayOfWeek);
+  const deadlines = movimentationDeadlineData?.data || [];
+
+  const movimentations = deadlines.map((deadline) => deadline.movimentation);
+  const {
+    processStatesByMovimentation,
+    isPending: isMovimentationExecutionTemplatePending,
+    isError: movimentationExecutionTemplateError,
+  } = useGetAllMovimentationsProcesStates({ movimentations });
+
+  const {
+    data: metasInRangeByDeadlineData,
+    isPending: isMetasInRangeByDeadlinePending,
+    isError: metasInRangeByDeadlineError,
+  } = useGroupAllMetasInRangeByDeadline({ from: startDayOfWeek, to: endDayOfWeek, deadlines });
+  const metasInRangeByDeadline = metasInRangeByDeadlineData;
 
   const normalizedWeekDays = useMemo(() => normalizeWeekDays(weekDays), [weekDays]);
 
@@ -42,7 +58,7 @@ export default function WeeklyDeadlineTable() {
         deadlines,
         normalizedWeekDays,
       }),
-    [deadlines, weekDays],
+    [deadlines, normalizedWeekDays],
   );
 
   const createRows = () => {
@@ -66,9 +82,12 @@ export default function WeeklyDeadlineTable() {
                     <WeekDeadlineCard
                       key={`${department.id}-${deadline.id}-${day.key}`}
                       deadline={deadline}
-                      departament={department}
                       weekDay={day.date}
-                      weekDays={weekDays}
+                      departament={department}
+                      metasInThisWeek={metasInRangeByDeadline?.get(deadline.id) || []}
+                      processStates={
+                        processStatesByMovimentation.get(deadline.movimentation.id) || []
+                      }
                     />
                   ))}
                 </div>
@@ -86,9 +105,19 @@ export default function WeeklyDeadlineTable() {
     [calendarMatrix, deadlinesByDepartament, normalizedWeekDays, weekDays],
   );
 
+  const isPending =
+    isMovimentationDeadlinePending ||
+    isMovimentationExecutionTemplatePending ||
+    isMetasInRangeByDeadlinePending;
+
+  const isError =
+    movimentationDeadlineError ||
+    movimentationExecutionTemplateError ||
+    metasInRangeByDeadlineError;
+
   if (isPending) return <Loader title="Carregando prazos..." />;
 
-  if (error) return <PageMsg title="Erro ao carregar prazos" />;
+  if (isError) return <PageMsg title="Erro ao carregar prazos" />;
 
   return (
     <section>
@@ -104,16 +133,16 @@ export default function WeeklyDeadlineTable() {
           {/* Primeira linha */}
           <TableRow>
             <TableHead className="w-[150px] font-semibold bg-muted/50">DEPARTAMENTOS</TableHead>
-            {normalizedWeekDays.map(({ key, date }) => (
+            {normalizedWeekDays.map(({ key, date, isToday }) => (
               <TableHead
                 key={key}
                 className={cn(
                   "w-[150px]  p-2 font-semibold bg-muted/50",
-                  isToday(date) && "bg-black/60 text-white",
+                  isToday && "bg-black/60 text-white",
                 )}
               >
                 <p className="flex flex-col">{DAYS_OF_WEEK[date.getDay() - 1]}</p>
-                <p>{isToday(date) ? "Hoje" : key}</p>
+                <p>{isToday ? "Hoje" : key}</p>
               </TableHead>
             ))}
           </TableRow>

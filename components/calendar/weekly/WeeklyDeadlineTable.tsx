@@ -71,7 +71,7 @@ export default function WeeklyDeadlineTable() {
 
       rows.push(
         <TableRow key={department.id}>
-          <TableHead className="w-[150px] font-semibold bg-muted/50">{department.name}</TableHead>
+          <TableHead className="w-[150px] font-semibold bg-muted/50 ">{department.name}</TableHead>
 
           {normalizedWeekDays.map((day) => {
             const deadlines = weekMap?.get(day.key);
@@ -132,27 +132,31 @@ export default function WeeklyDeadlineTable() {
         getPreviousWeek={getPreviousWeek}
       />
 
-      <Table>
-        <TableHeader>
-          {/* Primeira linha */}
-          <TableRow>
-            <TableHead className="w-[150px] font-semibold bg-muted/50">DEPARTAMENTOS</TableHead>
-            {normalizedWeekDays.map(({ key, date, isToday }) => (
-              <TableHead
-                key={key}
-                className={cn(
-                  "w-[150px]  p-2 font-semibold bg-muted/50",
-                  isToday && "bg-black/60 text-white",
-                )}
-              >
-                <p className="flex flex-col">{DAYS_OF_WEEK[date.getDay() - 1]}</p>
-                <p>{isToday ? "Hoje" : key}</p>
+      <div className="overflow-auto max-h-[90vh]">
+        <Table className="overflow-x-none">
+          <TableHeader>
+            {/* Primeira linha */}
+            <TableRow>
+              <TableHead className="w-[150px] font-semibold bg-muted/50 sticky top-0 z-30">
+                DEPARTAMENTOS
               </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>{rows}</TableBody>
-      </Table>
+              {normalizedWeekDays.map(({ key, date, isToday }) => (
+                <TableHead
+                  key={key}
+                  className={cn(
+                    "w-[150px] p-2 font-semibold bg-black/80 text-white sticky top-0 z-20",
+                    isToday && "bg-black/90 text-white",
+                  )}
+                >
+                  <p className="flex flex-col">{DAYS_OF_WEEK[date.getDay() - 1]}</p>
+                  <p>{isToday ? "Hoje" : key}</p>
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>{rows}</TableBody>
+        </Table>
+      </div>
     </section>
   );
 }

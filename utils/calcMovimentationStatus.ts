@@ -9,7 +9,7 @@ export default function calcMovimentationStatus({
   movimentation,
   processStates,
 }: UseMovimentationStatusProps): MovimentationStatus {
-  if (movimentation.is_cancelled) {
+  if (movimentation.status === "CANCELLED") {
     return "CANCELLED";
   }
 

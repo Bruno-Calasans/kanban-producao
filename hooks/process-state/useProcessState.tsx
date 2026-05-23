@@ -1,13 +1,7 @@
 /* eslint-disable react-hooks/preserve-manual-memoization */
 "use client";
 
-import {
-  MovimentationPopulated,
-  Process,
-  ProcessExecutionPopulated,
-  ProductionFlowTemplate,
-  ProductionFlowTemplateWithProcess,
-} from "@/types/database.type";
+import { MovimentationPopulated } from "@/types/database.type";
 import useGetAllProductionFlowTemplates from "../production-flow-template/useGetAllProductionFlowTemplates";
 import useGetAllProcessExecutionsByMovimentation from "../process-executation/useGetAllProcessExecutionsByMovimentation";
 import { useMemo } from "react";
@@ -48,7 +42,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     movimentation?.id,
     movimentation?.status,
     movimentation?.amount,
-    flowTemplateData,
+    processExecutionsData,
     flowTemplateData,
   ]);
 

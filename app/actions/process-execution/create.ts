@@ -7,7 +7,7 @@ import {
   getAllProcessExecutionsByMovimentation,
 } from "@/service/api/processExecutationApi";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
-import { Movimentation, MovimentationPopulated } from "@/types/database.type";
+import { MovimentationPopulated } from "@/types/database.type";
 import calcMovimentationStatus from "@/utils/calcMovimentationStatus";
 import { calcProcessStates } from "@/utils/calcProcessStates";
 

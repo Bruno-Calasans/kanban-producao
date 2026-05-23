@@ -50,15 +50,19 @@ export default function CreateProductMovimentationForm({
         );
 
         await createProcessExecution({
-          from_process_id: null,
-          process_id: processFlows[0].process.id,
-          amount: createdMovimentation.amount,
-          movimentation_id: createdMovimentation.id,
-          responsible_id: null,
-          product_id: product.id,
-          started_at: new Date().toISOString(),
-          finished_at: new Date().toISOString(),
-          type: "INIT",
+          createData: {
+            from_process_id: null,
+            process_id: processFlows[0].process.id,
+            amount: createdMovimentation.amount,
+            movimentation_id: createdMovimentation.id,
+            responsible_id: null,
+            product_id: product.id,
+            started_at: new Date().toISOString(),
+            finished_at: new Date().toISOString(),
+            type: "INIT",
+            reason: "",
+          },
+          movimentation: createdMovimentation,
         });
 
         toast.success("Produto movimentado com sucesso!");

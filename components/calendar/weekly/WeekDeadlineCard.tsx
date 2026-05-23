@@ -94,6 +94,7 @@ export default function WeekDeadlineCard({
             <p className="flex gap-0.5 items-center justify-center text-xs">
               <TargetIcon size={16} />
               <span className="font-bold">META DIÁRIA:</span> {metaAmount}
+              {isShort ? `/${totalAmount}` : null}
             </p>
             {!isShort && (
               <>

@@ -1,10 +1,8 @@
 "use client";
 
 import { MetaPopulated, MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
-import useGetAllMetasInRange from "../meta/useGetAllMetasInRange";
 import { formatDate } from "@/utils/formatDate";
 import { differenceInDays } from "date-fns";
-import { useMemo } from "react";
 
 type UseWeeklyDeadlineCardProps = {
   deadline: MovimentationDeadlinePopulated;

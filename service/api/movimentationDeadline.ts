@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase/client";
 import { MovimentationDeadline } from "@/types/database.type";
+import { getDeadlinePriority } from "@/utils/getDeadlinePriority";
 
 export type CreateMovimentationDeadlineData = Omit<
   MovimentationDeadline,

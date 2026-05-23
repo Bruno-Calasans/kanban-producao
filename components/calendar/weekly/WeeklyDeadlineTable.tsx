@@ -20,6 +20,7 @@ import { normalizeWeekDays } from "@/utils/createNormalizedWeekDays";
 import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
 import { useMemo } from "react";
 import useGroupAllMetasInRangeByDeadline from "@/hooks/deadline-meta/useGroupAllMetasInRangeByDeadline";
+import { sortByDeadlinePriority } from "@/utils/sortByDeadlinePriority";
 
 export default function WeeklyDeadlineTable() {
   const { weekDays, startDayOfWeek, endDayOfWeek, getCurrentWeek, getNextWeek, getPreviousWeek } =
@@ -74,6 +75,9 @@ export default function WeeklyDeadlineTable() {
 
           {normalizedWeekDays.map((day) => {
             const deadlines = weekMap?.get(day.key);
+            // Fazer depois porque nem todas as metas estão salvas no banco de dados
+            const metaInThisDay = deadlines?.map((d) => metasInRangeByDeadline?.get(d.id)) || [];
+            // console.log(department.name, day.key, metaInThisDay.filter(m => !!m))
 
             return (
               <TableCell key={`${department.id}-${day.key}`}>

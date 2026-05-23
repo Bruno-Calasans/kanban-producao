@@ -33,8 +33,6 @@ export function createCalendarMatrix({ deadlines, normalizedWeekDays }: CreateCa
       for (const day of normalizedWeekDays) {
         const cards = weekMap.get(day.key) || [];
 
-        const isExpectedDay = endTime === day.time;
-
         const isInsideInterval =
           startTime && endTime && day.time >= startTime && day.time <= endTime;
 

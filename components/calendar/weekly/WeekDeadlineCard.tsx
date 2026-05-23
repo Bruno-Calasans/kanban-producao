@@ -11,6 +11,7 @@ import WeekDeadlineCardContextMenu from "./WeekDeadlineCardContextMenu";
 import { TargetIcon, ShirtIcon, HashIcon } from "lucide-react";
 import useWeeklyDeadlineCard from "@/hooks/week-deadline-card/useWeeklyDeadlineCard";
 import { useWeeklyDeadlineStore } from "@/store/weeklyDeadlineCardStore";
+import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
 
 export type WeekDeadlineCardProps = {
   weekDay: Date;
@@ -31,6 +32,7 @@ export default function WeekDeadlineCard({
   const isSameDeadline = useWeeklyDeadlineStore(
     (state) => state.selectedDeadlineId === deadline.id,
   );
+  const isShort = useShortCardVersion((state) => state.isShort);
 
   const {
     totalAmount,
@@ -85,20 +87,27 @@ export default function WeekDeadlineCard({
           href={`/movimentations/${movimentation.id}`}
         >
           <div className="flex flex-col items-start gap-1.5">
-            <p className="font-bold mb-1 text-md">{movimentation.product.name}</p>
+            <p className="font-bold mb-1 text-md">
+              {movimentation.product.name} | {movimentation.product.op}
+            </p>
+
             <p className="flex gap-0.5 items-center justify-center text-xs">
               <TargetIcon size={16} />
               <span className="font-bold">META DIÁRIA:</span> {metaAmount}
             </p>
-            <p className="flex gap-0.5 items-center justify-center text-xs">
-              <ShirtIcon size={16} />
-              <span className="font-bold">FEITO:</span> {amountDoneInThisDay}
-            </p>
-            <p className="flex gap-0.5 items-center justify-center text-xs">
-              <HashIcon size={16} />
-              <span className="font-bold">RESTANTE:</span>
-              {departamentAvaliableAmount} DE {totalAmount}
-            </p>
+            {!isShort && (
+              <>
+                <p className="flex gap-0.5 items-center justify-center text-xs">
+                  <ShirtIcon size={16} />
+                  <span className="font-bold">FEITO:</span> {amountDoneInThisDay}
+                </p>
+                <p className="flex gap-0.5 items-center justify-center text-xs">
+                  <HashIcon size={16} />
+                  <span className="font-bold">RESTANTE:</span>
+                  {departamentAvaliableAmount} DE {totalAmount}
+                </p>
+              </>
+            )}
           </div>
         </Link>
       </Badge>

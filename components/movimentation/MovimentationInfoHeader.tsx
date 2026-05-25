@@ -184,6 +184,8 @@ export default function MovimentationInfoHeaderg({
                 ? new Date(hasDeadline.expected_at)
                 : undefined;
 
+            expiredDate?.setHours(0, 0, 0, 0)
+            today.setHours(0, 0, 0, 0)
             const isExpired = expiredDate ? expiredDate.getTime() < today.getTime() : undefined;
 
             if (isExpired)

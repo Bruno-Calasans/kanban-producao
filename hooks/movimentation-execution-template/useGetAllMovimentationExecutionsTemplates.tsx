@@ -9,6 +9,6 @@ export default function useGetAllMovimentationExecutionsTemplates(
   return useQuery({
     queryKey: [...movimentationKeys.lists(), movimentations?.map(m => m.id)],
     queryFn: () => getAllMovimentationExecutionsTemplates(movimentations),
-    enabled: movimentations && movimentations.length > 0,
+    enabled: !!movimentations && movimentations.length > 0,
   });
 }

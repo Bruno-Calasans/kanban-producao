@@ -30,15 +30,15 @@ export default function WeeklyDeadlineTable() {
 
   const {
     data: movimentationDeadlineData,
-    isPending: isMovimentationDeadlinePending,
-    error: movimentationDeadlineError,
+    isLoading: isMovimentationDeadlineLoading,
+    isError: movimentationDeadlineError,
   } = useGetAllMovimentationDeadlineInRange(startDayOfWeek, endDayOfWeek);
   const deadlines = movimentationDeadlineData?.data || [];
 
   const movimentations = deadlines.map((deadline) => deadline.movimentation);
   const {
     processStatesByMovimentation,
-    isPending: isMovimentationExecutionTemplatePending,
+    isLoading: isMovimentationExecutionTemplateLoading,
     isError: movimentationExecutionTemplateError,
   } = useGetAllMovimentationsProcesStates({ movimentations });
 
@@ -46,6 +46,7 @@ export default function WeeklyDeadlineTable() {
     data: metasInRangeByDeadlineData,
     isPending: isMetasInRangeByDeadlinePending,
     isError: metasInRangeByDeadlineError,
+    isLoading: isMetasInRangeByDeadlineLoading,
   } = useGroupAllMetasInRangeByDeadline({ from: startDayOfWeek, to: endDayOfWeek, deadlines });
   const metasInRangeByDeadline = metasInRangeByDeadlineData;
 
@@ -106,22 +107,27 @@ export default function WeeklyDeadlineTable() {
 
   const rows = useMemo(
     () => createRows(),
-    [calendarMatrix, deadlinesByDepartament, normalizedWeekDays, weekDays],
+    [
+      calendarMatrix,
+      deadlinesByDepartament,
+      normalizedWeekDays,
+      weekDays,
+      metasInRangeByDeadline,
+      processStatesByMovimentation,
+    ],
   );
 
-  console.log(deadlines);
-
-  const isPending =
-    isMovimentationDeadlinePending ||
-    isMovimentationExecutionTemplatePending ||
-    isMetasInRangeByDeadlinePending;
+  const isLoading =
+    isMovimentationDeadlineLoading ||
+    isMovimentationExecutionTemplateLoading ||
+    isMetasInRangeByDeadlineLoading;
 
   const isError =
     movimentationDeadlineError ||
     movimentationExecutionTemplateError ||
     metasInRangeByDeadlineError;
 
-  if (isPending) return <Loader title="Carregando prazos..." />;
+  if (isLoading) return <Loader title="Carregando prazos..." />;
 
   if (isError) return <PageMsg title="Erro ao carregar prazos" />;
 

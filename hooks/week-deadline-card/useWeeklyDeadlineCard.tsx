@@ -30,47 +30,74 @@ export default function useWeeklyDeadlineCard({
   today.setHours(0, 0, 0, 0);
   expectedDate?.setHours(0, 0, 0, 0);
   finishedDate?.setHours(0, 0, 0, 0);
+  weekDay.setHours(0, 0, 0, 0);
 
   // Dias entre a data que começou e prazo
   const daysAmount =
-    startedDate && expectedDate ? differenceInDays(expectedDate, startedDate) + 1 : 0;
+    startedDate && expectedDate ? differenceInDays(expectedDate, startedDate) + 1 : 1;
 
   // Quantidade que deve ser feita
   const totalAmount = movimentation.amount;
   const amountDoneInThisDay = metaInThisDay ? metaInThisDay.amount_done : 0;
 
   // Quantidade restante no departamento para fazer
-  const departamentAvaliableAmount = processStates
-    .filter((state) => state.process.departament.id === deadline.departament.id)
-    .reduce((prev, curr) => prev + curr.avaliableAmount, 0);
+  const departmentStates = processStates.filter(
+    (state) => state.process.departament.id === deadline.departament.id,
+  );
 
-  // Meta diária
-  const remainingDays = Math.max(daysAmount - metasInThisWeek.length, 1);
+  const internalRemainingAmount = departmentStates.reduce(
+    (total, state) => total + state.avaliableAmount,
+    0,
+  );
 
-  const metaAmount =
-    metaInThisDay && metaInThisDay.expected_amount
-      ? metaInThisDay.expected_amount
-      : Number.parseInt(String(departamentAvaliableAmount / remainingDays));
+  const externalRemainingAmount = departmentStates.reduce(
+    (total, state) => total + state.externalAmount,
+    0,
+  );
+
+  console.log("internalRemainingAmount", internalRemainingAmount);
+  console.log("externalRemainingAmount", externalRemainingAmount);
+  console.log("extternal executions", departmentStates.map((state) => state.outputExecutions.filter((exe) => exe.type === "EXTERNAL")).flat());
+
+  const totalRemainingAmount = internalRemainingAmount + externalRemainingAmount;
+
+  // Dias para fazer a meta
+  const totalDays = Math.max(daysAmount - metasInThisWeek.length, 1);
+
+  const metaAmount = metaInThisDay
+    ? metaInThisDay.expected_amount
+    : Math.ceil(internalRemainingAmount / totalDays);
+
+  const hasInternalWork = internalRemainingAmount > 0;
+  const hasExternalWork = externalRemainingAmount > 0;
+  const hasWork = hasInternalWork && hasExternalWork;
 
   const isExpired = expectedDate && expectedDate.getTime() < today.getTime();
 
   const isFinished = !!finishedDate;
 
-  const isMetaDone = amountDoneInThisDay >= metaAmount;
+  const isMetaDone = hasInternalWork && metaAmount > 0 && amountDoneInThisDay >= metaAmount;
 
   const isMetaIncomplete =
-    metaInThisDay && metaInThisDay.amount_done < metaInThisDay.expected_amount;
+    hasWork && !!metaInThisDay && metaInThisDay.amount_done < metaInThisDay.expected_amount;
+
+  const isExpectedThisWeekDay = expectedDate && expectedDate.getTime() == weekDay.getTime();
 
   return {
     metaInThisDay,
     totalAmount,
     amountDoneInThisDay,
     daysAmount,
-    departamentAvaliableAmount,
+    internalRemainingAmount,
+    externalRemainingAmount,
     metaAmount,
     isExpired,
     isFinished,
     isMetaDone,
     isMetaIncomplete,
+    isExpectedThisWeekDay,
+    hasInternalWork,
+    hasExternalWork,
+    hasWork,
   };
 }

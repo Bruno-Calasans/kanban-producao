@@ -58,11 +58,17 @@ export type ProcessStateFlags = {
   hasExternal?: boolean;
   hasPendingExternal?: boolean;
   partiallyexternal?: boolean;
+  partiallyExternal?: boolean;
 };
 
 export type ProcessState = {
   process: ProcessWithDepartament;
+  inputAmount: number;
+  outputAmount: number;
+  externalAmount: number;
+  reprocessAmount: number;
   avaliableAmount: number;
+  forwardAmount: number;
   status: ProcessExecutionStatus;
   flowTemplates: ProductionFlowTemplateWithProcess[];
   movimentation: MovimentationPopulated;
@@ -70,6 +76,8 @@ export type ProcessState = {
   nextProcess: ProcessWithDepartament | null;
   template: ProductionFlowTemplateWithProcess;
   executions: ProcessExecutionPopulated[];
+  inputExecutions: ProcessExecutionPopulated[];
+  outputExecutions: ProcessExecutionPopulated[];
   flags?: ProcessStateFlags;
 };
 

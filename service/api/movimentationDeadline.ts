@@ -55,8 +55,9 @@ export async function getAllMovimentationDeadlinesInRange(fromDate: Date, toDate
         departament:Departament!departament_id(*)
     `,
     )
-    .lte("started_at", to)
-    .or(`expected_at.gte.${from},expected_at.is.null`)
+    .or(
+      `and(started_at.is.null,expected_at.gte.${from},expected_at.lte.${to}),and(expected_at.is.null,started_at.gte.${from},started_at.lte.${to}),and(started_at.gte.${from},expected_at.lte.${to})`,
+    )
     .throwOnError();
 }
 

@@ -7,6 +7,7 @@ type CreateCalendarMatrixInput = {
   normalizedWeekDays: NormalizedWeekDay[];
 };
 
+
 export function createCalendarMatrix({ deadlines, normalizedWeekDays }: CreateCalendarMatrixInput) {
   const matrix = new Map<number, Map<string, MovimentationDeadlinePopulated[]>>();
 
@@ -36,8 +37,10 @@ export function createCalendarMatrix({ deadlines, normalizedWeekDays }: CreateCa
         const isInsideInterval =
           startTime && endTime && day.time >= startTime && day.time <= endTime;
 
+        const isAtDay = (startTime || endTime) == day.time;
+
         // Dias normais
-        if (isInsideInterval) {
+        if (isInsideInterval || isAtDay) {
           cards.push(deadline);
         }
       }

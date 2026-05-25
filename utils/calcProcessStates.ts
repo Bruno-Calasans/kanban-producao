@@ -3,7 +3,6 @@ import {
   ProcessExecutionPopulated,
   ProcessExecutionStatus,
   ProcessState,
-  ProductionFlowTemplate,
   ProductionFlowTemplateWithProcess,
 } from "@/types/database.type";
 
@@ -19,42 +18,45 @@ export function calcProcessStates({
   flowTemplates,
 }: ProcessStatusData) {
   const states: ProcessState[] = [];
+
   const lastProcess = flowTemplates[flowTemplates.length - 1].process;
 
-  const inputMap = new Map<number, number>();
-  const outputMap = new Map<number, number>();
-  const executionMap = new Map<number, ProcessExecutionPopulated[]>();
+  // Agrupamento por processo
+  const inputExecutionsMap = new Map<number, ProcessExecutionPopulated[]>();
+  const outputExecutionsMap = new Map<number, ProcessExecutionPopulated[]>();
 
-  // Agrupa execuções por processo e calcula somatório de entradas e saídas
+  // =========================
+  // ORGANIZA EXECUÇÕES
+  // =========================
+
   for (const execution of processExecutions) {
-    // Tem entradas
+    // ENTRADA
     if (execution.process) {
       const processId = execution.process.id;
 
-      // Soma entradas
-      const currentInput = inputMap.get(processId) || 0;
-      inputMap.set(processId, currentInput + execution.amount);
+      const current = inputExecutionsMap.get(processId) || [];
 
-      const currentExecutions = executionMap.get(processId) || [];
-      currentExecutions.push(execution);
-      executionMap.set(processId, currentExecutions);
+      current.push(execution);
+
+      inputExecutionsMap.set(processId, current);
     }
 
-    // Tem saídas
+    // SAÍDA
     if (execution.from_process) {
       const processId = execution.from_process.id;
 
-      // Soma saídas
-      const currentInput = outputMap.get(processId) || 0;
-      outputMap.set(processId, currentInput + execution.amount);
+      const current = outputExecutionsMap.get(processId) || [];
 
-      const currentExecutions = executionMap.get(processId) || [];
-      currentExecutions.push(execution);
-      executionMap.set(processId, currentExecutions);
+      current.push(execution);
+
+      outputExecutionsMap.set(processId, current);
     }
   }
 
-  // Calcula status de cada processo
+  // =========================
+  // CALCULA ESTADOS
+  // =========================
+
   for (let i = 0; i < flowTemplates.length; i++) {
     const template = flowTemplates[i];
 
@@ -62,20 +64,59 @@ export function calcProcessStates({
 
     const processId = currentProcess.id;
 
-    const input = inputMap.get(processId) || 0;
-    const output = outputMap.get(processId) || 0;
-    const avaliableAmount = input - output;
+    const inputExecutions = inputExecutionsMap.get(processId) || [];
 
-    const executions = executionMap.get(processId) || [];
-    const hasExecutions = executions.length > 0;
+    const outputExecutions = outputExecutionsMap.get(processId) || [];
 
-    const isLastProcess = currentProcess.id === lastProcess.id;
+    // =========================
+    // QUANTIDADES
+    // =========================
+
+    const inputAmount = inputExecutions.reduce(
+      (total, exe) => total + exe.amount,
+      0,
+    );
+
+    const forwardAmount = outputExecutions
+      .filter((exe) => exe.type === "TRANSFER")
+      .reduce((total, exe) => total + exe.amount, 0);
+
+    const externalAmount = outputExecutions
+      .filter((exe) => exe.type === "EXTERNAL")
+      .reduce((total, exe) => total + exe.amount, 0);
+
+    const reprocessAmount = outputExecutions
+      .filter((exe) => exe.type === "REPROCESS")
+      .reduce((total, exe) => total + exe.amount, 0);
+
+    const outputAmount =
+      forwardAmount + externalAmount + reprocessAmount;
+
+    const avaliableAmount =
+      inputAmount -
+      forwardAmount -
+      externalAmount -
+      reprocessAmount;
+
+    // =========================
+    // STATUS BASE
+    // =========================
+
+    const hasExecutions =
+      inputExecutions.length > 0 ||
+      outputExecutions.length > 0;
+
+    const isLastProcess =
+      currentProcess.id === lastProcess.id;
 
     let status: ProcessExecutionStatus = "PENDING";
 
     if (!hasExecutions) {
       status = "PENDING";
-    } else if (isLastProcess && avaliableAmount === movimentation.amount) {
+    } else if (
+      isLastProcess &&
+      avaliableAmount === movimentation.amount
+    ) {
       status = "SUCCESS";
     } else if (avaliableAmount > 0) {
       status = "IN_PROGRESS";
@@ -83,114 +124,153 @@ export function calcProcessStates({
       status = "SUCCESS";
     }
 
-    const previousProcess = i > 0 ? flowTemplates[i - 1].process : null;
-    const nextProcess = i < flowTemplates.length - 1 ? flowTemplates[i + 1].process : null;
+    // =========================
+    // FLAGS
+    // =========================
+
+    const hasExternal = externalAmount > 0;
+
+    const hasReprocess = reprocessAmount > 0;
+
+    const hasPendingExternal =
+      externalAmount > forwardAmount;
+
+    const hasPendingReprocess =
+      reprocessAmount > forwardAmount;
+
+    const fullyExternal =
+      externalAmount > 0 &&
+      forwardAmount === 0 &&
+      avaliableAmount === 0;
+
+    const fullyReprocessed =
+      reprocessAmount > 0 &&
+      forwardAmount === 0 &&
+      avaliableAmount === 0;
+
+    const partiallyExternal =
+      externalAmount > 0 &&
+      forwardAmount > 0;
+
+    const partiallyReprocessed =
+      reprocessAmount > 0 &&
+      forwardAmount > 0;
+
+    // =========================
+    // STATUS AVANÇADO
+    // =========================
+
+    if (fullyExternal) {
+      status = "EXTERNAL";
+    }
+
+    if (fullyReprocessed) {
+      status = "REPROCESSING";
+    }
+
+    // =========================
+    // PROCESSOS RELACIONADOS
+    // =========================
+
+    const previousProcess =
+      i > 0
+        ? flowTemplates[i - 1].process
+        : null;
+
+    const nextProcess =
+      i < flowTemplates.length - 1
+        ? flowTemplates[i + 1].process
+        : null;
+
+    // =========================
+    // PUSH
+    // =========================
 
     states.push({
       process: currentProcess,
+
       movimentation,
+
       flowTemplates,
-      avaliableAmount,
-      status,
-      previousProcess,
-      nextProcess,
+
       template,
-      executions,
+
+      previousProcess,
+
+      nextProcess,
+
+      status,
+
+      // QUANTIDADES
+      inputAmount,
+
+      outputAmount,
+
+      forwardAmount,
+
+      externalAmount,
+
+      reprocessAmount,
+
+      avaliableAmount,
+
+      // EXECUÇÕES
+      inputExecutions,
+
+      outputExecutions,
+
+      executions: [
+        ...inputExecutions,
+        ...outputExecutions,
+      ],
+
+      // FLAGS
+      flags: {
+        hasExternal,
+
+        hasPendingExternal,
+
+        partiallyExternal,
+
+        hasReprocess,
+
+        hasPendingReprocess,
+
+        partiallyReprocessed,
+      },
     });
   }
 
-  // Checa por processos pulados
+  // =========================
+  // PROCESSOS PULADOS
+  // =========================
+
   checkSkippedProcess(states);
-  checkReprocesses(states);
-  checkExernal(states);
 
   return states;
 }
 
-export function checkSkippedProcess(processStates: ProcessState[]) {
+export function checkSkippedProcess(
+  processStates: ProcessState[],
+) {
   for (let i = 0; i < processStates.length; i++) {
     const current = processStates[i];
 
-    const hasExecutions = current.executions.length > 0;
+    const hasExecutions =
+      current.executions.length > 0;
+
     if (hasExecutions) continue;
 
-    const afterStates = processStates.slice(i + 1);
-    const hasFlowAdvanced = afterStates.some((s) => s.executions.length > 0);
+    const afterStates =
+      processStates.slice(i + 1);
+
+    const hasFlowAdvanced =
+      afterStates.some(
+        (state) => state.executions.length > 0,
+      );
 
     if (hasFlowAdvanced) {
       current.status = "SKIPPED";
-    }
-  }
-}
-
-export function checkReprocesses(processStates: ProcessState[]) {
-  for (const current of processStates) {
-    const hasExecutions = current.executions.length > 0;
-    if (!hasExecutions) continue;
-
-    const outExecutions = current.executions.filter(
-      (exe) => exe.from_process?.id === current.process.id,
-    );
-
-    // Soma tudo que saiu normalmente
-    const forwardSum = outExecutions
-      .filter((exe) => exe.type === "TRANSFER" || exe.type === "EXTERNAL")
-      .reduce((total, exe) => total + exe.amount, 0);
-
-    // Soma tudo que saiu via reprocesso
-    const reprocessSum = outExecutions
-      .filter((exe) => exe.type === "REPROCESS")
-      .reduce((total, exe) => total + exe.amount, 0);
-
-    const hasReprocess = reprocessSum > 0;
-    const hasPendingReprocess = reprocessSum > forwardSum;
-    const fullyReprocessed = reprocessSum > 0 && forwardSum === 0 && current.avaliableAmount === 0;
-    const partiallyReprocessed = reprocessSum > 0 && forwardSum > 0 && reprocessSum > forwardSum;
-
-    current.flags = {
-      hasReprocess,
-      hasPendingReprocess,
-      partiallyReprocessed,
-    };
-
-    if (fullyReprocessed) {
-      current.status = "REPROCESSING";
-    }
-  }
-}
-
-export function checkExernal(processStates: ProcessState[]) {
-  for (const current of processStates) {
-    const hasExecutions = current.executions.length > 0;
-    if (!hasExecutions) continue;
-
-    const outExecutions = current.executions.filter(
-      (exe) => exe.from_process?.id === current.process.id,
-    );
-
-    // Soma tudo que saiu normalmente
-    const forwardSum = outExecutions
-      .filter((exe) => exe.type === "TRANSFER" || exe.type === "REPROCESS")
-      .reduce((total, exe) => total + exe.amount, 0);
-
-    // Soma tudo que saiu via reprocesso
-    const externalSum = outExecutions
-      .filter((exe) => exe.type === "EXTERNAL")
-      .reduce((total, exe) => total + exe.amount, 0);
-
-    const hasExternal = externalSum > 0;
-    const hasPendingExternal = externalSum > forwardSum;
-    const fullYExternal = externalSum > 0 && forwardSum === 0 && current.avaliableAmount === 0;
-    const partiallyexternal = externalSum > 0 && forwardSum > 0 && externalSum > forwardSum;
-
-    current.flags = {
-      hasExternal,
-      hasPendingExternal,
-      partiallyexternal,
-    };
-
-    if (fullYExternal) {
-      current.status = "EXTERNAL";
     }
   }
 }

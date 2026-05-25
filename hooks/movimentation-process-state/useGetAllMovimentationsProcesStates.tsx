@@ -12,13 +12,12 @@ type UseGetAllMovimentationsProcesStatesProps = {
 export default function useGetAllMovimentationsProcesStates({
   movimentations,
 }: UseGetAllMovimentationsProcesStatesProps) {
-  const { data, isPending, isError, error } =
-    useGetAllMovimentationExecutionsTemplates(movimentations);
+  const { data, isError, isLoading } = useGetAllMovimentationExecutionsTemplates(movimentations);
 
   const processStatesByMovimentation = useMemo(() => {
     const processStatesByMovimentation = new Map<number, ProcessState[]>();
 
-    if (!data || isPending || isError) return processStatesByMovimentation;
+    if (!data || isError || movimentations.length === 0) return processStatesByMovimentation;
 
     for (const [movimentationId, movimentationExecutionTemplate] of data) {
       const { movimentation, executions, templates } = movimentationExecutionTemplate;
@@ -33,11 +32,11 @@ export default function useGetAllMovimentationsProcesStates({
     }
 
     return processStatesByMovimentation;
-  }, [data]);
+  }, [movimentations, data]);
 
   return {
     processStatesByMovimentation,
-    isPending,
+    isLoading,
     isError,
   };
 }

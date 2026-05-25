@@ -157,10 +157,11 @@ export default function MovimentationInfoHeaderg({
           <ErrorAlert
             title="Movimentação Cancelada"
             description={`Esta movimentação foi cancelada dia ${new Date(movimentation.updated_at).toLocaleDateString()}. Você não pode realizar mais ações ou definir prazos para esta movimentação.`}
+            hideCloseButton
           />
         )}
 
-        {expiredDepartaments.length > 0 && (
+        {expiredDepartaments.length > 0 && movimentationStatus != "CANCELLED" && (
           <ErrorAlert
             title="Departamento com prazo expirado"
             description="Existem departamentos com prazos expirados. Verifique a aba de prazos para mais detalhes."

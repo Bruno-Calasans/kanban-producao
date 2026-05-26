@@ -1,4 +1,4 @@
-import WeekDeadlineCard from "@/components/calendar/weekly/WeekDeadlineCard";
+import WeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import WeekSelector from "@/components/calendar/weekly/WeekSelector";
 import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
@@ -21,6 +21,9 @@ import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament
 import { useMemo } from "react";
 import useGroupAllMetasInRangeByDeadline from "@/hooks/deadline-meta/useGroupAllMetasInRangeByDeadline";
 import { sortByDeadlinePriority } from "@/utils/sortByDeadlinePriority";
+import { calcExternalProcessStates } from "@/utils/calcExternalProcessState";
+import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";
+import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 
 export default function WeeklyDeadlineTable() {
   const { weekDays, startDayOfWeek, endDayOfWeek, getCurrentWeek, getNextWeek, getPreviousWeek } =
@@ -63,6 +66,8 @@ export default function WeeklyDeadlineTable() {
     [deadlines, normalizedWeekDays],
   );
 
+  console.log(metasInRangeByDeadline)
+
   const createRows = () => {
     const rows = [];
 
@@ -83,18 +88,34 @@ export default function WeeklyDeadlineTable() {
             return (
               <TableCell key={`${department.id}-${day.key}`}>
                 <div>
-                  {deadlines?.map((deadline) => (
-                    <WeekDeadlineCard
-                      key={`${department.id}-${deadline.id}-${day.key}`}
-                      deadline={deadline}
-                      weekDay={day.date}
-                      departament={department}
-                      metasInThisWeek={metasInRangeByDeadline?.get(deadline.id) || []}
-                      processStates={
-                        processStatesByMovimentation.get(deadline.movimentation.id) || []
-                      }
-                    />
-                  ))}
+                  {deadlines?.map((deadline) => {
+                    if (deadline.departament.is_external) {
+                      return (
+                        <ExternalWeekDeadlineCard
+                          key={`${department.id}-${deadline.id}-${day.key}`}
+                          deadline={deadline}
+                          weekDay={day.date}
+                          departament={department}
+                          processStates={
+                            processStatesByMovimentation.get(deadline.movimentation.id) || []
+                          }
+                        />
+                      );
+                    }
+
+                    return (
+                      <InternalWeekDeadlineCard
+                        key={`${department.id}-${deadline.id}-${day.key}`}
+                        deadline={deadline}
+                        weekDay={day.date}
+                        departament={department}
+                        metasInThisWeek={metasInRangeByDeadline?.get(deadline.id) || []}
+                        processStates={
+                          processStatesByMovimentation.get(deadline.movimentation.id) || []
+                        }
+                      />
+                    );
+                  })}
                 </div>
               </TableCell>
             );

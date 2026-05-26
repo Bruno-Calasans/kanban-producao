@@ -8,27 +8,31 @@ import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
-import { Departament, ProcessWithDepartament } from "@/types/database.type";
+import { MovimentationDeadlinePopulated, ProcessWithDepartament } from "@/types/database.type";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { ReturnAmountField } from "./fields/ReturnAmountField";
 import { ReturnProcessField } from "./fields/ReturnProcessField";
-import { ExternalProcessState } from "@/hooks/external-process-state/useExternalProcess";
 import { ReturnDatesField } from "./fields/ReturnDatesField";
+import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
+import { ExternalProcessState } from "@/utils/calcDepartamentExternalState";
 
 type ReturnProcessFormProps = {
+  deadline?: MovimentationDeadlinePopulated;
   externalProcessState: ExternalProcessState;
   avaliableProcesses: ProcessWithDepartament[];
 };
 
 export default function ReturnProcessForm({
+  deadline,
   externalProcessState,
   avaliableProcesses,
 }: ReturnProcessFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync: createProcessExecution, isPending: isCreateExecutionPending } =
     useCreateProcessExecution();
-  const [departament, setDepartament] = useState<Departament>();
   const [selectedProcess, setSelectedProcess] = useState<ProcessWithDepartament>();
+  const { mutateAsync: updateDeadline, isPending: isDeadlinePending } =
+    useUpdateMovimentationDeadline();
 
   const form = useAppForm({
     defaultValues: {
@@ -44,6 +48,8 @@ export default function ReturnProcessForm({
       if (!selectedProcess) return;
       const { amount, started_at, finished_at } = value;
       const { process: currProcess, movimentation } = externalProcessState;
+      const startedDate = started_at ? new Date(started_at).toISOString() : null;
+      const finishedDate = finished_at ? new Date(finished_at).toISOString() : null;
 
       try {
         // Cria execução de processo
@@ -54,14 +60,23 @@ export default function ReturnProcessForm({
             process_id: selectedProcess.id,
             movimentation_id: movimentation.id,
             product_id: movimentation.product.id,
-            started_at: started_at ? new Date(started_at).toISOString() : null,
-            finished_at: finished_at ? new Date(finished_at).toISOString() : null,
+            started_at: startedDate,
+            finished_at: finishedDate,
             type: "RETURN",
             responsible_id: null,
             reason: null,
           },
           movimentation,
         });
+
+        if (deadline) {
+          updateDeadline({
+            movimentationDeadlineId: deadline.id,
+            updateData: {
+              finished_at: finishedDate,
+            },
+          });
+        }
 
         toast.success("Retornado com sucesso!");
         closeDialog(`return-process-execution-${externalProcessState.process.id}`);

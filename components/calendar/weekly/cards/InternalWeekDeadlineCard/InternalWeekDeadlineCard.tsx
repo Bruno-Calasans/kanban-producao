@@ -7,15 +7,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import WeekDeadlineCardContextMenu from "./WeekDeadlineCardContextMenu";
-import { TargetIcon, ShirtIcon, HashIcon, FlagIcon, GoalIcon, Goal } from "lucide-react";
+import WeekDeadlineCardContextMenu from "./InternalWeekDeadlineCardContextMenu";
+import { TargetIcon, ShirtIcon, HashIcon, FlagIcon, GoalIcon } from "lucide-react";
 import useWeeklyDeadlineCard from "@/hooks/week-deadline-card/useWeeklyDeadlineCard";
 import { useWeeklyDeadlineStore } from "@/store/weeklyDeadlineCardStore";
 import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
 import { checkDeadlineType } from "@/utils/checkDeadlineType";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 
-export type WeekDeadlineCardProps = {
+export type InternalWeekDeadlineCardProps = {
   weekDay: Date;
   deadline: MovimentationDeadlinePopulated;
   departament: Departament;
@@ -23,13 +23,13 @@ export type WeekDeadlineCardProps = {
   metasInThisWeek: MetaPopulated[];
 };
 
-export default function WeekDeadlineCard({
+export default function InternalWeekDeadlineCard({
   deadline,
   departament,
   weekDay,
   processStates,
   metasInThisWeek,
-}: WeekDeadlineCardProps) {
+}: InternalWeekDeadlineCardProps) {
   const setSelectedDeadlineId = useWeeklyDeadlineStore((state) => state.setSelectedDeadlineId);
   const isSameDeadline = useWeeklyDeadlineStore(
     (state) => state.selectedDeadlineId === deadline.id,
@@ -45,9 +45,12 @@ export default function WeekDeadlineCard({
     isMetaDone,
     isMetaIncomplete,
     isExpectedThisWeekDay,
-    internalRemainingAmount,
     hasInternalWork,
+    workState,
+    avaliableAmount,
+    metaInThisDay,
   } = useWeeklyDeadlineCard({ deadline, metasInThisWeek, processStates, weekDay });
+
   const movimentation = deadline.movimentation;
   const deadlineType = checkDeadlineType(deadline);
 
@@ -58,13 +61,11 @@ export default function WeekDeadlineCard({
       metaAmount={metaAmount}
       metaWeekDate={weekDay}
       deadline={deadline}
-      departamentAvaliableAmount={internalRemainingAmount}
-      hideFinishAction={hasInternalWork || isFinished || !internalRemainingAmount}
+      departamentAvaliableAmount={avaliableAmount}
+      hidden={!avaliableAmount}
+      hideFinishAction={hasInternalWork || isFinished}
       hideFinishMetaAction={
-        isMetaDone ||
-        (isMetaIncomplete && amountDoneInThisDay > 0) ||
-        isFinished ||
-        !internalRemainingAmount
+        isMetaDone || (isMetaIncomplete && amountDoneInThisDay > 0) || isFinished
       }
     >
       <Link
@@ -75,19 +76,35 @@ export default function WeekDeadlineCard({
           asChild
           className={cn(
             "flex flex-co h-fit rounded-none p-3 mt-2",
+
+            // Deadline interna sem atraso
             !isExpired &&
               !isFinished &&
               "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
+
+            // Quando passa o mouse em cima de uma deadline interna sem atraso
             isSameDeadline && !isExpired && !isFinished && !isMetaIncomplete && "border-blue-700 ",
+
+            // Deadline atrasada
             isExpired && !isFinished && "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
+
+            // Quando passa o mouse em cima de uma deadline atrasada
             isSameDeadline && isExpired && !isFinished && "border-red-700",
+
+            // Deadline com meta incompleta
             !isExpired &&
               !isFinished &&
               isMetaIncomplete &&
               "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-30",
+
+            // Quando passa o mouse em cima de uma deadline com meta incompleta
             isSameDeadline && !isExpired && !isFinished && isMetaIncomplete && "border-amber-700",
+
+            // Quando meta ou deadline estiverem finalizadas
             (isFinished || isMetaDone) &&
               "bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
+
+            // Quando passa o mouse em cima de uma deadline finalizada ou meta concluída
             isSameDeadline && (isFinished || isMetaDone) && " border-emerald-700",
           )}
           onMouseEnter={() => setSelectedDeadlineId(deadline.id)}
@@ -98,14 +115,26 @@ export default function WeekDeadlineCard({
               {movimentation.product.name} | {movimentation.product.op}
             </p>
 
-            <p className="flex gap-0.5 items-center justify-center text-xs">
-              <TargetIcon size={16} />
-              <span className="font-bold">META DIÁRIA:</span> {metaAmount}
-              {isShort ? `/${totalAmount}` : null}
-            </p>
+            {/* Departamento interno */}
+            {workState == "READY" && isShort && (
+              <p className="flex gap-0.5 items-center justify-center text-xs">
+                <TargetIcon size={16} />
+                <span className="font-bold">META DIÁRIA:</span> {metaAmount}/{totalAmount}
+              </p>
+            )}
+
+            {workState == "WAITING_INPUT" && isShort && (
+              <p className="flex gap-0.5 items-center justify-center text-xs">
+                <span className="font-bold">AGUARDANDO</span>
+              </p>
+            )}
 
             {!isShort && (
               <>
+                <p className="flex gap-0.5 items-center justify-center text-xs">
+                  <TargetIcon size={16} />
+                  <span className="font-bold">META DIÁRIA:</span> {metaAmount}
+                </p>
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <ShirtIcon size={16} />
                   <span className="font-bold">FEITO:</span> {amountDoneInThisDay}
@@ -113,12 +142,13 @@ export default function WeekDeadlineCard({
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <HashIcon size={16} />
                   <span className="font-bold">RESTANTE:</span>
-                  {internalRemainingAmount} DE {totalAmount}
+                  {totalAmount}
                 </p>
               </>
             )}
           </div>
         </Badge>
+
         {/* Começa e termina no mesmo dia */}
         {isExpectedThisWeekDay && deadlineType === "ONLY_EXPECTED" && (
           <div className="absolute top-0.5 -right-1 bg-black rounded-full flex p-0.5">

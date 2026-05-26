@@ -56,6 +56,8 @@ export default function MovimentationInfoHeaderg({
     (deadline) => deadline.departament.is_external === true,
   );
 
+  console.log(externalProcessStates)
+
   return (
     <div>
       <div className="flex justify-between">
@@ -171,6 +173,7 @@ export default function MovimentationInfoHeaderg({
         {externalProcessStates &&
           externalProcessStates.length > 0 &&
           movimentationStatus != "CANCELLED" &&
+
           externalProcessStates.map((state) => {
             const hasDeadline = externalDeadlines.find(
               (deadline) => deadline.departament.id === state.process.departament_id,
@@ -184,8 +187,8 @@ export default function MovimentationInfoHeaderg({
                 ? new Date(hasDeadline.expected_at)
                 : undefined;
 
-            expiredDate?.setHours(0, 0, 0, 0)
-            today.setHours(0, 0, 0, 0)
+            expiredDate?.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
             const isExpired = expiredDate ? expiredDate.getTime() < today.getTime() : undefined;
 
             if (isExpired)
@@ -199,6 +202,8 @@ export default function MovimentationInfoHeaderg({
                     <ReturnProcessExecutionDialog
                       avaliableProcesses={avaliableProcesses}
                       externalProcessState={state}
+
+
                     />
                   }
                   hideCloseButton

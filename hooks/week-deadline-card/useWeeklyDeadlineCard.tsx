@@ -11,13 +11,16 @@ type UseWeeklyDeadlineCardProps = {
   metasInThisWeek: MetaPopulated[];
 };
 
+type DeadlineWorkState = "WAITING_INPUT" | "COMPLETED" | "READY" | "NO_WORK";
+
 export default function useWeeklyDeadlineCard({
   deadline,
   weekDay,
   processStates,
   metasInThisWeek,
 }: UseWeeklyDeadlineCardProps) {
-  const { movimentation, started_at, expected_at, finished_at } = deadline;
+  const { movimentation, started_at, expected_at, finished_at, departament } = deadline;
+
   const metaInThisDay = metasInThisWeek.find(
     (meta) => formatDate(new Date(meta.ref_date + "T00:00:00")) == formatDate(weekDay),
   );
@@ -32,45 +35,31 @@ export default function useWeeklyDeadlineCard({
   finishedDate?.setHours(0, 0, 0, 0);
   weekDay.setHours(0, 0, 0, 0);
 
-  // Dias entre a data que começou e prazo
-  const daysAmount =
-    startedDate && expectedDate ? differenceInDays(expectedDate, startedDate) + 1 : 1;
-
-  // Quantidade que deve ser feita
+  // Quantidade de dias para fazer a meta
   const totalAmount = movimentation.amount;
+  const daysAmount = startedDate && expectedDate ? differenceInDays(expectedDate, today) + 1 : 1;
   const amountDoneInThisDay = metaInThisDay ? metaInThisDay.amount_done : 0;
+  const totalDays = Math.max(daysAmount - metasInThisWeek.length, 1);
 
   // Quantidade restante no departamento para fazer
   const departmentStates = processStates.filter(
-    (state) => state.process.departament.id === deadline.departament.id,
+    (state) => state.process.departament.id === departament.id,
   );
 
-  const internalRemainingAmount = departmentStates.reduce(
+  const avaliableAmount = departmentStates.reduce(
     (total, state) => total + state.avaliableAmount,
     0,
   );
 
-  const externalRemainingAmount = departmentStates.reduce(
-    (total, state) => total + state.externalAmount,
-    0,
-  );
+  const hasReceivedWork = departmentStates.some((state) => state.inputAmount > 0);
 
-  console.log("internalRemainingAmount", internalRemainingAmount);
-  console.log("externalRemainingAmount", externalRemainingAmount);
-  console.log("extternal executions", departmentStates.map((state) => state.outputExecutions.filter((exe) => exe.type === "EXTERNAL")).flat());
-
-  const totalRemainingAmount = internalRemainingAmount + externalRemainingAmount;
-
-  // Dias para fazer a meta
-  const totalDays = Math.max(daysAmount - metasInThisWeek.length, 1);
-
+  // Dias para fazer a meta do departamento interno
   const metaAmount = metaInThisDay
     ? metaInThisDay.expected_amount
-    : Math.ceil(internalRemainingAmount / totalDays);
+    : Math.ceil(avaliableAmount / totalDays);
 
-  const hasInternalWork = internalRemainingAmount > 0;
-  const hasExternalWork = externalRemainingAmount > 0;
-  const hasWork = hasInternalWork && hasExternalWork;
+  const hasInternalWork = avaliableAmount > 0;
+  const hasWork = hasInternalWork;
 
   const isExpired = expectedDate && expectedDate.getTime() < today.getTime();
 
@@ -83,13 +72,21 @@ export default function useWeeklyDeadlineCard({
 
   const isExpectedThisWeekDay = expectedDate && expectedDate.getTime() == weekDay.getTime();
 
+  let workState: DeadlineWorkState;
+  if (isFinished) {
+    workState = "COMPLETED";
+  } else if (avaliableAmount > 0) {
+    workState = "READY";
+  } else if (!hasReceivedWork) {
+    workState = "WAITING_INPUT";
+  }
+
   return {
     metaInThisDay,
     totalAmount,
     amountDoneInThisDay,
     daysAmount,
-    internalRemainingAmount,
-    externalRemainingAmount,
+    avaliableAmount,
     metaAmount,
     isExpired,
     isFinished,
@@ -97,7 +94,6 @@ export default function useWeeklyDeadlineCard({
     isMetaIncomplete,
     isExpectedThisWeekDay,
     hasInternalWork,
-    hasExternalWork,
     hasWork,
   };
 }

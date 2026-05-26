@@ -3,9 +3,9 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import { Button } from "@/components/ui/button";
 import { MoveDownLeftIcon } from "lucide-react";
-import { ExternalProcessState } from "@/hooks/external-process-state/useExternalProcess";
 import ReturnProcessForm from "../forms/return-form/ReturnProcessForm";
 import { ProcessWithDepartament } from "@/types/database.type";
+import { ExternalProcessState } from "@/utils/calcDepartamentExternalState";
 
 type ReturnProcessExecutionDialogProps = {
   externalProcessState: ExternalProcessState;

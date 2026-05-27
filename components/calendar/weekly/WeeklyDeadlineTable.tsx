@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/preserve-manual-memoization */
 import WeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import WeekSelector from "@/components/calendar/weekly/WeekSelector";
 import Loader from "@/components/custom/Loader";
@@ -65,8 +66,6 @@ export default function WeeklyDeadlineTable() {
       }),
     [deadlines, normalizedWeekDays],
   );
-
-  console.log(metasInRangeByDeadline)
 
   const createRows = () => {
     const rows = [];

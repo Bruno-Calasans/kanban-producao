@@ -16,7 +16,7 @@ type InternalWeekDeadlineCardContextMenurops = {
   metaWeekDate: Date;
   deadline: MovimentationDeadlinePopulated;
   departamentAvaliableAmount: number;
-  hideFinishAction?: boolean;
+  hideFinishDeadlineAction?: boolean;
   hideFinishMetaAction?: boolean;
   hidden?: boolean;
 };
@@ -28,7 +28,7 @@ export default function InternalWeekDeadlineCardContextMenu({
   metaAmount,
   metaWeekDate,
   deadline,
-  hideFinishAction,
+  hideFinishDeadlineAction,
   hideFinishMetaAction,
   departamentAvaliableAmount,
   hidden,
@@ -39,7 +39,7 @@ export default function InternalWeekDeadlineCardContextMenu({
 
       <ContextMenuContent hidden={hidden}>
         {/* Concluir deadline */}
-        {!hideFinishAction && (
+        {!hideFinishDeadlineAction && (
           <ContextMenuItem asChild>
             <FinishDeadlineDialog deadline={deadline} />
           </ContextMenuItem>

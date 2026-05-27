@@ -11,7 +11,7 @@ type UseWeeklyDeadlineCardProps = {
   metasInThisWeek: MetaPopulated[];
 };
 
-type DeadlineWorkState = "WAITING_INPUT" | "COMPLETED" | "READY" | "NO_WORK";
+type DeadlineWorkState = "WAITING_INPUT" | "COMPLETED" | "READY";
 
 export default function useWeeklyDeadlineCard({
   deadline,
@@ -21,6 +21,7 @@ export default function useWeeklyDeadlineCard({
 }: UseWeeklyDeadlineCardProps) {
   const { movimentation, started_at, expected_at, finished_at, departament } = deadline;
 
+  // Pega a meta deste dia
   const metaInThisDay = metasInThisWeek.find(
     (meta) => formatDate(new Date(meta.ref_date + "T00:00:00")) == formatDate(weekDay),
   );
@@ -35,10 +36,18 @@ export default function useWeeklyDeadlineCard({
   finishedDate?.setHours(0, 0, 0, 0);
   weekDay.setHours(0, 0, 0, 0);
 
-  // Quantidade de dias para fazer a meta
+  // Quantidade total que tem que fazer
   const totalAmount = movimentation.amount;
-  const daysAmount = startedDate && expectedDate ? differenceInDays(expectedDate, today) + 1 : 1;
+
+  // Total feito nesta semana
+  const weekTotalAmount = metasInThisWeek.reduce((prev, curr) => prev + curr.amount_done, 0);
+
+  // Quantidade feita neste dia da semana
   const amountDoneInThisDay = metaInThisDay ? metaInThisDay.amount_done : 0;
+
+  // Dias para fazer
+  const daysAmount =
+    startedDate && expectedDate ? differenceInDays(expectedDate, startedDate) + 1 : 1;
   const totalDays = Math.max(daysAmount - metasInThisWeek.length, 1);
 
   // Quantidade restante no departamento para fazer
@@ -46,38 +55,43 @@ export default function useWeeklyDeadlineCard({
     (state) => state.process.departament.id === departament.id,
   );
 
+  // Quantidade de peças disponíveis no departamento
   const avaliableAmount = departmentStates.reduce(
     (total, state) => total + state.avaliableAmount,
     0,
   );
 
-  const hasReceivedWork = departmentStates.some((state) => state.inputAmount > 0);
-
-  // Dias para fazer a meta do departamento interno
+  // Quantidade de peças que deve ser feita neste dia
   const metaAmount = metaInThisDay
     ? metaInThisDay.expected_amount
     : Math.ceil(avaliableAmount / totalDays);
 
-  const hasInternalWork = avaliableAmount > 0;
-  const hasWork = hasInternalWork;
+  // Tem peças disponíveis para fazer
+  const hasWork = avaliableAmount > 0;
 
+  // Se a meta está expirada
   const isExpired = expectedDate && expectedDate.getTime() < today.getTime();
 
-  const isFinished = !!finishedDate;
+  const isFinished = !!finishedDate && avaliableAmount == 0;
 
-  const isMetaDone = hasInternalWork && metaAmount > 0 && amountDoneInThisDay >= metaAmount;
+  // Meta será completada se fizer igual ou maior a meta definida
+  const isMetaDone = hasWork && metaAmount > 0 && amountDoneInThisDay >= metaAmount;
 
+  // Meta será incompleta se fizer menos que a meta estabelecida
   const isMetaIncomplete =
     hasWork && !!metaInThisDay && metaInThisDay.amount_done < metaInThisDay.expected_amount;
 
+  // Diz se o prazo cai neste dia da semana
   const isExpectedThisWeekDay = expectedDate && expectedDate.getTime() == weekDay.getTime();
+  const isStartedThisWeekDay = startedDate && startedDate.getTime() == weekDay.getTime();
 
-  let workState: DeadlineWorkState;
+  let workState: DeadlineWorkState = "WAITING_INPUT";
+
   if (isFinished) {
     workState = "COMPLETED";
   } else if (avaliableAmount > 0) {
     workState = "READY";
-  } else if (!hasReceivedWork) {
+  } else if (!hasWork) {
     workState = "WAITING_INPUT";
   }
 
@@ -92,8 +106,10 @@ export default function useWeeklyDeadlineCard({
     isFinished,
     isMetaDone,
     isMetaIncomplete,
-    isExpectedThisWeekDay,
-    hasInternalWork,
     hasWork,
+    weekTotalAmount,
+    workState,
+    isExpectedThisWeekDay,
+    isStartedThisWeekDay,
   };
 }

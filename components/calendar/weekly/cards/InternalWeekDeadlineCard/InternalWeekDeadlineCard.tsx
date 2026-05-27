@@ -8,12 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import WeekDeadlineCardContextMenu from "./InternalWeekDeadlineCardContextMenu";
-import { TargetIcon, ShirtIcon, HashIcon, FlagIcon, GoalIcon } from "lucide-react";
+import { TargetIcon, ShirtIcon, HashIcon } from "lucide-react";
 import useWeeklyDeadlineCard from "@/hooks/week-deadline-card/useWeeklyDeadlineCard";
 import { useWeeklyDeadlineStore } from "@/store/weeklyDeadlineCardStore";
 import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
-import { checkDeadlineType } from "@/utils/checkDeadlineType";
-import CustomTooltip from "@/components/custom/CustomTooltip";
+import DeadlineTypeBadge from "../../DeadlineTypeBadge";
 
 export type InternalWeekDeadlineCardProps = {
   weekDay: Date;
@@ -35,6 +34,7 @@ export default function InternalWeekDeadlineCard({
     (state) => state.selectedDeadlineId === deadline.id,
   );
   const isShort = useShortCardVersion((state) => state.isShort);
+  const movimentation = deadline.movimentation;
 
   const {
     totalAmount,
@@ -44,15 +44,11 @@ export default function InternalWeekDeadlineCard({
     isFinished,
     isMetaDone,
     isMetaIncomplete,
-    isExpectedThisWeekDay,
-    hasInternalWork,
     workState,
     avaliableAmount,
-    metaInThisDay,
+    isExpectedThisWeekDay,
+    isStartedThisWeekDay,
   } = useWeeklyDeadlineCard({ deadline, metasInThisWeek, processStates, weekDay });
-
-  const movimentation = deadline.movimentation;
-  const deadlineType = checkDeadlineType(deadline);
 
   return (
     <WeekDeadlineCardContextMenu
@@ -62,10 +58,10 @@ export default function InternalWeekDeadlineCard({
       metaWeekDate={weekDay}
       deadline={deadline}
       departamentAvaliableAmount={avaliableAmount}
-      hidden={!avaliableAmount}
-      hideFinishAction={hasInternalWork || isFinished}
+      hidden={!avaliableAmount || isMetaDone}
+      hideFinishDeadlineAction={isFinished}
       hideFinishMetaAction={
-        isMetaDone || (isMetaIncomplete && amountDoneInThisDay > 0) || isFinished
+        isMetaDone || isFinished || (isMetaIncomplete && amountDoneInThisDay > 0)
       }
     >
       <Link
@@ -111,11 +107,11 @@ export default function InternalWeekDeadlineCard({
           onMouseLeave={() => setSelectedDeadlineId(null)}
         >
           <div className="flex flex-col items-start gap-1.5">
+            {/* Nome do produto e OP */}
             <p className="font-bold mb-1 text-md">
               {movimentation.product.name} | {movimentation.product.op}
             </p>
 
-            {/* Departamento interno */}
             {workState == "READY" && isShort && (
               <p className="flex gap-0.5 items-center justify-center text-xs">
                 <TargetIcon size={16} />
@@ -123,13 +119,19 @@ export default function InternalWeekDeadlineCard({
               </p>
             )}
 
-            {workState == "WAITING_INPUT" && isShort && (
+            {workState == "WAITING_INPUT" && (
               <p className="flex gap-0.5 items-center justify-center text-xs">
-                <span className="font-bold">AGUARDANDO</span>
+                <span className="font-bold">AGUARDANDO ENTRADA</span>
               </p>
             )}
 
-            {!isShort && (
+            {workState == "COMPLETED" && isShort && (
+              <p className="flex gap-0.5 items-center justify-center text-xs">
+                <span className="font-bold">CONCLUÍDO</span>
+              </p>
+            )}
+
+            {!isShort && workState != "WAITING_INPUT" && (
               <>
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <TargetIcon size={16} />
@@ -141,7 +143,7 @@ export default function InternalWeekDeadlineCard({
                 </p>
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <HashIcon size={16} />
-                  <span className="font-bold">RESTANTE:</span>
+                  <span className="font-bold">TOTAL:</span>
                   {totalAmount}
                 </p>
               </>
@@ -149,22 +151,11 @@ export default function InternalWeekDeadlineCard({
           </div>
         </Badge>
 
-        {/* Começa e termina no mesmo dia */}
-        {isExpectedThisWeekDay && deadlineType === "ONLY_EXPECTED" && (
-          <div className="absolute top-0.5 -right-1 bg-black rounded-full flex p-0.5">
-            <CustomTooltip content="Termina e começa neste dia" side="right">
-              <GoalIcon size={14} className="text-white" />
-            </CustomTooltip>
-          </div>
-        )}
-
-        {isExpectedThisWeekDay && deadlineType === "RANGE" && (
-          <div className="absolute top-0.5 -right-1 bg-black rounded-full flex p-0.5">
-            <CustomTooltip content="Termina neste dia" side="right">
-              <FlagIcon size={14} className="text-white" />
-            </CustomTooltip>
-          </div>
-        )}
+        <DeadlineTypeBadge
+          deadline={deadline}
+          isExpectedThisWeekDay={isExpectedThisWeekDay}
+          isStartedThisWeekDay={isStartedThisWeekDay}
+        />
       </Link>
     </WeekDeadlineCardContextMenu>
   );

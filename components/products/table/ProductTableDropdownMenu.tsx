@@ -24,15 +24,15 @@ type ProductTableDropdownMenuProps = {
 };
 
 export default function ProductTableDropdownMenu({ product }: ProductTableDropdownMenuProps) {
-  const { toggleActive, isPending: isPendingUpdate } = useActiveProduct({ product });
+  const { toggleActive, isPending: isActivePending } = useActiveProduct({ product });
   const { data, isPending: isProductMovimentationsPending } = useGetAllMovimentationsByProduct(
     product.id,
   );
   const movimentations = data?.data || [];
 
-  const isPending = isPendingUpdate || isProductMovimentationsPending;
+  const isPending = isActivePending || isProductMovimentationsPending;
   const canEdit = !isPending && product.is_active;
-  const hideProductionFlowSelector = !isPending && movimentations.length == 0;
+  const hideProductionFlowSelector = movimentations.length > 0;
   const canDeleteProduct = !isPending && movimentations.length == 0;
 
   return (

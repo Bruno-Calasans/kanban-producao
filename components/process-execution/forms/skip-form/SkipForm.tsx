@@ -72,13 +72,7 @@ export default function SkipForm({ processStates, processState }: SkipFormProps)
 
   const isPending = isCreateExecutionPending;
   const avaliableProcesses = processStates
-    .filter(
-      ({ process, template }) =>
-        process.id != processState.process.id &&
-        template?.sequence &&
-        processState.template.sequence &&
-        template?.sequence > processState.template.sequence,
-    )
+    .filter(({ process, template }) => process.id != processState.process.id)
     .map((state) => state.process);
 
   return (

@@ -53,7 +53,7 @@ export default function ProductTable({ products }: ProductPageProps) {
 
   return (
     <DataTable
-      filterPlaceholder="Procurar produto"
+      filterPlaceholder="Procurar por produto ou OP"
       filterColumn={["name", "op"]}
       columns={productColumns}
       data={products}

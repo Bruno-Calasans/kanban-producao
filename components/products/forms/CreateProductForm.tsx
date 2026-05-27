@@ -7,17 +7,20 @@ import useCreateProduct from "@/hooks/product/useCreateProduct";
 import { ProductNameField } from "./fields/ProductNameField";
 import { defaultProductFormValues, formSchema, useAppForm } from "./productFormContext";
 import { ProductOpField } from "./fields/ProductOpField";
-import { FieldGroup } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
 import { ProductionFlow } from "@/types/database.type";
 import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
+import { Checkbox } from "@/components/ui/checkbox";
+import CreateManySwitch from "@/components/custom/CreateManySwitch";
 
 export default function CreateProductForm() {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useCreateProduct();
   const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow>();
+  const [many, setMany] = useState(false);
 
   const form = useAppForm({
     defaultValues: defaultProductFormValues,
@@ -37,7 +40,9 @@ export default function CreateProductForm() {
           is_active: true,
         });
         toast.success("Produto criado com sucesso!");
-        closeDialog("create-product");
+        if (!many) {
+          closeDialog("create-product");
+        }
         form.reset();
       } catch (error) {
         errorHandler(error, {
@@ -67,6 +72,7 @@ export default function CreateProductForm() {
         id="create-product-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
+        <CreateManySwitch value={many} onChangeValue={setMany} />
         <ClearButton isLoading={isPending} onclick={() => form.reset()} />
         <ConfirmButton
           hiddenIcon

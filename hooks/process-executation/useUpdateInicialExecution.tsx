@@ -1,16 +1,23 @@
-import { updateInitialExecution } from "@/service/api/processExecutationApi";
+import {
+  updateInitialExecution,
+  UpdateInitialExecutionData,
+} from "@/service/api/processExecutationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { movimentationKeys } from "@/constants/movimentationKeys";
+import { processExecutationKeys } from "@/constants/processExecutationKeys";
 
 export default function useUpdateInicialExecution() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { movimentationId: number; amount: number }) =>
-      updateInitialExecution(data.movimentationId, data.amount),
-    onSuccess: () => {
+    mutationFn: (data: UpdateInitialExecutionData) => updateInitialExecution(data),
+    onSuccess: ({ data: updatedExecution }) => {
       queryClient.invalidateQueries({
-        queryKey: movimentationKeys.lists(),
+        queryKey: movimentationKeys.detail(updatedExecution?.movimentation_id),
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: processExecutationKeys.list(updatedExecution?.movimentation_id),
       });
     },
   });

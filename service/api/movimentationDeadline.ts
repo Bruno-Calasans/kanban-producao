@@ -29,7 +29,8 @@ export async function getAllMovimentationDeadlinesWithProduct() {
         *, 
         movimentation:Movimentation!movimentation_id(
           *,
-          product:Product!product_id(*)
+          product:Product!product_id(*),
+          productionFlow:ProductionFlow!production_flow_id(*)
         ),
         departament:Departament!departament_id(*)
     `,
@@ -50,7 +51,8 @@ export async function getAllMovimentationDeadlinesInRange(fromDate: Date, toDate
         *, 
         movimentation:Movimentation!movimentation_id(  
         *,
-          product:Product!product_id(*)
+          product:Product!product_id(*),
+          productionFlow:ProductionFlow!production_flow_id(*)
         ),
         departament:Departament!departament_id(*)
     `,
@@ -67,7 +69,7 @@ export async function getAllMovimentationDeadlinesByMovimentation(movimentationI
     .select(
       `
         *, 
-        movimentation:Movimentation!movimentation_id(*, product:Product!product_id(*)),
+        movimentation:Movimentation!movimentation_id(*, product:Product!product_id(*),   productionFlow:ProductionFlow!production_flow_id(*)),
         departament:Departament!departament_id(*)
     `,
     )

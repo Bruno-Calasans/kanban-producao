@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import Loader from "../Loader";
+import { useEffect } from "react";
 
 export type SelectorItem = {
   id: number;
@@ -74,6 +75,10 @@ export function SearchableSelector<T extends DataItem>({
     setOpen(false);
     setSearch("");
   };
+
+  useEffect(() => {
+    if (defaultData && !isLoading) onChange(defaultData);
+  }, [defaultData, isLoading]);
 
   if (isLoading) {
     return <Loader title={loadingMsg || "Carregando items"} horizontal />;

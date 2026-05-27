@@ -15,34 +15,26 @@ import { ProductNameField } from "./fields/ProductNameField";
 import { ProductOpField } from "./fields/ProductOpField";
 import handleFormError from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
-import { useState } from "react";
-import { ProductionFlow, ProductWithProductionFlow } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 
 type EditProductForm = {
-  product: ProductWithProductionFlow;
-  hideProductionFlowSelector?: boolean;
+  product: Product;
 };
 
-export default function EditProductForm({ product, hideProductionFlowSelector }: EditProductForm) {
+export default function EditProductForm({ product }: EditProductForm) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useUpdateProduct();
-  const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow | undefined>(
-    hideProductionFlowSelector ? product.production_flow : undefined,
-  );
 
   const form = useAppForm({
     defaultValues: {
       name: product.name,
       op: product.op || defaultProductFormValues.op,
-      productionFlow: product.production_flow.name,
     } as ProductSchema,
     validators: {
       onSubmit: formSchema,
       onChange: formSchema,
     },
     onSubmit: async ({ value: inputData }) => {
-      if (!selectedProductionFlow) return;
       try {
         const { name, op } = inputData;
 
@@ -51,7 +43,6 @@ export default function EditProductForm({ product, hideProductionFlowSelector }:
           updateData: {
             name,
             op,
-            production_flow_id: selectedProductionFlow.id,
           },
         });
         toast.success("Produto atualizado com sucesso!");
@@ -78,14 +69,6 @@ export default function EditProductForm({ product, hideProductionFlowSelector }:
         <ProductNameField form={form} />
         <ProductOpField form={form} />
       </FieldGroup>
-
-      {!hideProductionFlowSelector && (
-        <ProductProductionFlowField
-          form={form}
-          defaultProductionFlow={product.production_flow}
-          onChangeProductionFlow={setSelectedProductionFlow}
-        />
-      )}
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={() => form.reset()} />

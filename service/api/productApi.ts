@@ -5,27 +5,15 @@ export type CreateProductData = Omit<Product, "id" | "created_at" | "updated_at"
 export type UpdateProductData = Partial<CreateProductData>;
 
 export async function getAllProducts() {
-  return await supabase
-    .from("Product")
-    .select("*, production_flow:ProductionFlow!production_flow_id(*)")
-    .throwOnError();
+  return await supabase.from("Product").select("*").throwOnError();
 }
 
 export async function getAllActiveProducts() {
-  return await supabase
-    .from("Product")
-    .select("*, production_flow:ProductionFlow!production_flow_id(*)")
-    .eq("is_active", true)
-    .throwOnError();
+  return await supabase.from("Product").select("*").eq("is_active", true).throwOnError();
 }
 
 export async function getOneProduct(productId: number) {
-  return await supabase
-    .from("Product")
-    .select("*, production_flow:ProductionFlow!production_flow_id(*)")
-    .eq("id", productId)
-    .single()
-    .throwOnError();
+  return await supabase.from("Product").select("*").eq("id", productId).single().throwOnError();
 }
 
 export async function createProduct(createData: CreateProductData) {

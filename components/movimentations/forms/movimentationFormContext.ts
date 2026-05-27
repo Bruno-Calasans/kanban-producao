@@ -5,11 +5,13 @@ import * as z from "zod";
 export const formSchema = z.object({
   productName: z.string().nonempty("Produto é obrigatório."),
   amount: ZodNumberField({ min: 1, minError: "Valor mínimo é 1" }),
+  productionFlow: z.string().nonempty("Fluxo de produção é obrigatório."),
 });
 
 export type MovimentationFormSchema = z.infer<typeof formSchema>;
 
 export const defaultMovimentationFormValues: MovimentationFormSchema = {
+  productionFlow: "",
   productName: "",
   amount: 1,
 };

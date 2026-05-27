@@ -1,10 +1,10 @@
 "use client";
 
 import MovimentationTable from "@/components/movimentations/table/MovimentationTable";
-import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/database.type";
+import { MovimentationPopulated, Product } from "@/types/database.type";
 
 type ProductMovimentationTabProps = {
-  product: ProductWithProductionFlow;
+  product: Product;
   movimentations: MovimentationPopulated[];
 };
 

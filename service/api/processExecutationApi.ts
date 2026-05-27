@@ -13,6 +13,12 @@ export type MoveNextProcessDate = {
   amount?: number;
 };
 
+export type UpdateInitialExecutionData = {
+  movimentationId: number;
+  processId: number;
+  amount: number;
+};
+
 export async function getAllProcessExecutions() {
   return await supabase
     .from("ProcessExecution")
@@ -155,14 +161,21 @@ export async function getAllExecutionsByResponsible(responsibleId: number) {
     .throwOnError();
 }
 
-export async function updateInitialExecution(movimentationId: number, amount: number) {
+export async function updateInitialExecution({
+  movimentationId,
+  processId,
+  amount,
+}: UpdateInitialExecutionData) {
   return await supabase
     .from("ProcessExecution")
     .update({
+      process_id: processId,
       amount,
     })
+    .select()
     .eq("movimentation_id", movimentationId)
     .eq("type", "INIT")
+    .maybeSingle()
     .throwOnError();
 }
 
@@ -203,4 +216,3 @@ export async function moveToNextDepartament({
     if (isFirstNextDepartamentProcess) return data;
   }
 }
-

@@ -9,19 +9,18 @@ import { SingleSelector } from "./SingleSelector";
 import useGetAllActiveProductionFlows from "@/hooks/production-flow/useGetAllActiveProductionFlows";
 
 type ProductionFlowSelectorWithCheckboxProps = {
+  selectedProductionFlow?: ProductionFlow;
   defaultProductionFlow?: ProductionFlow;
   disabled?: boolean;
   onValueChange(productionFlow?: ProductionFlow): void;
 };
 
 export default function ProductionFlowSelectorWithCheckbox({
+  selectedProductionFlow,
   defaultProductionFlow,
   disabled,
   onValueChange,
 }: ProductionFlowSelectorWithCheckboxProps) {
-  const [selectedProductionFlow, setSelectedProductionFlow] = useState<
-    ProductionFlow | undefined
-  >();
   const [useDefault, setUseDefault] = useState<boolean | "indeterminate">(
     defaultProductionFlow ? false : true,
   );
@@ -36,7 +35,6 @@ export default function ProductionFlowSelectorWithCheckbox({
   };
 
   const valueChangeHandler = (productionFlow?: ProductionFlow) => {
-    setSelectedProductionFlow(productionFlow);
     onValueChange(productionFlow);
   };
 

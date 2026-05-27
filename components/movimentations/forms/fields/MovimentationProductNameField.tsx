@@ -1,13 +1,13 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import ProductSelector from "@/components/custom/ProductSelector";
-import { ProductWithProductionFlow, Product } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 
 type MovimentationProductNameFieldProps = {
-  selectedProduct?: ProductWithProductionFlow;
-  defaultProduct?: ProductWithProductionFlow;
+  selectedProduct?: Product;
+  defaultProduct?: Product;
   disabled?: boolean;
-  onChange(product?: ProductWithProductionFlow): void;
+  onChange(product?: Product): void;
 };
 
 export const MovimentationProductNameField = withForm({
@@ -25,11 +25,11 @@ export const MovimentationProductNameField = withForm({
               <ProductSelector
                 selectedProduct={selectedProduct}
                 defaultProduct={defaultProduct}
+                disabled={disabled}
                 onChangeProduct={(product) => {
                   field.handleChange(product?.name || "");
                   onChange(product);
                 }}
-                disabled={disabled}
               />
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </Field>

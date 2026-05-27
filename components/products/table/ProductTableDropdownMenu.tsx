@@ -14,13 +14,13 @@ import {
 } from "lucide-react";
 import EditProductDialog from "../dialogs/EditProductDialog";
 import DeleteProductDialog from "../dialogs/DeleteProductDialog";
-import { ProductWithProductionFlow } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 import Link from "next/link";
 import useGetAllMovimentationsByProduct from "@/hooks/movimentation/useGetAllMovimentationsByProduct";
 import useActiveProduct from "@/hooks/product/useActiveProduct";
 
 type ProductTableDropdownMenuProps = {
-  product: ProductWithProductionFlow;
+  product: Product;
 };
 
 export default function ProductTableDropdownMenu({ product }: ProductTableDropdownMenuProps) {
@@ -32,7 +32,6 @@ export default function ProductTableDropdownMenu({ product }: ProductTableDropdo
 
   const isPending = isActivePending || isProductMovimentationsPending;
   const canEdit = !isPending && product.is_active;
-  const hideProductionFlowSelector = false;
   const canDeleteProduct = !isPending && movimentations.length == 0;
 
   return (
@@ -50,10 +49,7 @@ export default function ProductTableDropdownMenu({ product }: ProductTableDropdo
         </Link>
 
         {canEdit && (
-          <EditProductDialog
-            hideProductionFlowSelector={hideProductionFlowSelector}
-            product={product}
-          >
+          <EditProductDialog product={product}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Edit2Icon />
               Editar

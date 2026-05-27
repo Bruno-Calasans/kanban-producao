@@ -9,14 +9,15 @@ import { defaultMovimentationFormValues, useAppForm, formSchema } from "./movime
 import handleFormError from "@/utils/errorHandler";
 import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup";
 import useDialog from "@/hooks/dialog/useDialog";
-import { ProductWithProductionFlow } from "@/types/database.type";
+import { Product, ProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
 import CreateManySwitch from "@/components/custom/CreateManySwitch";
+import { MovimentationProductionFlowField } from "./fields/MovimentationProductionFlowField";
 
 type CreateMovimentationFormProps = {
-  defaultProduct?: ProductWithProductionFlow;
+  defaultProduct?: Product;
 };
 
 export default function CreateMovimentationForm({ defaultProduct }: CreateMovimentationFormProps) {
@@ -25,8 +26,9 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
     useCreateMovimentation();
   const { mutateAsync: createProcessExecution, isPending: isCreateProcessExecutionPending } =
     useCreateProcessExecution();
-  const [product, setProduct] = useState<ProductWithProductionFlow>();
+  const [product, setProduct] = useState<Product>();
   const [many, setMany] = useState<boolean>(false);
+  const [productionFlow, setProductionFlow] = useState<ProductionFlow>();
 
   const form = useAppForm({
     defaultValues: defaultMovimentationFormValues,
@@ -35,18 +37,17 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      if (!product) return;
+      if (!product || !productionFlow) return;
       const { amount } = value;
       try {
         const { data: createdMovimentation } = await createMovimentation({
+          amount,
           product_id: product.id,
           status: "PENDING",
-          amount,
+          production_flow_id: productionFlow.id,
         });
 
-        const { data: processFlows } = await getAllProductionFlowTemplates(
-          product.production_flow.id,
-        );
+        const { data: processFlows } = await getAllProductionFlowTemplates(productionFlow.id);
 
         await createProcessExecution({
           createData: {
@@ -66,7 +67,7 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
 
         toast.success("Produto movimentado com sucesso!");
         if (!many) closeDialog("create-movimentation");
-        form.reset();
+        resetForm();
       } catch (error) {
         handleFormError(error, {
           default: "Erro: não foi possível movimentar. Tente novamente",
@@ -76,7 +77,8 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
   });
 
   const resetForm = () => {
-    form.reset();
+    form.resetField("productName");
+    form.resetField("amount");
     setProduct(undefined);
   };
 
@@ -100,6 +102,8 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
       />
 
       <MovimentationAmountFieldGroup form={form} />
+
+      <MovimentationProductionFlowField form={form} onChangeProductionFlow={setProductionFlow} />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <CreateManySwitch value={many} onChangeValue={setMany} />

@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
-import { ProductWithProductionFlow } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import ProductTableDropdownMenu from "./ProductTableDropdownMenu";
@@ -10,10 +10,10 @@ import { useRouter } from "next/navigation";
 import ActiveBadge from "@/components/custom/badges/ActiveBadge";
 
 type ProductPageProps = {
-  products: ProductWithProductionFlow[];
+  products: Product[];
 };
 
-const productColumns: ColumnDef<ProductWithProductionFlow>[] = [
+const productColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "op",
     header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,

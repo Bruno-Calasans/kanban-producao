@@ -15,11 +15,11 @@ export type DepartamenStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED" | "EXPIRE
 export type DepartamentState = {
   movimentation: MovimentationPopulated;
   departament: Departament;
-  deadline?: MovimentationDeadlinePopulated;
   processStates: ProcessState[];
   movimentationProcessStates: ProcessState[];
   status: DepartamenStatus;
   expiredDays: number;
+  deadline?: MovimentationDeadlinePopulated;
 };
 
 type UseDepartamentStateProps = {

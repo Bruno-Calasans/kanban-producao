@@ -56,8 +56,6 @@ export default function MovimentationInfoHeaderg({
     (deadline) => deadline.departament.is_external === true,
   );
 
-  console.log(externalProcessStates)
-
   return (
     <div>
       <div className="flex justify-between">
@@ -79,6 +77,15 @@ export default function MovimentationInfoHeaderg({
             href={`/products/${movimentation.product.id}`}
           >
             {movimentation.product.name}
+          </Link>
+        </p>
+        <p className="flex gap-1 items-start text-center">
+          <strong>Fluxo de Produção:</strong>
+          <Link
+            className="flex gap-1 justify-center items-center hover:underline"
+            href="/production-flows"
+          >
+            {movimentation.productionFlow.name}
           </Link>
         </p>
         <p className="flex gap-1 items-start text-center">
@@ -173,7 +180,6 @@ export default function MovimentationInfoHeaderg({
         {externalProcessStates &&
           externalProcessStates.length > 0 &&
           movimentationStatus != "CANCELLED" &&
-
           externalProcessStates.map((state) => {
             const hasDeadline = externalDeadlines.find(
               (deadline) => deadline.departament.id === state.process.departament_id,
@@ -202,8 +208,6 @@ export default function MovimentationInfoHeaderg({
                     <ReturnProcessExecutionDialog
                       avaliableProcesses={avaliableProcesses}
                       externalProcessState={state}
-
-
                     />
                   }
                   hideCloseButton

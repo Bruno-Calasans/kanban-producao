@@ -10,14 +10,16 @@ import {
 } from "./ProductMovimentationFormContext";
 import handleFormError from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { ProductWithProductionFlow } from "@/types/database.type";
+import { Product, ProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
 import { ProductProductMovimentationAmountField } from "./fields/ProductMovimentationAmountField";
+import { MovimentationProductionFlowField } from "@/components/movimentations/forms/fields/MovimentationProductionFlowField";
+import { useState } from "react";
 
 type CreateProductMovimentationFormProps = {
-  product: ProductWithProductionFlow;
+  product: Product;
 };
 
 export default function CreateProductMovimentationForm({
@@ -28,6 +30,7 @@ export default function CreateProductMovimentationForm({
     useCreateMovimentation();
   const { mutateAsync: createProcessExecution, isPending: isCreateProcessExecutionPending } =
     useCreateProcessExecution();
+  const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow>();
 
   const form = useAppForm({
     defaultValues: defaultMovimentationFormValues,
@@ -36,17 +39,18 @@ export default function CreateProductMovimentationForm({
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      if (!product) return;
+      if (!product || !selectedProductionFlow) return;
       const { amount } = value;
       try {
         const { data: createdMovimentation } = await createMovimentation({
-          product_id: product.id,
           amount,
+          product_id: product.id,
           status: "PENDING",
+          production_flow_id: selectedProductionFlow.id,
         });
 
         const { data: processFlows } = await getAllProductionFlowTemplates(
-          product.production_flow.id,
+          createdMovimentation.production_flow_id,
         );
 
         await createProcessExecution({
@@ -77,7 +81,7 @@ export default function CreateProductMovimentationForm({
   });
 
   const resetForm = () => {
-    form.reset();
+    form.resetField("amount");
   };
 
   const isPending = isCreateMovimentationPending || isCreateProcessExecutionPending;

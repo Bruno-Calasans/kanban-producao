@@ -21,6 +21,7 @@ export function MovimentationTableDropdownMenu({
   const canEdit = movimentation.status == "PENDING";
   const canDelete = movimentation.status == "PENDING";
   const canCancel = movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
+  const hideProductionFlowField = movimentation.status != "PENDING";
 
   return (
     <DropdownMenu>
@@ -37,7 +38,10 @@ export function MovimentationTableDropdownMenu({
         </Link>
 
         {canEdit && (
-          <EditMovimentationDialog movimentation={movimentation}>
+          <EditMovimentationDialog
+            movimentation={movimentation}
+            hideProductionFlowField={hideProductionFlowField}
+          >
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Edit2Icon />
               Editar

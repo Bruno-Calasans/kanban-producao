@@ -1,19 +1,26 @@
 /* eslint-disable react/no-children-prop */
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { defaultProductFormValues, withForm } from "../productFormContext";
+import { defaultMovimentationFormValues, withForm } from "../movimentationFormContext";
 import { ProductionFlow } from "@/types/database.type";
 import ProductionFlowSelectorWithCheckbox from "@/components/custom/selectors/ProductionFlowSelectorWithCheckbox";
 
-type ProductProductionFlowFieldProps = {
+type MovimentationProductionFlowFieldProps = {
+  selectedProductionFlow?: ProductionFlow;
   defaultProductionFlow?: ProductionFlow;
   disabled?: boolean;
   onChangeProductionFlow: (productionFlow?: ProductionFlow) => void;
 };
 
-export const ProductProductionFlowField = withForm({
-  defaultValues: defaultProductFormValues,
-  props: {} as ProductProductionFlowFieldProps,
-  render({ form, defaultProductionFlow, disabled, onChangeProductionFlow }) {
+export const MovimentationProductionFlowField = withForm({
+  defaultValues: defaultMovimentationFormValues,
+  props: {} as MovimentationProductionFlowFieldProps,
+  render({
+    form,
+    selectedProductionFlow,
+    defaultProductionFlow,
+    disabled,
+    onChangeProductionFlow,
+  }) {
     return (
       <form.Field
         name="productionFlow"
@@ -24,6 +31,7 @@ export const ProductProductionFlowField = withForm({
               <FieldLabel htmlFor={field.name}>Fluxo de Produção</FieldLabel>
               <ProductionFlowSelectorWithCheckbox
                 disabled={disabled}
+                selectedProductionFlow={selectedProductionFlow}
                 defaultProductionFlow={defaultProductionFlow}
                 onValueChange={(productionFlow) => {
                   field.handleChange(productionFlow?.name || "");

@@ -1,10 +1,10 @@
-import { ProductWithProductionFlow } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 import useUpdateProduct from "./useUpdateProduct";
 import { toast } from "sonner";
 import errorHandler from "@/utils/errorHandler";
 
 type UseActiveProductProps = {
-  product: ProductWithProductionFlow;
+  product: Product;
 };
 
 export default function useActiveProduct({ product }: UseActiveProductProps) {

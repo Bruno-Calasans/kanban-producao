@@ -3,12 +3,12 @@ import CancelButton from "@/components/custom/buttons/CancelButton";
 import DeleteButton from "@/components/custom/buttons/DeleteButton";
 import useDialog from "@/hooks/dialog/useDialog";
 import useDeleteProduct from "@/hooks/product/useDeleteProduct";
-import { ProductWithProductionFlow } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 import errorHandler from "@/utils/errorHandler";
 import { toast } from "sonner";
 
 type DeleteProductDialogProps = {
-  product: ProductWithProductionFlow;
+  product: Product;
   children?: React.ReactNode;
 };
 

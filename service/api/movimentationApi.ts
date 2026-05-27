@@ -11,7 +11,9 @@ export async function getAllMovimentations() {
     .select(
       `
         *,
-        product:Product!product_id(*)`,
+        product:Product!product_id(*),
+         productionFlow:ProductionFlow!production_flow_id(*)
+        `,
     )
     .throwOnError();
 }
@@ -22,7 +24,9 @@ export async function getOneMovimentationById(id: number) {
     .select(
       `
         *,
-        product:Product!product_id(*)`,
+        product:Product!product_id(*),
+        productionFlow:ProductionFlow!production_flow_id(*)
+        `,
     )
     .eq("id", id)
     .maybeSingle()
@@ -35,7 +39,9 @@ export async function getLastProductMovimentation(productId: number) {
     .select(
       `
         *,
-        product:Product!product_id(*)`,
+        product:Product!product_id(*),
+        productionFlow:ProductionFlow!production_flow_id(*)
+        `,
     )
     .order("created_at", { ascending: false })
     .eq("product_id", productId)
@@ -51,7 +57,8 @@ export async function createMovimentation(data: CreateMovimentationtData) {
     .select(
       `
       *,
-      product:Product(*)
+      product:Product(*),
+      productionFlow:ProductionFlow!production_flow_id(*)
     `,
     )
     .single()
@@ -81,7 +88,9 @@ export async function getAllMovimentationsByProduct(productId: number) {
     .select(
       `
         *,
-        product:Product!product_id(*)`,
+        product:Product!product_id(*),
+        productionFlow:ProductionFlow!production_flow_id(*)
+        `,
     )
     .eq("product_id", productId)
     .throwOnError();
@@ -93,7 +102,9 @@ export async function getAllMovimentationsByProductionFlow(productionFlowId: num
     .select(
       `
         *,
-        product:Product!inner(*)`,
+        product:Product!inner(*),
+        productionFlow:ProductionFlow!production_flow_id(*)
+        `,
     )
     .eq("product.production_flow_id", productionFlowId)
     .throwOnError();

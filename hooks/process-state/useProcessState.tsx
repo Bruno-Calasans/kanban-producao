@@ -16,7 +16,7 @@ export default function useProcessState({ movimentation }: UseProcessStateProps)
     data: flowTemplateData,
     error: flowTemplateError,
     isPending: isFlowTemplatePending,
-  } = useGetAllProductionFlowTemplates(movimentation?.product.production_flow_id);
+  } = useGetAllProductionFlowTemplates(movimentation?.production_flow_id);
 
   const {
     data: processExecutionsData,

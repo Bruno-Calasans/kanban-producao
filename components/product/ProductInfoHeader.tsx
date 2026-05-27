@@ -1,4 +1,4 @@
-import { Movimentation, ProductWithProductionFlow } from "@/types/database.type";
+import { Movimentation, MovimentationPopulated, Product } from "@/types/database.type";
 import PageTitle from "@/components/custom/PageTitle";
 import BackButton from "@/components/custom/buttons/BackButton";
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,8 @@ import { InfoAlert } from "../custom/alerts/InfoAlert";
 import { CustomAlert } from "../custom/alerts/CustomAlert";
 
 type ProductInfoHeaderProps = {
-  product: ProductWithProductionFlow;
-  movimentations: Movimentation[];
+  product: Product;
+  movimentations: MovimentationPopulated[];
 };
 
 export default function ProductInfoHeader({ product, movimentations }: ProductInfoHeaderProps) {
@@ -42,10 +42,7 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
           <strong>Nome:</strong> {product.name}
         </p>
         <p>
-          <strong>Número de OP:</strong> {product.op}
-        </p>
-        <p>
-          <strong>Fluxo de Produção:</strong> {product.production_flow.name}
+          <strong>OP:</strong> {product.op}
         </p>
         <p className="flex items-center-safe gap-1">
           <strong>Situação:</strong> <ActiveBadge isActive={product.is_active} />
@@ -67,10 +64,7 @@ export default function ProductInfoHeader({ product, movimentations }: ProductIn
                 </Button>
               }
             >
-              <EditProductForm
-                product={product}
-                hideProductionFlowSelector={hideProductionFlowSelector}
-              />
+              <EditProductForm product={product} />
             </CustomDialog>
           </>
         )}

@@ -5,7 +5,6 @@ import * as z from "zod";
 export const formSchema = z.object({
   name: z.string().nonempty("Nome do produto é obrigatório.").toUpperCase(),
   op: ZodNumberField({ min: 0, minError: "OP deve ser maior que 0." }),
-  productionFlow: z.string().nonempty("Fluxo de produção é obrigatório"),
 });
 
 export type ProductSchema = z.infer<typeof formSchema>;
@@ -13,7 +12,6 @@ export type ProductSchema = z.infer<typeof formSchema>;
 export const defaultProductFormValues: ProductSchema = {
   name: "",
   op: 0,
-  productionFlow: "",
 };
 
 export const { fieldContext, formContext, useFieldContext, useFormContext } =

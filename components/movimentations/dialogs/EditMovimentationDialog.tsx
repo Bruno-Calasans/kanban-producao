@@ -4,16 +4,25 @@ import EditMovimentationForm from "../forms/EditMovimentationForm";
 
 type EditMovimentationDialogProps = {
   movimentation: MovimentationPopulated;
+  hideProductionFlowField?: boolean;
   children?: React.ReactNode;
 };
 
 export default function EditMovimentationDialog({
+  hideProductionFlowField,
   movimentation,
   children,
 }: EditMovimentationDialogProps) {
   return (
-    <CustomDialog id="edit-movimentation" title="Editar Movimentação" trigger={children}>
-      <EditMovimentationForm movimentation={movimentation} />
+    <CustomDialog
+      id={`edit-movimentation-${movimentation.id}`}
+      title="Editar Movimentação"
+      trigger={children}
+    >
+      <EditMovimentationForm
+        movimentation={movimentation}
+        hideProductionFlowField={hideProductionFlowField}
+      />
     </CustomDialog>
   );
 }

@@ -7,28 +7,36 @@ import { useAppForm, formSchema, MovimentationFormSchema } from "./movimentation
 import handleFormError from "@/utils/errorHandler";
 import { MovimentationAmountFieldGroup } from "./fields/MovimentationAmountFieldGroup";
 import useDialog from "@/hooks/dialog/useDialog";
-import { MovimentationPopulated, ProductWithProductionFlow } from "@/types/database.type";
+import { MovimentationPopulated, Product, ProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
 import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
 import useUpdateInicialExecution from "@/hooks/process-executation/useUpdateInicialExecution";
+import { MovimentationProductionFlowField } from "./fields/MovimentationProductionFlowField";
+import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
 
 type EditMovimentationFormProps = {
   movimentation: MovimentationPopulated;
+  hideProductionFlowField?: boolean;
 };
 
-export default function EditMovimentationForm({ movimentation }: EditMovimentationFormProps) {
+export default function EditMovimentationForm({
+  movimentation,
+  hideProductionFlowField,
+}: EditMovimentationFormProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync: updateMovimentation, isPending: isMovimentationPending } =
     useUpdateMovimentation();
   const { mutateAsync: updateInitialExecution, isPending: isExecutionPending } =
     useUpdateInicialExecution();
-  const [product, setProduct] = useState<ProductWithProductionFlow>();
+  const [product, setProduct] = useState<Product>();
+  const [productionFlow, setProductionFlow] = useState<ProductionFlow>();
 
   const form = useAppForm({
     defaultValues: {
       productName: movimentation.product.name,
       amount: movimentation.amount,
+      productionFlow: movimentation.productionFlow.name,
       useMaxAmount: false,
     } as MovimentationFormSchema,
     validators: {
@@ -38,6 +46,7 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
     onSubmit: async ({ value }) => {
       if (!product) return;
       const { amount } = value;
+      const selectedProductionFlow = productionFlow ? productionFlow : movimentation.productionFlow;
 
       try {
         await updateMovimentation({
@@ -47,19 +56,29 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
             product_id: product.id,
             status: "PENDING",
             updated_at: new Date().toISOString(),
+            production_flow_id: selectedProductionFlow.id,
           },
         });
 
         //  atualiza execução inicial
-        if (amount != movimentation.amount) {
+        const isProductionFlowDiff =
+          productionFlow && movimentation.productionFlow.id != productionFlow.id;
+
+        if (amount != movimentation.amount || isProductionFlowDiff) {
+          const { data: templates } = await getAllProductionFlowTemplates(
+            selectedProductionFlow.id,
+          );
+          const firstProcess = templates[0];
+
           await updateInitialExecution({
             movimentationId: movimentation.id,
+            processId: firstProcess.process.id,
             amount,
           });
         }
 
         toast.success("Movimentação atualizado com sucesso!");
-        closeDialog("edit-movimentation");
+        closeDialog(`edit-movimentation-${movimentation.id}`);
         form.reset();
       } catch (error) {
         handleFormError(error, {
@@ -70,8 +89,13 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
   });
 
   const resetForm = () => {
-    form.reset();
-    setProduct(undefined);
+    form.reset({
+      amount: movimentation.amount,
+      productName: movimentation.product.name,
+      productionFlow: movimentation.productionFlow.name,
+    });
+    setProduct(movimentation.product);
+    setProductionFlow(movimentation.productionFlow);
   };
 
   const isPending = isMovimentationPending || isExecutionPending;
@@ -87,15 +111,24 @@ export default function EditMovimentationForm({ movimentation }: EditMovimentati
     >
       <MovimentationProductNameField
         form={form}
+        defaultProduct={movimentation.product}
         selectedProduct={product}
-        defaultProduct={movimentation.product as ProductWithProductionFlow}
         onChange={setProduct}
         disabled
       />
+
       <MovimentationAmountFieldGroup form={form} />
 
+      <MovimentationProductionFlowField
+        form={form}
+        disabled={hideProductionFlowField}
+        defaultProductionFlow={movimentation.productionFlow}
+        selectedProductionFlow={productionFlow}
+        onChangeProductionFlow={setProductionFlow}
+      />
+
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <ClearButton isLoading={isPending} onclick={resetForm} />
+        <ClearButton label="Resetar" isLoading={isPending} onclick={resetForm} />
         <SaveButton isLoading={isPending} hiddenIcon />
       </div>
     </form>

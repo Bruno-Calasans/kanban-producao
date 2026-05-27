@@ -7,19 +7,15 @@ import useCreateProduct from "@/hooks/product/useCreateProduct";
 import { ProductNameField } from "./fields/ProductNameField";
 import { defaultProductFormValues, formSchema, useAppForm } from "./productFormContext";
 import { ProductOpField } from "./fields/ProductOpField";
-import { Field, FieldContent, FieldDescription, FieldGroup } from "@/components/ui/field";
+import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
-import { ProductionFlow } from "@/types/database.type";
-import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
-import { Checkbox } from "@/components/ui/checkbox";
 import CreateManySwitch from "@/components/custom/CreateManySwitch";
 
 export default function CreateProductForm() {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useCreateProduct();
-  const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow>();
   const [many, setMany] = useState(false);
 
   const form = useAppForm({
@@ -29,21 +25,18 @@ export default function CreateProductForm() {
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      if (!selectedProductionFlow) return;
-
       try {
         const { name, op } = value;
         await mutateAsync({
           name,
           op,
-          production_flow_id: selectedProductionFlow.id,
           is_active: true,
         });
         toast.success("Produto criado com sucesso!");
         if (!many) {
           closeDialog("create-product");
         }
-        resetForm();
+        form.reset();
       } catch (error) {
         errorHandler(error, {
           default: "Erro: não foi possível criar o produto",
@@ -52,11 +45,6 @@ export default function CreateProductForm() {
       }
     },
   });
-
-  const resetForm = () => {
-    form.resetField("name");
-    form.resetField("op");
-  };
 
   return (
     <form
@@ -70,8 +58,6 @@ export default function CreateProductForm() {
         <ProductNameField form={form} />
         <ProductOpField form={form} />
       </FieldGroup>
-
-      <ProductProductionFlowField form={form} onChangeProductionFlow={setSelectedProductionFlow} />
 
       <div
         id="create-product-form-buttons"

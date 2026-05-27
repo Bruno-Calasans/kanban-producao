@@ -1,13 +1,12 @@
-import { ProductWithProductionFlow } from "@/types/database.type";
-import { SingleSelector } from "./selectors/SingleSelector";
+import { Product } from "@/types/database.type";
 import useGetAllActiveProducts from "@/hooks/product/useGetAllActiveProducts";
 import { SearchableSelector } from "./selectors/SearchableSelector";
 
 type ProductSelectorProps = {
-  selectedProduct?: ProductWithProductionFlow;
-  defaultProduct?: ProductWithProductionFlow;
+  selectedProduct?: Product;
+  defaultProduct?: Product;
   disabled?: boolean;
-  onChangeProduct(product?: ProductWithProductionFlow): void;
+  onChangeProduct(product?: Product): void;
 };
 
 export default function ProductSelector({
@@ -20,7 +19,7 @@ export default function ProductSelector({
   const products = data ? data.data : [];
 
   return (
-    <SearchableSelector<ProductWithProductionFlow>
+    <SearchableSelector<Product>
       data={products}
       selectedData={selectedProduct}
       defaultData={defaultProduct}

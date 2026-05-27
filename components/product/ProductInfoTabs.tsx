@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  MovimentationPopulated,
-  ProcessExecutionPopulated,
-  ProductWithProductionFlow,
-} from "@/types/database.type";
+import { MovimentationPopulated, ProcessExecutionPopulated, Product } from "@/types/database.type";
 import ProcessExecutationTable from "./tables/ProcessExecutationTable";
 import ProductMovimentationTable from "./tables/ProductMovimentationTable";
 
 type ProductInfoTabsProps = {
-  product: ProductWithProductionFlow;
+  product: Product;
   movimentations: MovimentationPopulated[];
   executions: ProcessExecutionPopulated[];
 };

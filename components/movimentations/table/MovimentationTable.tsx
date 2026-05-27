@@ -34,6 +34,11 @@ export default function MovimentationTable({
       header: ({ column }) => <DataTableColumnHeader column={column} title="Produto" />,
     },
     {
+      id: "productionFlow.nam",
+      accessorKey: "productionFlow.name",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="Fluxo" />,
+    },
+    {
       accessorKey: "amount",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd." />,
     },

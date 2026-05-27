@@ -21,7 +21,7 @@ export async function getAllMovimentationExecutionsTemplates(
   if (!movimentations || movimentations.length == 0) return dataByMovimentation;
 
   const movimentationsIds = [...new Set(movimentations.map((movimentation) => movimentation.id))];
-  const flowIds = [...new Set(movimentations.map((m) => m.product.production_flow_id))];
+  const flowIds = [...new Set(movimentations.map((m) => m.production_flow_id))];
 
   // Mapear todos os ids das movimentações
   if (movimentationsIds.length == 0) return;
@@ -79,7 +79,7 @@ export async function getAllMovimentationExecutionsTemplates(
   for (const movimentation of movimentations) {
     const movimentationId = movimentation.id;
     const executions = executionsByMovimentation.get(movimentationId) || [];
-    const templates = templatesByProductionFlow.get(movimentation.product.production_flow_id) || [];
+    const templates = templatesByProductionFlow.get(movimentation.production_flow_id) || [];
     dataByMovimentation.set(movimentationId, {
       movimentation,
       executions,

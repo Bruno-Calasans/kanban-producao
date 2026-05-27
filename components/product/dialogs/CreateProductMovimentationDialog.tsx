@@ -1,11 +1,11 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import { Button } from "@/components/ui/button";
-import { ProductWithProductionFlow } from "@/types/database.type";
+import { Product } from "@/types/database.type";
 import { ArrowLeftRightIcon } from "lucide-react";
 import CreateProductMovimentationForm from "../forms/CreateProductMovimentationForm";
 
 type CreateProductMovimentationDialogProps = {
-  product: ProductWithProductionFlow;
+  product: Product;
 };
 
 export default function CreateProductMovimentationDialog({

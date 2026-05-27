@@ -24,7 +24,7 @@ export async function createExecution(
   );
 
   const { data: flowTemplates } = await getAllProductionFlowTemplates(
-    movimentation.product.production_flow_id,
+    movimentation.production_flow_id,
   );
 
   // Calcula process states

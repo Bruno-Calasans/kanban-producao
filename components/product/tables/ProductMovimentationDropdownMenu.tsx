@@ -9,7 +9,7 @@ import DeleteMovimentationDialog from "@/components/movimentations/dialogs/Delet
 import { MovimentationPopulated } from "@/types/database.type";
 import CancelMovimentationDialog from "@/components/movimentations/dialogs/CancelMovimentationDialog";
 import Link from "next/link";
-import EditProductMovimentationDialog from "../dialogs/EditProductMovimentationDialog";
+import EditMovimentationDialog from "@/components/movimentations/dialogs/EditMovimentationDialog";
 
 type ProductMovimentationDropdownMenuProps = {
   movimentation: MovimentationPopulated;
@@ -21,6 +21,7 @@ export function ProductMovimentationDropdownMenu({
   const canEdit = movimentation.status == "PENDING";
   const canDelete = movimentation.status == "PENDING";
   const canCancel = movimentation.status != "CANCELLED" && movimentation.status != "COMPLETED";
+  const hideProductionFlowField = movimentation.status != "PENDING";
 
   return (
     <DropdownMenu>
@@ -37,12 +38,15 @@ export function ProductMovimentationDropdownMenu({
         </Link>
 
         {canEdit && (
-          <EditProductMovimentationDialog movimentation={movimentation}>
+          <EditMovimentationDialog
+            movimentation={movimentation}
+            hideProductionFlowField={hideProductionFlowField}
+          >
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Edit2Icon />
               Editar
             </DropdownMenuItem>
-          </EditProductMovimentationDialog>
+          </EditMovimentationDialog>
         )}
 
         {canCancel && (

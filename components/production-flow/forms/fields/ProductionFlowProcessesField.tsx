@@ -24,7 +24,8 @@ export const ProductionFlowProcessesField = withForm({
           <FieldSet>
             <FieldLegend>Processos</FieldLegend>
             <FieldDescription>
-              Selecione os processos que fazem parte deste fluxo de produção.
+              Selecione os processos que fazem parte deste fluxo de produção. Apenas processos de
+              departamentos INTERNOS aparecerão na lista.
             </FieldDescription>
             <ProcessSortable
               defaultProcesses={defaultProcesses}

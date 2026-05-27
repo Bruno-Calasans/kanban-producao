@@ -11,7 +11,7 @@ import useCreateProductionFlow from "@/hooks/production-flow/useCreateProduction
 import { ProductionFlowDescField } from "./fields/ProductionFlowDescField";
 import { ProductionFlowProcessesField } from "./fields/ProductionFlowProcessesField";
 import { useState } from "react";
-import { Process, ProcessWithDepartament } from "@/types/database.type";
+import { ProcessWithDepartament } from "@/types/database.type";
 import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
 import { useRouter } from "next/navigation";
 import { ProductionFlowUseDefaultField } from "./fields/ProductionFlowUseDefaultField";

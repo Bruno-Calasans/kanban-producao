@@ -16,10 +16,9 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@/components/ui/combobox";
-import { Process, ProcessWithDepartament } from "@/types/database.type";
+import { ProcessWithDepartament } from "@/types/database.type";
 import { useEffect, useMemo, useState } from "react";
 import Loader from "./Loader";
-import { sortBySequence } from "@/utils/sortBySequence";
 import useGetAllActiveProcesses from "@/hooks/process/useGetAllActiveProcesses";
 
 type ComboItem = {

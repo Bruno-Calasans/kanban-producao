@@ -6,111 +6,128 @@ import {
   MovimentationPopulated,
   ProcessState,
 } from "@/types/database.type";
-import { useMemo } from "react";
-import { differenceInDays } from "date-fns";
 
-export type DepartamenStatus = "IN_PROGRESS" | "PENDING" | "COMPLETED" | "EXPIRED";
+import { useMemo } from "react";
+import { differenceInDays, startOfDay } from "date-fns";
+
+export type DepartamenStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED" | "EXPIRED";
 
 export type DepartamentState = {
   movimentation: MovimentationPopulated;
   departament: Departament;
   deadline?: MovimentationDeadlinePopulated;
   processStates: ProcessState[];
+  movimentationProcessStates: ProcessState[];
   status: DepartamenStatus;
   expiredDays: number;
-  movimentationProcessStates: ProcessState[];
-};
-
-export type ProcessStateByDepartament = {
-  [key in string]: ProcessState[];
 };
 
 type UseDepartamentStateProps = {
   movimentation: MovimentationPopulated;
-  movimentationProcessStates: ProcessState[];
   movimentationDeadlines: MovimentationDeadlinePopulated[];
+  movimentationProcessStates: ProcessState[];
 };
+
+export function calculateDepartamentStatus(
+  processStates: ProcessState[],
+  deadline?: MovimentationDeadlinePopulated,
+): {
+  status: DepartamenStatus;
+  expiredDays: number;
+} {
+  let hasPending = false;
+  let hasInProgress = false;
+
+  for (const state of processStates) {
+    if (state.status === "IN_PROGRESS") {
+      hasInProgress = true;
+    }
+
+    if (state.status === "PENDING") {
+      hasPending = true;
+    }
+  }
+
+  let status: DepartamenStatus = "COMPLETED";
+
+  if (hasInProgress) {
+    status = "IN_PROGRESS";
+  } else if (hasPending) {
+    status = "PENDING";
+  }
+
+  // verifica atraso
+  if (deadline?.expected_at && !deadline.finished_at) {
+    const today = startOfDay(new Date());
+    const expectedDate = startOfDay(new Date(deadline.expected_at));
+
+    const diff = differenceInDays(expectedDate, today);
+
+    if (diff < 0) {
+      return {
+        status: "EXPIRED",
+        expiredDays: Math.abs(diff),
+      };
+    }
+  }
+
+  return {
+    status,
+    expiredDays: 0,
+  };
+}
 
 export default function useDepartamentState({
   movimentation,
-  movimentationProcessStates,
   movimentationDeadlines,
+  movimentationProcessStates,
 }: UseDepartamentStateProps) {
-  
-  const getDepartamentStates = () => {
-    const processStateByDepartament: ProcessStateByDepartament = {};
-    const departamentStates: DepartamentState[] = [];
+  const departamentStates = useMemo(() => {
+    const processStatesByDepartament = new Map<number, ProcessState[]>();
 
-    // agrupa departamento com seus estados dos processos
-    movimentationProcessStates.forEach((state) => {
-      const departament = state.process.departament;
+    const deadlinesByDepartament = new Map<number, MovimentationDeadlinePopulated>();
 
-      if (processStateByDepartament[departament.id]) {
-        processStateByDepartament[departament.id].push(state);
-      } else {
-        processStateByDepartament[departament.id] = [state];
-      }
-    });
+    // deadlines map
+    for (const deadline of movimentationDeadlines) {
+      deadlinesByDepartament.set(deadline.departament.id, deadline);
+    }
 
-    for (const departamentKey of Object.keys(processStateByDepartament)) {
-      const departamentProcessStates = processStateByDepartament[departamentKey];
-      const currentDepartament = processStateByDepartament[departamentKey][0].process.departament;
+    // agrupa process states
+    for (const state of movimentationProcessStates) {
+      const departamentId = state.process.departament.id;
 
-      const deadline = movimentationDeadlines.find(
-        (deadline) => deadline.departament.id === currentDepartament.id,
-      );
+      const current = processStatesByDepartament.get(departamentId) || [];
 
-      const { status, expiredDays } = getDepartamentStatus(departamentProcessStates, deadline);
+      current.push(state);
 
-      departamentStates.push({
+      processStatesByDepartament.set(departamentId, current);
+    }
+
+    const states: DepartamentState[] = [];
+
+    // cria estados finais
+    for (const [departamentId, processStates] of processStatesByDepartament) {
+      const departament = processStates[0].process.departament;
+
+      const deadline = deadlinesByDepartament.get(departamentId);
+
+      const { status, expiredDays } = calculateDepartamentStatus(processStates, deadline);
+
+      states.push({
         movimentation,
-        departament: currentDepartament,
-        processStates: processStateByDepartament[departamentKey],
+        departament,
+        processStates,
+        movimentationProcessStates,
         deadline,
         status,
         expiredDays,
-        movimentationProcessStates,
       });
     }
 
-    return departamentStates;
+    return states;
+  }, [movimentation, movimentationDeadlines, movimentationProcessStates]);
+
+  return {
+    departamentStates,
   };
-
-  const getDepartamentStatus = (
-    processStates: ProcessState[],
-    deadline?: MovimentationDeadlinePopulated,
-  ): { status: DepartamenStatus; expiredDays: number } => {
-    let dptStatus: { status: DepartamenStatus; expiredDays: number } = {
-      expiredDays: 0,
-      status: "COMPLETED",
-    };
-
-    const pendingStates = processStates.filter((state) => state.status === "PENDING");
-    const progressStates = processStates.filter((state) => state.status === "IN_PROGRESS");
-
-    if (pendingStates.length > 0 && progressStates.length == 0) dptStatus.status = "PENDING";
-    if (progressStates.length > 0) dptStatus.status = "IN_PROGRESS";
-
-    // Tem prazo
-    if (deadline && deadline.expected_at && !deadline.finished_at) {
-      const expectedDate = new Date(deadline.expected_at);
-      const currentDate = new Date();
-      expectedDate.setHours(0, 0, 0, 0);
-      currentDate.setHours(0, 0, 0, 0);
-
-      const diffInDays = differenceInDays(expectedDate, currentDate);
-      const isExpired = diffInDays < 0;
-
-      if (isExpired) dptStatus = { status: "EXPIRED", expiredDays: Math.abs(diffInDays) };
-    }
-
-    return dptStatus;
-  };
-
-  const departamentStates = useMemo(
-    () => getDepartamentStates(),
-    [movimentation, movimentationProcessStates, movimentationDeadlines],
-  );
-
-  return { departamentStates };
 }

@@ -68,14 +68,13 @@ export function calcProcessStates({
 
     const outputExecutions = outputExecutionsMap.get(processId) || [];
 
+    const executions = [...inputExecutions, ...outputExecutions];
+
     // =========================
     // QUANTIDADES
     // =========================
 
-    const inputAmount = inputExecutions.reduce(
-      (total, exe) => total + exe.amount,
-      0,
-    );
+    const inputAmount = inputExecutions.reduce((total, exe) => total + exe.amount, 0);
 
     const forwardAmount = outputExecutions
       .filter((exe) => exe.type === "TRANSFER")
@@ -89,34 +88,26 @@ export function calcProcessStates({
       .filter((exe) => exe.type === "REPROCESS")
       .reduce((total, exe) => total + exe.amount, 0);
 
-    const outputAmount =
-      forwardAmount + externalAmount + reprocessAmount;
+    const outputAmount = forwardAmount + externalAmount + reprocessAmount;
 
-    const avaliableAmount =
-      inputAmount -
-      forwardAmount -
-      externalAmount -
-      reprocessAmount;
+    const avaliableAmount = inputAmount - forwardAmount - externalAmount - reprocessAmount;
 
     // =========================
     // STATUS BASE
     // =========================
 
-    const hasExecutions =
-      inputExecutions.length > 0 ||
-      outputExecutions.length > 0;
+    const hasExecutions = inputExecutions.length > 0 || outputExecutions.length > 0;
 
-    const isLastProcess =
-      currentProcess.id === lastProcess.id;
+    const isInitialExecution =
+      executions && executions.length === 1 && executions[0].type === "INIT";
+
+    const isLastProcess = currentProcess.id === lastProcess.id;
 
     let status: ProcessExecutionStatus = "PENDING";
 
-    if (!hasExecutions) {
+    if (!hasExecutions || isInitialExecution) {
       status = "PENDING";
-    } else if (
-      isLastProcess &&
-      avaliableAmount === movimentation.amount
-    ) {
+    } else if (isLastProcess && avaliableAmount === movimentation.amount) {
       status = "SUCCESS";
     } else if (avaliableAmount > 0) {
       status = "IN_PROGRESS";
@@ -132,29 +123,17 @@ export function calcProcessStates({
 
     const hasReprocess = reprocessAmount > 0;
 
-    const hasPendingExternal =
-      externalAmount > forwardAmount;
+    const hasPendingExternal = externalAmount > forwardAmount;
 
-    const hasPendingReprocess =
-      reprocessAmount > forwardAmount;
+    const hasPendingReprocess = reprocessAmount > forwardAmount;
 
-    const fullyExternal =
-      externalAmount > 0 &&
-      forwardAmount === 0 &&
-      avaliableAmount === 0;
+    const fullyExternal = externalAmount > 0 && forwardAmount === 0 && avaliableAmount === 0;
 
-    const fullyReprocessed =
-      reprocessAmount > 0 &&
-      forwardAmount === 0 &&
-      avaliableAmount === 0;
+    const fullyReprocessed = reprocessAmount > 0 && forwardAmount === 0 && avaliableAmount === 0;
 
-    const partiallyExternal =
-      externalAmount > 0 &&
-      forwardAmount > 0;
+    const partiallyExternal = externalAmount > 0 && forwardAmount > 0;
 
-    const partiallyReprocessed =
-      reprocessAmount > 0 &&
-      forwardAmount > 0;
+    const partiallyReprocessed = reprocessAmount > 0 && forwardAmount > 0;
 
     // =========================
     // STATUS AVANÇADO
@@ -172,15 +151,9 @@ export function calcProcessStates({
     // PROCESSOS RELACIONADOS
     // =========================
 
-    const previousProcess =
-      i > 0
-        ? flowTemplates[i - 1].process
-        : null;
+    const previousProcess = i > 0 ? flowTemplates[i - 1].process : null;
 
-    const nextProcess =
-      i < flowTemplates.length - 1
-        ? flowTemplates[i + 1].process
-        : null;
+    const nextProcess = i < flowTemplates.length - 1 ? flowTemplates[i + 1].process : null;
 
     // =========================
     // PUSH
@@ -219,10 +192,7 @@ export function calcProcessStates({
 
       outputExecutions,
 
-      executions: [
-        ...inputExecutions,
-        ...outputExecutions,
-      ],
+      executions: [...inputExecutions, ...outputExecutions],
 
       // FLAGS
       flags: {
@@ -250,24 +220,17 @@ export function calcProcessStates({
   return states;
 }
 
-export function checkSkippedProcess(
-  processStates: ProcessState[],
-) {
+export function checkSkippedProcess(processStates: ProcessState[]) {
   for (let i = 0; i < processStates.length; i++) {
     const current = processStates[i];
 
-    const hasExecutions =
-      current.executions.length > 0;
+    const hasExecutions = current.executions.length > 0;
 
     if (hasExecutions) continue;
 
-    const afterStates =
-      processStates.slice(i + 1);
+    const afterStates = processStates.slice(i + 1);
 
-    const hasFlowAdvanced =
-      afterStates.some(
-        (state) => state.executions.length > 0,
-      );
+    const hasFlowAdvanced = afterStates.some((state) => state.executions.length > 0);
 
     if (hasFlowAdvanced) {
       current.status = "SKIPPED";

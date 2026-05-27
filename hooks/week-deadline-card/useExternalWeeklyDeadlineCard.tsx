@@ -30,23 +30,32 @@ export default function useExternalWeeklyDeadlineCard({
   // Verificando os departamentos externos
   const movimentationExecutions = processStates.flatMap((state) => state.executions);
   const departamentExternalState = calcDepartamentExternalState({
-    movimentation,
     departament,
+    movimentation,
     movimentationExecutions,
   });
 
+  // Quantidade disponível no departamento externo
   const avaliableAmount = departamentExternalState?.avaliableAmount || 0;
+
+  // Quantidade retornada do departamento externo
   const amountDone = departamentExternalState?.returnAmount || 0;
+
+  // Quantidade totaal e inicial no departamento externo
   const totalAmount = departamentExternalState?.externalAmount || 0;
 
   const hasWork = amountDone > 0;
 
+  // Se o prazo de retorno do departamento externo está expirado
   const isExpired = expectedDate && expectedDate.getTime() < today.getTime();
 
-  const isFinished = !!finishedDate;
+  // Se não tem mais nada no departamento externo
+  const isFinished = !!finishedDate && avaliableAmount == 0;
 
-  const isDone = amountDone > 0 && amountDone >= totalAmount;
+  // Se tudo já retornou
+  const isDone = amountDone > 0 && amountDone == totalAmount;
 
+  // Prazo do departamento termina este dia da semana
   const isExpectedThisWeekDay = expectedDate && expectedDate.getTime() == weekDay.getTime();
 
   return {

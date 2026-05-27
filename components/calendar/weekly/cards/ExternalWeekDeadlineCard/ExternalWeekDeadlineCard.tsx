@@ -3,12 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import ExternalWeekDeadlineCardContextMenu from "./ExternalWeekDeadlineCardContextMenu";
-import { ShirtIcon, HashIcon, FlagIcon, GoalIcon, BoxesIcon } from "lucide-react";
+import { ShirtIcon, HashIcon, BoxesIcon } from "lucide-react";
 import { useWeeklyDeadlineStore } from "@/store/weeklyDeadlineCardStore";
 import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
-import { checkDeadlineType } from "@/utils/checkDeadlineType";
-import CustomTooltip from "@/components/custom/CustomTooltip";
 import useExternalWeeklyDeadlineCard from "@/hooks/week-deadline-card/useExternalWeeklyDeadlineCard";
+import DeadlineTypeBadge from "../../DeadlineTypeBadge";
 
 export type ExternalWeekDeadlineCardProps = {
   weekDay: Date;
@@ -28,6 +27,7 @@ export default function ExternalWeekDeadlineCard({
     (state) => state.selectedDeadlineId === deadline.id,
   );
   const isShort = useShortCardVersion((state) => state.isShort);
+  const movimentation = deadline.movimentation;
 
   const {
     isDone,
@@ -39,9 +39,6 @@ export default function ExternalWeekDeadlineCard({
     isExpectedThisWeekDay,
     departamentExternalState,
   } = useExternalWeeklyDeadlineCard({ deadline, processStates, weekDay });
-
-  const movimentation = deadline.movimentation;
-  const deadlineType = checkDeadlineType(deadline);
 
   return (
     <ExternalWeekDeadlineCardContextMenu
@@ -103,35 +100,19 @@ export default function ExternalWeekDeadlineCard({
                 {/* Quanto foi feito */}
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <ShirtIcon size={16} />
-                  <span className="font-bold">FEITO:</span> {amountDone}
+                  <span className="font-bold">RETORNADO:</span> {amountDone}
                 </p>
                 {/* Quanto falta fazer */}
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <HashIcon size={16} />
-                  <span className="font-bold">RESTANTE:</span>
-                  {amountDone} DE {totalAmount}
+                  <span className="font-bold">ENVIADO:</span>
+                  {totalAmount}
                 </p>
               </>
             )}
           </div>
         </Badge>
-
-        {/* Começa e termina no mesmo dia */}
-        {isExpectedThisWeekDay && deadlineType === "ONLY_EXPECTED" && (
-          <div className="absolute top-0.5 -right-1 bg-black rounded-full flex p-0.5">
-            <CustomTooltip content="Termina e começa neste dia" side="right">
-              <GoalIcon size={14} className="text-white" />
-            </CustomTooltip>
-          </div>
-        )}
-
-        {isExpectedThisWeekDay && deadlineType === "RANGE" && (
-          <div className="absolute top-0.5 -right-1 bg-black rounded-full flex p-0.5">
-            <CustomTooltip content="Termina neste dia" side="right">
-              <FlagIcon size={14} className="text-white" />
-            </CustomTooltip>
-          </div>
-        )}
+        <DeadlineTypeBadge deadline={deadline} isExpectedThisWeekDay={isExpectedThisWeekDay} />
       </Link>
     </ExternalWeekDeadlineCardContextMenu>
   );

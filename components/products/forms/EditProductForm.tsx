@@ -56,7 +56,7 @@ export default function EditProductForm({ product, hideProductionFlowSelector }:
         });
         toast.success("Produto atualizado com sucesso!");
         closeDialog("edit-product");
-        // form.reset();
+        form.reset();
       } catch (error) {
         handleFormError(error, {
           duplicate: "Erro: já existe um produto com esse nome.",

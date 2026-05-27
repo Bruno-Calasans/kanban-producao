@@ -43,7 +43,7 @@ export default function CreateProductForm() {
         if (!many) {
           closeDialog("create-product");
         }
-        form.reset();
+        resetForm();
       } catch (error) {
         errorHandler(error, {
           default: "Erro: não foi possível criar o produto",
@@ -52,6 +52,11 @@ export default function CreateProductForm() {
       }
     },
   });
+
+  const resetForm = () => {
+    form.resetField("name");
+    form.resetField("op");
+  };
 
   return (
     <form

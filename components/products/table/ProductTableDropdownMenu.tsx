@@ -32,7 +32,7 @@ export default function ProductTableDropdownMenu({ product }: ProductTableDropdo
 
   const isPending = isActivePending || isProductMovimentationsPending;
   const canEdit = !isPending && product.is_active;
-  const hideProductionFlowSelector = movimentations.length > 0;
+  const hideProductionFlowSelector = false;
   const canDeleteProduct = !isPending && movimentations.length == 0;
 
   return (

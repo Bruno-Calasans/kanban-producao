@@ -13,6 +13,7 @@ import { ProductWithProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
+import CreateManySwitch from "@/components/custom/CreateManySwitch";
 
 type CreateMovimentationFormProps = {
   defaultProduct?: ProductWithProductionFlow;
@@ -25,6 +26,7 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
   const { mutateAsync: createProcessExecution, isPending: isCreateProcessExecutionPending } =
     useCreateProcessExecution();
   const [product, setProduct] = useState<ProductWithProductionFlow>();
+  const [many, setMany] = useState<boolean>(false);
 
   const form = useAppForm({
     defaultValues: defaultMovimentationFormValues,
@@ -63,7 +65,7 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
         });
 
         toast.success("Produto movimentado com sucesso!");
-        closeDialog("create-movimentation");
+        if (!many) closeDialog("create-movimentation");
         form.reset();
       } catch (error) {
         handleFormError(error, {
@@ -94,12 +96,13 @@ export default function CreateMovimentationForm({ defaultProduct }: CreateMovime
         defaultProduct={defaultProduct}
         selectedProduct={product}
         onChange={setProduct}
-        disabled
+        disabled={!!defaultProduct}
       />
 
       <MovimentationAmountFieldGroup form={form} />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
+        <CreateManySwitch value={many} onChangeValue={setMany} />
         <ClearButton isLoading={isPending} onclick={resetForm} />
         <MoveButton title="Criar" isLoading={isPending} hiddenIcon />
       </div>

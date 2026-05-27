@@ -32,6 +32,9 @@ export const MovimentationAmountFieldGroup = withForm({
                 name={field.name}
                 value={fieldValue}
                 onBlur={field.handleBlur}
+                onFocus={(e) =>
+                  !field.state.meta.isDirty && field.handleChange("" as unknown as number)
+                }
                 onChange={(e) => field.handleChange(e.target.value as unknown as number)}
                 aria-invalid={isInvalid}
                 placeholder="Quantidade a ser movimentada"

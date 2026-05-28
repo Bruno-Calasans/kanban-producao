@@ -2,6 +2,7 @@ import { moveToNextDepartament, MoveNextProcessDate } from "@/service/api/proces
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { processExecutationKeys } from "@/constants/processExecutationKeys";
 import { movimentationKeys } from "@/constants/movimentationKeys";
+import { productionFlowTemplateKeys } from "@/constants/productionFlowTemplateKeys";
 
 export default function useMoveToNextDepartament() {
   const queryClient = useQueryClient();
@@ -9,15 +10,26 @@ export default function useMoveToNextDepartament() {
   return useMutation({
     mutationFn: (data: MoveNextProcessDate) => moveToNextDepartament(data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: processExecutationKeys.lists(),
-        exact: false,
-      });
+      if (data?.data) {
+        const { data: processExecution } = data;
 
-      if (data) {
         queryClient.invalidateQueries({
-          queryKey: movimentationKeys.list(data.data.movimentation_id),
+          queryKey: processExecutationKeys.list(processExecution.movimentation_id),
+
           exact: false,
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: movimentationKeys.list(processExecution.movimentation_id),
+          exact: false,
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: [
+            ...productionFlowTemplateKeys.all,
+            ...processExecutationKeys.all,
+            processExecution.movimentation_id,
+          ],
         });
       }
     },

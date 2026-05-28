@@ -21,7 +21,7 @@ const processColumns: ColumnDef<DepartamentState>[] = [
   },
   {
     accessorKey: "deadline.started_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Começou em" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Começa em" />,
     cell: ({
       row: {
         original: { movimentation, departament, deadline, status },
@@ -93,7 +93,7 @@ export default function MovimentationDeadlinesTable({
 }: MovimentationDeadlineState) {
   return (
     <DataTable
-      filterPlaceholder="Procurar departamento"
+      filterPlaceholder="Procurar por departamento"
       filterColumn="departament.name"
       columns={processColumns}
       data={departamentStates}

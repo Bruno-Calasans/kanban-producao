@@ -6,18 +6,22 @@ import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { formSchema, useAppForm, FinishDeadlineFormSchema } from "./finishDeadlineFormContext";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
 import { FinishedAtField } from "./fields/FinishedAtField";
 import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
 import { differenceInDays } from "date-fns";
+import useMoveToNextDepartament from "@/hooks/process-executation/useMoveToNextDepartament";
 
 type FinishDeadlineFormProps = {
+  processStates: ProcessState[];
   deadline: MovimentationDeadlinePopulated;
 };
 
-export default function FinishDeadlineForm({ deadline }: FinishDeadlineFormProps) {
+export default function FinishDeadlineForm({ processStates, deadline }: FinishDeadlineFormProps) {
   const { closeDialog } = useDialog();
-  const { mutateAsync: updateDeadline, isPending, error } = useUpdateMovimentationDeadline();
+  const { mutateAsync: updateDeadline, isPending, isError } = useUpdateMovimentationDeadline();
+  const { mutateAsync: moveNextDepartament, isPending: isNextDepartamentPending } =
+    useMoveToNextDepartament();
 
   const form = useAppForm({
     defaultValues: {
@@ -29,14 +33,27 @@ export default function FinishDeadlineForm({ deadline }: FinishDeadlineFormProps
     },
     onSubmit: async ({ value }) => {
       const { finished_at } = value;
+      if (!finished_at) return;
+
+      const { movimentation } = deadline;
+      const finishedDate = new Date(finished_at).toISOString();
 
       try {
         await updateDeadline({
           movimentationDeadlineId: deadline.id,
           updateData: {
-            finished_at,
+            finished_at: finishedDate,
           },
         });
+
+        await moveNextDepartament({
+          processStates,
+          finished_at: finishedDate,
+          amount: movimentation.amount,
+          startedAt: deadline.started_at,
+          responsibleId: null,
+        });
+
         toast.success("Prazo finalizado com sucesso!");
         closeDialog(`finish-deadline-${deadline.id}`);
         form.reset();

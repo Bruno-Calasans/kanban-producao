@@ -31,7 +31,7 @@ export async function getAllMetasByDepartament(departamentId: number) {
 }
 
 export async function createMeta(data: CreateMetaData) {
-  return await supabase.from("Meta").insert(data).throwOnError();
+  return await supabase.from("Meta").insert(data).select().single().throwOnError();
 }
 
 export async function updateMeta(metaId: number, data: UpdateMetaData) {

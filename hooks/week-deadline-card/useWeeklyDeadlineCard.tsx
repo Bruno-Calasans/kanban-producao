@@ -61,21 +61,21 @@ export default function useWeeklyDeadlineCard({
     0,
   );
 
+  const isFinished = !!finishedDate && avaliableAmount == 0;
+
   // Quantidade de peças que deve ser feita neste dia
   const metaAmount = metaInThisDay
     ? metaInThisDay.expected_amount
-    : Math.ceil(avaliableAmount / totalDays);
+    : Math.ceil((isFinished ? totalAmount : avaliableAmount) / totalDays);
 
   // Tem peças disponíveis para fazer
-  const hasWork = avaliableAmount > 0;
+  const hasWork = departmentStates.length > 0 && avaliableAmount > 0;
 
   // Se a meta está expirada
   const isExpired = expectedDate && expectedDate.getTime() < today.getTime();
 
-  const isFinished = !!finishedDate && avaliableAmount == 0;
-
   // Meta será completada se fizer igual ou maior a meta definida
-  const isMetaDone = hasWork && metaAmount > 0 && amountDoneInThisDay >= metaAmount;
+  const isMetaDone = metaAmount > 0 && amountDoneInThisDay >= metaAmount;
 
   // Meta será incompleta se fizer menos que a meta estabelecida
   const isMetaIncomplete =
@@ -85,11 +85,11 @@ export default function useWeeklyDeadlineCard({
   const isExpectedThisWeekDay = expectedDate && expectedDate.getTime() == weekDay.getTime();
   const isStartedThisWeekDay = startedDate && startedDate.getTime() == weekDay.getTime();
 
-  let workState: DeadlineWorkState = "WAITING_INPUT";
+  let workState: DeadlineWorkState;
 
-  if (isFinished) {
+  if (isFinished || isMetaDone) {
     workState = "COMPLETED";
-  } else if (avaliableAmount > 0) {
+  } else if (hasWork) {
     workState = "READY";
   } else if (!hasWork) {
     workState = "WAITING_INPUT";

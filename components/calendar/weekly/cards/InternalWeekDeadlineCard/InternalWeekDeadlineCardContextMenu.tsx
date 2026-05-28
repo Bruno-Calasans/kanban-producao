@@ -41,7 +41,7 @@ export default function InternalWeekDeadlineCardContextMenu({
         {/* Concluir deadline */}
         {!hideFinishDeadlineAction && (
           <ContextMenuItem asChild>
-            <FinishDeadlineDialog deadline={deadline} />
+            <FinishDeadlineDialog deadline={deadline} processStates={processStates} />
           </ContextMenuItem>
         )}
 

@@ -2,14 +2,18 @@
 
 import CustomDialog from "@/components/custom/CustomDialog";
 import FinishDeadlineForm from "@/components/calendar/weekly/forms/finish-deadline/FinishDeadlineForm";
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
 import { CheckIcon } from "lucide-react";
 
 type FinishDeadlineDialogProps = {
   deadline: MovimentationDeadlinePopulated;
+  processStates: ProcessState[];
 };
 
-export default function FinishDeadlineDialog({ deadline }: FinishDeadlineDialogProps) {
+export default function FinishDeadlineDialog({
+  deadline,
+  processStates,
+}: FinishDeadlineDialogProps) {
   return (
     <CustomDialog
       id={`finish-deadline-${deadline.id}`}
@@ -21,7 +25,7 @@ export default function FinishDeadlineDialog({ deadline }: FinishDeadlineDialogP
         </p>
       }
     >
-      <FinishDeadlineForm deadline={deadline} />
+      <FinishDeadlineForm deadline={deadline} processStates={processStates} />
     </CustomDialog>
   );
 }

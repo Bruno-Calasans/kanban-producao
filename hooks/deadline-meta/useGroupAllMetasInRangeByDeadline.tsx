@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { movimentationDeadlineKeys } from "@/constants/movimentationDeadlineKeys";
+import { metaKeys } from "@/constants/metaKeys";
 import { MovimentationDeadlinePopulated } from "@/types/database.type";
 import groupAllMetasInRangeByDeadline from "@/utils/groupAllMetasInRangeByDeadline";
 
@@ -17,7 +17,7 @@ export default function useGroupAllMetasInRangeByDeadline({
   const deadlineIds = deadlines.map((deadline) => deadline.id);
 
   return useQuery({
-    queryKey: [...movimentationDeadlineKeys.lists(), deadlineIds],
+    queryKey: [...metaKeys.lists(), ...deadlineIds],
     queryFn: () => groupAllMetasInRangeByDeadline(from, to, deadlineIds),
     enabled: !!deadlines && deadlines.length > 0 && !!from && !!to,
   });

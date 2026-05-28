@@ -48,7 +48,6 @@ export default function WeeklyDeadlineTable() {
 
   const {
     data: metasInRangeByDeadlineData,
-    isPending: isMetasInRangeByDeadlinePending,
     isError: metasInRangeByDeadlineError,
     isLoading: isMetasInRangeByDeadlineLoading,
   } = useGroupAllMetasInRangeByDeadline({ from: startDayOfWeek, to: endDayOfWeek, deadlines });

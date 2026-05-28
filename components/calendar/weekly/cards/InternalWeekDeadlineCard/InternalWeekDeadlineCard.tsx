@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import WeekDeadlineCardContextMenu from "./InternalWeekDeadlineCardContextMenu";
-import { TargetIcon, ShirtIcon, HashIcon } from "lucide-react";
+import { TargetIcon, ShirtIcon, HashIcon, AsteriskIcon } from "lucide-react";
 import useWeeklyDeadlineCard from "@/hooks/week-deadline-card/useWeeklyDeadlineCard";
 import { useWeeklyDeadlineStore } from "@/store/weeklyDeadlineCardStore";
 import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
@@ -48,6 +48,7 @@ export default function InternalWeekDeadlineCard({
     avaliableAmount,
     isExpectedThisWeekDay,
     isStartedThisWeekDay,
+    hasWork,
   } = useWeeklyDeadlineCard({ deadline, metasInThisWeek, processStates, weekDay });
 
   return (
@@ -59,7 +60,7 @@ export default function InternalWeekDeadlineCard({
       deadline={deadline}
       departamentAvaliableAmount={avaliableAmount}
       hidden={!avaliableAmount || isMetaDone}
-      hideFinishDeadlineAction={isFinished}
+      hideFinishDeadlineAction={isFinished || avaliableAmount == 0}
       hideFinishMetaAction={
         isMetaDone || isFinished || (isMetaIncomplete && amountDoneInThisDay > 0)
       }
@@ -113,10 +114,16 @@ export default function InternalWeekDeadlineCard({
             </p>
 
             {workState == "READY" && isShort && (
-              <p className="flex gap-0.5 items-center justify-center text-xs">
-                <TargetIcon size={16} />
-                <span className="font-bold">META DIÁRIA:</span> {metaAmount}/{totalAmount}
-              </p>
+              <>
+                <p className="flex gap-0.5 items-center justify-center text-xs">
+                  <TargetIcon size={16} />
+                  <span className="font-bold">META DIÁRIA:</span> {metaAmount}
+                </p>
+                <p className="flex gap-0.5 items-center justify-center text-xs">
+                  <HashIcon size={16} />
+                  <span className="font-bold">RESTANTE:</span> {avaliableAmount}/{totalAmount}
+                </p>
+              </>
             )}
 
             {workState == "WAITING_INPUT" && (
@@ -127,7 +134,9 @@ export default function InternalWeekDeadlineCard({
 
             {workState == "COMPLETED" && isShort && (
               <p className="flex gap-0.5 items-center justify-center text-xs">
-                <span className="font-bold">CONCLUÍDO</span>
+                <span className="font-bold">
+                  CONCLUÍDO: {metaAmount}/{totalAmount}
+                </span>
               </p>
             )}
 
@@ -139,7 +148,12 @@ export default function InternalWeekDeadlineCard({
                 </p>
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <ShirtIcon size={16} />
-                  <span className="font-bold">FEITO:</span> {amountDoneInThisDay}
+                  <span className="font-bold">META FEITA:</span>{" "}
+                  {isFinished ? metaAmount : amountDoneInThisDay}
+                </p>
+                <p className="flex gap-0.5 items-center justify-center text-xs">
+                  <AsteriskIcon size={16} />
+                  <span className="font-bold">RESTANTE TOTAL:</span> {avaliableAmount}
                 </p>
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <HashIcon size={16} />

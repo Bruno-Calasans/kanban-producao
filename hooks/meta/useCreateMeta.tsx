@@ -7,9 +7,9 @@ export default function usecreateMeta() {
 
   return useMutation({
     mutationFn: (data: CreateMetaData) => createMeta(data),
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       queryClient.invalidateQueries({
-        queryKey: metaKeys.lists(),
+        queryKey: metaKeys.list(data.deadline_id),
         exact: false,
         refetchType: "active",
       });

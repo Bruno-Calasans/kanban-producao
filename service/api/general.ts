@@ -24,7 +24,7 @@ export async function getAllMovimentationExecutionsTemplates(
   const flowIds = [...new Set(movimentations.map((m) => m.production_flow_id))];
 
   // Mapear todos os ids das movimentações
-  if (movimentationsIds.length == 0) return;
+  if (movimentationsIds.length == 0) return dataByMovimentation;
 
   // Pega todas as execuções das movimentações
   const { data: executions } = await supabase

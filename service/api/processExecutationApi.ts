@@ -175,7 +175,7 @@ export async function updateInitialExecution({
     .select()
     .eq("movimentation_id", movimentationId)
     .eq("type", "INIT")
-    .maybeSingle()
+    .single()
     .throwOnError();
 }
 

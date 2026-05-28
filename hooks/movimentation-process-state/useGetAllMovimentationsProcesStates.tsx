@@ -17,7 +17,10 @@ export default function useGetAllMovimentationsProcesStates({
   const processStatesByMovimentation = useMemo(() => {
     const processStatesByMovimentation = new Map<number, ProcessState[]>();
 
-    if (!data || isError || movimentations.length === 0) return processStatesByMovimentation;
+    console.log(data)
+
+    if (!data || isError || isLoading || movimentations.length === 0)
+      return processStatesByMovimentation;
 
     for (const [movimentationId, movimentationExecutionTemplate] of data) {
       const { movimentation, executions, templates } = movimentationExecutionTemplate;
@@ -32,7 +35,7 @@ export default function useGetAllMovimentationsProcesStates({
     }
 
     return processStatesByMovimentation;
-  }, [movimentations, data]);
+  }, [movimentations, data, isLoading]);
 
   return {
     processStatesByMovimentation,

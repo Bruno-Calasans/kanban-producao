@@ -39,9 +39,9 @@ export default function FinishMetaForm({
 }: MoveNextDepartamentFormProps) {
   const { closeDialog } = useDialog();
   const [responsible, setResponsible] = useState<Responsible>();
+  const { mutateAsync: createMeta, isPending: isMetaPending } = usecreateMeta();
   const { mutateAsync: moveNextDepartament, isPending: isNextDepartamentPending } =
     useMoveToNextDepartament();
-  const { mutateAsync: createMeta, isPending: isMetaPending } = usecreateMeta();
 
   const form = useAppForm({
     defaultValues: {

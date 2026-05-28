@@ -19,19 +19,19 @@ export default function MonthlyCalendarPage() {
   const deadlines = data?.data || [];
   const [selectedDepartaments, setSelectedDepartaments] = React.useState<DepartamentItem[]>([]);
 
-  const notEndDeadlines = deadlines.filter((deadline) => !deadline.finished_at);
+  const notEndDeadlines = deadlines.filter((deadline) => !deadline.actual_end_at);
 
   const startDeadlineDates = notEndDeadlines
-    .filter((deadline) => deadline.started_at != null)
-    .map((deadline) => new Date(deadline.started_at!));
+    .filter((deadline) => deadline.planned_start_at != null)
+    .map((deadline) => new Date(deadline.planned_start_at!));
 
   const finishedDeadlineDates = deadlines
-    .filter((deadline) => deadline.finished_at != null)
-    .map((deadline) => new Date(deadline.finished_at!));
+    .filter((deadline) => deadline.actual_end_at != null)
+    .map((deadline) => new Date(deadline.actual_end_at!));
 
   const deadlineDates = notEndDeadlines
-    .filter((deadline) => deadline.expected_at != null)
-    .map((deadline) => new Date(deadline.expected_at!));
+    .filter((deadline) => deadline.planned_end_at != null)
+    .map((deadline) => new Date(deadline.planned_end_at!));
 
   const selectedDeadlines = notEndDeadlines.filter((deadline) =>
     selectedDepartaments.some((departament) => departament.value === deadline.departament.id),

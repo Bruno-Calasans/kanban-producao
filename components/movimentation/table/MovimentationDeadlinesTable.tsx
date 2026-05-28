@@ -8,6 +8,8 @@ import MovimentationDeadlineInput from "../inputs/MovimentationDeadlineInput";
 import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import MovimentationDeadlineStartsAtInput from "../inputs/MovimentationDeadlineStartsAtInput";
 import MovimentationDeadlineEndsAtInput from "../inputs/MovimentationDeadlineEndsAtInput";
+import MovimentationDeadlinePlannedStartInput from "../inputs/MovimentationDeadlinePlannedStartInput";
+import MovimenationDeadlinePlannedEndInput from "../inputs/MovimenationDeadlinePlannedEndInput";
 
 type MovimentationDeadlineState = {
   departamentStates: DepartamentState[];
@@ -20,63 +22,75 @@ const processColumns: ColumnDef<DepartamentState>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
   },
   {
-    accessorKey: "deadline.started_at",
+    accessorKey: "deadline.planned_start_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Começa em" />,
     cell: ({
       row: {
         original: { movimentation, departament, deadline, status },
       },
     }) => (
-      <MovimentationDeadlineStartsAtInput
+      <MovimentationDeadlinePlannedStartInput
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
-        disabled={
-          !!deadline?.finished_at || movimentation.status == "CANCELLED" || !!deadline?.finished_at
-        }
+        disabled={movimentation.status == "CANCELLED"}
       />
     ),
   },
   {
-    accessorKey: "expected_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Prazo" />,
+    accessorKey: "deadline.planned_end_at",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Termina em" />,
     cell: ({
       row: {
         original: { movimentation, departament, deadline, status },
       },
     }) => (
-      <MovimentationDeadlineInput
+      <MovimenationDeadlinePlannedEndInput
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
-        disabled={
-          !!deadline?.finished_at ||
-          !!!deadline?.started_at ||
-          movimentation.status == "CANCELLED" ||
-          !!deadline?.finished_at
-        }
+        disabled={!!!deadline?.planned_start_at || movimentation.status == "CANCELLED"}
       />
     ),
   },
-  {
-    accessorKey: "finished_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
-    cell: ({
-      row: {
-        original: { movimentation, departament, deadline, status, movimentationProcessStates },
-      },
-    }) => (
-      <MovimentationDeadlineEndsAtInput
-        movimentation={movimentation}
-        departament={departament}
-        deadline={deadline}
-        movimentationProcessStates={movimentationProcessStates}
-        disabled={
-          !!deadline?.finished_at || !deadline?.started_at || movimentation.status == "CANCELLED"
-        }
-      />
-    ),
-  },
+  // {
+  //   accessorKey: "finished_at",
+  //   header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
+  //   cell: ({
+  //     row: {
+  //       original: { movimentation, departament, deadline, status, movimentationProcessStates },
+  //     },
+  //   }) => (
+  //     <MovimentationDeadlineEndsAtInput
+  //       movimentation={movimentation}
+  //       departament={departament}
+  //       deadline={deadline}
+  //       movimentationProcessStates={movimentationProcessStates}
+  //       disabled={
+  //         !!deadline?.finished_at || !deadline?.started_at || movimentation.status == "CANCELLED"
+  //       }
+  //     />
+  //   ),
+  // },
+  // {
+  //   accessorKey: "finished_at",
+  //   header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
+  //   cell: ({
+  //     row: {
+  //       original: { movimentation, departament, deadline, status, movimentationProcessStates },
+  //     },
+  //   }) => (
+  //     <MovimentationDeadlineEndsAtInput
+  //       movimentation={movimentation}
+  //       departament={departament}
+  //       deadline={deadline}
+  //       movimentationProcessStates={movimentationProcessStates}
+  //       disabled={
+  //         !!deadline?.finished_at || !deadline?.started_at || movimentation.status == "CANCELLED"
+  //       }
+  //     />
+  //   ),
+  // },
   {
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,

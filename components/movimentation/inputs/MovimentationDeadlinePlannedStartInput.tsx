@@ -19,13 +19,16 @@ type ProcessExecutionActionsProps = {
   disabled?: boolean;
 };
 
-export default function MovimentationDeadlineStartsAtInput({
+export default function MovimentationDeadlinePlannedStartInput({
   movimentation,
   departament,
   deadline,
   disabled,
 }: ProcessExecutionActionsProps) {
-  const startDate = deadline?.started_at ? new Date(deadline?.started_at) : undefined;
+  const today = new Date();
+  const plannedStarDate = deadline?.planned_start_at
+    ? new Date(deadline?.planned_start_at)
+    : undefined;
 
   const {
     mutateAsync: updateMovimentationDeadline,
@@ -40,13 +43,27 @@ export default function MovimentationDeadlineStartsAtInput({
   } = useCreateMovimentationDeadline();
 
   const onChangeDate = async (date?: Date) => {
-    const hasChanged = startDate?.getTime() !== date?.getTime();
-    
-    const startDateIsMoreThanEndDate =
-      deadline?.finished_at && date && new Date(deadline.finished_at).getTime() < date.getTime();
+    const hasChanged = plannedStarDate?.getTime() !== date?.getTime();
+    const plannedEndDate = deadline?.planned_end_at ? new Date(deadline.planned_end_at) : null;
+    const actualStartDate = deadline?.actual_start_at ? new Date(deadline.actual_start_at) : null;
+    const actualEndDate = deadline?.actual_end_at ? new Date(deadline.actual_end_at) : null;
 
-    const startDateIsMoreThanExpectedDate =
-      deadline?.expected_at && date && new Date(deadline.expected_at).getTime() < date.getTime();
+    date?.setHours(0, 0, 0, 0);
+    plannedEndDate?.setHours(0, 0, 0, 0);
+    actualStartDate?.setHours(0, 0, 0, 0);
+    actualEndDate?.setHours(0, 0, 0, 0);
+
+    // A data planejada de começo deve ser menor que a data planejada de fim
+    const isPlannedStartDateMoreThanPlannedEndDate =
+      date && plannedEndDate && date.getTime() >= plannedEndDate.getTime();
+
+    // A data de começo planejada deve ser menor ou igual a data que realmente começou
+    const isPlannedStartDateMoreThanActualStartDate =
+      date && actualStartDate && date.getTime() >= actualStartDate.getTime();
+
+    // A data de começo deve ser menor ou igual que a data real de término
+    const isPlannedStartDateMoreThanActualEndDate =
+      date && actualEndDate && date.getTime() > actualEndDate.getTime();
 
     if (!date || !hasChanged) return;
 
@@ -56,12 +73,17 @@ export default function MovimentationDeadlineStartsAtInput({
           movimentationDeadlineId: deadline.id,
           updateData: {
             departament_id: departament.id,
-            started_at: date.toISOString(),
-            finished_at: startDateIsMoreThanEndDate ? null : deadline.finished_at,
-            expected_at: startDateIsMoreThanExpectedDate ? null : deadline.expected_at,
+            planned_start_at: date.toISOString(),
+            planned_end_at: isPlannedStartDateMoreThanPlannedEndDate
+              ? null
+              : deadline.planned_end_at,
+            actual_start_at: isPlannedStartDateMoreThanActualStartDate
+              ? null
+              : deadline.actual_start_at,
+            actual_end_at: isPlannedStartDateMoreThanActualEndDate ? null : deadline.actual_end_at,
           },
         });
-        toast.success("Data de início atualizada");
+        toast.success("Data de início planejada atualizada");
       } catch (error) {
         errorHandler(error, {
           default: "Erro: Data de início não foi salva",
@@ -72,11 +94,12 @@ export default function MovimentationDeadlineStartsAtInput({
         await createMovimentationDeadline({
           movimentation_id: movimentation.id,
           departament_id: departament.id,
-          started_at: date.toISOString(),
-          expected_at: null,
-          finished_at: null,
+          planned_start_at: date.toISOString(),
+          planned_end_at: null,
+          actual_start_at: null,
+          actual_end_at: null,
         });
-        toast.success("Data de início criada");
+        toast.success("Data de início planejada criada");
       } catch (error) {
         errorHandler(error, {
           default: "Erro: Não foi possível criar a data de início",
@@ -92,9 +115,10 @@ export default function MovimentationDeadlineStartsAtInput({
 
   return (
     <DatePickerInput
-      currentDate={startDate}
+      minDate={today}
+      currentDate={plannedStarDate}
       onChangeDate={onChangeDate}
-      placeholder={startDate ? "" : "Data de início"}
+      placeholder={plannedStarDate ? "" : "Data de início"}
       disabled={disabled}
     />
   );

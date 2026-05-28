@@ -36,21 +36,21 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
       if (!finished_at) return;
 
       const { movimentation } = deadline;
-      const finishedDate = new Date(finished_at).toISOString();
+      const endDate = new Date(finished_at).toISOString();
 
       try {
         await updateDeadline({
           movimentationDeadlineId: deadline.id,
           updateData: {
-            finished_at: finishedDate,
+            actual_end_at: endDate,
           },
         });
 
         await moveNextDepartament({
           processStates,
-          finished_at: finishedDate,
+          finished_at: endDate,
           amount: movimentation.amount,
-          startedAt: deadline.started_at,
+          startedAt: deadline.planned_start_at,
           responsibleId: null,
         });
 

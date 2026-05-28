@@ -70,8 +70,8 @@ export default function ProcessExecutationTable({
 
   return (
     <DataTable
-      filterPlaceholder="Procurar Execução de processos"
-      filterColumn="process.name"
+      filterPlaceholder="Procurar por processo, responsável"
+      filterColumn={["process.name", "from_process.name", "responsible.name"]}
       columns={filteredColumns}
       data={processExecutions}
     />

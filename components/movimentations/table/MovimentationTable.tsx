@@ -73,8 +73,8 @@ export default function MovimentationTable({
 
   return (
     <DataTable
-      filterPlaceholder="Procurar movimentação"
-      filterColumn="id"
+      filterPlaceholder="Procurar por movimentação ou produto"
+      filterColumn={["id", "product.name"]}
       columns={filteredColumns}
       data={movimentations}
       onClickCell={({ column, row: { original } }) =>

@@ -12,7 +12,7 @@ export async function getAllMovimentations() {
       `
         *,
         product:Product!product_id(*),
-         productionFlow:ProductionFlow!production_flow_id(*)
+        productionFlow:ProductionFlow!production_flow_id(*)
         `,
     )
     .throwOnError();
@@ -102,10 +102,10 @@ export async function getAllMovimentationsByProductionFlow(productionFlowId: num
     .select(
       `
         *,
-        product:Product!inner(*),
-        productionFlow:ProductionFlow!production_flow_id(*)
+      product:Product!product_id(*),
+      productionFlow:ProductionFlow!production_flow_id(*)
         `,
     )
-    .eq("product.production_flow_id", productionFlowId)
+    .eq("production_flow_id", productionFlowId)
     .throwOnError();
 }

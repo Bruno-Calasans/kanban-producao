@@ -51,8 +51,8 @@ const responsibleColumns: ColumnDef<ResponsibleWithDepartament>[] = [
 export default function ResponsibleTable({ responsibles }: ResponsiblePageProps) {
   return (
     <DataTable
-      filterPlaceholder="Procurar responsável"
-      filterColumn="name"
+      filterPlaceholder="Procurar por responsável ou departamento"
+      filterColumn={["name", "departament.name"]}
       columns={responsibleColumns}
       data={responsibles}
     />

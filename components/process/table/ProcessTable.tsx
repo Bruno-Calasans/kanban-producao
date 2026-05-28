@@ -53,8 +53,8 @@ const processColumns: ColumnDef<ProcessWithDepartament>[] = [
 export default function ProcessTable({ processes }: ProcessPageProps) {
   return (
     <DataTable
-      filterPlaceholder="Procurar processo"
-      filterColumn="name"
+      filterPlaceholder="Procurar por processo ou departamento"
+      filterColumn={["name", "departament.name"]}
       columns={processColumns}
       data={processes}
     />

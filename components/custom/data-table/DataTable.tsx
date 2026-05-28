@@ -119,7 +119,7 @@ export function DataTable<TData, TValue>({
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   onClick={() => onClickRow && onClickRow(row)}
-                  className="cursor-pointer"
+                  className="cursor-default"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} onClick={() => onClickCell && onClickCell(cell)}>

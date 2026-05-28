@@ -23,11 +23,6 @@ const productColumns: ColumnDef<Product>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Produto" />,
   },
   {
-    id: "production_flow.name",
-    accessorKey: "production_flow.name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Fluxo" />,
-  },
-  {
     accessorKey: "is_active",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Ativo" />,
     cell: (props) => <ActiveBadge isActive={!!props.getValue()} />,

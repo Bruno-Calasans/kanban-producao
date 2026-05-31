@@ -28,11 +28,17 @@ export default function ReturnProcessForm({
   avaliableProcesses,
 }: ReturnProcessFormProps) {
   const { closeDialog } = useDialog();
-  const { mutateAsync: createProcessExecution, isPending: isCreateExecutionPending } =
-    useCreateProcessExecution();
   const [selectedProcess, setSelectedProcess] = useState<ProcessWithDepartament>();
-  const { mutateAsync: updateDeadline, isPending: isDeadlinePending } =
-    useUpdateMovimentationDeadline();
+  const {
+    mutateAsync: updateDeadline,
+    isPending: isUpdateDeadlinePending,
+    isError: isUpdateDeadlineError,
+  } = useUpdateMovimentationDeadline();
+  const {
+    mutateAsync: createProcessExecution,
+    isPending: isCreateExecutionPending,
+    isError: isCreateExecutionError,
+  } = useCreateProcessExecution();
 
   const form = useAppForm({
     defaultValues: {
@@ -48,11 +54,10 @@ export default function ReturnProcessForm({
       if (!selectedProcess) return;
       const { amount, started_at, finished_at } = value;
       const { process: currProcess, movimentation } = externalProcessState;
-      const startedDate = started_at ? new Date(started_at).toISOString() : null;
-      const finishedDate = finished_at ? new Date(finished_at).toISOString() : null;
+      const startDate = started_at ? new Date(started_at).toISOString() : null;
+      const endDate = finished_at ? new Date(finished_at).toISOString() : null;
 
       try {
-        // Cria execução de processo
         await createProcessExecution({
           createData: {
             amount,
@@ -60,8 +65,8 @@ export default function ReturnProcessForm({
             process_id: selectedProcess.id,
             movimentation_id: movimentation.id,
             product_id: movimentation.product.id,
-            started_at: startedDate,
-            finished_at: finishedDate,
+            started_at: startDate,
+            finished_at: endDate,
             type: "RETURN",
             responsible_id: null,
             reason: null,
@@ -73,7 +78,8 @@ export default function ReturnProcessForm({
           updateDeadline({
             movimentationDeadlineId: deadline.id,
             updateData: {
-              finished_at: finishedDate,
+              actual_start_at: startDate,
+              actual_end_at: endDate,
             },
           });
         }
@@ -89,7 +95,8 @@ export default function ReturnProcessForm({
     },
   });
 
-  const isPending = isCreateExecutionPending;
+  const isPending = isUpdateDeadlinePending || isCreateExecutionPending;
+  const isError = isUpdateDeadlineError || isCreateExecutionError;
 
   return (
     <form

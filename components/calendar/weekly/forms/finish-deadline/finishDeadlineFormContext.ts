@@ -1,15 +1,16 @@
-import ZodNumberField from "@/utils/ZodNumberField";
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form-nextjs";
 import * as z from "zod";
 
 export const formSchema = z.object({
-  finished_at: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 });
 
 export type FinishDeadlineFormSchema = z.infer<typeof formSchema>;
 
 export const defaultFinishDeadlineFormValues: FinishDeadlineFormSchema = {
-  finished_at: "",
+  startDate: "",
+  endDate: "",
 };
 
 export const { fieldContext, formContext, useFieldContext, useFormContext } =

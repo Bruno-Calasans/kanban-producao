@@ -7,7 +7,7 @@ import { formSchema, useAppForm, FinishDeadlineFormSchema } from "./finishDeadli
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
-import { FinishedAtField } from "./fields/FinishedAtField";
+import { FinishedDeadlineDatesField } from "./fields/FinishedDeadlineDatesField";
 import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
 import { differenceInDays } from "date-fns";
 import useMoveToNextDepartament from "@/hooks/process-executation/useMoveToNextDepartament";
@@ -19,9 +19,16 @@ type FinishDeadlineFormProps = {
 
 export default function FinishDeadlineForm({ processStates, deadline }: FinishDeadlineFormProps) {
   const { closeDialog } = useDialog();
-  const { mutateAsync: updateDeadline, isPending, isError } = useUpdateMovimentationDeadline();
-  const { mutateAsync: moveNextDepartament, isPending: isNextDepartamentPending } =
-    useMoveToNextDepartament();
+  const {
+    mutateAsync: updateDeadline,
+    isPending: isUpdateDeadlinePending,
+    isError: updateDeadlineError,
+  } = useUpdateMovimentationDeadline();
+  const {
+    mutateAsync: moveNextDepartament,
+    isPending: isNextDepartamentPending,
+    isError: moveNextDepartamentError,
+  } = useMoveToNextDepartament();
 
   const form = useAppForm({
     defaultValues: {
@@ -32,25 +39,27 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
       onChange: formSchema,
     },
     onSubmit: async ({ value }) => {
-      const { finished_at } = value;
-      if (!finished_at) return;
+      const { startDate, endDate } = value;
+      if (!startDate || !endDate) return;
 
       const { movimentation } = deadline;
-      const endDate = new Date(finished_at).toISOString();
+      const actualStartDate = new Date(startDate).toISOString();
+      const actualEndDate = new Date(endDate).toISOString();
 
       try {
         await updateDeadline({
           movimentationDeadlineId: deadline.id,
           updateData: {
-            actual_end_at: endDate,
+            actual_start_at: actualStartDate,
+            actual_end_at: actualEndDate,
           },
         });
 
         await moveNextDepartament({
           processStates,
-          finished_at: endDate,
           amount: movimentation.amount,
-          startedAt: deadline.planned_start_at,
+          startedAt: startDate,
+          finished_at: endDate,
           responsibleId: null,
         });
 
@@ -65,9 +74,21 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
     },
   });
 
-  const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
-  const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
+  const isPending = isUpdateDeadlinePending || isNextDepartamentPending;
+  const isError = updateDeadlineError || moveNextDepartamentError;
+
+  const plannedStartDate = deadline.planned_start_at
+    ? new Date(deadline.planned_start_at)
+    : undefined;
+
+  const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : undefined;
   const today = new Date();
+
+  const isExpired =
+    plannedEndDate && plannedStartDate && plannedEndDate.getTime() < today.getTime();
+
+  const remainingDays =
+    plannedEndDate && plannedStartDate ? differenceInDays(plannedEndDate, plannedStartDate) + 1 : 0;
 
   return (
     <form
@@ -79,34 +100,31 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
     >
       <div className="flex flex-col  gap-1 mb-4">
         <p>
-          <span className="font-bold">Data de Início:</span>{" "}
-          {startedDate ? startedDate.toLocaleDateString() : "N/A"}
+          <span className="font-bold">Data de início planejada:</span>{" "}
+          {plannedStartDate ? plannedStartDate.toLocaleDateString() : "N/A"}
         </p>
         <p>
-          <span className="font-bold">Prazo:</span>{" "}
-          {expectedDate ? expectedDate.toLocaleDateString() : "N/A"}
+          <span className="font-bold">Date de fim planejada:</span>{" "}
+          {plannedEndDate ? plannedEndDate.toLocaleDateString() : "N/A"}
         </p>
         <p>
           <span className="font-bold">Dias em atraso:</span>{" "}
-          {expectedDate && startedDate && expectedDate.getTime() < today.getTime()
-            ? differenceInDays(today, expectedDate)
-            : "N/A"}
+          {isExpired ? differenceInDays(today, plannedEndDate) : "N/A"}
         </p>
         <p>
-          <span className="font-bold">Dias restantes:</span>{" "}
-          {expectedDate && startedDate ? differenceInDays(expectedDate, startedDate) : "N/A"}
+          <span className="font-bold">Dias restantes:</span> {remainingDays || "N/A"}
         </p>
       </div>
-      <FinishedAtField form={form} minDate={startedDate} />
+      <FinishedDeadlineDatesField form={form} />
 
       <div
-        id="create-execution-form-buttons"
+        id="finish-deadline-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
         <ConfirmButton
           hiddenIcon
           isLoading={isPending}
-          label="Finalizar prazo"
+          label="Finalizar"
           loadingMsg="Finalizando..."
         />
       </div>

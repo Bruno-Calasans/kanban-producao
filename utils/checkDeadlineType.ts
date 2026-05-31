@@ -2,11 +2,11 @@ import { MovimentationDeadlinePopulated } from "@/types/database.type";
 export type DeadlineType = "RANGE" | "ONLY_START" | "ONLY_EXPECTED";
 
 export function checkDeadlineType(deadline: MovimentationDeadlinePopulated): DeadlineType {
-  if (deadline.started_at && !deadline.expected_at) {
+  if (deadline.planned_start_at && !deadline.planned_end_at) {
     return "ONLY_START";
   }
 
-  if (deadline.expected_at && !deadline.started_at) {
+  if (deadline.planned_end_at && !deadline.planned_start_at) {
     return "ONLY_EXPECTED";
   }
 

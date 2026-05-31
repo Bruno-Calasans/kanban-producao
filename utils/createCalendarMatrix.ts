@@ -7,7 +7,6 @@ type CreateCalendarMatrixInput = {
   normalizedWeekDays: NormalizedWeekDay[];
 };
 
-
 export function createCalendarMatrix({ deadlines, normalizedWeekDays }: CreateCalendarMatrixInput) {
   const matrix = new Map<number, Map<string, MovimentationDeadlinePopulated[]>>();
 
@@ -22,14 +21,16 @@ export function createCalendarMatrix({ deadlines, normalizedWeekDays }: CreateCa
 
     // Processa deadlines
     for (const deadline of departmentDeadlines) {
-      const startedDate = deadline.started_at ? new Date(deadline.started_at) : null;
-      const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : null;
+      const plannedStartDate = deadline.planned_start_at
+        ? new Date(deadline.planned_start_at)
+        : null;
+      const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : null;
 
-      startedDate?.setHours(0, 0, 0, 0);
-      expectedDate?.setHours(0, 0, 0, 0);
+      plannedStartDate?.setHours(0, 0, 0, 0);
+      plannedEndDate?.setHours(0, 0, 0, 0);
 
-      const startTime = startedDate?.getTime();
-      const endTime = expectedDate?.getTime();
+      const startTime = plannedStartDate?.getTime();
+      const endTime = plannedEndDate?.getTime();
 
       for (const day of normalizedWeekDays) {
         const cards = weekMap.get(day.key) || [];

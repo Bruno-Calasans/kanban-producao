@@ -1,18 +1,18 @@
 import { MovimentationDeadlinePopulated } from "@/types/database.type";
 
 export function getDeadlinePriority(deadline: MovimentationDeadlinePopulated) {
-  const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : null;
+  const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : null;
 
-  const isFinished = !!deadline.finished_at;
+  const isFinished = !!deadline.actual_end_at;
 
   const today = new Date();
 
   today.setHours(0, 0, 0, 0);
 
-  if (expectedDate && !isFinished) {
-    expectedDate.setHours(0, 0, 0, 0);
+  if (plannedEndDate && !isFinished) {
+    plannedEndDate.setHours(0, 0, 0, 0);
 
-    if (expectedDate < today) {
+    if (plannedEndDate < today) {
       return 0; // atrasado
     }
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const movimentationDeadlineKeys = {
   all: ["MovimentationDeadline"] as const,
   lists: () => [...movimentationDeadlineKeys.all, "list"] as const,

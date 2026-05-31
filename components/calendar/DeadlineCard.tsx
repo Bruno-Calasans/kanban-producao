@@ -1,7 +1,6 @@
 import {
   Card,
   CardAction,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -21,11 +20,14 @@ type DeadlineCardProps = {
 };
 
 export default function DeadlineCard({ deadline }: DeadlineCardProps) {
-  const isExpired = deadline.expected_at ? new Date(deadline.expected_at) < new Date() : false;
-  const hasExpiredDate = !!deadline.expected_at;
-  const expireInDays = deadline.expected_at
+  const isExpired = deadline.planned_end_at
+    ? new Date(deadline.planned_end_at) < new Date()
+    : false;
+  const hasExpiredDate = !!deadline.planned_end_at;
+  const expireInDays = deadline.planned_end_at
     ? Math.ceil(
-        (new Date(deadline.expected_at).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
+        (new Date(deadline.planned_end_at).getTime() - new Date().getTime()) /
+          (1000 * 60 * 60 * 24),
       )
     : null;
 
@@ -42,8 +44,8 @@ export default function DeadlineCard({ deadline }: DeadlineCardProps) {
         <CardDescription>Quantidade: {deadline.movimentation.amount}</CardDescription>
         <CardAction className="text-sm">
           <span className="font-bold">Prazo</span>:{" "}
-          {deadline.expected_at
-            ? new Date(deadline.expected_at).toLocaleDateString() + ` (${expireInDays} dias)`
+          {deadline.planned_end_at
+            ? new Date(deadline.planned_end_at).toLocaleDateString() + ` (${expireInDays} dias)`
             : "N/A"}
         </CardAction>
       </CardHeader>

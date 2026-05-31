@@ -51,11 +51,12 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
     },
     onSubmit: async ({ value }) => {
       if (!process) return;
-      const { amount, expectedAt } = value;
+      const { amount, plannedEndAt } = value;
       const { process: currProcess, movimentation } = processState;
 
       try {
         await createProcessExecution({
+          movimentation,
           createData: {
             amount,
             from_process_id: currProcess.id,
@@ -68,16 +69,16 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
             reason: null,
             type: "EXTERNAL",
           },
-          movimentation,
         });
 
-        if (expectedAt) {
+        if (plannedEndAt) {
           await createDeadline({
             departament_id: process.departament.id,
             movimentation_id: movimentation.id,
-            expected_at: new Date(expectedAt).toISOString(),
-            started_at: null,
-            finished_at: null,
+            planned_end_at: new Date(plannedEndAt).toISOString(),
+            planned_start_at: null,
+            actual_start_at: null,
+            actual_end_at: null,
           });
         }
 
@@ -107,6 +108,7 @@ export default function MoveExternalForm({ processState }: MoveExternalFormProps
         <MoveProcessField
           form={form}
           processes={processes}
+          defaultProcess={processes[0]}
           selectedProcess={process}
           onChangeProcess={setProcess}
           isLoading={isProcessesPending}

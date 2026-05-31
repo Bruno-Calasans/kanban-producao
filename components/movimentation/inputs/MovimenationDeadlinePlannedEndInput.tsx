@@ -28,6 +28,7 @@ export default function MovimenationDeadlinePlannedEndInput({
   const plannedStartDate = deadline?.planned_start_at
     ? new Date(deadline.planned_start_at)
     : undefined;
+
   const plannedEndDate = deadline?.planned_end_at ? new Date(deadline?.planned_end_at) : undefined;
 
   const {
@@ -43,19 +44,20 @@ export default function MovimenationDeadlinePlannedEndInput({
   } = useCreateMovimentationDeadline();
 
   const onChangeDate = async (date?: Date) => {
-    const hasChanged = plannedEndDate?.getTime() !== date?.getTime();
-
     const actualStartDate = deadline?.actual_start_at ? new Date(deadline.actual_start_at) : null;
     const actualEndDate = deadline?.actual_end_at ? new Date(deadline.actual_end_at) : null;
 
     date?.setHours(0, 0, 0, 0);
     plannedStartDate?.setHours(0, 0, 0, 0);
+    plannedEndDate?.setHours(0, 0, 0, 0);
     actualStartDate?.setHours(0, 0, 0, 0);
     actualEndDate?.setHours(0, 0, 0, 0);
 
+    const hasChanged = plannedEndDate?.getTime() !== date?.getTime();
+
     // A data planejada de fim deve ser menor ou igual que a data planejada de começo
     const isPlannedEndDateLessThanPlannedStartDate =
-      date && plannedStartDate && plannedStartDate.getTime() < date.getTime();
+      date && plannedStartDate && date.getTime() < plannedStartDate.getTime();
 
     // A data de fim planejada deve ser menor ou igual a data que realmente começou
     const isPlannedEndDateMoreThanActualStartDate =

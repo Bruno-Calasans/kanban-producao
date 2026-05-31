@@ -57,9 +57,9 @@ export function calculateDepartamentStatus(
   }
 
   // verifica atraso
-  if (deadline?.expected_at && !deadline.finished_at) {
+  if (deadline?.planned_end_at && !deadline.actual_end_at) {
     const today = startOfDay(new Date());
-    const expectedDate = startOfDay(new Date(deadline.expected_at));
+    const expectedDate = startOfDay(new Date(deadline.planned_end_at));
 
     const diff = differenceInDays(expectedDate, today);
 

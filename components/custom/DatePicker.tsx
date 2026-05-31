@@ -66,7 +66,6 @@ export function DatePickerInput({
 
   return (
     <Field className="mx-auto">
-      {/* <FieldLabel htmlFor="date-required">Subscription Date</FieldLabel> */}
       <InputGroup>
         <InputGroupInput
           id="date-required"
@@ -124,6 +123,8 @@ export function DatePickerInput({
                 }}
                 disabled={(date: Date) => {
                   let isDisable = false;
+
+                  // Por padrão, removi domingo dos dias permitidos
                   const permittedWeekDays = weekDays || [1, 2, 3, 4, 5, 6];
                   const isNotPermitted = !permittedWeekDays.includes(date.getDay());
 
@@ -135,6 +136,10 @@ export function DatePickerInput({
                   if (maxDate) {
                     const convertedDate = typeof maxDate === "string" ? new Date(maxDate) : maxDate;
                     isDisable = date.getTime() > convertedDate.getTime() || isNotPermitted;
+                  }
+
+                  if (!minDate && !maxDate) {
+                    isDisable = isNotPermitted;
                   }
 
                   return isDisable;

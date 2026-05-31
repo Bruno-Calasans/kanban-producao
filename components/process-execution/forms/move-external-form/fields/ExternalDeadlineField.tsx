@@ -16,7 +16,7 @@ export const ExternalDeadlineField = withForm({
       <FieldGroup>
         <FieldGroup className="flex flex-row">
           <form.Field
-            name="expectedAt"
+            name="plannedEndAt"
             children={(field) => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
               return (
@@ -30,7 +30,8 @@ export const ExternalDeadlineField = withForm({
                     placeholder="Selecione o prazo"
                   />
                   <FieldDescription>
-                    Defina a data que você espera receber de volta
+                    Defina a data que você espera receber de volta. Ao definir, essa data aparecerá
+                    no calendário.
                   </FieldDescription>
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>

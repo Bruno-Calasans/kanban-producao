@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase/client";
 import { MovimentationDeadline } from "@/types/database.type";
-import { getDeadlinePriority } from "@/utils/getDeadlinePriority";
+import { Select } from "react-day-picker";
 
 export type CreateMovimentationDeadlineData = Omit<
   MovimentationDeadline,
@@ -58,7 +58,7 @@ export async function getAllMovimentationDeadlinesInRange(fromDate: Date, toDate
     `,
     )
     .or(
-      `and(started_at.is.null,expected_at.gte.${from},expected_at.lte.${to}),and(expected_at.is.null,started_at.gte.${from},started_at.lte.${to}),and(started_at.gte.${from},expected_at.lte.${to})`,
+      `and(planned_start_at.is.null,planned_end_at.gte.${from},planned_end_at.lte.${to}),and(planned_end_at.is.null,planned_start_at.gte.${from},planned_start_at.lte.${to}),and(planned_start_at.gte.${from},planned_end_at.lte.${to})`,
     )
     .throwOnError();
 }
@@ -104,6 +104,8 @@ export async function updateMovimentationDeadline(
     .from("MovimentationDeadline")
     .update(updateData)
     .eq("id", movimentationDeadlineId)
+    .select()
+    .single()
     .throwOnError();
 }
 

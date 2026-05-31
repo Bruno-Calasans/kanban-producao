@@ -7,15 +7,14 @@ import {
   defaultExecutionFormValues,
 } from "@/components/process-execution/forms/execution-form/processExecutionFormContext";
 import { Input } from "@/components/ui/input";
-import { DatePickerInput } from "@/components/custom/DatePicker";
 
 export const ExecutionDatesField = withForm({
   defaultValues: defaultExecutionFormValues,
   props: {},
   render({ form }) {
     return (
-      <FieldGroup>
-        <FieldGroup className="flex flex-row">
+      <FieldGroup className="gap-0">
+        <div className="flex flex-row justify-between gap-2 m-0">
           <form.Field
             name="started_at"
             children={(field) => {
@@ -23,24 +22,13 @@ export const ExecutionDatesField = withForm({
               return (
                 <Field data-invalid={isInvalid}>
                   <FieldLabel htmlFor={field.name}>Data de Início</FieldLabel>
-                  {/* <DatePickerInput
-                    currentDate={field.state.value}
-                    onChangeDate={field.handleChange}
-                  /> */}
                   <Input
                     name={field.name}
                     type="datetime-local"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
-                  {/* <Field className="w-32">
-                    <Input
-                      type="time"
-                      step="1"
-                      defaultValue="00:00:00"
-                     
-                    />
-                  </Field> */}
+                  <FieldDescription className="mt-0 p-0">Quando começou</FieldDescription>
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               );
@@ -54,7 +42,7 @@ export const ExecutionDatesField = withForm({
                 children={(field) => {
                   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
-                    <Field>
+                    <Field orientation="vertical">
                       <FieldLabel htmlFor={field.name}>Data de término</FieldLabel>
                       <Input
                         name={field.name}
@@ -64,15 +52,7 @@ export const ExecutionDatesField = withForm({
                         disabled={!started_at}
                         min={started_at}
                       />
-                      <Field className="w-32">
-                        {/* <FieldLabel htmlFor="time-picker-optional">Hora de fim</FieldLabel> */}
-                        {/* <Input
-                          type="time"
-                          id="time-picker-optional"
-                          step="1"
-                          defaultValue="00:00:00"
-                        /> */}
-                      </Field>
+                      <FieldDescription className="mt-0 p-0">Quando terminou</FieldDescription>
                       {isInvalid && <FieldError errors={field.state.meta.errors} />}
                     </Field>
                   );
@@ -80,8 +60,7 @@ export const ExecutionDatesField = withForm({
               />
             )}
           </form.Subscribe>
-        </FieldGroup>
-        <FieldDescription>Quando começou e terminou esse processo.</FieldDescription>
+        </div>
       </FieldGroup>
     );
   },

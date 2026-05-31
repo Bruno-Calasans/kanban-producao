@@ -4,20 +4,20 @@
 import { Field, FieldError, FieldGroup, FieldLabel, FieldDescription } from "@/components/ui/field";
 import {
   withForm,
-  defaultReturnProcessFormValues,
-} from "@/components/process-execution/forms/return-form/returnProcessFormContext";
+  defaultFinishDeadlineFormValues,
+} from "@/components/calendar/weekly/forms/finish-deadline/finishDeadlineFormContext";
 import { Input } from "@/components/ui/input";
 import { DatePickerInput } from "@/components/custom/DatePicker";
 
-export const ReturnDatesField = withForm({
-  defaultValues: defaultReturnProcessFormValues,
+export const FinishedDeadlineDatesField = withForm({
+  defaultValues: defaultFinishDeadlineFormValues,
   props: {},
   render({ form }) {
     return (
-      <FieldGroup className="flex flex-col gap-0">
+      <FieldGroup className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
           <form.Field
-            name="started_at"
+            name="startDate"
             children={(field) => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
               return (
@@ -28,7 +28,7 @@ export const ReturnDatesField = withForm({
                     onChangeDate={(value) => field.handleChange(value?.toDateString())}
                   />
                   {/* Time input */}
-                  <form.Subscribe selector={({ values }) => values.started_at}>
+                  <form.Subscribe selector={({ values }) => values.startDate}>
                     {(started_at) => {
                       if (!started_at) return null;
                       return (
@@ -56,10 +56,10 @@ export const ReturnDatesField = withForm({
             }}
           />
 
-          <form.Subscribe selector={(state) => state.values.started_at}>
+          <form.Subscribe selector={(state) => state.values.startDate}>
             {(started_at) => (
               <form.Field
-                name="finished_at"
+                name="endDate"
                 children={(field) => {
                   const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
@@ -72,7 +72,7 @@ export const ReturnDatesField = withForm({
                         disabled={!started_at}
                       />
                       {/* Time input */}
-                      <form.Subscribe selector={({ values }) => values.finished_at}>
+                      <form.Subscribe selector={({ values }) => values.endDate}>
                         {(finished_at) => {
                           if (!finished_at) return null;
                           return (

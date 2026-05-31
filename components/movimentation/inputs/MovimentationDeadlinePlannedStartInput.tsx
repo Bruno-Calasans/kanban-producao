@@ -26,7 +26,7 @@ export default function MovimentationDeadlinePlannedStartInput({
   disabled,
 }: ProcessExecutionActionsProps) {
   const today = new Date();
-  const plannedStarDate = deadline?.planned_start_at
+  const plannedStartDate = deadline?.planned_start_at
     ? new Date(deadline?.planned_start_at)
     : undefined;
 
@@ -43,7 +43,7 @@ export default function MovimentationDeadlinePlannedStartInput({
   } = useCreateMovimentationDeadline();
 
   const onChangeDate = async (date?: Date) => {
-    const hasChanged = plannedStarDate?.getTime() !== date?.getTime();
+    const hasChanged = plannedStartDate?.getTime() !== date?.getTime();
     const plannedEndDate = deadline?.planned_end_at ? new Date(deadline.planned_end_at) : null;
     const actualStartDate = deadline?.actual_start_at ? new Date(deadline.actual_start_at) : null;
     const actualEndDate = deadline?.actual_end_at ? new Date(deadline.actual_end_at) : null;
@@ -116,9 +116,9 @@ export default function MovimentationDeadlinePlannedStartInput({
   return (
     <DatePickerInput
       minDate={today}
-      currentDate={plannedStarDate}
+      currentDate={plannedStartDate}
+      placeholder={plannedStartDate ? "" : "Data de início"}
       onChangeDate={onChangeDate}
-      placeholder={plannedStarDate ? "" : "Data de início"}
       disabled={disabled}
     />
   );

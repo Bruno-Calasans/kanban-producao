@@ -5,7 +5,7 @@ import { ClassValue } from "clsx";
 
 type InfoAlertProps = {
   title: string;
-  description: string;
+  description: React.ReactNode;
   alertIcon?: React.ReactNode;
   hideCloseButton?: boolean;
   closeIcon?: React.ReactNode;

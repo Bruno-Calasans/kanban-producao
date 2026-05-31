@@ -8,7 +8,7 @@ type ExecutionStateMsgProps = {
 
 export default function ExecutionStateMsg({ from_process, to_process }: ExecutionStateMsgProps) {
   return (
-    <div className="flex flex-col  gap-4 mb-4">
+    <div className="flex flex-col  gap-4 mb-5">
       <div className="flex justify-between gap-4">
         {/* Departamento origem */}
         <div className="flex gap-1 flex-1">
@@ -19,22 +19,22 @@ export default function ExecutionStateMsg({ from_process, to_process }: Executio
           </p>
         </div>
 
+        {/* Departamento destino */}
+        <div className="flex gap-1 flex-1">
+          <FactoryIcon size={18} />
+          <p className="flex flex-col">
+            <strong>Departamento Destino</strong> {to_process?.departament.name}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex justify-between gap-4">
         {/* Processo origem */}
         <div className="flex gap-1 flex-1">
           <CogIcon size={18} />
           <p className="flex flex-col">
             <strong>Processo Origem</strong>
             {from_process?.name}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex justify-between gap-4">
-        {/* Departamento destino */}
-        <div className="flex gap-1 flex-1">
-          <FactoryIcon size={18} />
-          <p className="flex flex-col">
-            <strong>Departamento Destino</strong> {to_process?.departament.name}
           </p>
         </div>
 

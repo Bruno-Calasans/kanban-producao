@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { ProcessWithDepartament } from "@/types/database.type";
 import { defaultMoveExternalFormValues, withForm } from "../moveExternalFormContext";
@@ -7,6 +8,7 @@ import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type MoveProcessFieldProps = {
   processes: ProcessWithDepartament[];
+  defaultProcess?: ProcessWithDepartament;
   selectedProcess?: ProcessWithDepartament;
   isLoading?: boolean;
   onChangeProcess: (process?: ProcessWithDepartament) => void;
@@ -15,7 +17,7 @@ type MoveProcessFieldProps = {
 export const MoveProcessField = withForm({
   defaultValues: defaultMoveExternalFormValues,
   props: {} as MoveProcessFieldProps,
-  render({ form, selectedProcess, processes, isLoading, onChangeProcess }) {
+  render({ form, defaultProcess, selectedProcess, processes, isLoading, onChangeProcess }) {
     const groups = groupProcessesByDepartament(processes);
     return (
       <form.Field
@@ -32,6 +34,7 @@ export const MoveProcessField = withForm({
                 labelSelector="name"
                 data={processes}
                 dataGroup={groups}
+                defaultData={defaultProcess}
                 selectedData={selectedProcess}
                 isLoading={isLoading}
                 loadingMsg="Carregando processos externos..."

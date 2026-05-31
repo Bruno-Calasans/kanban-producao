@@ -1,7 +1,6 @@
 /* eslint-disable prefer-const */
 import { supabase } from "@/lib/supabase/client";
 import { ProcessExecution, ProcessState } from "@/types/database.type";
-import { getAllMovimentations } from "./movimentationApi";
 
 export type CreateProcessExecutionData = Omit<ProcessExecution, "id" | "created_at" | "updated_at">;
 export type UpdateProcessExecutionData = Partial<CreateProcessExecutionData>;

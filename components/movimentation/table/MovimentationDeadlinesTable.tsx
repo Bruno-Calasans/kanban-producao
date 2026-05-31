@@ -2,12 +2,9 @@
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
+import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import MovimentationDeadlineStatusBadge from "@/components/custom/badges/MovimentationDeadlineStatus";
-import MovimentationDeadlineInput from "../inputs/MovimentationDeadlineInput";
-import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
-import MovimentationDeadlineStartsAtInput from "../inputs/MovimentationDeadlineStartsAtInput";
-import MovimentationDeadlineEndsAtInput from "../inputs/MovimentationDeadlineEndsAtInput";
 import MovimentationDeadlinePlannedStartInput from "../inputs/MovimentationDeadlinePlannedStartInput";
 import MovimenationDeadlinePlannedEndInput from "../inputs/MovimenationDeadlinePlannedEndInput";
 
@@ -33,7 +30,7 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
-        disabled={movimentation.status == "CANCELLED"}
+        disabled={status === "COMPLETED" || movimentation.status == "CANCELLED"}
       />
     ),
   },
@@ -49,7 +46,11 @@ const processColumns: ColumnDef<DepartamentState>[] = [
         movimentation={movimentation}
         departament={departament}
         deadline={deadline}
-        disabled={!!!deadline?.planned_start_at || movimentation.status == "CANCELLED"}
+        disabled={
+          !!!deadline?.planned_start_at ||
+          status === "COMPLETED" ||
+          movimentation.status == "CANCELLED"
+        }
       />
     ),
   },

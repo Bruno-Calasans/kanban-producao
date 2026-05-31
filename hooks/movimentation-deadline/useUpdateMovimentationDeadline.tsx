@@ -4,6 +4,8 @@ import {
 } from "@/service/api/movimentationDeadline";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { movimentationDeadlineKeys } from "@/constants/movimentationDeadlineKeys";
+import { productionFlowTemplateKeys } from "@/constants/productionFlowTemplateKeys";
+import { processExecutationKeys } from "@/constants/processExecutationKeys";
 
 export default function useUpdateMovimentationDeadline() {
   const queryClient = useQueryClient();
@@ -13,11 +15,22 @@ export default function useUpdateMovimentationDeadline() {
       movimentationDeadlineId: number;
       updateData: UpdateMovimentationDeadlineData;
     }) => updateMovimentationDeadline(data.movimentationDeadlineId, data.updateData),
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       queryClient.invalidateQueries({
         queryKey: movimentationDeadlineKeys.lists(),
         exact: false,
       });
+
+      if (data) {
+        queryClient.invalidateQueries({
+          queryKey: [
+            ...productionFlowTemplateKeys.all,
+            ...processExecutationKeys.all,
+            data.movimentation_id,
+          ],
+          exact: false,
+        });
+      }
     },
   });
 }

@@ -25,13 +25,13 @@ export default function MovimentationDepartamentDetails({
   if (isPending) return <Loader title="Carregando..." />;
   if (error) return <div>Algo deu errado</div>;
 
-  const expiredDeadlines = deadlines.filter(({ expected_at }) =>
-    expected_at ? new Date(expected_at) < new Date() : false,
+  const expiredDeadlines = deadlines.filter(({ planned_end_at }) =>
+    planned_end_at ? new Date(planned_end_at) < new Date() : false,
   );
 
-  const aboutToExpireDeadlines = deadlines.filter(({ expected_at }) => {
-    if (!expected_at) return false;
-    const expectedDate = new Date(expected_at);
+  const aboutToExpireDeadlines = deadlines.filter(({ planned_end_at }) => {
+    if (!planned_end_at) return false;
+    const expectedDate = new Date(planned_end_at);
     const now = new Date();
     const timeDiff = expectedDate.getTime() - now.getTime();
     const daysDiff = timeDiff / (1000 * 3600 * 24);

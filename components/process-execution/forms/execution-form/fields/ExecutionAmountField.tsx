@@ -15,6 +15,7 @@ import {
   defaultExecutionFormValues,
 } from "@/components/process-execution/forms/execution-form/processExecutionFormContext";
 import { Checkbox } from "@/components/ui/checkbox";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type ExecutionAmountFieldProps = {
   maxAmount: number;
@@ -38,7 +39,10 @@ export const ExecutionAmountField = withForm({
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field id="execution-amount-field" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Quantidade</FieldLabel>
+                    <FieldLabel className="gap-0" htmlFor={field.name}>
+                      Quantidade
+                      <RequiredFieldTooltip />
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}

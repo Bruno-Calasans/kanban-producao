@@ -23,9 +23,9 @@ export default function CreateProcessExecutionForm({
   processState,
 }: CreateProcessExecutionFormProps) {
   const { closeDialog } = useDialog();
+  const [responsible, setResponsible] = useState<Responsible>();
   const { mutateAsync: createProcessExecution, isPending: isCreateExecutionPending } =
     useCreateProcessExecution();
-  const [responsible, setResponsible] = useState<Responsible>();
 
   const form = useAppForm({
     defaultValues: {
@@ -85,7 +85,6 @@ export default function CreateProcessExecutionForm({
     >
       <ExecutionState from_process={processState.process} to_process={processState.nextProcess} />
       <FieldGroup>
-        <ExecutionDatesField form={form} />
         <ExecutionAmountField form={form} maxAmount={processState.avaliableAmount} />
         <ExecutionResponsibleField
           form={form}
@@ -93,13 +92,13 @@ export default function CreateProcessExecutionForm({
           selectedResponsible={responsible}
           onChangeResponsible={setResponsible}
         />
+        <ExecutionDatesField form={form} />
       </FieldGroup>
 
       <div
         id="create-execution-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
-        {/* <ClearButton isLoading={isPending} onclick={() => form.reset()} /> */}
         <ConfirmButton
           hiddenIcon
           isLoading={isPending}

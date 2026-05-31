@@ -18,8 +18,8 @@ type MovimentationTabsProps = {
   movimentation: MovimentationPopulated;
   processStates: ProcessState[];
   processExecutions: ProcessExecutionPopulated[];
-  deadlines: MovimentationDeadlinePopulated[];
   departamentStates: DepartamentState[];
+  deadlines: MovimentationDeadlinePopulated[];
 };
 
 const TABS = ["ACTIONS", "DEADLINE", "HISTORY"];

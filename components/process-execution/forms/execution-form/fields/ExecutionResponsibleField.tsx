@@ -1,8 +1,10 @@
+/* eslint-disable react/no-children-prop */
 import { Field } from "@/components/ui/field";
 import { defaultExecutionFormValues, withForm } from "../processExecutionFormContext";
 import { FieldError, FieldLabel, FieldDescription } from "@/components/ui/field";
 import ResponsibleSelector from "@/components/custom/selectors/ResponsibleSelector";
 import { Departament, Responsible } from "@/types/database.type";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type ExecutionResponsibleFieldProps = {
   departament: Departament;
@@ -18,11 +20,12 @@ export const ExecutionResponsibleField = withForm({
       <form.Field
         name="responsible"
         children={(field) => {
-          const hasDefaultValue = defaultExecutionFormValues[field.name] == field.state.value;
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
             <Field>
-              <FieldLabel htmlFor={field.name}>Responsável</FieldLabel>
+              <FieldLabel className="gap-0" htmlFor={field.name}>
+                Responsável <RequiredFieldTooltip />
+              </FieldLabel>
               <ResponsibleSelector
                 departament={departament}
                 selectedResponsible={selectedResponsible}

@@ -9,34 +9,36 @@ export function groupDeadlinesByWeekDay(
   const deadlinesByDate = new Map<string, MovimentationDeadlinePopulated[]>();
 
   for (const deadline of deadlines) {
-    const startedDate = deadline.started_at ? new Date(deadline.started_at) : undefined;
-    const expectedDate = deadline.expected_at ? new Date(deadline.expected_at) : undefined;
+    const plannedStartDate = deadline.planned_start_at
+      ? new Date(deadline.planned_start_at)
+      : undefined;
+    const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : undefined;
 
     // Se zerar o tempo, estou apenas comparando a data em número
-    startedDate?.setHours(0, 0, 0, 0);
-    expectedDate?.setHours(0, 0, 0, 0);
+    plannedStartDate?.setHours(0, 0, 0, 0);
+    plannedEndDate?.setHours(0, 0, 0, 0);
 
-    const startedTime = startedDate?.getTime();
-    const expectedTime = expectedDate?.getTime();
+    const startedTime = plannedStartDate?.getTime();
+    const expectedTime = plannedEndDate?.getTime();
 
     for (const weekDay of normalizedWeekDays) {
       let includeDeadline = false;
 
       // Tem dia para começar, mas não tem diz pra terminar
-      if (startedDate && startedTime && !expectedDate) {
+      if (plannedStartDate && startedTime && !plannedEndDate) {
         includeDeadline = startedTime <= weekDay.time;
       }
 
       // Tem prazo para terminar, mas não tem dia para começar
-      if (expectedDate && !startedDate) {
+      if (plannedEndDate && !plannedStartDate) {
         includeDeadline = expectedTime == weekDay.time;
       }
 
       // Deadline está dentro do intervalo
-      if (startedDate && expectedDate) {
+      if (plannedStartDate && plannedEndDate) {
         includeDeadline = isWithinInterval(weekDay.date, {
-          start: startedDate,
-          end: expectedDate,
+          start: plannedStartDate,
+          end: plannedEndDate,
         });
       }
 

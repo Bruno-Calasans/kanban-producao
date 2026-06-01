@@ -30,6 +30,8 @@ export default function MovimentationDeadlinePlannedStartInput({
     ? new Date(deadline?.planned_start_at)
     : undefined;
 
+  today.setHours(0, 0, 0, 0);
+
   const {
     mutateAsync: updateMovimentationDeadline,
     isPending: isUpdateDeadlinePending,

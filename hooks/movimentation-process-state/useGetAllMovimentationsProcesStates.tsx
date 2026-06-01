@@ -17,8 +17,6 @@ export default function useGetAllMovimentationsProcesStates({
   const processStatesByMovimentation = useMemo(() => {
     const processStatesByMovimentation = new Map<number, ProcessState[]>();
 
-    console.log(data)
-
     if (!data || isError || isLoading || movimentations.length === 0)
       return processStatesByMovimentation;
 

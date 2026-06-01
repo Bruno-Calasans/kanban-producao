@@ -35,6 +35,7 @@ export async function getAllMovimentationDeadlinesWithProduct() {
         departament:Departament!departament_id(*)
     `,
     )
+    .order("departament_id", { ascending: true })
     .throwOnError();
 }
 

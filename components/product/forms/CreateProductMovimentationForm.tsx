@@ -17,6 +17,7 @@ import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate
 import { ProductProductMovimentationAmountField } from "./fields/ProductMovimentationAmountField";
 import { MovimentationProductionFlowField } from "@/components/movimentations/forms/fields/MovimentationProductionFlowField";
 import { useState } from "react";
+import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
 
 type CreateProductMovimentationFormProps = {
   product: Product;
@@ -96,6 +97,11 @@ export default function CreateProductMovimentationForm({
       }}
     >
       <ProductProductMovimentationAmountField form={form} />
+      <ProductProductionFlowField
+        form={form}
+        selectedProductionFlow={selectedProductionFlow}
+        onChangeProductionFlow={setSelectedProductionFlow}
+      />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <ClearButton isLoading={isPending} onclick={resetForm} />

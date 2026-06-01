@@ -69,7 +69,9 @@ export default function WeeklyDeadlineTable() {
   const createRows = () => {
     const rows = [];
 
-    for (const [departmentId, departmentDeadlines] of deadlinesByDepartament) {
+    for (const [departmentId, departmentDeadlines] of [...deadlinesByDepartament.entries()].sort(
+      (a, b) => a[0] - b[0],
+    )) {
       const department = departmentDeadlines[0].departament;
       const weekMap = calendarMatrix.get(departmentId);
 

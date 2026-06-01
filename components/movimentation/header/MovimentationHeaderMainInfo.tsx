@@ -26,6 +26,9 @@ export default function MovimentationHeaderMainInfo({
         <p>
           <strong>ID:</strong> #{movimentation.id}
         </p>
+        <p className="flex gap-1 items-start text-center">
+          <strong>OP:</strong> {movimentation.product.op}
+        </p>
         <p className="flex gap-1">
           <strong>Produto:</strong>{" "}
           <Link
@@ -44,9 +47,6 @@ export default function MovimentationHeaderMainInfo({
             {movimentation.productionFlow.name}
           </Link>
         </p>
-        <p className="flex gap-1 items-start text-center">
-          <strong>OP:</strong> {movimentation.product.op}
-        </p>
 
         <p>
           <strong>Quantidade:</strong> {movimentation.amount}
@@ -57,7 +57,6 @@ export default function MovimentationHeaderMainInfo({
             <strong>Concluída em:</strong> {new Date(movimentation.updated_at).toLocaleDateString()}
           </p>
         )}
-
         <p className="flex gap-1 items-start text-center">
           <strong>Status:</strong> <MovimentationStatusBadge movimentation={movimentation} />
         </p>

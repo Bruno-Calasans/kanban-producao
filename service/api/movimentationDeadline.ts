@@ -58,9 +58,9 @@ export async function getAllMovimentationDeadlinesInRange(fromDate: Date, toDate
         departament:Departament!departament_id(*)
     `,
     )
-    .or(
-      `and(planned_start_at.is.null,planned_end_at.gte.${from},planned_end_at.lte.${to}),and(planned_end_at.is.null,planned_start_at.gte.${from},planned_start_at.lte.${to}),and(planned_start_at.gte.${from},planned_end_at.lte.${to})`,
-    )
+    // .or(
+    //   `and(planned_start_at.is.null,planned_end_at.gte.${from},planned_end_at.lte.${to}),and(planned_end_at.is.null,planned_start_at.gte.${from},planned_start_at.lte.${to}),and(planned_start_at.gte.${from},planned_end_at.lte.${to})`,
+    // )
     .throwOnError();
 }
 

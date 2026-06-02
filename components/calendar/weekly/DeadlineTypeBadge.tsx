@@ -23,7 +23,7 @@ export default function DeadlineTypeBadge({
     return (
       <div
         className={cn(
-          "absolute bg-black rounded-full flex z-50 w-fit h-fit p-0.5 bottom-0.5 right-0.5",
+          "absolute bg-black rounded-full flex w-fit h-fit p-0.5 bottom-0.5 right-0.5",
           isShort && "top-px right-px",
         )}
       >
@@ -38,7 +38,7 @@ export default function DeadlineTypeBadge({
     return (
       <div
         className={cn(
-          "absolute bg-black rounded-full flex z-50 w-fit h-fit p-0.5 bottom-0.5 right-0.5",
+          "absolute bg-black rounded-full flex w-fit h-fit p-0.5 bottom-0.5 right-0.5",
           isShort && "top-px right-px",
         )}
       >
@@ -53,7 +53,7 @@ export default function DeadlineTypeBadge({
     return (
       <div
         className={cn(
-          "absolute bg-black rounded-full flex z-50 w-fit h-fit p-0.5 bottom-0.5 right-0.5",
+          "absolute bg-black rounded-full flex w-fit h-fit p-0.5 bottom-0.5 right-0.5",
           isShort && "top-px right-px",
         )}
       >

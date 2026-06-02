@@ -92,6 +92,7 @@ export default function WeeklyDeadlineTable() {
             <TableCell
               key={`${day.key}-${department.id}`}
               className={cn(
+                "w-[300px]",
                 department.name === "CORTE" && "bg-pink-200",
                 department.name === "ESTAMPARIA" && "bg-emerald-200",
                 department.name === "BORDADO" && "bg-orange-200",
@@ -100,7 +101,7 @@ export default function WeeklyDeadlineTable() {
                 department.name === "FACÇÃO" && "bg-blue-200",
               )}
             >
-              <div className="m-0 p-0">
+              <div className="m-0 p-0 grid grid-cols-2">
                 {deadlines?.map((deadline) => {
                   if (deadline.departament.is_external) {
                     return (
@@ -173,7 +174,7 @@ export default function WeeklyDeadlineTable() {
       />
 
       <div className="overflow-auto max-h-[90vh]">
-        <Table className="overflow-x-none">
+        <Table className="overflow-x-none w-fit">
           {/* <TableHeader>
 
             <TableRow>
@@ -218,7 +219,7 @@ export default function WeeklyDeadlineTable() {
           {/* Inverted header columns */}
           <TableHeader>
             <TableRow>
-              <TableHead className="w-25 font-semibold bg-muted/50 sticky top-0 z-30">
+              <TableHead className="w-25 font-semibold bg-muted/50 sticky top-0 z-100">
                 DIA
               </TableHead>
 
@@ -230,7 +231,7 @@ export default function WeeklyDeadlineTable() {
                   return (
                     <TableHead
                       key={department.id}
-                      className="p-2 font-semibold bg-black/80 text-white sticky top-0 z-20 col-span-2"
+                      className="p-2 font-semibold bg-black/80 text-white sticky top-0 z-20"
                     >
                       {department.name}
                     </TableHead>

@@ -115,7 +115,7 @@ export default function InternalWeekDeadlineCard({
             </p> */}
 
             {isShort && (
-              <div>
+              <div className="mr-2">
                 <p className="font-bold mb-1 text-md">{movimentation.product.op}</p>
                 <p className="font-bold mb-1 text-md">Meta: {metaAmount}</p>
               </div>

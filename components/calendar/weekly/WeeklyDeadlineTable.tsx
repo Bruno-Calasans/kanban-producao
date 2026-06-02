@@ -25,6 +25,7 @@ import { sortByDeadlinePriority } from "@/utils/sortByDeadlinePriority";
 import { calcExternalProcessStates } from "@/utils/calcExternalProcessState";
 import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";
 import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
+import { isToday } from "date-fns";
 
 export default function WeeklyDeadlineTable() {
   const { weekDays, startDayOfWeek, endDayOfWeek, getCurrentWeek, getNextWeek, getPreviousWeek } =
@@ -66,75 +67,74 @@ export default function WeeklyDeadlineTable() {
     [deadlines, normalizedWeekDays],
   );
 
+  const sortedDepartments = [...deadlinesByDepartament.entries()].sort((a, b) => a[0] - b[0]);
+
   const createRows = () => {
-    const rows = [];
+    return normalizedWeekDays.map((day) => (
+      <TableRow key={day.key}>
+        <TableHead
+          id={`day-${day.key}`}
+          className={cn(
+            "font-semibold",
+            isToday(day.date) ? "bg-black/90 text-white" : "bg-black/30",
+          )}
+        >
+          <p>{DAYS_OF_WEEK[day.date.getDay() - 1]}</p>
+          <p>{day.key}</p>
+        </TableHead>
 
-    for (const [departmentId, departmentDeadlines] of [...deadlinesByDepartament.entries()].sort(
-      (a, b) => a[0] - b[0],
-    )) {
-      const department = departmentDeadlines[0].departament;
-      const weekMap = calendarMatrix.get(departmentId);
+        {sortedDepartments.map(([departmentId, departmentDeadlines]) => {
+          const department = departmentDeadlines[0].departament;
+          const weekMap = calendarMatrix.get(departmentId);
+          const deadlines = weekMap?.get(day.key);
 
-      rows.push(
-        <TableRow key={department.id}>
-          <TableHead className="w-37.5 font-semibold bg-muted/50 ">{department.name}</TableHead>
-
-          {normalizedWeekDays.map((day) => {
-            const deadlines = weekMap?.get(day.key);
-            // Fazer depois porque nem todas as metas estão salvas no banco de dados
-            const metaInThisDay = deadlines?.map((d) => metasInRangeByDeadline?.get(d.id)) || [];
-            // console.log(department.name, day.key, metaInThisDay.filter(m => !!m))
-
-            return (
-              <TableCell
-                key={`${department.id}-${day.key}`}
-                className={cn(
-                  // Cores para diferenciar os departamentos, caso queira tirar é só remover essas linhas
-                  department.name === "CORTE" && "bg-pink-200",
-                  department.name == "ESTAMPARIA" && "bg-emerald-200",
-                  department.name == "BORDADO" && "bg-orange-200",
-                  department.name == "COSTURA" && "bg-yellow-200",
-                  department.name == "ACABAMENTO" && "bg-purple-200",
-                  department.name == "FACÇÃO" && "bg-blue-200",
-                )}
-              >
-                <div className="m-0 p-0">
-                  {deadlines?.map((deadline) => {
-                    if (deadline.departament.is_external) {
-                      return (
-                        <ExternalWeekDeadlineCard
-                          key={`${department.id}-${deadline.id}-${day.key}`}
-                          deadline={deadline}
-                          weekDay={day.date}
-                          departament={department}
-                          processStates={
-                            processStatesByMovimentation.get(deadline.movimentation.id) || []
-                          }
-                        />
-                      );
-                    }
-
+          return (
+            <TableCell
+              key={`${day.key}-${department.id}`}
+              className={cn(
+                department.name === "CORTE" && "bg-pink-200",
+                department.name === "ESTAMPARIA" && "bg-emerald-200",
+                department.name === "BORDADO" && "bg-orange-200",
+                department.name === "COSTURA" && "bg-yellow-200",
+                department.name === "ACABAMENTO" && "bg-purple-200",
+                department.name === "FACÇÃO" && "bg-blue-200",
+              )}
+            >
+              <div className="m-0 p-0">
+                {deadlines?.map((deadline) => {
+                  if (deadline.departament.is_external) {
                     return (
-                      <InternalWeekDeadlineCard
+                      <ExternalWeekDeadlineCard
                         key={`${department.id}-${deadline.id}-${day.key}`}
                         deadline={deadline}
                         weekDay={day.date}
                         departament={department}
-                        metasInThisWeek={metasInRangeByDeadline?.get(deadline.id) || []}
                         processStates={
                           processStatesByMovimentation.get(deadline.movimentation.id) || []
                         }
                       />
                     );
-                  })}
-                </div>
-              </TableCell>
-            );
-          })}
-        </TableRow>,
-      );
-    }
-    return rows;
+                  }
+
+                  return (
+                    <InternalWeekDeadlineCard
+                      key={`${department.id}-${deadline.id}-${day.key}`}
+                      deadline={deadline}
+                      weekDay={day.date}
+                      departament={department}
+                      metasInThisWeek={metasInRangeByDeadline?.get(deadline.id) || []}
+                      processStates={
+                        processStatesByMovimentation.get(deadline.movimentation.id) || []
+                      }
+                    />
+                  );
+                })}
+              </div>
+            </TableCell>
+          );
+        })}
+      </TableRow>
+    ));
   };
 
   const rows = useMemo(
@@ -174,12 +174,13 @@ export default function WeeklyDeadlineTable() {
 
       <div className="overflow-auto max-h-[90vh]">
         <Table className="overflow-x-none">
-          <TableHeader>
-            {/* Primeira linha */}
+          {/* <TableHeader>
+
             <TableRow>
               <TableHead className="w-[150px] font-semibold bg-muted/50 sticky top-0 z-30">
                 DEPARTAMENTOS
               </TableHead>
+
               {normalizedWeekDays.map(({ key, date, isToday }) => (
                 <TableHead
                   key={key}
@@ -192,8 +193,52 @@ export default function WeeklyDeadlineTable() {
                   <p>{isToday ? "Hoje" : key}</p>
                 </TableHead>
               ))}
+
+            </TableRow>
+          </TableHeader> */}
+
+          {/* 
+          <TableBody>
+            {normalizedWeekDays.map((day) => (
+              <TableRow key={day.key}>
+                <TableHead>
+                  <p>{DAYS_OF_WEEK[day.date.getDay() - 1]}</p>
+                  <p>{day.isToday ? "Hoje" : day.key}</p>
+                </TableHead>
+
+                {sortedDepartments.map(([departmentId]) => {
+                  const deadlines = calendarMatrix.get(departmentId)?.get(day.key);
+
+                  return <TableCell key={`${day.key}-${departmentId}`}>...</TableCell>;
+                })}
+              </TableRow>
+            ))}
+          </TableBody> */}
+
+          {/* Inverted header columns */}
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-25 font-semibold bg-muted/50 sticky top-0 z-30">
+                DIA
+              </TableHead>
+
+              {[...deadlinesByDepartament.entries()]
+                .sort((a, b) => a[0] - b[0])
+                .map(([_, departmentDeadlines]) => {
+                  const department = departmentDeadlines[0].departament;
+
+                  return (
+                    <TableHead
+                      key={department.id}
+                      className="p-2 font-semibold bg-black/80 text-white sticky top-0 z-20 col-span-2"
+                    >
+                      {department.name}
+                    </TableHead>
+                  );
+                })}
             </TableRow>
           </TableHeader>
+
           <TableBody>{rows}</TableBody>
         </Table>
       </div>

@@ -5,12 +5,13 @@ import {
   MovimentationDeadlinePopulated,
   MovimentationPopulated,
 } from "@/types/database.type";
-import { DatePickerInput } from "../../custom/DatePicker";
+import { DatePickerInput } from "@/components/custom/DatePicker";
 import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
 import errorHandler from "@/utils/errorHandler";
 import { toast } from "sonner";
 import useCreateMovimentationDeadline from "@/hooks/movimentation-deadline/useCreateMovimentationDeadline";
-import Loader from "../../custom/Loader";
+import Loader from "@/components/custom/Loader";
+import { XIcon } from "lucide-react";
 
 type ProcessExecutionActionsProps = {
   departament: Departament;
@@ -110,18 +111,50 @@ export default function MovimentationDeadlinePlannedStartInput({
     }
   };
 
+  const removePlannedStartDate = async () => {
+    if (!deadline?.id) return;
+    try {
+      await updateMovimentationDeadline({
+        movimentationDeadlineId: deadline.id,
+        updateData: {
+          planned_start_at: null,
+        },
+      });
+      toast.success("Data de início planejada removida");
+    } catch (error) {
+      errorHandler(error, {
+        default: "Erro: Não foi possível remover a data de início planejada",
+      });
+    }
+  };
+
   const isPending = isUpdateDeadlinePending || createDeadlinePending;
   const isError = isUpdateDeadlineError || createDeadlineError;
 
   if (isPending) return <Loader title="Salvando..." />;
 
   return (
-    <DatePickerInput
-      minDate={today}
-      currentDate={plannedStartDate}
-      placeholder={plannedStartDate ? "" : "Data de início"}
-      onChangeDate={onChangeDate}
-      disabled={disabled}
-    />
+    <div className="flex items-center gap-1">
+      <DatePickerInput
+        minDate={today}
+        currentDate={plannedStartDate}
+        placeholder={plannedStartDate ? "" : "Data de início"}
+        onChangeDate={onChangeDate}
+        disabled={disabled}
+        extraAddon={
+          plannedStartDate &&
+          !isPending &&
+          !disabled && (
+            <div
+              title="Remover data de início planejada"
+              className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
+              onClick={() => removePlannedStartDate()}
+            >
+              <XIcon className="text-white h-4 w-4" />
+            </div>
+          )
+        }
+      />
+    </div>
   );
 }

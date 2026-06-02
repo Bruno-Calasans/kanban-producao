@@ -42,6 +42,7 @@ type DatePickerInputProps = {
   minDate?: Date | string;
   maxDate?: Date | string;
   weekDays?: number[];
+  extraAddon?: React.ReactNode;
   onChangeDate?: (date?: Date) => void;
 };
 
@@ -52,6 +53,7 @@ export function DatePickerInput({
   minDate,
   maxDate,
   weekDays,
+  extraAddon,
   onChangeDate,
 }: DatePickerInputProps) {
   const [open, setOpen] = useState(false);
@@ -147,6 +149,7 @@ export function DatePickerInput({
               />
             </PopoverContent>
           </Popover>
+          {extraAddon}
         </InputGroupAddon>
       </InputGroup>
     </Field>

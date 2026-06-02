@@ -11,6 +11,7 @@ import errorHandler from "@/utils/errorHandler";
 import { toast } from "sonner";
 import useCreateMovimentationDeadline from "@/hooks/movimentation-deadline/useCreateMovimentationDeadline";
 import Loader from "../../custom/Loader";
+import { XIcon } from "lucide-react";
 
 type ProcessExecutionActionsProps = {
   departament: Departament;
@@ -114,6 +115,23 @@ export default function MovimenationDeadlinePlannedEndInput({
     }
   };
 
+  const removePlannedEndDate = async () => {
+    if (!deadline?.id) return;
+    try {
+      await updateMovimentationDeadline({
+        movimentationDeadlineId: deadline.id,
+        updateData: {
+          planned_end_at: null,
+        },
+      });
+      toast.success("Data de fim planejada removida");
+    } catch (error) {
+      errorHandler(error, {
+        default: "Erro: Não foi possível remover a data de fim planejada",
+      });
+    }
+  };
+
   const isPending = isUpdateDeadlinePending || createDeadlinePending;
   const isError = isUpdateDeadlineError || createDeadlineError;
 
@@ -126,6 +144,19 @@ export default function MovimenationDeadlinePlannedEndInput({
       onChangeDate={onChangeDate}
       placeholder={plannedEndDate ? "" : "Data de fim"}
       disabled={disabled}
+      extraAddon={
+        plannedEndDate &&
+        !isPending &&
+        !disabled && (
+          <div
+            title="Remover data de fim planejada"
+            className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
+            onClick={() => removePlannedEndDate()}
+          >
+            <XIcon className="text-white h-4 w-4" />
+          </div>
+        )
+      }
     />
   );
 }

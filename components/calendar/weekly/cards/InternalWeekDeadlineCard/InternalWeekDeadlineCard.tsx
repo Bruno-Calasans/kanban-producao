@@ -66,13 +66,14 @@ export default function InternalWeekDeadlineCard({
       }
     >
       <Link
-        className="[a]:hover:bg-secondary p-0 m-0 relative w-fit [a]:w-fit flex"
+        className={cn("flex flex-col h-fit rounded-none p-0 mt-2")}
         href={`/movimentations/${movimentation.id}`}
       >
         <Badge
           asChild
           className={cn(
-            "flex flex-co h-fit rounded-none p-3 mt-2",
+            "flex flex-co h-fit rounded-none p-2 mt-2",
+            isShort && "p-1",
 
             // Deadline interna sem atraso
             !isExpired &&
@@ -107,30 +108,37 @@ export default function InternalWeekDeadlineCard({
           onMouseEnter={() => setSelectedDeadlineId(deadline.id)}
           onMouseLeave={() => setSelectedDeadlineId(null)}
         >
-          <div className="flex flex-col items-start gap-1.5">
+          <div className="flex flex-col items-start gap-1.5 relative">
             {/* Nome do produto e OP */}
-            <p className="font-bold mb-1 text-md">
+            {/* <p className="font-bold mb-1 text-md">
               {movimentation.product.name} | {movimentation.product.op}
-            </p>
+            </p> */}
+
+            {isShort && (
+              <div>
+                <p className="font-bold mb-1 text-md">{movimentation.product.op}</p>
+                <p className="font-bold mb-1 text-md">Meta: {metaAmount}</p>
+              </div>
+            )}
 
             {workState == "READY" && isShort && (
               <>
-                <p className="flex gap-0.5 items-center justify-center text-xs">
+                {/* <p className="flex gap-0.5 items-center justify-center text-xs">
                   <TargetIcon size={16} />
                   <span className="font-bold">META DIÁRIA:</span> {metaAmount}
-                </p>
-                <p className="flex gap-0.5 items-center justify-center text-xs">
+                </p> */}
+                {/* <p className="flex gap-0.5 items-center justify-center text-xs">
                   <HashIcon size={16} />
                   <span className="font-bold">RESTANTE:</span> {avaliableAmount}/{totalAmount}
-                </p>
+                </p> */}
               </>
             )}
-
+            {/* 
             {workState == "WAITING_INPUT" && (
               <p className="flex gap-0.5 items-center justify-center text-xs">
                 <span className="font-bold">AGUARDANDO ENTRADA</span>
               </p>
-            )}
+            )} */}
 
             {workState == "COMPLETED" && isShort && (
               <p className="flex gap-0.5 items-center justify-center text-xs">
@@ -142,6 +150,9 @@ export default function InternalWeekDeadlineCard({
 
             {!isShort && workState != "WAITING_INPUT" && (
               <>
+                <p className="font-bold mb-1 text-md">
+                  {movimentation.product.name} | {movimentation.product.op}
+                </p>
                 <p className="flex gap-0.5 items-center justify-center text-xs">
                   <TargetIcon size={16} />
                   <span className="font-bold">META DIÁRIA:</span> {metaAmount}
@@ -162,14 +173,14 @@ export default function InternalWeekDeadlineCard({
                 </p>
               </>
             )}
+            <DeadlineTypeBadge
+              deadline={deadline}
+              isExpectedThisWeekDay={isExpectedThisWeekDay}
+              isStartedThisWeekDay={isStartedThisWeekDay}
+              isShort={isShort}
+            />
           </div>
         </Badge>
-
-        <DeadlineTypeBadge
-          deadline={deadline}
-          isExpectedThisWeekDay={isExpectedThisWeekDay}
-          isStartedThisWeekDay={isStartedThisWeekDay}
-        />
       </Link>
     </WeekDeadlineCardContextMenu>
   );

@@ -77,7 +77,7 @@ export default function WeeklyDeadlineTable() {
 
       rows.push(
         <TableRow key={department.id}>
-          <TableHead className="w-[150px] font-semibold bg-muted/50 ">{department.name}</TableHead>
+          <TableHead className="w-37.5 font-semibold bg-muted/50 ">{department.name}</TableHead>
 
           {normalizedWeekDays.map((day) => {
             const deadlines = weekMap?.get(day.key);
@@ -86,8 +86,19 @@ export default function WeeklyDeadlineTable() {
             // console.log(department.name, day.key, metaInThisDay.filter(m => !!m))
 
             return (
-              <TableCell key={`${department.id}-${day.key}`}>
-                <div>
+              <TableCell
+                key={`${department.id}-${day.key}`}
+                className={cn(
+                  // Cores para diferenciar os departamentos, caso queira tirar é só remover essas linhas
+                  department.name === "CORTE" && "bg-pink-200",
+                  department.name == "ESTAMPARIA" && "bg-emerald-200",
+                  department.name == "BORDADO" && "bg-orange-200",
+                  department.name == "COSTURA" && "bg-yellow-200",
+                  department.name == "ACABAMENTO" && "bg-purple-200",
+                  department.name == "FACÇÃO" && "bg-blue-200",
+                )}
+              >
+                <div className="m-0 p-0">
                   {deadlines?.map((deadline) => {
                     if (deadline.departament.is_external) {
                       return (

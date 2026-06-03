@@ -92,7 +92,7 @@ export default function WeeklyDeadlineTable() {
             <TableCell
               key={`${day.key}-${department.id}`}
               className={cn(
-                "w-[300px]",
+                "",
                 department.name === "CORTE" && "bg-pink-200",
                 department.name === "ESTAMPARIA" && "bg-emerald-200",
                 department.name === "BORDADO" && "bg-orange-200",

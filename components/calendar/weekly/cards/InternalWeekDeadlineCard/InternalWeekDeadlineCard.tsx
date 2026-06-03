@@ -66,7 +66,10 @@ export default function InternalWeekDeadlineCard({
       }
     >
       <Link
-        className={cn("flex flex-col h-fit rounded-none p-0 mt-2")}
+        className={cn(
+          "flex flex-col h-fit rounded-none mt-2 p-1",
+          !hasWork && "cursor-not-allowed",
+        )}
         href={`/movimentations/${movimentation.id}`}
       >
         <Badge

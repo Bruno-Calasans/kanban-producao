@@ -60,6 +60,7 @@ export default function InternalWeekDeadlineCard({
       deadline={deadline}
       departamentAvaliableAmount={avaliableAmount}
       hidden={!avaliableAmount || isMetaDone}
+      hideEditDeadlineAction={isFinished || avaliableAmount == 0}
       hideFinishDeadlineAction={isFinished || avaliableAmount == 0}
       hideFinishMetaAction={
         isMetaDone || isFinished || (isMetaIncomplete && amountDoneInThisDay > 0)
@@ -112,7 +113,6 @@ export default function InternalWeekDeadlineCard({
           onMouseLeave={() => setSelectedDeadlineId(null)}
         >
           <div className="flex flex-col items-start gap-1.5 relative">
-            
             {/* Versão curta com entrada disponível no departamento */}
             {isShort && (
               <div className="mr-2">

@@ -12,9 +12,8 @@ import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { MovimentationDeadlinePopulated } from "@/types/database.type";
 import { EditDeadlineDatesField } from "./fields/EditDeadlineDatesField";
-import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
 import { differenceInDays } from "date-fns";
-import useMoveToNextDepartament from "@/hooks/process-executation/useMoveToNextDepartament";
+import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
 
 type EditDeadlineFormProps = {
   deadline: MovimentationDeadlinePopulated;
@@ -27,11 +26,6 @@ export default function EditDeadlineForm({ deadline }: EditDeadlineFormProps) {
     isPending: isUpdateDeadlinePending,
     isError: updateDeadlineError,
   } = useUpdateMovimentationDeadline();
-  const {
-    mutateAsync: moveNextDepartament,
-    isPending: isNextDepartamentPending,
-    isError: moveNextDepartamentError,
-  } = useMoveToNextDepartament();
 
   const form = useAppForm({
     defaultValues: {
@@ -69,8 +63,8 @@ export default function EditDeadlineForm({ deadline }: EditDeadlineFormProps) {
     },
   });
 
-  const isPending = isUpdateDeadlinePending || isNextDepartamentPending;
-  const isError = updateDeadlineError || moveNextDepartamentError;
+  const isPending = isUpdateDeadlinePending;
+  const isError = updateDeadlineError;
 
   const plannedStartDate = deadline.planned_start_at
     ? new Date(deadline.planned_start_at)

@@ -34,7 +34,8 @@ export type DialogID =
   | `return-process-execution-${number}`
   | `create-movimentation-${number}`
   | `edit-movimentation-${number}`
-  | `remove-movimentation-${number}`;
+  | `remove-movimentation-${number}`
+  | `edit-deadline-${number}`;
 
 export type DialogContext = {
   dialog: DialogID | null;

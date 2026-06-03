@@ -176,6 +176,22 @@ export default function InternalWeekDeadlineCard({
                 </p>
               </>
             )}
+
+            {!isShort && workState == "WAITING_INPUT" && (
+              <>
+                <p className="font-bold mb-1 text-md">
+                  {movimentation.product.name} | {movimentation.product.op}
+                </p>
+                <p className="flex gap-0.5 items-center justify-center text-xs">
+                  <span className="font-bold">AGUARDANDO ENTRADA</span>
+                </p>
+                <p className="flex gap-0.5 items-center justify-center text-xs">
+                  <HashIcon size={16} />
+                  <span className="font-bold">TOTAL:</span>
+                  {totalAmount}
+                </p>
+              </>
+            )}
             <DeadlineTypeBadge
               deadline={deadline}
               isExpectedThisWeekDay={isExpectedThisWeekDay}

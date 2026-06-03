@@ -26,11 +26,13 @@ import { calcExternalProcessStates } from "@/utils/calcExternalProcessState";
 import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";
 import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import { isToday } from "date-fns";
+import { useSelectedWeekDay } from "@/hooks/local-storage/useSelectedWeekDay";
 
 export default function WeeklyDeadlineTable() {
+  const { selectedWeekDay } = useSelectedWeekDay();
   const { weekDays, startDayOfWeek, endDayOfWeek, getCurrentWeek, getNextWeek, getPreviousWeek } =
     useWeek({
-      startDate: new Date(),
+      startDate: selectedWeekDay ? new Date(selectedWeekDay) : new Date(),
     });
 
   const {
@@ -101,7 +103,7 @@ export default function WeeklyDeadlineTable() {
                 department.name === "FACÇÃO" && "bg-blue-200",
               )}
             >
-              <div className="m-0 p-0 grid grid-cols-2">
+              <div className="m-0 p-0 grid md:grid-cols-1 xl:grid-cols-2">
                 {deadlines?.map((deadline) => {
                   if (deadline.departament.is_external) {
                     return (

@@ -1,7 +1,8 @@
 "use client";
 
 import { startOfWeek, addDays, subDays, endOfWeek } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelectedWeekDay } from "@/hooks/local-storage/useSelectedWeekDay";
 
 type UseWeekProps = {
   startDate: Date;
@@ -12,6 +13,7 @@ export default function useWeek({ startDate, daysAmount }: UseWeekProps) {
   const [fromDate, setFromDate] = useState<Date>(startDate);
   const startDayOfWeek = startOfWeek(fromDate, { weekStartsOn: 1 });
   const endDayOfWeek = endOfWeek(fromDate, { weekStartsOn: 1 });
+  const { setSelectedWeekDay } = useSelectedWeekDay();
 
   // Pega todos os dias da semana, execto domingo (configurável)
   const getWeekDays = () => {
@@ -29,18 +31,30 @@ export default function useWeek({ startDate, daysAmount }: UseWeekProps) {
   };
 
   const getCurrentWeek = () => {
-    setFromDate(startDate);
+    const today = new Date();
+    setSelectedWeekDay(today);
+    setFromDate(today);
   };
 
   const getNextWeek = () => {
-    setFromDate(getFirstDayOfNextWeek());
+    const nextWeekFirstDay = getFirstDayOfNextWeek();
+    setSelectedWeekDay(nextWeekFirstDay);
+    setFromDate(nextWeekFirstDay);
   };
 
   const getPreviousWeek = () => {
-    setFromDate(getFirstDayOfPreviousWeek());
+    const previousWeekFirstDay = getFirstDayOfPreviousWeek();
+    setSelectedWeekDay(previousWeekFirstDay);
+    setFromDate(previousWeekFirstDay);
   };
 
   const weekDays = getWeekDays();
+
+  useEffect(() => {
+    if (fromDate.getTime() !== startDate.getTime()) {
+      setFromDate(startDate);
+    }
+  }, [startDate]);
 
   return {
     startDayOfWeek,

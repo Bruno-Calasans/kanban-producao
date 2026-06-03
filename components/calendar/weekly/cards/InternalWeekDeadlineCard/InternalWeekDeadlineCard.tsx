@@ -112,45 +112,23 @@ export default function InternalWeekDeadlineCard({
           onMouseLeave={() => setSelectedDeadlineId(null)}
         >
           <div className="flex flex-col items-start gap-1.5 relative">
-            {/* Nome do produto e OP */}
-            {/* <p className="font-bold mb-1 text-md">
-              {movimentation.product.name} | {movimentation.product.op}
-            </p> */}
-
+            
+            {/* Versão curta com entrada disponível no departamento */}
             {isShort && (
               <div className="mr-2">
                 <p className="font-bold mb-1 text-md">{movimentation.product.op}</p>
                 <p className="font-bold mb-1 text-md">Meta: {metaAmount}</p>
+                {workState == "COMPLETED" && (
+                  <p className="flex gap-0.5 items-center justify-center text-xs">
+                    <span className="font-bold">
+                      Concluído: {metaAmount}/{totalAmount}
+                    </span>
+                  </p>
+                )}
               </div>
             )}
 
-            {workState == "READY" && isShort && (
-              <>
-                {/* <p className="flex gap-0.5 items-center justify-center text-xs">
-                  <TargetIcon size={16} />
-                  <span className="font-bold">META DIÁRIA:</span> {metaAmount}
-                </p> */}
-                {/* <p className="flex gap-0.5 items-center justify-center text-xs">
-                  <HashIcon size={16} />
-                  <span className="font-bold">RESTANTE:</span> {avaliableAmount}/{totalAmount}
-                </p> */}
-              </>
-            )}
-            {/* 
-            {workState == "WAITING_INPUT" && (
-              <p className="flex gap-0.5 items-center justify-center text-xs">
-                <span className="font-bold">AGUARDANDO ENTRADA</span>
-              </p>
-            )} */}
-
-            {workState == "COMPLETED" && isShort && (
-              <p className="flex gap-0.5 items-center justify-center text-xs">
-                <span className="font-bold">
-                  CONCLUÍDO: {metaAmount}/{totalAmount}
-                </span>
-              </p>
-            )}
-
+            {/* Versão longa com entrada disponível no departamento */}
             {!isShort && workState != "WAITING_INPUT" && (
               <>
                 <p className="font-bold mb-1 text-md">
@@ -177,6 +155,7 @@ export default function InternalWeekDeadlineCard({
               </>
             )}
 
+            {/* Versão longa aguardando entrada no departamento */}
             {!isShort && workState == "WAITING_INPUT" && (
               <>
                 <p className="font-bold mb-1 text-md">
@@ -192,6 +171,7 @@ export default function InternalWeekDeadlineCard({
                 </p>
               </>
             )}
+
             <DeadlineTypeBadge
               deadline={deadline}
               isExpectedThisWeekDay={isExpectedThisWeekDay}

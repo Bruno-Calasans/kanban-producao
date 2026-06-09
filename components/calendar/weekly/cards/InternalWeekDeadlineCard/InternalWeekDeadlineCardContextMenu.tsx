@@ -51,7 +51,11 @@ export default function InternalWeekDeadlineCardContextMenu({
         {/* Editar deadline */}
         {!hideEditDeadlineAction && (
           <ContextMenuItem asChild>
-            <EditDeadlineDialog deadline={deadline} />
+            <EditDeadlineDialog
+              deadline={deadline}
+              departament={departament}
+              departamentAvaliableAmount={departamentAvaliableAmount}
+            />
           </ContextMenuItem>
         )}
 

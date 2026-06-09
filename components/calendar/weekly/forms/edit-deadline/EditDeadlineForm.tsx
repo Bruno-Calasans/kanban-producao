@@ -10,16 +10,22 @@ import {
 } from "./editDeadlineFormContext";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { Departament, MovimentationDeadlinePopulated } from "@/types/database.type";
 import { EditDeadlineDatesField } from "./fields/EditDeadlineDatesField";
-import { differenceInDays } from "date-fns";
 import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
+import CancelButton from "@/components/custom/buttons/CancelButton";
+import DeadlineStateMsg from "@/components/calendar/weekly/DeadlineStateMsg";
 
 type EditDeadlineFormProps = {
   deadline: MovimentationDeadlinePopulated;
+  departament: Departament;
+  departamentAvaliableAmount: number;
 };
 
-export default function EditDeadlineForm({ deadline }: EditDeadlineFormProps) {
+export default function EditDeadlineForm({
+  deadline,
+  departamentAvaliableAmount,
+}: EditDeadlineFormProps) {
   const { closeDialog } = useDialog();
   const {
     mutateAsync: updateDeadline,
@@ -66,19 +72,6 @@ export default function EditDeadlineForm({ deadline }: EditDeadlineFormProps) {
   const isPending = isUpdateDeadlinePending;
   const isError = updateDeadlineError;
 
-  const plannedStartDate = deadline.planned_start_at
-    ? new Date(deadline.planned_start_at)
-    : undefined;
-
-  const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : undefined;
-  const today = new Date();
-
-  const isExpired =
-    plannedEndDate && plannedStartDate && plannedEndDate.getTime() < today.getTime();
-
-  const remainingDays =
-    plannedEndDate && plannedStartDate ? differenceInDays(plannedEndDate, plannedStartDate) + 1 : 0;
-
   return (
     <form
       id="edit-deadline-form"
@@ -87,25 +80,17 @@ export default function EditDeadlineForm({ deadline }: EditDeadlineFormProps) {
         form.handleSubmit();
       }}
     >
-      <div className="flex flex-col  gap-1 mb-4">
-        <p>
-          <span className="font-bold">Produto:</span> {deadline.movimentation?.product?.name} |{" "}
-          {deadline.movimentation?.product?.op}
-        </p>
-        <p>
-          <span className="font-bold">Dias em atraso:</span>{" "}
-          {isExpired ? differenceInDays(today, plannedEndDate) : "N/A"}
-        </p>
-        <p>
-          <span className="font-bold">Dias restantes:</span> {remainingDays || "N/A"}
-        </p>
-      </div>
+      <DeadlineStateMsg
+        deadline={deadline}
+        departamentAvaliableAmount={departamentAvaliableAmount}
+      />
       <EditDeadlineDatesField form={form} />
 
       <div
         id="edit-deadline-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
+        <CancelButton onclick={() => closeDialog(`edit-deadline-${deadline.id}`)} />
         <ConfirmButton hiddenIcon isLoading={isPending} label="Salvar" loadingMsg="Salvando..." />
       </div>
     </form>

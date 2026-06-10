@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/preserve-manual-memoization */
-import WeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import WeekSelector from "@/components/calendar/weekly/WeekSelector";
 import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
@@ -27,6 +26,7 @@ import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalW
 import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import { isToday } from "date-fns";
 import { useSelectedWeekDay } from "@/hooks/local-storage/useSelectedWeekDay";
+import { groupDeadlinesByMovimentation } from "@/utils/groupDeadlinesByMovimentation";
 
 export default function WeeklyDeadlineTable() {
   const { selectedWeekDay } = useSelectedWeekDay();
@@ -59,6 +59,11 @@ export default function WeeklyDeadlineTable() {
   const normalizedWeekDays = useMemo(() => normalizeWeekDays(weekDays), [weekDays]);
 
   const deadlinesByDepartament = useMemo(() => groupDeadlinesByDepartament(deadlines), [deadlines]);
+
+  const deadlinesByMovimentation = useMemo(
+    () => groupDeadlinesByMovimentation(deadlines),
+    [deadlines, processStatesByMovimentation],
+  );
 
   const calendarMatrix = useMemo(
     () =>
@@ -152,6 +157,11 @@ export default function WeeklyDeadlineTable() {
     ],
   );
 
+  const uniqueMovimentations = useMemo(
+    () => Array.from(new Map(movimentations.map((item) => [item.id, item])).values()),
+    [movimentations],
+  );
+
   const isLoading =
     isMovimentationDeadlineLoading ||
     isMovimentationExecutionTemplateLoading ||
@@ -173,6 +183,9 @@ export default function WeeklyDeadlineTable() {
         getCurrentWeek={getCurrentWeek}
         getNextWeek={getNextWeek}
         getPreviousWeek={getPreviousWeek}
+        movimentations={uniqueMovimentations}
+        deadlinesByMovimentation={deadlinesByMovimentation}
+        processStatesByMovimentation={processStatesByMovimentation}
       />
 
       <div className="overflow-auto max-h-[90vh]">

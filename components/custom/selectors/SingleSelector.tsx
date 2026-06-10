@@ -29,6 +29,7 @@ type SelectorProps<T extends DataItem> = {
   disabled?: boolean | "indeterminate";
   onChange: (data?: T) => void;
   onChangeItem?: (item?: SelectorItem) => void;
+  customLabelSelector?: (item: T) => string;
 };
 
 export function SingleSelector<T extends DataItem>({
@@ -43,10 +44,11 @@ export function SingleSelector<T extends DataItem>({
   disabled,
   onChangeItem,
   onChange,
+  customLabelSelector,
 }: SelectorProps<T>) {
   const items: SelectorItem[] = data.map((dataItem) => ({
     id: dataItem.id,
-    label: dataItem[labelSelector] as string,
+    label: customLabelSelector ? customLabelSelector(dataItem) : String(dataItem[labelSelector]),
   }));
   const defaultItem = defaultData
     ? { id: defaultData.id, label: defaultData[labelSelector] }

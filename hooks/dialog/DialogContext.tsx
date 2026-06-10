@@ -35,6 +35,7 @@ export type DialogID =
   | `create-movimentation-${number}`
   | `edit-movimentation-${number}`
   | `remove-movimentation-${number}`
+  | `create-deadline`
   | `edit-deadline-${number}`;
 
 export type DialogContext = {

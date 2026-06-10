@@ -11,8 +11,8 @@ import { useState } from "react";
 import ProcessStateTable from "../table/ProcessStateTable";
 import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
-import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import { Badge } from "@/components/ui/badge";
+import { DepartamentState } from "@/utils/calcDepartamentState";
 
 type MovimentationTabsProps = {
   movimentation: MovimentationPopulated;

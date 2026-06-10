@@ -2,14 +2,14 @@
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import MovimentationDeadlineStatusBadge from "@/components/custom/badges/MovimentationDeadlineStatus";
-import MovimentationDeadlinePlannedStartInput from "../inputs/MovimentationDeadlinePlannedStartInput";
-import MovimenationDeadlinePlannedEndInput from "../inputs/MovimenationDeadlinePlannedEndInput";
+import MovimentationDeadlineDatesInput from "../inputs/MovimentationDeadlineDatesInput";
+import { DepartamentState } from "@/utils/calcDepartamentState";
 
 type MovimentationDeadlineState = {
   departamentStates: DepartamentState[];
+  hideSearch?: boolean;
 };
 
 const processColumns: ColumnDef<DepartamentState>[] = [
@@ -17,84 +17,22 @@ const processColumns: ColumnDef<DepartamentState>[] = [
     id: "departament.name",
     accessorKey: "departament.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
+    enableSorting: false,
   },
   {
-    accessorKey: "deadline.planned_start_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Começa em" />,
-    cell: ({
-      row: {
-        original: { movimentation, departament, deadline, status },
-      },
-    }) => (
-      <MovimentationDeadlinePlannedStartInput
-        movimentation={movimentation}
-        departament={departament}
-        deadline={deadline}
-        disabled={status === "COMPLETED" || movimentation.status == "CANCELLED"}
-      />
+    id: "deadline-data",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Data de início e data de fim" />
+    ),
+    enableSorting: false,
+    cell: ({ row: { original: departamentState } }) => (
+      <MovimentationDeadlineDatesInput departamentState={departamentState} />
     ),
   },
-  {
-    accessorKey: "deadline.planned_end_at",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Termina em" />,
-    cell: ({
-      row: {
-        original: { movimentation, departament, deadline, status },
-      },
-    }) => (
-      <MovimenationDeadlinePlannedEndInput
-        movimentation={movimentation}
-        departament={departament}
-        deadline={deadline}
-        disabled={
-          !!!deadline?.planned_start_at ||
-          status === "COMPLETED" ||
-          movimentation.status == "CANCELLED"
-        }
-      />
-    ),
-  },
-  // {
-  //   accessorKey: "finished_at",
-  //   header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
-  //   cell: ({
-  //     row: {
-  //       original: { movimentation, departament, deadline, status, movimentationProcessStates },
-  //     },
-  //   }) => (
-  //     <MovimentationDeadlineEndsAtInput
-  //       movimentation={movimentation}
-  //       departament={departament}
-  //       deadline={deadline}
-  //       movimentationProcessStates={movimentationProcessStates}
-  //       disabled={
-  //         !!deadline?.finished_at || !deadline?.started_at || movimentation.status == "CANCELLED"
-  //       }
-  //     />
-  //   ),
-  // },
-  // {
-  //   accessorKey: "finished_at",
-  //   header: ({ column }) => <DataTableColumnHeader column={column} title="Terminou em" />,
-  //   cell: ({
-  //     row: {
-  //       original: { movimentation, departament, deadline, status, movimentationProcessStates },
-  //     },
-  //   }) => (
-  //     <MovimentationDeadlineEndsAtInput
-  //       movimentation={movimentation}
-  //       departament={departament}
-  //       deadline={deadline}
-  //       movimentationProcessStates={movimentationProcessStates}
-  //       disabled={
-  //         !!deadline?.finished_at || !deadline?.started_at || movimentation.status == "CANCELLED"
-  //       }
-  //     />
-  //   ),
-  // },
   {
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    enableSorting: false,
     cell: ({
       row: {
         original: { status, expiredDays },
@@ -105,6 +43,7 @@ const processColumns: ColumnDef<DepartamentState>[] = [
 
 export default function MovimentationDeadlinesTable({
   departamentStates,
+  hideSearch,
 }: MovimentationDeadlineState) {
   return (
     <DataTable
@@ -112,6 +51,7 @@ export default function MovimentationDeadlinesTable({
       filterColumn="departament.name"
       columns={processColumns}
       data={departamentStates}
+      hideSearch={hideSearch}
       hidePagination
     />
   );

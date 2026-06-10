@@ -13,6 +13,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ptBR } from "date-fns/locale";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 function formatDate(date: Date | string | undefined) {
   if (!date) {
@@ -43,6 +44,7 @@ type DatePickerInputProps = {
   maxDate?: Date | string;
   weekDays?: number[];
   extraAddon?: React.ReactNode;
+  className?: string;
   onChangeDate?: (date?: Date) => void;
 };
 
@@ -54,6 +56,7 @@ export function DatePickerInput({
   maxDate,
   weekDays,
   extraAddon,
+  className,
   onChangeDate,
 }: DatePickerInputProps) {
   const [open, setOpen] = useState(false);
@@ -67,7 +70,7 @@ export function DatePickerInput({
   }, [currentDate]);
 
   return (
-    <Field className="mx-auto">
+    <Field className={cn("mx-auto", className)}>
       <InputGroup>
         <InputGroupInput
           id="date-required"

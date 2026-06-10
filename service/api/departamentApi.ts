@@ -65,3 +65,12 @@ export async function updateDepartament(id: number, data: UpdateDepartamentData)
 export async function deleteDepartament(departamentId: number) {
   return await supabase.from("Departament").delete().eq("id", departamentId).throwOnError();
 }
+
+export async function getAllDepartamentsByMovimentation() {
+  return await supabase
+    .from("Departament")
+    .select("*")
+    .eq("is_active", true)
+    .order("created_at", { ascending: true })
+    .throwOnError();
+}

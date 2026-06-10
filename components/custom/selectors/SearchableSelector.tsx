@@ -31,8 +31,10 @@ type SelectorProps<T extends DataItem> = {
   loadingMsg?: string;
   labelSelector: keyof T;
   disabled?: boolean | "indeterminate";
+  searchPlaceholder?: string;
   onChange: (data?: T) => void;
   onChangeItem?: (item?: SelectorItem) => void;
+  customLabelSelector?: (item: T) => string;
 };
 
 export function SearchableSelector<T extends DataItem>({
@@ -45,15 +47,17 @@ export function SearchableSelector<T extends DataItem>({
   loadingMsg,
   labelSelector,
   disabled,
+  searchPlaceholder,
   onChange,
   onChangeItem,
+  customLabelSelector,
 }: SelectorProps<T>) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
   const items: SelectorItem[] = data.map((dataItem) => ({
     id: dataItem.id,
-    label: String(dataItem[labelSelector]),
+    label: customLabelSelector ? customLabelSelector(dataItem) : String(dataItem[labelSelector]),
   }));
 
   const selectedItem = items.find(
@@ -105,7 +109,7 @@ export function SearchableSelector<T extends DataItem>({
 
       <PopoverContent className="p-2 w-[400px]">
         <Input
-          placeholder="Pesquisar..."
+          placeholder={searchPlaceholder || "Pesquisar..."}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="mb-2"

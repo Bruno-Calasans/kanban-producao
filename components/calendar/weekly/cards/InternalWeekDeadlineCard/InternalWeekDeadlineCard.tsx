@@ -31,7 +31,7 @@ export default function InternalWeekDeadlineCard({
 }: InternalWeekDeadlineCardProps) {
   const setSelectedDeadlineId = useWeeklyDeadlineStore((state) => state.setSelectedDeadlineId);
   const isSameDeadline = useWeeklyDeadlineStore(
-    (state) => state.selectedDeadlineId === deadline.id,
+    (state) => state.selectedDeadlineId === deadline.movimentation.id,
   );
   const isShort = useShortCardVersion((state) => state.isShort);
   const movimentation = deadline.movimentation;
@@ -109,7 +109,7 @@ export default function InternalWeekDeadlineCard({
             // Quando passa o mouse em cima de uma deadline finalizada ou meta concluída
             isSameDeadline && (isFinished || isMetaDone) && " border-emerald-700",
           )}
-          onMouseEnter={() => setSelectedDeadlineId(deadline.id)}
+          onMouseEnter={() => setSelectedDeadlineId(deadline.movimentation.id)}
           onMouseLeave={() => setSelectedDeadlineId(null)}
         >
           <div className="flex flex-col items-start gap-1.5 relative">

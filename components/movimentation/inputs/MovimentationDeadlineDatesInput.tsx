@@ -15,6 +15,7 @@ import { useState } from "react";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
 import { DepartamentState } from "@/utils/calcDepartamentState";
+import { cn } from "@/lib/utils";
 
 type MovimentationDeadlineDatesInputProps = {
   departamentState: DepartamentState;
@@ -60,6 +61,8 @@ export default function MovimentationDeadlineDatesInput({
 
   const hasEndDateChanged =
     selectedEndDate && selectedEndDate?.getTime() != plannedStartDate?.getTime();
+
+  const hasChanged = hasStartDateChanged || hasEndDateChanged;
 
   const removePlannedStartDate = async () => {
     if (!deadline?.id) return;
@@ -118,6 +121,7 @@ export default function MovimentationDeadlineDatesInput({
           },
         });
         toast.success("Prazo atualizado");
+        onCancel();
       } catch (error) {
         errorHandler(error, {
           default: "Erro: prazo não foi salvo",
@@ -134,6 +138,7 @@ export default function MovimentationDeadlineDatesInput({
           actual_end_at: null,
         });
         toast.success("Prazo criado com sucesso");
+        onCancel();
       } catch (error) {
         errorHandler(error, {
           default: "Erro: Não foi possível criar o prazo",
@@ -150,57 +155,58 @@ export default function MovimentationDeadlineDatesInput({
   const isPending = isUpdateDeadlinePending || createDeadlinePending;
   const isError = isUpdateDeadlineError || createDeadlineError;
   const isStarDateInputDisabled = status === "COMPLETED";
-  const isEndDateInputDisabled = status === "COMPLETED" && !(selectedStartDate || plannedStartDate);
+  const isEndDateInputDisabled = status === "COMPLETED" || !(selectedStartDate || plannedStartDate);
 
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="flex gap-2">
-        {/* Escolher data de início planejada */}
-        <DatePickerInput
-          className="w-62.5"
-          minDate={today}
-          currentDate={selectedStartDate || plannedStartDate}
-          placeholder={plannedStartDate ? "" : "Data de início"}
-          onChangeDate={(date) => onChangeDate(date, "START")}
-          disabled={isStarDateInputDisabled}
-          extraAddon={
-            plannedStartDate &&
-            !isPending &&
-            !isStarDateInputDisabled && (
-              <div
-                title="Remover data de início planejada"
-                className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
-                onClick={() => removePlannedStartDate()}
-              >
-                <XIcon className="text-white h-4 w-4" />
-              </div>
-            )
-          }
-        />
-        {/* Escolher data de fim planejada */}
-        <DatePickerInput
-          className="w-62.5"
-          minDate={selectedStartDate || plannedStartDate}
-          currentDate={selectedEndDate || plannedEndDate}
-          onChangeDate={(date) => onChangeDate(date, "END")}
-          placeholder={plannedEndDate ? "" : "Data de fim"}
-          disabled={!(selectedStartDate || plannedStartDate)}
-          extraAddon={
-            plannedEndDate &&
-            !isPending &&
-            !isEndDateInputDisabled && (
-              <div
-                title="Remover data de fim planejada"
-                className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
-                onClick={() => removePlannedEndDate()}
-              >
-                <XIcon className="text-white h-4 w-4" />
-              </div>
-            )
-          }
-        />
-      </div>
-      <div className="flex items-end self-end pt-1 gap-1">
+    <div
+      className={cn("grid grid-rows-1 grid-cols-2 items-center gap-1", hasChanged && "grid-rows-2")}
+    >
+      {/* Escolher data de início planejada */}
+      <DatePickerInput
+        className="w-full"
+        // minDate={today}
+        currentDate={selectedStartDate || plannedStartDate}
+        placeholder={plannedStartDate ? "" : "Data de início"}
+        onChangeDate={(date) => onChangeDate(date, "START")}
+        disabled={isStarDateInputDisabled}
+        extraAddon={
+          plannedStartDate &&
+          !isPending &&
+          !isStarDateInputDisabled && (
+            <div
+              title="Remover data de início planejada"
+              className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
+              onClick={() => removePlannedStartDate()}
+            >
+              <XIcon className="text-white h-4 w-4" />
+            </div>
+          )
+        }
+      />
+      {/* Escolher data de fim planejada */}
+      <DatePickerInput
+        className="w-full"
+        minDate={selectedStartDate || plannedStartDate}
+        currentDate={selectedEndDate || plannedEndDate}
+        onChangeDate={(date) => onChangeDate(date, "END")}
+        placeholder={plannedEndDate ? "" : "Data de fim"}
+        disabled={isEndDateInputDisabled}
+        extraAddon={
+          plannedEndDate &&
+          !isPending &&
+          !isEndDateInputDisabled && (
+            <div
+              title="Remover data de fim planejada"
+              className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
+              onClick={() => removePlannedEndDate()}
+            >
+              <XIcon className="text-white h-4 w-4" />
+            </div>
+          )
+        }
+      />
+      <div></div>
+      <div className="pt-1 flex justify-self-end gap-1">
         {(hasStartDateChanged || hasEndDateChanged) && (
           <>
             <CancelButton label="Cancelar" size="xs" onClick={onCancel} isLoading={isPending} />

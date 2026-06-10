@@ -52,12 +52,12 @@ export default function CancelMovimentationDialog({
           <CancelButton
             hiddenIcon
             isLoading={isPending}
-            onclick={() => closeDialog("cancel-movimentation")}
+            onClick={() => closeDialog("cancel-movimentation")}
           />
           <CancelActionButton
             label="Cancelar movimentação"
             isLoading={isPending}
-            onclick={handleCancel}
+            onClick={handleCancel}
           />
         </div>
       </div>

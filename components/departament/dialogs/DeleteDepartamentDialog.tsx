@@ -40,8 +40,8 @@ export default function DeleteDepartamentDialog({
         <p>Essa ação não pode ser desfeita.</p>
         <p></p>
         <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-          <CancelButton isLoading={isPending} onclick={() => closeDialog("delete-departament")} />
-          <DeleteButton isLoading={isPending} onclick={handleDelete} />
+          <CancelButton isLoading={isPending} onClick={() => closeDialog("delete-departament")} />
+          <DeleteButton isLoading={isPending} onClick={handleDelete} />
         </div>
       </div>
     </CustomDialog>

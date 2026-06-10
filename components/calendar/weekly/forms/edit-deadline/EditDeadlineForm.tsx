@@ -90,7 +90,7 @@ export default function EditDeadlineForm({
         id="edit-deadline-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
-        <CancelButton onclick={() => closeDialog(`edit-deadline-${deadline.id}`)} />
+        <CancelButton onClick={() => closeDialog(`edit-deadline-${deadline.id}`)} />
         <ConfirmButton hiddenIcon isLoading={isPending} label="Salvar" loadingMsg="Salvando..." />
       </div>
     </form>

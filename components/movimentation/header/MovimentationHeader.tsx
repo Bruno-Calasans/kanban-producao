@@ -5,10 +5,10 @@ import {
   ProcessState,
   ProductionFlowTemplateWithProcess,
 } from "@/types/database.type";
-import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import MovimentationHeaderMainInfo from "./MovimentationHeaderMainInfo";
 import MovimentationHeaderActions from "./MovimentationHeaderActions";
 import MovimentationHeaderAlerts from "./MovimentationHeaderAlerts";
+import { DepartamentState } from "@/utils/calcDepartamentState";
 
 type MovimentationHeadergProps = {
   movimentation: MovimentationPopulated;

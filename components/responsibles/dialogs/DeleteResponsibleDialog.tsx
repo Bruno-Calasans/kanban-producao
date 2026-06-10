@@ -41,7 +41,7 @@ export default function DeleteResponsibleDialog({
         <p></p>
         <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
           <CancelButton isLoading={isPending} />
-          <DeleteButton isLoading={isPending} onclick={handleDelete} />
+          <DeleteButton isLoading={isPending} onClick={handleDelete} />
         </div>
       </div>
     </CustomDialog>

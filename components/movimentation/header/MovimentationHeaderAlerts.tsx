@@ -5,11 +5,11 @@ import {
   ProductionFlowTemplateWithProcess,
 } from "@/types/database.type";
 import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
-import { DepartamentState } from "@/hooks/departament-state/useDepartamentState";
 import { InfoAlert } from "@/components/custom/alerts/InfoAlert";
 import { differenceInDays } from "date-fns";
 import ReturnProcessExecutionDialog from "@/components/process-execution/dialogs/ReturnProcessExecutionDialog";
 import useExternalProcessState from "@/hooks/external-process-state/useExternalProcess";
+import { DepartamentState } from "@/utils/calcDepartamentState";
 
 type MovimentationHeaderAlertsProps = {
   movimentation: MovimentationPopulated;

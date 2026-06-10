@@ -234,7 +234,7 @@ export default function WeeklyDeadlineTable() {
           {/* Inverted header columns */}
           <TableHeader>
             <TableRow>
-              <TableHead className="w-25 font-semibold bg-muted/50 sticky top-0 z-100">
+              <TableHead className="w-25 font-semibold bg-muted/50 sticky top-0 z-20">
                 DIA
               </TableHead>
 

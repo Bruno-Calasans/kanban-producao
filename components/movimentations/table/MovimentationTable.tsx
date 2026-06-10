@@ -22,11 +22,9 @@ export default function MovimentationTable({
 
   const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
     {
-      accessorKey: "id",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Movimentação" />,
-      cell({ row: { original: movimentation } }) {
-        return <p>#{movimentation.id}</p>;
-      },
+      id: "product.op",
+      accessorKey: "product.op",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,
     },
     {
       id: "product.name",
@@ -73,8 +71,8 @@ export default function MovimentationTable({
 
   return (
     <DataTable
-      filterPlaceholder="Procurar por movimentação ou produto"
-      filterColumn={["id", "product.name"]}
+      filterPlaceholder="Procurar por produto ou OP"
+      filterColumn={["product.name", "product.op"]}
       columns={filteredColumns}
       data={movimentations}
       onClickCell={({ column, row: { original } }) =>

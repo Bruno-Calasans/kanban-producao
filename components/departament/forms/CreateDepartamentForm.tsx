@@ -1,7 +1,6 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import useCreateDepartament from "@/hooks/departament/useCreateDepartament";
 import { FieldGroup } from "@/components/ui/field";
@@ -10,6 +9,7 @@ import { DepartamentNameField } from "./fields/DepartamentNameField";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { DepartamentIsExternalCheckboxField } from "./fields/DepartamentIsExternalCheckboxField";
+import CancelButton from "@/components/custom/buttons/CancelButton";
 
 export default function CreateDepartamentForm() {
   const { closeDialog } = useDialog();
@@ -50,7 +50,7 @@ export default function CreateDepartamentForm() {
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <ClearButton isLoading={isPending} onclick={() => form.reset()} />
+        <CancelButton isLoading={isPending} onClick={() => closeDialog("create-departament")} />
         <ConfirmButton hiddenIcon isLoading={isPending} label="Criar departamento" />
       </div>
     </form>

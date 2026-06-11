@@ -11,6 +11,7 @@ import handleFormError from "@/utils/errorHandler";
 import { DepartamentNameField } from "./fields/DepartamentNameField";
 import useDialog from "@/hooks/dialog/useDialog";
 import { DepartamentIsExternalCheckboxField } from "./fields/DepartamentIsExternalCheckboxField";
+import CancelButton from "@/components/custom/buttons/CancelButton";
 
 type DepartamentFormProps = {
   departament: Departament;
@@ -41,6 +42,7 @@ export default function EditDepartamentForm({
           updateData: {
             name,
             is_external: isExternal,
+            updated_at: new Date().toISOString(),
           },
         });
         toast.success("Departamento atualizado com sucesso!");
@@ -48,8 +50,8 @@ export default function EditDepartamentForm({
         form.reset();
       } catch (error) {
         handleFormError(error, {
-          duplicate: "Erro: departamento com esse nome ou sequência existe.",
           default: "Erro: não foi possível atualizar o departamento.",
+          duplicate: "Erro: departamento com esse nome já existe.",
         });
       }
     },
@@ -69,7 +71,7 @@ export default function EditDepartamentForm({
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <ClearButton isLoading={isPending} onclick={() => form.reset()} />
+        <CancelButton isLoading={isPending} onClick={() => closeDialog("edit-departament")} />
         <SaveButton hiddenIcon isLoading={isPending || !form.state.isValid} />
       </div>
     </form>

@@ -2,7 +2,7 @@
 
 import PageTitle from "@/components/custom/PageTitle";
 import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments";
-import { DepartamentTable } from "../../components/departament/table/DepartamentTable";
+import { DepartamentTable } from "@/components/departament/table/DepartamentTable";
 import CreateDepartamentDialog from "@/components/departament/dialogs/CreateDepartamentDialog";
 import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";

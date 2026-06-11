@@ -21,6 +21,7 @@ export default function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   const maxSize = table.getFilteredRowModel().rows.length;
   const pageSize = table.getState().pagination.pageSize;
+  const totalPages = Math.max(table.getPageCount(), 1);
 
   return (
     <div className="flex items-center justify-between px-2 mt-2">
@@ -49,7 +50,7 @@ export default function DataTablePagination<TData>({
           </Select>
         </div>
         <div className="flex w-25 items-center justify-center text-sm font-medium">
-          Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+          Página {table.getState().pagination.pageIndex + 1} de {totalPages}
         </div>
         <div className="flex items-center space-x-2">
           <Button

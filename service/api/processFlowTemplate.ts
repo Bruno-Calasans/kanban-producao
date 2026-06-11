@@ -47,9 +47,9 @@ export async function getAllFlowTemplatesByDepartament(departamentId: number) {
     .from("ProductionFlowTemplate")
     .select(
       `
-    process:Process!inner(departament_id)
+    departament:Departament!inner(*)
   `,
     )
-    .eq("process.departament_id", departamentId)
+    .eq("departament.id", departamentId)
     .throwOnError();
 }

@@ -10,8 +10,6 @@ export default function useDeleteDepartament() {
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: departamentKeys.lists(),
-        exact: false,
-        refetchType: "active",
       });
     },
   });

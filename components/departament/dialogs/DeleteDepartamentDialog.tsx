@@ -26,7 +26,7 @@ export default function DeleteDepartamentDialog({
       closeDialog("delete-departament");
     } catch (error) {
       errorHandler(error, {
-        default: "Não foi possível excluir departamento. Tente novamente.",
+        default: "Erro: Não foi possível excluir departamento. Tente novamente.",
       });
     }
   };

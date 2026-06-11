@@ -1,7 +1,6 @@
 import { updateMovimentation, UpdateMovimentationData } from "@/service/api/movimentationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { movimentationKeys } from "@/constants/movimentationKeys";
-import { processExecutationKeys } from "@/constants/processExecutationKeys";
 
 export default function useUpdateMovimentation() {
   const queryClient = useQueryClient();
@@ -9,9 +8,14 @@ export default function useUpdateMovimentation() {
   return useMutation({
     mutationFn: (data: { movimentationId: number; updateData: UpdateMovimentationData }) =>
       updateMovimentation(data.movimentationId, data.updateData),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: movimentationKeys.details(),
+        queryKey: movimentationKeys.detail(data.data?.id),
+        exact: false,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: movimentationKeys.lists(),
         exact: false,
       });
     },

@@ -1,10 +1,8 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
-import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { FieldGroup } from "@/components/ui/field";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Departament,
   MovimentationDeadlinePopulated,
@@ -15,11 +13,8 @@ import { defaultCreateDeadlineForm, useAppForm, formSchema } from "./createDeadl
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import useCreateMovimentationDeadline from "@/hooks/movimentation-deadline/useCreateMovimentationDeadline";
-import { DepartamentSelectorField } from "./fields/DepartamentSelectorField";
 import { MovimentationSelectorField } from "./fields/MovimentationSelectorField";
 import MovimentationDeadlinesTable from "@/components/movimentation/table/MovimentationDeadlinesTable";
-import useDepartamentState from "@/hooks/departament-state/useDepartamentState";
-import CancelButton from "@/components/custom/buttons/CancelButton";
 import calcDepartamentState from "@/utils/calcDepartamentState";
 
 type CreateDeadlineFormProps = {
@@ -103,11 +98,6 @@ export default function CreateDeadlineForm({
           <MovimentationDeadlinesTable departamentStates={departamentStates} hideSearch />
         )}
       </FieldGroup>
-
-      {/* <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <CancelButton isLoading={isPending} onclick={() => closeDialog("create-deadline")} />
-        <ConfirmButton hiddenIcon isLoading={isPending} label="Criar prazo" />
-      </div> */}
     </form>
   );
 }

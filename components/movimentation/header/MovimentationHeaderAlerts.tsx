@@ -1,6 +1,7 @@
 import {
   MovimentationDeadlinePopulated,
   MovimentationPopulated,
+  MovimentationStatus,
   ProcessExecutionPopulated,
   ProductionFlowTemplateWithProcess,
 } from "@/types/database.type";
@@ -40,12 +41,13 @@ export default function MovimentationHeaderAlerts({
 
   return (
     <div id="movimentation-alerts" className="flex gap-2 flex-col my-3">
-      {deadlines.length == 0 && (
-        <InfoAlert
-          title="Movimentação sem prazo definido"
-          description="Nenhum departamento tem prazo de entrega. Vá na aba 'Prazos' e defina os prazos para os departamentos."
-        />
-      )}
+      {deadlines.length == 0 &&
+        !(["CANCELLED", "COMPLETED"] as MovimentationStatus[]).includes(movimentationStatus) && (
+          <InfoAlert
+            title="Movimentação sem prazo definido"
+            description="Nenhum departamento tem prazo de entrega. Vá na aba 'Prazos' e defina os prazos para os departamentos."
+          />
+        )}
 
       {movimentationStatus == "CANCELLED" && (
         <ErrorAlert

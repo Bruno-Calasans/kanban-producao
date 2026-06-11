@@ -154,8 +154,12 @@ export default function MovimentationDeadlineDatesInput({
 
   const isPending = isUpdateDeadlinePending || createDeadlinePending;
   const isError = isUpdateDeadlineError || createDeadlineError;
-  const isStarDateInputDisabled = status === "COMPLETED";
-  const isEndDateInputDisabled = status === "COMPLETED" || !(selectedStartDate || plannedStartDate);
+  const isStarDateInputDisabled =
+    status === "COMPLETED" || departamentState.movimentation.status == "CANCELLED";
+  const isEndDateInputDisabled =
+    status === "COMPLETED" ||
+    !(selectedStartDate || plannedStartDate) ||
+    departamentState.movimentation.status == "CANCELLED";
 
   return (
     <div

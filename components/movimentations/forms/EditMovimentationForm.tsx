@@ -10,8 +10,8 @@ import useDialog from "@/hooks/dialog/useDialog";
 import { MovimentationPopulated, Product, ProductionFlow } from "@/types/database.type";
 import ClearButton from "@/components/custom/buttons/ClearButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
-import useUpdateMovimentation from "@/hooks/movimentation/useUpdateMovimentation";
-import useUpdateInicialExecution from "@/hooks/process-executation/useUpdateInicialExecution";
+import useUpdateMovimentation from "@/hooks/production/useUpdateProduction";
+import useUpdateInicialExecution from "@/hooks/movimentation/useUpdateInicialExecution";
 import { MovimentationProductionFlowField } from "./fields/MovimentationProductionFlowField";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
 

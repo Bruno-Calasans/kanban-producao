@@ -16,7 +16,7 @@ import EditProductDialog from "../dialogs/EditProductDialog";
 import DeleteProductDialog from "../dialogs/DeleteProductDialog";
 import { Product } from "@/types/database.type";
 import Link from "next/link";
-import useGetAllMovimentationsByProduct from "@/hooks/movimentation/useGetAllMovimentationsByProduct";
+import useGetAllMovimentationsByProduct from "@/hooks/production/useGetAllProductionsByProduct";
 import useActiveProduct from "@/hooks/product/useActiveProduct";
 
 type ProductTableDropdownMenuProps = {

@@ -12,7 +12,7 @@ import {
   useAppForm,
 } from "./productFormContext";
 import { ProductNameField } from "./fields/ProductNameField";
-import { ProductOpField } from "./fields/ProductOpField";
+import { ProductRefField } from "./fields/ProductRefField";
 import handleFormError from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { Product } from "@/types/database.type";
@@ -28,7 +28,7 @@ export default function EditProductForm({ product }: EditProductForm) {
   const form = useAppForm({
     defaultValues: {
       name: product.name,
-      op: product.op || defaultProductFormValues.op,
+      ref: product.ref,
     } as ProductSchema,
     validators: {
       onSubmit: formSchema,
@@ -36,13 +36,13 @@ export default function EditProductForm({ product }: EditProductForm) {
     },
     onSubmit: async ({ value: inputData }) => {
       try {
-        const { name, op } = inputData;
+        const { name, ref } = inputData;
 
         await mutateAsync({
           id: product.id,
           updateData: {
             name,
-            op,
+            ref,
           },
         });
         toast.success("Produto atualizado com sucesso!");
@@ -67,7 +67,7 @@ export default function EditProductForm({ product }: EditProductForm) {
     >
       <FieldGroup>
         <ProductNameField form={form} />
-        <ProductOpField form={form} />
+        <ProductRefField form={form} />
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">

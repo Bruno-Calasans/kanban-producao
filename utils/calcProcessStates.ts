@@ -1,55 +1,54 @@
 import {
   MovimentationPopulated,
-  ProcessExecutionPopulated,
-  ProcessExecutionStatus,
-  ProcessState,
-  ProductionFlowTemplateWithProcess,
+  MovimentationStatus,
+  DepartamentState,
+  ProductionFlowTemplatePopulated,
+  ProductionPopulated,
 } from "@/types/database.type";
 
 type ProcessStatusData = {
-  movimentation: MovimentationPopulated;
-  processExecutions: ProcessExecutionPopulated[];
-  flowTemplates: ProductionFlowTemplateWithProcess[];
+  production: ProductionPopulated;
+  movimentations: MovimentationPopulated[];
+  flowTemplates: ProductionFlowTemplatePopulated[];
 };
 
-export function calcProcessStates({
-  movimentation,
-  processExecutions,
+export function calcDepartamentStates({
+  production,
   flowTemplates,
+  movimentations,
 }: ProcessStatusData) {
-  const states: ProcessState[] = [];
-
-  const lastProcess = flowTemplates[flowTemplates.length - 1].process;
+  const states: DepartamentState[] = [];
+  const lastDepartament = flowTemplates[flowTemplates.length - 1].departament;
 
   // Agrupamento por processo
-  const inputExecutionsMap = new Map<number, ProcessExecutionPopulated[]>();
-  const outputExecutionsMap = new Map<number, ProcessExecutionPopulated[]>();
+  const inputMovimentationsMap = new Map<number, MovimentationPopulated[]>();
+  const outputMovimentationsMap = new Map<number, MovimentationPopulated[]>();
 
   // =========================
   // ORGANIZA EXECUÇÕES
   // =========================
 
-  for (const execution of processExecutions) {
+  for (const movimentation of movimentations) {
     // ENTRADA
-    if (execution.process) {
-      const processId = execution.process.id;
+    if (movimentation.departament) {
+      const departamentId = movimentation.departament.id;
 
-      const current = inputExecutionsMap.get(processId) || [];
+      const current = inputMovimentationsMap.get(departamentId) || [];
 
-      current.push(execution);
+      current.push(movimentation);
 
-      inputExecutionsMap.set(processId, current);
+      inputMovimentationsMap.set(departamentId, current);
     }
 
     // SAÍDA
-    if (execution.from_process) {
-      const processId = execution.from_process.id;
+    if (movimentation.from_departament) {
+      const departamentId = movimentation.from_departament.id;
 
-      const current = outputExecutionsMap.get(processId) || [];
+      const current = outputMovimentationsMap.get(departamentId) || [];
 
-      current.push(execution);
+      current.push(movimentation);
 
-      outputExecutionsMap.set(processId, current);
+      outputMovimentationsMap.set(departamentId, current);
     }
   }
 
@@ -60,31 +59,31 @@ export function calcProcessStates({
   for (let i = 0; i < flowTemplates.length; i++) {
     const template = flowTemplates[i];
 
-    const currentProcess = template.process;
+    const currentDepartament = template.departament;
 
-    const processId = currentProcess.id;
+    const departamentId = currentDepartament.id;
 
-    const inputExecutions = inputExecutionsMap.get(processId) || [];
+    const inputMovimentations = inputMovimentationsMap.get(departamentId) || [];
 
-    const outputExecutions = outputExecutionsMap.get(processId) || [];
+    const outputMovimentations = outputMovimentationsMap.get(departamentId) || [];
 
-    const executions = [...inputExecutions, ...outputExecutions];
+    const movimentations = [...inputMovimentations, ...outputMovimentations];
 
     // =========================
     // QUANTIDADES
     // =========================
 
-    const inputAmount = inputExecutions.reduce((total, exe) => total + exe.amount, 0);
+    const inputAmount = inputMovimentations.reduce((total, exe) => total + exe.amount, 0);
 
-    const forwardAmount = outputExecutions
+    const forwardAmount = outputMovimentations
       .filter((exe) => exe.type === "TRANSFER")
       .reduce((total, exe) => total + exe.amount, 0);
 
-    const externalAmount = outputExecutions
+    const externalAmount = outputMovimentations
       .filter((exe) => exe.type === "EXTERNAL")
       .reduce((total, exe) => total + exe.amount, 0);
 
-    const reprocessAmount = outputExecutions
+    const reprocessAmount = outputMovimentations
       .filter((exe) => exe.type === "REPROCESS")
       .reduce((total, exe) => total + exe.amount, 0);
 
@@ -96,18 +95,18 @@ export function calcProcessStates({
     // STATUS BASE
     // =========================
 
-    const hasExecutions = inputExecutions.length > 0 || outputExecutions.length > 0;
+    const hasMovimentations = inputMovimentations.length > 0 || outputMovimentations.length > 0;
 
-    const isInitialExecution =
-      executions && executions.length === 1 && executions[0].type === "INIT";
+    const isInitialMovimentation =
+      movimentations && movimentations.length === 1 && movimentations[0].type === "INIT";
 
-    const isLastProcess = currentProcess.id === lastProcess.id;
+    const isLastDepartament = currentDepartament.id === lastDepartament.id;
 
-    let status: ProcessExecutionStatus = "PENDING";
+    let status: MovimentationStatus = "PENDING";
 
-    if (!hasExecutions || isInitialExecution) {
+    if (!hasMovimentations || isInitialMovimentation) {
       status = "PENDING";
-    } else if (isLastProcess && avaliableAmount === movimentation.amount) {
+    } else if (isLastDepartament && avaliableAmount === production.amount) {
       status = "SUCCESS";
     } else if (avaliableAmount > 0) {
       status = "IN_PROGRESS";
@@ -150,27 +149,25 @@ export function calcProcessStates({
     // =========================
     // PROCESSOS RELACIONADOS
     // =========================
-
-    const previousProcess = i > 0 ? flowTemplates[i - 1].process : null;
-
-    const nextProcess = i < flowTemplates.length - 1 ? flowTemplates[i + 1].process : null;
+    const previousDepartament = i > 0 ? flowTemplates[i - 1].departament : null;
+    const nextDepartament = i < flowTemplates.length - 1 ? flowTemplates[i + 1].departament : null;
 
     // =========================
     // PUSH
     // =========================
 
     states.push({
-      process: currentProcess,
+      departament: currentDepartament,
 
-      movimentation,
+      production,
 
       flowTemplates,
 
       template,
 
-      previousProcess,
+      previousDepartament,
 
-      nextProcess,
+      nextDepartament,
 
       status,
 
@@ -188,11 +185,11 @@ export function calcProcessStates({
       avaliableAmount,
 
       // EXECUÇÕES
-      inputExecutions,
+      inputMovimentations,
 
-      outputExecutions,
+      outputMovimentations,
 
-      executions: [...inputExecutions, ...outputExecutions],
+      movimentations: [...inputMovimentations, ...outputMovimentations],
 
       // FLAGS
       flags: {
@@ -215,22 +212,22 @@ export function calcProcessStates({
   // PROCESSOS PULADOS
   // =========================
 
-  checkSkippedProcess(states);
+  checkSkippedDepartaments(states);
 
   return states;
 }
 
-export function checkSkippedProcess(processStates: ProcessState[]) {
-  for (let i = 0; i < processStates.length; i++) {
-    const current = processStates[i];
+export function checkSkippedDepartaments(departamentStates: DepartamentState[]) {
+  for (let i = 0; i < departamentStates.length; i++) {
+    const current = departamentStates[i];
 
-    const hasExecutions = current.executions.length > 0;
+    const hasmovimentations = current.movimentations.length > 0;
 
-    if (hasExecutions) continue;
+    if (hasmovimentations) continue;
 
-    const afterStates = processStates.slice(i + 1);
+    const afterStates = departamentStates.slice(i + 1);
 
-    const hasFlowAdvanced = afterStates.some((state) => state.executions.length > 0);
+    const hasFlowAdvanced = afterStates.some((state) => state.movimentations.length > 0);
 
     if (hasFlowAdvanced) {
       current.status = "SKIPPED";

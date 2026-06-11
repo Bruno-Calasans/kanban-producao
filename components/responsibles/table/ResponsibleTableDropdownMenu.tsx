@@ -9,7 +9,7 @@ import {
 import EditResponsibleDialog from "../dialogs/EditResponsibleDialog";
 import DeleteResponsibleDialog from "../dialogs/DeleteResponsibleDialog";
 import useActiveResponsible from "@/hooks/responsible/useActiveResponsible";
-import useGetAllExecutionsByResponsible from "@/hooks/process-executation/useGetAllExecutionsByResponsible";
+import useGetAllExecutionsByResponsible from "@/hooks/movimentation/useGetAllExecutionsByResponsible";
 
 type ResponsibleDropdownMenuProps = {
   responsible: ResponsibleWithDepartament;

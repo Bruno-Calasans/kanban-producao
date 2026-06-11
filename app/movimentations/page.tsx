@@ -2,7 +2,7 @@
 
 import PageTitle from "@/components/custom/PageTitle";
 import Loader from "@/components/custom/Loader";
-import useGetAllMovimentations from "@/hooks/movimentation/useGetAllMovimentation";
+import useGetAllMovimentations from "@/hooks/production/useGetAllProductions";
 import CreateMovimentationDialog from "@/components/movimentations/dialogs/CreateMovimentationDialog";
 import MovimentationTable from "@/components/movimentations/table/MovimentationTable";
 

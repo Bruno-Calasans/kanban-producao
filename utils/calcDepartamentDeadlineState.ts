@@ -12,7 +12,7 @@ type CalcDepartamentStateData = {
   movimentationProcessStates: ProcessState[];
 };
 
-export type DepartamentState = {
+export type DepartamentDeadlineState = {
   movimentation: MovimentationPopulated;
   departament: Departament;
   processStates: ProcessState[];
@@ -22,7 +22,7 @@ export type DepartamentState = {
   deadline?: MovimentationDeadlinePopulated;
 };
 
-export default function calcDepartamentState({
+export default function calcDepartamentDeadlineState({
   movimentation,
   movimentationDeadlines,
   movimentationProcessStates,
@@ -46,7 +46,7 @@ export default function calcDepartamentState({
     processStatesByDepartament.set(departamentId, current);
   }
 
-  const states: DepartamentState[] = [];
+  const states: DepartamentDeadlineState[] = [];
 
   // cria estados finais
   for (const [departamentId, processStates] of processStatesByDepartament) {

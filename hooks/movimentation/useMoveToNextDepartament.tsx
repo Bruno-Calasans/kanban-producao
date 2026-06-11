@@ -1,7 +1,7 @@
-import { moveToNextDepartament, MoveNextProcessDate } from "@/service/api/processExecutationApi";
+import { moveToNextDepartament, MoveNextProcessDate } from "@/service/api/movimentationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { processExecutationKeys } from "@/constants/processExecutationKeys";
-import { movimentationKeys } from "@/constants/movimentationKeys";
+import { processExecutationKeys } from "@/constants/movimentationKeys";
+import { movimentationKeys } from "@/constants/productionKeys";
 import { productionFlowTemplateKeys } from "@/constants/productionFlowTemplateKeys";
 
 export default function useMoveToNextDepartament() {

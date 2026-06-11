@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import MovimentationDeadlineStatusBadge from "@/components/custom/badges/MovimentationDeadlineStatus";
 import MovimentationDeadlineDatesInput from "../inputs/MovimentationDeadlineDatesInput";
-import { DepartamentState } from "@/utils/calcDepartamentState";
+import { DepartamentState } from "@/utils/calcDepartamentDeadlineState";
 
 type MovimentationDeadlineState = {
   departamentStates: DepartamentState[];

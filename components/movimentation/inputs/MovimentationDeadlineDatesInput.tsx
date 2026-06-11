@@ -14,7 +14,7 @@ import { XIcon } from "lucide-react";
 import { useState } from "react";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
-import { DepartamentState } from "@/utils/calcDepartamentState";
+import { DepartamentState } from "@/utils/calcDepartamentDeadlineState";
 import { cn } from "@/lib/utils";
 
 type MovimentationDeadlineDatesInputProps = {

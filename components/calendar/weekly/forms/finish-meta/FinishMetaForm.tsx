@@ -14,7 +14,7 @@ import {
   ProcessState,
   Responsible,
 } from "@/types/database.type";
-import useMoveToNextDepartament from "@/hooks/process-executation/useMoveToNextDepartament";
+import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
 import { MetaAmountField } from "./fields/MetaAmountField";
 import { MetaDatesField } from "./fields/MetaDatesField";
 import { MetaResponsibleField } from "./fields/MetaResponsibleField";

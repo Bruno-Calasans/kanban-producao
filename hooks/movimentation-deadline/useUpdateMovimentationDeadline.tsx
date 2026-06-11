@@ -5,7 +5,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { movimentationDeadlineKeys } from "@/constants/movimentationDeadlineKeys";
 import { productionFlowTemplateKeys } from "@/constants/productionFlowTemplateKeys";
-import { processExecutationKeys } from "@/constants/processExecutationKeys";
+import { processExecutationKeys } from "@/constants/movimentationKeys";
 
 export default function useUpdateMovimentationDeadline() {
   const queryClient = useQueryClient();

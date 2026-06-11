@@ -1,17 +1,17 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import useCreateProduct from "@/hooks/product/useCreateProduct";
 import { ProductNameField } from "./fields/ProductNameField";
 import { defaultProductFormValues, formSchema, useAppForm } from "./productFormContext";
-import { ProductOpField } from "./fields/ProductOpField";
+import { ProductRefField } from "./fields/ProductRefField";
 import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
 import CreateManySwitch from "@/components/custom/CreateManySwitch";
+import CancelButton from "@/components/custom/buttons/CancelButton";
 
 export default function CreateProductForm() {
   const { closeDialog } = useDialog();
@@ -26,10 +26,10 @@ export default function CreateProductForm() {
     },
     onSubmit: async ({ value }) => {
       try {
-        const { name, op } = value;
+        const { name, ref } = value;
         await mutateAsync({
           name,
-          op,
+          ref,
           is_active: true,
         });
         toast.success("Produto criado com sucesso!");
@@ -56,7 +56,7 @@ export default function CreateProductForm() {
     >
       <FieldGroup>
         <ProductNameField form={form} />
-        <ProductOpField form={form} />
+        <ProductRefField form={form} />
       </FieldGroup>
 
       <div
@@ -64,7 +64,7 @@ export default function CreateProductForm() {
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
         <CreateManySwitch value={many} onChangeValue={setMany} />
-        <ClearButton isLoading={isPending} onclick={() => form.reset()} />
+        <CancelButton isLoading={isPending} onClick={() => closeDialog("create-product")} />
         <ConfirmButton
           hiddenIcon
           isLoading={isPending}

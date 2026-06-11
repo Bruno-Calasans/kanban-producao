@@ -1,7 +1,7 @@
 "use client";
 
 import Loader from "@/components/custom/Loader";
-import getOneMovimentation from "@/hooks/movimentation/useGetOneMovimentation";
+import getOneMovimentation from "@/hooks/production/useGetOneProduction";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import MovimentationPageContent from "@/components/movimentation/MovimentationPageContent";
 import { useParams } from "next/navigation";

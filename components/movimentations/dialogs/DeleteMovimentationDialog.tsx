@@ -1,7 +1,7 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import DeleteButton from "@/components/custom/buttons/DeleteButton";
-import useDeleteMovimentation from "@/hooks/movimentation/useDeleteMovimentation";
+import useDeleteMovimentation from "@/hooks/production/useDeleteProduction";
 import { toast } from "sonner";
 import type { MovimentationPopulated } from "@/types/database.type";
 import useDialog from "@/hooks/dialog/useDialog";

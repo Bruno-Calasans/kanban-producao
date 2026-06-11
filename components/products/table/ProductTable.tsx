@@ -15,8 +15,8 @@ type ProductPageProps = {
 
 const productColumns: ColumnDef<Product>[] = [
   {
-    accessorKey: "op",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,
+    accessorKey: "ref",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Ref" />,
   },
   {
     accessorKey: "name",

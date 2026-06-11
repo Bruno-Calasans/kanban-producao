@@ -5,7 +5,7 @@ import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import PageTitle from "@/components/custom/PageTitle";
 import EditProductionFlowForm from "@/components/production-flow/forms/EditProductionFlowForm";
-import useGetlAllMovimentationsByProductionFlow from "@/hooks/movimentation/useGetlAllMovimentationsByProductionFlow";
+import useGetlAllMovimentationsByProductionFlow from "@/hooks/production/useGetlAllProductionssByProductionFlow";
 import useGetOneProductionFlow from "@/hooks/production-flow/useGetOneProductionFlow";
 import { useParams, redirect } from "next/navigation";
 

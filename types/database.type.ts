@@ -1,45 +1,43 @@
 import { Database } from "@/database.types";
 
+// Departamento
 export type Departament = Database["public"]["Tables"]["Departament"]["Row"];
 
+// Produto
 export type Product = Database["public"]["Tables"]["Product"]["Row"];
 
-export type Process = Database["public"]["Tables"]["Process"]["Row"];
-export type ProcessWithDepartament = Omit<Process, "departament_id"> & {
-  departament: Departament;
-};
-
+// Responsável
 export type Responsible = Database["public"]["Tables"]["Responsible"]["Row"];
 export type ResponsibleWithDepartament = Omit<Responsible, "departament_id"> & {
   departament: Departament;
 };
 
-export type Movimentation = Database["public"]["Tables"]["Movimentation"]["Row"];
-export type MovimentationPopulated = Movimentation & {
+// Produção
+export type Production = Database["public"]["Tables"]["Production"]["Row"];
+export type ProductionPopulated = Production & {
   product: Product;
   productionFlow: ProductionFlow;
 };
 
+// Fluxo de produção
 export type ProductionFlow = Database["public"]["Tables"]["ProductionFlow"]["Row"];
 export type ProductionFlowTemplate = Database["public"]["Tables"]["ProductionFlowTemplate"]["Row"];
-export type ProductionFlowTemplateWithProcess = Omit<ProductionFlowTemplate, "process_id"> & {
-  process: ProcessWithDepartament;
+export type ProductionFlowTemplatePopulated = Omit<ProductionFlowTemplate, "departament_id"> & {
+  departament: Departament;
 };
 
-export type ProcessExecution = Database["public"]["Tables"]["ProcessExecution"]["Row"];
-export type ProcessExecutionPopulated = Omit<
-  ProcessExecution,
-  "movimentation_id" | "product_id" | "process_id" | "from_process_id" | "responsible_id"
-> & {
-  movimentation: Movimentation;
+// Movimentação
+export type Movimentation = Database["public"]["Tables"]["Movimentation"]["Row"];
+export type MovimentationPopulated = Movimentation & {
   product: Product;
-  process: Process | null;
-  from_process: Process | null;
+  production: Production;
+  departament: Departament | null;
+  from_departament: Departament | null;
   responsible: Responsible | null;
 };
 
-export type ProcessExecutionType = ProcessExecution["type"];
-export type ProcessExecutionStatus =
+export type MovimentationType = Movimentation["type"];
+export type MovimentationStatus =
   | "PENDING"
   | "SUCCESS"
   | "IN_PROGRESS"
@@ -48,7 +46,7 @@ export type ProcessExecutionStatus =
   | "REPROCESSING"
   | "EXTERNAL";
 
-export type ProcessStateFlags = {
+export type DepartamentStateFlags = {
   hasReprocess?: boolean;
   hasPendingReprocess?: boolean;
   partiallyReprocessed?: boolean;
@@ -58,24 +56,24 @@ export type ProcessStateFlags = {
   partiallyExternal?: boolean;
 };
 
-export type ProcessState = {
-  process: ProcessWithDepartament;
+export type DepartamentState = {
   inputAmount: number;
   outputAmount: number;
   externalAmount: number;
   reprocessAmount: number;
   avaliableAmount: number;
   forwardAmount: number;
-  status: ProcessExecutionStatus;
-  flowTemplates: ProductionFlowTemplateWithProcess[];
-  movimentation: MovimentationPopulated;
-  previousProcess: ProcessWithDepartament | null;
-  nextProcess: ProcessWithDepartament | null;
-  template: ProductionFlowTemplateWithProcess;
-  executions: ProcessExecutionPopulated[];
-  inputExecutions: ProcessExecutionPopulated[];
-  outputExecutions: ProcessExecutionPopulated[];
-  flags?: ProcessStateFlags;
+  status: MovimentationStatus;
+  flowTemplates: ProductionFlowTemplatePopulated[];
+  production: ProductionPopulated;
+  departament: Departament;
+  previousDepartament: Departament | null;
+  nextDepartament: Departament | null;
+  template: ProductionFlowTemplatePopulated;
+  movimentations: MovimentationPopulated[];
+  inputMovimentations: MovimentationPopulated[];
+  outputMovimentations: MovimentationPopulated[];
+  flags?: DepartamentStateFlags;
 };
 
 export type ProductMovimentation = {
@@ -83,19 +81,20 @@ export type ProductMovimentation = {
   movimentations: MovimentationPopulated[];
 };
 
-export type MovimentationDeadline = Database["public"]["Tables"]["MovimentationDeadline"]["Row"];
+export type ProductionDeadline = Database["public"]["Tables"]["ProductionDeadline"]["Row"];
 
-export type MovimentationDeadlinePopulated = Omit<
-  MovimentationDeadline,
+export type ProductionDeadlinePopulated = Omit<
+  ProductionDeadline,
   "departament_id" | "movimention_id"
 > & {
   departament: Departament;
   movimentation: MovimentationPopulated;
 };
 
-export type Meta = Database["public"]["Tables"]["Meta"]["Row"];
-export type MetaPopulated = Omit<Meta, "deadline_id"> & {
-  deadline: MovimentationDeadline;
+// Objetivo diário
+export type DailyGoal = Database["public"]["Tables"]["DailyGoal"]["Row"];
+export type DailyGoalPopulated = Omit<DailyGoal, "deadline_id"> & {
+  deadline: ProductionDeadline;
 };
 
-export type MovimentationStatus = Database["public"]["Tables"]["Movimentation"]["Row"]["status"];
+export type ProductionStatus = Database["public"]["Tables"]["Production"]["Row"]["status"];

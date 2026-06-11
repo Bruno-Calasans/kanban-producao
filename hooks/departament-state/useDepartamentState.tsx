@@ -6,7 +6,7 @@ import {
   MovimentationPopulated,
   ProcessState,
 } from "@/types/database.type";
-import calcDepartamentState from "@/utils/calcDepartamentState";
+import ca from "@/utils/calcDepartamentDeadlineState";
 
 type UseDepartamentStateProps = {
   movimentation: MovimentationPopulated;

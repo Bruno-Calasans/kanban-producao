@@ -10,7 +10,7 @@ import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.t
 import { FinishedDeadlineDatesField } from "./fields/FinishedDeadlineDatesField";
 import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
 import { differenceInDays } from "date-fns";
-import useMoveToNextDepartament from "@/hooks/process-executation/useMoveToNextDepartament";
+import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
 
 type FinishDeadlineFormProps = {
   processStates: ProcessState[];

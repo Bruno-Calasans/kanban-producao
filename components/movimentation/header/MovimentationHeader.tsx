@@ -8,7 +8,7 @@ import {
 import MovimentationHeaderMainInfo from "./MovimentationHeaderMainInfo";
 import MovimentationHeaderActions from "./MovimentationHeaderActions";
 import MovimentationHeaderAlerts from "./MovimentationHeaderAlerts";
-import { DepartamentState } from "@/utils/calcDepartamentState";
+import { DepartamentState } from "@/utils/calcDepartamentDeadlineState";
 
 type MovimentationHeadergProps = {
   movimentation: MovimentationPopulated;

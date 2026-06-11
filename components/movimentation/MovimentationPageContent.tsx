@@ -2,7 +2,7 @@ import { MovimentationPopulated } from "@/types/database.type";
 import MovimentationInfoHeader from "./header/MovimentationHeader";
 import MovimentationTabs from "./tabs/MovimentationTab";
 import useProcessState from "@/hooks/process-state/useProcessState";
-import useGetAllProcessExecutionsByMovimentation from "@/hooks/process-executation/useGetAllProcessExecutionsByMovimentation";
+import useGetAllProcessExecutionsByMovimentation from "@/hooks/movimentation/useGetAllProcessExecutionsByMovimentation";
 import useGetAllMovimentationDeadlinesByMovimentation from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlinesByMovimentation";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import Loader from "@/components/custom/Loader";

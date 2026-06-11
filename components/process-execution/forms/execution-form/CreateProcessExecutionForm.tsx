@@ -9,7 +9,7 @@ import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
 import { ProcessState, Responsible } from "@/types/database.type";
-import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
+import useCreateProcessExecution from "@/hooks/movimentation/useCreateMovimentation";
 import { ExecutionAmountField } from "./fields/ExecutionAmountField";
 import { ExecutionResponsibleField } from "./fields/ExecutionResponsibleField";
 import ExecutionState from "../../ExecutionStateMsg";

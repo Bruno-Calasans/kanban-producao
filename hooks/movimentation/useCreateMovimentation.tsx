@@ -1,18 +1,35 @@
-import { createMovimentation, CreateMovimentationtData } from "@/service/api/movimentationApi";
+import { CreateMovimentationData } from "@/service/api/movimentationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createMovimentationAction } from "@/app/actions/movimentation/create";
+import { ProductionPopulated } from "@/types/database.type";
 import { movimentationKeys } from "@/constants/movimentationKeys";
-import { productKeys } from "@/constants/productKeys";
+import { productionKeys } from "@/constants/productionKeys";
 
 export default function useCreateMovimentation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateMovimentationtData) => createMovimentation(data),
-    onSuccess: () => {
+    mutationFn: ({
+      createData,
+      production,
+    }: {
+      createData: CreateMovimentationData;
+      production: ProductionPopulated;
+    }) => createMovimentationAction(createData, production),
+    onSuccess: ({ data }) => {
       queryClient.invalidateQueries({
-        queryKey: movimentationKeys.lists(),
+        queryKey: productionKeys.lists(),
         exact: false,
-        refetchType: "active",
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: movimentationKeys.detail(data.id),
+        exact: false,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: movimentationKeys.list(data.id),
+        exact: false,
       });
     },
   });

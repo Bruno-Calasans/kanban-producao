@@ -1,10 +1,7 @@
-import {
-  updateInitialExecution,
-  UpdateInitialExecutionData,
-} from "@/service/api/processExecutationApi";
+import { updateInitialExecution, UpdateInitialExecutionData } from "@/service/api/movimentationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { movimentationKeys } from "@/constants/movimentationKeys";
-import { processExecutationKeys } from "@/constants/processExecutationKeys";
+import { movimentationKeys } from "@/constants/productionKeys";
+import { processExecutationKeys } from "@/constants/movimentationKeys";
 
 export default function useUpdateInicialExecution() {
   const queryClient = useQueryClient();

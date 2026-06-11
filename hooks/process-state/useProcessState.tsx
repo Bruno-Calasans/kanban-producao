@@ -3,7 +3,7 @@
 
 import { MovimentationPopulated } from "@/types/database.type";
 import useGetAllProductionFlowTemplates from "../production-flow-template/useGetAllProductionFlowTemplates";
-import useGetAllProcessExecutionsByMovimentation from "../process-executation/useGetAllProcessExecutionsByMovimentation";
+import useGetAllProcessExecutionsByMovimentation from "../movimentation/useGetAllProcessExecutionsByMovimentation";
 import { useMemo } from "react";
 import { calcProcessStates } from "@/utils/calcProcessStates";
 

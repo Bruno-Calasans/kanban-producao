@@ -9,7 +9,7 @@ import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
 import { ProcessState, ProcessWithDepartament } from "@/types/database.type";
-import useCreateProcessExecution from "@/hooks/process-executation/useCreateProcessExecution";
+import useCreateProcessExecution from "@/hooks/movimentation/useCreateMovimentation";
 import { SkipAmountField } from "./fields/SkipAmountField";
 import { SkipProcessField } from "./fields/SkipProcessField";
 import { SkipReasonField } from "./fields/SkipReasonField";

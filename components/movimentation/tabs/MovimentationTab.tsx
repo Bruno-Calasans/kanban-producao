@@ -12,7 +12,7 @@ import ProcessStateTable from "../table/ProcessStateTable";
 import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
 import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
 import { Badge } from "@/components/ui/badge";
-import { DepartamentState } from "@/utils/calcDepartamentState";
+import { DepartamentState } from "@/utils/calcDepartamentDeadlineState";
 
 type MovimentationTabsProps = {
   movimentation: MovimentationPopulated;

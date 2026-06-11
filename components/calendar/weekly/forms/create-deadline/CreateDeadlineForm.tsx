@@ -15,7 +15,7 @@ import useDialog from "@/hooks/dialog/useDialog";
 import useCreateMovimentationDeadline from "@/hooks/movimentation-deadline/useCreateMovimentationDeadline";
 import { MovimentationSelectorField } from "./fields/MovimentationSelectorField";
 import MovimentationDeadlinesTable from "@/components/movimentation/table/MovimentationDeadlinesTable";
-import calcDepartamentState from "@/utils/calcDepartamentState";
+import calcDepartamentState from "@/utils/calcDepartamentDeadlineState";
 
 type CreateDeadlineFormProps = {
   movimentations: MovimentationPopulated[];

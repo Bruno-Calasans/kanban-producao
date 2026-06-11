@@ -10,7 +10,7 @@ import { InfoAlert } from "@/components/custom/alerts/InfoAlert";
 import { differenceInDays } from "date-fns";
 import ReturnProcessExecutionDialog from "@/components/process-execution/dialogs/ReturnProcessExecutionDialog";
 import useExternalProcessState from "@/hooks/external-process-state/useExternalProcess";
-import { DepartamentState } from "@/utils/calcDepartamentState";
+import { DepartamentState } from "@/utils/calcDepartamentDeadlineState";
 
 type MovimentationHeaderAlertsProps = {
   movimentation: MovimentationPopulated;

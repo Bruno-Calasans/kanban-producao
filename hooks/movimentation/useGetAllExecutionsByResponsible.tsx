@@ -1,6 +1,6 @@
-import { getAllExecutionsByResponsible } from "@/service/api/processExecutationApi";
+import { getAllExecutionsByResponsible } from "@/service/api/movimentationApi";
 import { useQuery } from "@tanstack/react-query";
-import { movimentationKeys } from "@/constants/movimentationKeys";
+import { movimentationKeys } from "@/constants/productionKeys";
 
 export default function useGetAllExecutionsByResponsible(responsibleId: number) {
   return useQuery({

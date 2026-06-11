@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllExecutionsByProcess } from "@/service/api/processExecutationApi";
-import { processExecutationKeys } from "@/constants/processExecutationKeys";
+import { getAllExecutionsByProcess } from "@/service/api/movimentationApi";
+import { processExecutationKeys } from "@/constants/movimentationKeys";
 
 export default function useGetAllProcessExecutionsByProcess(processId: number) {
   return useQuery({

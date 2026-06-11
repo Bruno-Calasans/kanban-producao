@@ -4,7 +4,7 @@ import PageTitle from "@/components/custom/PageTitle";
 import type { ProductMovimentation } from "@/types/database.type";
 import Loader from "@/components/custom/Loader";
 import ResumeTable from "@/components/resume/ResumeTable";
-import useGetAllMovimentations from "@/hooks/movimentation/useGetAllMovimentation";
+import useGetAllMovimentations from "@/hooks/production/useGetAllProductions";
 import { useMemo } from "react";
 
 export default function Home() {

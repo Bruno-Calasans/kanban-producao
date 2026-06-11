@@ -4,8 +4,8 @@ import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import ProductInfoHeader from "@/components/product/ProductInfoHeader";
 import ProductInfoTabs from "@/components/product/ProductInfoTabs";
-import useGetAllMovimentationsByProduct from "@/hooks/movimentation/useGetAllMovimentationsByProduct";
-import useGetAllProcessExecutationsByProduct from "@/hooks/process-executation/useGetAllProcessExecutionsByProduct";
+import useGetAllMovimentationsByProduct from "@/hooks/production/useGetAllProductionsByProduct";
+import useGetAllProcessExecutationsByProduct from "@/hooks/movimentation/useGetAllProcessExecutionsByProduct";
 import useGetOneProduct from "@/hooks/product/useGetOneProduct";
 import { useParams } from "next/navigation";
 

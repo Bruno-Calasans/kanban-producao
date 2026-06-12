@@ -43,8 +43,8 @@ export default function ProductionFlowDropdownMenu({
   const isError = productionFlowerror || defaultProductionFlowError;
   const isPending = isProductsPending || isDefaultProductionFlowPending;
   const canMarkAsDefault = productionFlow.is_active && !productionFlow.is_default;
-  const canEdit = movimentations.length == 0;
-  const canDelete = movimentations.length == 0;
+  const canEdit = !isPending && movimentations.length == 0;
+  const canDelete = !isPending && movimentations.length == 0;
 
   return (
     <DropdownMenu>

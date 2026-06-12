@@ -10,9 +10,9 @@ import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import { ProductionFlowNameField } from "./fields/ProductionFlowNameField";
 import { ProductionFlowDescField } from "./fields/ProductionFlowDescField";
-import { ProductionFlowProcessesField } from "./fields/ProductionFlowProcessesField";
+import { ProductionFlowDepartamentsField } from "./fields/ProductionFlowDepartamentsField";
 import { useState } from "react";
-import { ProcessWithDepartament, ProductionFlow } from "@/types/database.type";
+import { Departament, ProductionFlow } from "@/types/database.type";
 import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
 import { useRouter } from "next/navigation";
 import { ProductionFlowUseDefaultField } from "./fields/ProductionFlowUseDefaultField";
@@ -26,6 +26,7 @@ type CreateProductionFlowFormProps = {
 
 export default function EditProductionFlowForm({ productionFlow }: CreateProductionFlowFormProps) {
   const router = useRouter();
+  const [selectedDepartaments, setSelectedDepartaments] = useState<Departament[]>([]);
 
   const { mutateAsync: updateProductionFlow, isPending: isProductionFlowPending } =
     useUpdateProductionFlow();
@@ -43,10 +44,9 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
   const { data, isPending: isProductionFlowTemplatesPending } = useGetAllProductionFlowTemplates(
     productionFlow.id,
   );
-  const [selectedProcesses, setSelectedProcesses] = useState<ProcessWithDepartament[]>([]);
 
   const productionFlowTemplates = data?.data || [];
-  const defaultSelectedProcesses = productionFlowTemplates.map((template) => template.process);
+  const defaultSelectedProcesses = productionFlowTemplates.map((template) => template.departament);
   const isPending =
     isProductionFlowPending ||
     isProductionFlowTemplatesPending ||
@@ -86,10 +86,9 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
 
         // criar novos processos do fluxo de produção com os processos selecionados
         await createProductionFlowTemplateAsync(
-          selectedProcesses.map((process, index) => ({
+          selectedDepartaments.map((departament, index) => ({
             production_flow_id: productionFlow.id,
-            departament_id: process.departament.id,
-            process_id: process.id,
+            departament_id: departament.id,
             sequence: index,
           })),
         );
@@ -110,7 +109,7 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
       name: productionFlow.name,
       desc: productionFlow.desc || "",
       useDefault: productionFlow.is_default || false,
-      processNames: defaultSelectedProcesses.map((process) => process.name) || [],
+      departamentNames: defaultSelectedProcesses.map((process) => process.name) || [],
     });
   };
 
@@ -127,11 +126,11 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
         <ProductionFlowDescField form={form} />
         <ProductionFlowUseDefaultField form={form} />
         {!isProductionFlowTemplatesPending && (
-          <ProductionFlowProcessesField
+          <ProductionFlowDepartamentsField
             form={form}
-            defaultProcesses={defaultSelectedProcesses}
-            selectedProcesses={selectedProcesses}
-            onSelect={setSelectedProcesses}
+            defaultDepartaments={defaultSelectedProcesses}
+            selectedDepartaments={selectedDepartaments}
+            onSelect={setSelectedDepartaments}
           />
         )}
       </FieldGroup>

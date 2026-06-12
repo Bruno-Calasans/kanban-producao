@@ -6,25 +6,27 @@ import { cn } from "@/lib/utils";
 import { ProductionFlow } from "@/types/database.type";
 import { useState } from "react";
 
-type ProductionFlowProcessesProps = {
+type ProductionFlowDepartamentsProps = {
   productionFlow: ProductionFlow;
 };
 
-export default function ProductionFlowProcesses({ productionFlow }: ProductionFlowProcessesProps) {
+export default function ProductionFlowDepartaments({
+  productionFlow,
+}: ProductionFlowDepartamentsProps) {
   const { data, isPending } = useGetAllProductionFlowTemplates(productionFlow.id);
   const templates = data?.data || [];
 
   const canShowExpandButton = templates.length > 3;
   const [expand, setExpand] = useState(false);
 
-  if (isPending) return <Loader title="Carregando processos" />;
+  if (isPending) return <Loader title="Carregando departamentos" />;
 
   return (
     <div>
       <div className={cn("flex flex-col gap-1 overflow-hidden max-h-20", expand && "max-h-fit")}>
         {templates.map((template) => (
           <Badge key={template.id}>
-            {template.sequence} - {template.process.name}
+            {template.sequence} - {template.departament.name}
           </Badge>
         ))}
       </div>

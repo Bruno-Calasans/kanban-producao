@@ -5,10 +5,10 @@ import PageMsg from "@/components/custom/msgs/PageMsg";
 import PageTitle from "@/components/custom/PageTitle";
 import CreateProductionFlowDialog from "@/components/production-flow/dialogs/CreateProductionFlowDialog";
 import ProductionFlowTable from "@/components/production-flow/table/ProductionFlowTable";
-import useGetAllFlowTemplates from "@/hooks/production-flow/useGetAllProductionFlow";
+import useGetAllProductionFlow from "@/hooks/production-flow/useGetAllProductionFlow";
 
 export default function ProductionFlowsPage() {
-  const { data, isPending, error } = useGetAllFlowTemplates();
+  const { data, isPending, error } = useGetAllProductionFlow();
   const productionFlows = data?.data || [];
 
   if (isPending) {
@@ -29,7 +29,7 @@ export default function ProductionFlowsPage() {
   return (
     <section>
       <PageTitle>Fluxos de Produção</PageTitle>
-      <p>Defina como o produto vai transitar entre os departamentos e processos.</p>
+      <p>Defina como o produto vai transitar entre os departamentos.</p>
       <div className="flex flex-col">
         <CreateProductionFlowDialog />
         <ProductionFlowTable productionFlows={productionFlows} />

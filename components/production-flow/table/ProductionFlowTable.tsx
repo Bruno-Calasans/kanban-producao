@@ -7,7 +7,7 @@ import DataTableColumnHeader from "@/components/custom/data-table/DataTableColum
 import sortByDefault from "@/utils/sortByDefault";
 import DefaultBadge from "@/components/custom/badges/DefaultBadge";
 import ProductionFlowDropdownMenu from "./ProductionFlowDropdownMenu";
-import ProductionFlowProcesses from "./ProductionFlowProcesses";
+import ProductionFlowDepartaments from "./ProductionFlowDepartaments";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 import ActiveBadge from "@/components/custom/badges/ActiveBadge";
 import sortByIsActive from "@/utils/sortByIsActive";
@@ -35,16 +35,16 @@ const productionFlowColumns: ColumnDef<ProductionFlow>[] = [
     accessorKey: "desc",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Desc" />,
     cell: ({ row: { original: productionFlow } }) => (
-      <p title={productionFlow.desc || ""} className="overflow-hidden text-ellipsis">
+      <p title={productionFlow.desc || ""} className="w-32 overflow-hidden text-ellipsis">
         {productionFlow.desc}
       </p>
     ),
   },
   {
-    id: "processes",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Processos " />,
+    id: "departaments",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Departamentos " />,
     cell: ({ row: { original } }) => {
-      return <ProductionFlowProcesses productionFlow={original} />;
+      return <ProductionFlowDepartaments productionFlow={original} />;
     },
   },
   {

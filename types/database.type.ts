@@ -83,12 +83,9 @@ export type ProductMovimentation = {
 
 export type ProductionDeadline = Database["public"]["Tables"]["ProductionDeadline"]["Row"];
 
-export type ProductionDeadlinePopulated = Omit<
-  ProductionDeadline,
-  "departament_id" | "movimention_id"
-> & {
+export type ProductionDeadlinePopulated = ProductionDeadline & {
   departament: Departament;
-  movimentation: MovimentationPopulated;
+  production: ProductionPopulated;
 };
 
 // Objetivo diário

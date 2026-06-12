@@ -4,7 +4,7 @@ import * as z from "zod";
 
 export const formSchema = z.object({
   amount: ZodNumberField({ min: 1, minError: "Quantidade mínima é 1" }),
-  externalProcessName: z.string().nonempty("Processo é obrigatório"),
+  externalDepartamentName: z.string().nonempty("Processo é obrigatório"),
   useMaxAmount: z.boolean(),
   plannedEndAt: z.string().optional(),
 });
@@ -14,7 +14,7 @@ export type MoveExternalFormSchema = z.infer<typeof formSchema>;
 export const defaultMoveExternalFormValues: MoveExternalFormSchema = {
   amount: 1,
   useMaxAmount: true,
-  externalProcessName: "",
+  externalDepartamentName: "",
   plannedEndAt: "",
 };
 

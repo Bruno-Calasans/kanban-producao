@@ -6,8 +6,8 @@ export default function useUpdateProduction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { movimentationId: number; updateData: UpdateProductionData }) =>
-      updateProduction(data.movimentationId, data.updateData),
+    mutationFn: (data: { productionId: number; updateData: UpdateProductionData }) =>
+      updateProduction(data.productionId, data.updateData),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: productionKeys.lists(),

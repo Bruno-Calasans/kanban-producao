@@ -12,7 +12,7 @@ import {
 import { defaultCreateDeadlineForm, useAppForm, formSchema } from "./createDeadlineFormContext";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import useCreateMovimentationDeadline from "@/hooks/movimentation-deadline/useCreateMovimentationDeadline";
+import useCreateMovimentationDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
 import { MovimentationSelectorField } from "./fields/MovimentationSelectorField";
 import MovimentationDeadlinesTable from "@/components/movimentation/table/MovimentationDeadlinesTable";
 import calcDepartamentState from "@/utils/calcDepartamentDeadlineState";

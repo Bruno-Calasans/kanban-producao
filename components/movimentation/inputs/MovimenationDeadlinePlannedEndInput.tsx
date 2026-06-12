@@ -6,10 +6,10 @@ import {
   MovimentationPopulated,
 } from "@/types/database.type";
 import { DatePickerInput } from "../../custom/DatePicker";
-import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
+import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
 import errorHandler from "@/utils/errorHandler";
 import { toast } from "sonner";
-import useCreateMovimentationDeadline from "@/hooks/movimentation-deadline/useCreateMovimentationDeadline";
+import useCreateMovimentationDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
 import Loader from "../../custom/Loader";
 import { XIcon } from "lucide-react";
 

@@ -13,7 +13,6 @@ export type MoveNextDepartamentData = {
 };
 
 export type UpdateInitialMovimentation = {
-  movimentationId: number;
   departamentId: number;
   amount: number;
 };
@@ -154,7 +153,6 @@ export async function getAllMovimentationsByResponsible(responsibleId: number) {
 }
 
 export async function updateInitialMovimentation({
-  movimentationId,
   departamentId,
   amount,
 }: UpdateInitialMovimentation) {
@@ -165,7 +163,6 @@ export async function updateInitialMovimentation({
       amount,
     })
     .select()
-    .eq("movimentation_id", movimentationId)
     .eq("type", "INIT")
     .single()
     .throwOnError();
@@ -193,7 +190,7 @@ export async function moveToNextDepartament({
 
     const data = await createMovimentation({
       amount: amountToMove,
-      from_departament: state.departament.id,
+      from_departament_id: state.departament.id,
       production_id: state.production.id,
       departament_id: state.nextDepartament!.id,
       product_id: state.production.product.id,

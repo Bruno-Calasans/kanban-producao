@@ -1,29 +1,27 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import { Button } from "@/components/ui/button";
-import EditMovimentationForm from "../../movimentations/forms/EditMovimentationForm";
 import { Edit2Icon, Trash2Icon, BanIcon } from "lucide-react";
-import DeleteMovimentationDialog from "../../movimentations/dialogs/DeleteMovimentationDialog";
-import CancelMovimentationDialog from "../../movimentations/dialogs/CancelMovimentationDialog";
-import { MovimentationPopulated } from "@/types/database.type";
+import { ProductionPopulated } from "@/types/database.type";
+import DeleteProductionDialog from "@/components/productions/dialogs/DeleteProductionDialog";
+import CancelProductionDialog from "@/components/productions/dialogs/CancelProductionDialog";
+import EditProductionForm from "@/components/productions/forms/EditProductionForm";
 
-type MovimentationHeaderActionsProps = {
-  movimentation: MovimentationPopulated;
+type ProductionHeaderActionsProps = {
+  production: ProductionPopulated;
 };
 
-export default function MovimentationHeaderActions({
-  movimentation,
-}: MovimentationHeaderActionsProps) {
-  const movimentationStatus = movimentation.status;
-  const canEdit = movimentationStatus == "PENDING";
-  const canDelete = movimentationStatus == "PENDING";
-  const canCancel = movimentationStatus != "CANCELLED" && movimentationStatus != "COMPLETED";
+export default function ProductionHeaderActions({ production }: ProductionHeaderActionsProps) {
+  const productionStatus = production.status;
+  const canEdit = productionStatus == "PENDING";
+  const canDelete = productionStatus == "PENDING";
+  const canCancel = productionStatus != "CANCELLED" && productionStatus != "COMPLETED";
 
   return (
-    <div className="flex gap-2 border-black">
+    <div className="flex gap-2 border-black my-3">
       {canEdit && (
         <CustomDialog
-          id="edit-movimentation"
-          title="Editar Movimentação"
+          id={`edit-production-${production.id}`}
+          title="Editar Produção"
           trigger={
             <Button className="m-0" size="xs">
               <Edit2Icon />
@@ -31,14 +29,14 @@ export default function MovimentationHeaderActions({
             </Button>
           }
         >
-          <EditMovimentationForm movimentation={movimentation} />
+          <EditProductionForm production={production} />
         </CustomDialog>
       )}
 
       {canCancel && (
         <CustomDialog
-          id="cancel-movimentation"
-          title="Editar Movimentação"
+          id={`cancel-production-${production.id}`}
+          title="Editar Produção"
           trigger={
             <Button variant="destructive" className="m-0" size="xs">
               <BanIcon />
@@ -46,14 +44,14 @@ export default function MovimentationHeaderActions({
             </Button>
           }
         >
-          <CancelMovimentationDialog movimentation={movimentation} />
+          <CancelProductionDialog production={production} />
         </CustomDialog>
       )}
 
       {canDelete && (
         <CustomDialog
-          id="delete-movimentation"
-          title="Excluir Movimentação"
+          id={`delete-production-${production.id}`}
+          title="Excluir Produção"
           trigger={
             <Button variant="destructive" className="m-0" size="xs">
               <Trash2Icon />
@@ -61,7 +59,7 @@ export default function MovimentationHeaderActions({
             </Button>
           }
         >
-          <DeleteMovimentationDialog movimentation={movimentation} />
+          <DeleteProductionDialog production={production} />
         </CustomDialog>
       )}
     </div>

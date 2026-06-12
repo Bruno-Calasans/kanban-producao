@@ -1,6 +1,6 @@
 import CustomTooltip from "@/components/custom/CustomTooltip";
 import { Badge } from "@/components/ui/badge";
-import { DepartamenStatus } from "@/utils/calcDepartamentStatus";
+import { DepartamenStatus } from "@/utils/calcDepartamentDeadlineStatus";
 
 type MovimentationDeadlineStatusBadgeProps = {
   status: DepartamenStatus;

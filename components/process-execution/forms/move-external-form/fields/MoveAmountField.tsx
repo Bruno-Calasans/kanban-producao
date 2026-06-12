@@ -60,7 +60,7 @@ export const MoveAmountField = withForm({
                       onFocus={(e) => field.handleChange("" as unknown as number)}
                     />
                     <FieldDescription>
-                      Define a quantidade que será movida para o processo externo.
+                      Define a quantidade que será movida para o departamento externo.
                     </FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>

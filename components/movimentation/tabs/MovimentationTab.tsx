@@ -2,42 +2,44 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  MovimentationDeadlinePopulated,
+  DepartamentState,
   MovimentationPopulated,
-  ProcessExecutionPopulated,
-  ProcessState,
+  ProductionDeadlinePopulated,
+  ProductionPopulated,
 } from "@/types/database.type";
 import { useState } from "react";
-import ProcessStateTable from "../table/ProcessStateTable";
-import ProcessExecutationTable from "@/components/product/tables/ProcessExecutationTable";
-import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import { Badge } from "@/components/ui/badge";
-import { DepartamentState } from "@/utils/calcDepartamentDeadlineState";
+import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
+import DepartamentStateTable from "../table/DepartamentStateTable";
+import MovimentationTable from "@/components/product/tables/MovimentationTable";
 
 type MovimentationTabsProps = {
-  movimentation: MovimentationPopulated;
-  processStates: ProcessState[];
-  processExecutions: ProcessExecutionPopulated[];
+  production: ProductionPopulated;
+  movimentations: MovimentationPopulated[];
+  deadlines: ProductionDeadlinePopulated[];
   departamentStates: DepartamentState[];
-  deadlines: MovimentationDeadlinePopulated[];
+  departamentDeadlineStates: DepartamentDeadlineState[];
 };
 
 const TABS = ["ACTIONS", "DEADLINE", "HISTORY"];
 
 export default function MovimentationTabs({
-  processStates,
-  processExecutions,
   departamentStates,
+  departamentDeadlineStates,
+  movimentations,
+  deadlines,
+  production,
 }: MovimentationTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
-  const expiredDepartaments = departamentStates.filter((dpt) => dpt.status === "EXPIRED");
+  const expiredDepartaments = departamentDeadlineStates.filter((dpt) => dpt.status === "EXPIRED");
 
   return (
     <Tabs value={selectedTab} onValueChange={setSelectedTab}>
       <div className="flex justify-between">
         <TabsList className="w-full">
           <TabsTrigger className="m-2" value={TABS[0]}>
-            Ações
+            Departamentos
           </TabsTrigger>
 
           <TabsTrigger className="m-2" value={TABS[1]}>
@@ -48,21 +50,21 @@ export default function MovimentationTabs({
           </TabsTrigger>
 
           <TabsTrigger className="m-2" value={TABS[2]}>
-            Histórico de Execuções
+            Histórico de Movimentações
           </TabsTrigger>
         </TabsList>
       </div>
 
       <TabsContent value={TABS[0]}>
-        <ProcessStateTable processStates={processStates} />
+        <DepartamentStateTable departamentStates={departamentStates} />
       </TabsContent>
 
       <TabsContent value={TABS[1]}>
-        <MovimentationDeadlinesTable departamentStates={departamentStates} />
+        <MovimentationDeadlinesTable departamentDeadlineStates={departamentDeadlineStates} />
       </TabsContent>
 
       <TabsContent value={TABS[2]}>
-        <ProcessExecutationTable hideMovimentationColumn processExecutions={processExecutions} />
+        <MovimentationTable movimentations={movimentations} hideMovimentationColumn />
       </TabsContent>
     </Tabs>
   );

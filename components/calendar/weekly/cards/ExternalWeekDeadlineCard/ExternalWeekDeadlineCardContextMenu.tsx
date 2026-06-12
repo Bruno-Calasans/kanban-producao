@@ -24,7 +24,7 @@ export default function ExternalWeekDeadlineCardContextMenu({
   departamentExternalState,
   hidden,
 }: ExternalWeekDeadlineCardContextMenuProps) {
-  const avaliableProcesses = processStates.map((state) => state.process);
+  const avaliableDepartaments = processStates.map((state) => state.de);
 
   return (
     <ContextMenu>
@@ -32,8 +32,8 @@ export default function ExternalWeekDeadlineCardContextMenu({
       <ContextMenuContent hidden={hidden}>
         <ContextMenuItem asChild>
           <ReturnDialog
-            externalProcessState={departamentExternalState}
-            avaliableProcesses={avaliableProcesses}
+            externalDepartamentState={departamentExternalState}
+            avaliableDepartaments={avaliableDepartaments}
             deadline={deadline}
           />
         </ContextMenuItem>

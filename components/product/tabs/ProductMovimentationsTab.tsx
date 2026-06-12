@@ -1,6 +1,6 @@
 "use client";
 
-import MovimentationTable from "@/components/movimentations/table/MovimentationTable";
+import MovimentationTable from "@/components/productions/table/ProductionTable";
 import { MovimentationPopulated, Product } from "@/types/database.type";
 
 type ProductMovimentationTabProps = {

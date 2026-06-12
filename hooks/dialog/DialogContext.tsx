@@ -3,40 +3,58 @@
 import { createContext, useState } from "react";
 
 export type DialogID =
+  // Produto
   | "create-product"
-  | "edit-product"
-  | "delete-product"
+  | `edit-product-${number}`
+  | `update-product-${number}`
+  | `delete-product-${number}`
+
+  // Departamento
   | "create-departament"
   | "edit-departament"
   | "delete-departament"
+
+  // Processo
   | "create-process"
   | "edit-process"
   | "delete-process"
+
+  // Responsável
   | "create-responsible"
   | "edit-responsible"
   | "delete-responsible"
-  | "create-movimentation"
-  | "edit-movimentation"
-  | "delete-movimentation"
-  | "cancel-movimentation"
+
+  // Produção
+  | "create-production"
+  | `edit-production-${number}`
+  | `update-production-${number}`
+  | `cancel-production-${number}`
+  | `delete-production-${number}`
+
+  // Fluxo de Produção
   | "create-production-flow"
   | "edit-production-flow"
   | "delete-production-flow"
+
+  // excluir
   | "create-process-execution"
   | "edit-process-execution"
   | "delete-process-execution"
   | `create-process-execution-${number}`
-  | `create-reprocess-execution-${number}`
-  | `skip-process-execution-${number}`
-  | `move-external-process-execution-${number}`
+
+  // Prazos
+  | `create-deadline`
+  | `edit-deadline-${number}`
   | `finish-deadline-${number}`
   | `finish-meta-${number | string}`
-  | `return-process-execution-${number}`
+
+  // Movimentação
   | `create-movimentation-${number}`
-  | `edit-movimentation-${number}`
-  | `remove-movimentation-${number}`
-  | `create-deadline`
-  | `edit-deadline-${number}`;
+  | `delete-movimentation-${number}`
+  | `external-movimentation-${number}`
+  | `return-movimentation-${number}`
+  | `skip-movimentation-${number}`
+  | `reprocess-movimentation-${number}`;
 
 export type DialogContext = {
   dialog: DialogID | null;

@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DAYS_OF_WEEK } from "@/constants/date";
-import useGetAllMovimentationDeadlineInRange from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlineInRange";
+import useGetAllMovimentationDeadlineInRange from "@/hooks/production-deadline/useGetAllProductionDeadlinesInRange";
 import useGetAllMovimentationsProcesStates from "@/hooks/movimentation-process-state/useGetAllMovimentationsProcesStates";
 import useWeek from "@/hooks/use-week/useWeek";
 import { cn } from "@/lib/utils";

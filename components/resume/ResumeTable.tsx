@@ -4,7 +4,7 @@ import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ProductMovimentation } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import MovimentationStatusBadge from "../custom/badges/MovimentationStatusBadge";
+import MovimentationStatusBadge from "../custom/badges/ProductionStatusBadge";
 import MovimentationMoreDetails from "./MovimentationMoreDetails";
 import Link from "next/link";
 import MovimentationDepartamentDetails from "./MovimentationDepartamentDetails";

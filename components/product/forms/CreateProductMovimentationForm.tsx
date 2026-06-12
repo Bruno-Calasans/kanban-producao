@@ -15,7 +15,7 @@ import ClearButton from "@/components/custom/buttons/ClearButton";
 import useCreateProcessExecution from "@/hooks/movimentation/useCreateMovimentation";
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
 import { ProductProductMovimentationAmountField } from "./fields/ProductMovimentationAmountField";
-import { MovimentationProductionFlowField } from "@/components/movimentations/forms/fields/MovimentationProductionFlowField";
+import { MovimentationProductionFlowField } from "@/components/productions/forms/fields/ProductionFlowField";
 import { useState } from "react";
 import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
 

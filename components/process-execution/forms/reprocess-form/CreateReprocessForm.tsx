@@ -6,35 +6,35 @@ import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { ProcessState, ProcessWithDepartament } from "@/types/database.type";
+import { Departament, DepartamentState } from "@/types/database.type";
 import useCreateProcessExecution from "@/hooks/movimentation/useCreateMovimentation";
 import { ReprocessExecutionSchema, useAppForm, formSchema } from "./reprocessExecutionFormContext";
 import { ReprocessAmountField } from "./fields/ReprocessAmountField";
-import { ReprocessProcessField } from "./fields/ReprocessProcessField";
+import { ReprocessDepartamentField } from "./fields/ReprocessDepartamentField";
 import { useMemo, useState } from "react";
 import { ReprocessReasonField } from "./fields/ReprocessReasonField";
 
 type CreateReprocessFormrops = {
-  processState: ProcessState;
-  processStates: ProcessState[];
+  departamentState: DepartamentState;
+  departamentStates: DepartamentState[];
 };
 
 export default function CreateReprocessForm({
-  processState,
-  processStates,
+  departamentState,
+  departamentStates,
 }: CreateReprocessFormrops) {
   const { closeDialog } = useDialog();
   const { mutateAsync: createProcessExecution, isPending: isCreateExecutionPending } =
     useCreateProcessExecution();
-  const [selectedProcess, setSelectedProcess] = useState<ProcessWithDepartament | undefined>(
-    processState.previousProcess || undefined,
+  const [selectedDepartament, setSelectedDepartament] = useState<Departament | undefined>(
+    departamentState.previousDepartament || undefined,
   );
 
   const form = useAppForm({
     defaultValues: {
-      amount: processState.avaliableAmount,
+      amount: departamentState.avaliableAmount,
+      departamentName: selectedDepartament?.name || "",
       useMaxAmount: false,
-      processName: selectedProcess?.name || "",
       reason: "",
     } as ReprocessExecutionSchema,
     validators: {
@@ -44,29 +44,29 @@ export default function CreateReprocessForm({
     onSubmit: async ({ value }) => {
       try {
         const { amount } = value;
-        const { process, movimentation } = processState;
+        const { departament, production } = departamentState;
 
-        if (!selectedProcess) return;
+        if (!selectedDepartament) return;
 
         // Cria execução de processo
         await createProcessExecution({
+          production,
           createData: {
             amount,
-            from_process_id: process.id,
-            process_id: selectedProcess.id,
-            movimentation_id: movimentation.id,
-            product_id: movimentation.product.id,
+            from_departament_id: departament.id,
+            departament_id: selectedDepartament.id,
+            production_id: production.id,
+            product_id: production.product.id,
             responsible_id: null,
             started_at: new Date().toISOString(),
             finished_at: new Date().toISOString(),
             type: "REPROCESS",
             reason: null,
           },
-          movimentation,
         });
 
         toast.success("Reprocesso criado com sucesso!");
-        closeDialog(`create-reprocess-execution-${processState.process.id}`);
+        closeDialog(`reprocess-movimentation-${departamentState.departament.id}`);
         form.reset();
       } catch (error) {
         errorHandler(error, {
@@ -78,17 +78,19 @@ export default function CreateReprocessForm({
 
   const isPending = isCreateExecutionPending;
 
-  const avaliableProcesses = useMemo(() => {
-    return processStates
+  const avaliableDepartaments = useMemo(() => {
+    return departamentStates
       .filter(
-        ({ process, template }) =>
-          process.id != processState.process.id &&
-          template?.sequence &&
-          processState.template.sequence &&
-          template?.sequence < processState.template.sequence,
+        ({ departament, template }) =>
+          // Departamento diferente do atual
+          departament.id != departamentState.departament.id &&
+          // Tem valor de sequência
+          template?.sequence != null &&
+          departamentState.template.sequence != null &&
+          template?.sequence != departamentState.template.sequence,
       )
-      .map((state) => state.process);
-  }, [processStates, processState]);
+      .map((state) => state.departament);
+  }, [departamentState, departamentStates]);
 
   return (
     <form
@@ -99,18 +101,18 @@ export default function CreateReprocessForm({
       }}
     >
       <FieldGroup>
-        <ReprocessProcessField
+        <ReprocessDepartamentField
           form={form}
-          selectedProcess={selectedProcess}
-          avaliableProcesses={avaliableProcesses}
-          onChangeProcess={setSelectedProcess}
+          selectedDepartament={selectedDepartament}
+          avaliableDepartaments={avaliableDepartaments}
+          onChangeDepartament={setSelectedDepartament}
         />
-        <ReprocessAmountField form={form} maxAmount={processState.avaliableAmount} />
+        <ReprocessAmountField form={form} maxAmount={departamentState.avaliableAmount} />
         <ReprocessReasonField form={form} />
       </FieldGroup>
 
       <div
-        id="create-execution-form-buttons"
+        id="create-reprocess-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
         <ConfirmButton

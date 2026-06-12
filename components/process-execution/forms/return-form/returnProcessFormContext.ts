@@ -5,7 +5,7 @@ import * as z from "zod";
 export const formSchema = z.object({
   amount: ZodNumberField({ min: 1, minError: "Quantidade mínima é 1" }),
   useMaxAmount: z.boolean(),
-  externalProcessName: z.string().nonempty("Processo é obrigatório"),
+  externalDepartamentName: z.string().nonempty("Departamento é obrigatório"),
   started_at: z.string().optional(),
   finished_at: z.string().optional(),
 });
@@ -15,7 +15,7 @@ export type ReturnProcessFormContextSchema = z.infer<typeof formSchema>;
 export const defaultReturnProcessFormValues: ReturnProcessFormContextSchema = {
   amount: 1,
   useMaxAmount: true,
-  externalProcessName: "",
+  externalDepartamentName: "",
 };
 
 export const { fieldContext, formContext, useFieldContext, useFormContext } =

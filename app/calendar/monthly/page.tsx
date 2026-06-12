@@ -7,7 +7,7 @@ import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import { Badge } from "@/components/ui/badge";
 import PageTitle from "@/components/custom/PageTitle";
-import useGetAllMovimentationDeadlinesWithProduct from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlineWithProduct";
+import useGetAllMovimentationDeadlinesWithProduct from "@/hooks/production-deadline/useGetAllProductionDeadlinesWithProduct";
 import DepartamentItemSelector, {
   DepartamentItem,
 } from "@/components/calendar/DepartamentItemSelector";

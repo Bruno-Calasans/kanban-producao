@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import useGetAllMovimentationExecutionsTemplates from "../movimentation-execution-template/useGetAllMovimentationExecutionsTemplates";
 import { MovimentationPopulated, ProcessState } from "@/types/database.type";
-import { calcProcessStates } from "@/utils/calcDepartamentState";
+import { calcProcessStates } from "@/utils/calcDepartamentStates";
 
 type UseGetAllMovimentationsProcesStatesProps = {
   movimentations: MovimentationPopulated[];

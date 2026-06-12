@@ -5,11 +5,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { EllipsisVerticalIcon, Trash2Icon, BanIcon, Edit2Icon, InfoIcon } from "lucide-react";
-import DeleteMovimentationDialog from "@/components/movimentations/dialogs/DeleteMovimentationDialog";
+import DeleteMovimentationDialog from "@/components/productions/dialogs/DeleteProductionDialog";
 import { MovimentationPopulated } from "@/types/database.type";
-import CancelMovimentationDialog from "@/components/movimentations/dialogs/CancelMovimentationDialog";
+import CancelMovimentationDialog from "@/components/productions/dialogs/CancelProductionDialog";
 import Link from "next/link";
-import EditMovimentationDialog from "@/components/movimentations/dialogs/EditMovimentationDialog";
+import EditMovimentationDialog from "@/components/productions/dialogs/EditProductionDialog";
 
 type ProductMovimentationDropdownMenuProps = {
   movimentation: MovimentationPopulated;

@@ -1,6 +1,6 @@
 import { MovimentationPopulated } from "@/types/database.type";
 import Loader from "../custom/Loader";
-import useGetAllMovimentationDeadlinesByMovimentation from "@/hooks/movimentation-deadline/useGetAllMovimentationDeadlinesByMovimentation";
+import useGetAllMovimentationDeadlinesByMovimentation from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
 import {
   InfoIcon,
   ClockCheckIcon,

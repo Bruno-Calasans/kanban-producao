@@ -39,8 +39,8 @@ const items = [
     icon: HomeIcon,
   },
   {
-    name: "Movimentações",
-    url: "/movimentations",
+    name: "Produções",
+    url: "/productions",
     icon: ArrowLeftRightIcon,
   },
   {

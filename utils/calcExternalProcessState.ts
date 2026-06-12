@@ -1,66 +1,66 @@
-import { MovimentationPopulated, Process, ProcessExecutionPopulated } from "@/types/database.type";
-import { ExternalProcessState } from "./calcDepartamentExternalState";
+import { MovimentationPopulated, ProductionPopulated } from "@/types/database.type";
+import { ExternalDepartamentState } from "./calcDepartamentExternalState";
 
-export type GroupExternalProcessState = Record<number, ExternalProcessState>;
+export type GroupExternalProcessState = Record<number, ExternalDepartamentState>;
 
 type CalcExternalProcessStatesProps = {
-  movimentation: MovimentationPopulated;
-  processExecutions: ProcessExecutionPopulated[];
+  production: ProductionPopulated;
+  movimentations: MovimentationPopulated[];
 };
 
 export function calcExternalProcessStates({
-  movimentation,
-  processExecutions,
+  production,
+  movimentations,
 }: CalcExternalProcessStatesProps) {
   const groups: GroupExternalProcessState = {};
 
-  for (const execution of processExecutions) {
+  for (const movimentation of movimentations) {
     // SAIU PARA EXTERNO
-    if (execution.type === "EXTERNAL") {
-      const process = execution.process;
-      if (!process) continue;
+    if (movimentation.type === "EXTERNAL") {
+      const departament = movimentation.departament;
+      if (!departament) continue;
 
-      if (!groups[process.id]) {
-        groups[process.id] = {
-          process,
-          movimentation,
-          externalExecutions: [execution],
-          executions: [execution],
-          returnExecutions: [],
+      if (!groups[departament.id]) {
+        groups[departament.id] = {
+          departament,
+          production,
+          externalMovimentations: [movimentation],
+          departamentMovimentations: [movimentation],
+          returnMovimentations: [],
           avaliableAmount: 0,
           externalAmount: 0,
           returnAmount: 0,
         };
       }
 
-      groups[process.id].executions.push(execution);
-      groups[process.id].externalExecutions.push(execution);
-      groups[process.id].avaliableAmount += execution.amount;
-      groups[process.id].externalAmount += execution.amount;
+      groups[departament.id].departamentMovimentations.push(movimentation);
+      groups[departament.id].externalMovimentations.push(movimentation);
+      groups[departament.id].avaliableAmount += movimentation.amount;
+      groups[departament.id].externalAmount += movimentation.amount;
     }
 
     // RETORNOU DO EXTERNO
-    if (execution.type === "RETURN") {
-      const process = execution.from_process;
-      if (!process) continue;
+    if (movimentation.type === "RETURN") {
+      const departament = movimentation.from_departament;
+      if (!departament) continue;
 
-      if (!groups[process.id]) {
-        groups[process.id] = {
-          process,
-          movimentation,
-          returnExecutions: [execution],
-          executions: [execution],
-          externalExecutions: [],
+      if (!groups[departament.id]) {
+        groups[departament.id] = {
+          departament,
+          production,
+          returnMovimentations: [movimentation],
+          departamentMovimentations: [movimentation],
+          externalMovimentations: [],
           avaliableAmount: 0,
           externalAmount: 0,
           returnAmount: 0,
         };
       }
 
-      groups[process.id].executions.push(execution);
-      groups[process.id].returnExecutions.push(execution);
-      groups[process.id].avaliableAmount -= execution.amount;
-      groups[process.id].returnAmount += execution.amount;
+      groups[movimentation.id].departamentMovimentations.push(movimentation);
+      groups[movimentation.id].returnMovimentations.push(movimentation);
+      groups[movimentation.id].avaliableAmount -= movimentation.amount;
+      groups[movimentation.id].returnAmount += movimentation.amount;
     }
   }
 

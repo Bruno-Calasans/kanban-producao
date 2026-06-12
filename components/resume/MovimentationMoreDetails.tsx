@@ -1,4 +1,4 @@
-import useProcessState from "@/hooks/process-state/useProcessState";
+import useProcessState from "@/hooks/process-state/useDepartamentState";
 import { MovimentationPopulated } from "@/types/database.type";
 import Loader from "../custom/Loader";
 import { Badge } from "@/components/ui/badge";

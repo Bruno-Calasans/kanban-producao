@@ -8,7 +8,7 @@ import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
 import { FinishedDeadlineDatesField } from "./fields/FinishedDeadlineDatesField";
-import useUpdateMovimentationDeadline from "@/hooks/movimentation-deadline/useUpdateMovimentationDeadline";
+import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
 import { differenceInDays } from "date-fns";
 import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
 

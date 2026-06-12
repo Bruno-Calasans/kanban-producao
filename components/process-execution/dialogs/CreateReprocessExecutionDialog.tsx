@@ -1,22 +1,22 @@
-import CustomDialog from "@/components/custom/CustomDialog";
 import { Button } from "@/components/ui/button";
-import { ProcessState } from "@/types/database.type";
+import { DepartamentState } from "@/types/database.type";
 import { RotateCcwIcon } from "lucide-react";
+import CustomDialog from "@/components/custom/CustomDialog";
 import CreateReprocessForm from "../forms/reprocess-form/CreateReprocessForm";
 
 type CreateReprocessExecutionDialogProps = {
-  processState: ProcessState;
-  processStates: ProcessState[];
+  departamentState: DepartamentState;
+  departamentStates: DepartamentState[];
 };
 
 export default function CreateReprocessExecutionDialog({
-  processState,
-  processStates,
+  departamentState,
+  departamentStates,
 }: CreateReprocessExecutionDialogProps) {
   return (
     <CustomDialog
-      id={`create-reprocess-execution-${processState.process.id}`}
-      title="Reprocessar Execução"
+      id={`reprocess-movimentation-${departamentState.departament.id}`}
+      title="Reprocessar Produção"
       trigger={
         <Button className="bg-amber-400 hover:bg-amber-500" size="xs">
           Reprocessar
@@ -24,7 +24,10 @@ export default function CreateReprocessExecutionDialog({
         </Button>
       }
     >
-      <CreateReprocessForm processStates={processStates} processState={processState} />
+      <CreateReprocessForm
+        departamentState={departamentState}
+        departamentStates={departamentStates}
+      />
     </CustomDialog>
   );
 }

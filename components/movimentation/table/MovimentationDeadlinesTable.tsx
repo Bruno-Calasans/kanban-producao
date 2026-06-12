@@ -5,14 +5,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import MovimentationDeadlineStatusBadge from "@/components/custom/badges/MovimentationDeadlineStatus";
 import MovimentationDeadlineDatesInput from "../inputs/MovimentationDeadlineDatesInput";
-import { DepartamentState } from "@/utils/calcDepartamentDeadlineState";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 
 type MovimentationDeadlineState = {
-  departamentStates: DepartamentState[];
+  departamentDeadlineStates: DepartamentDeadlineState[];
   hideSearch?: boolean;
 };
 
-const processColumns: ColumnDef<DepartamentState>[] = [
+const processColumns: ColumnDef<DepartamentDeadlineState>[] = [
   {
     id: "departament.name",
     accessorKey: "departament.name",
@@ -42,7 +42,7 @@ const processColumns: ColumnDef<DepartamentState>[] = [
 ];
 
 export default function MovimentationDeadlinesTable({
-  departamentStates,
+  departamentDeadlineStates,
   hideSearch,
 }: MovimentationDeadlineState) {
   return (
@@ -50,7 +50,7 @@ export default function MovimentationDeadlinesTable({
       filterPlaceholder="Procurar por departamento"
       filterColumn="departament.name"
       columns={processColumns}
-      data={departamentStates}
+      data={departamentDeadlineStates}
       hideSearch={hideSearch}
       hidePagination
     />

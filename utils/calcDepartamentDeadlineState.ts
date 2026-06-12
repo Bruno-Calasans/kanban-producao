@@ -1,64 +1,64 @@
-import { Departament, MovimentationPopulated } from "@/types/database.type";
-import { calcDepartamentStatus, DepartamenStatus } from "./calcDepartamentStatus";
+import {
+  Departament,
+  DepartamentState,
+  Production,
+  ProductionDeadlinePopulated,
+} from "@/types/database.type";
+import { calcDepartamentDeadlineStatus, DepartamenStatus } from "./calcDepartamentDeadlineStatus";
 
 type CalcDepartamentStateData = {
-  movimentation: MovimentationPopulated;
-  movimentationDeadlines: MovimentationDeadlinePopulated[];
-  movimentationProcessStates: ProcessState[];
+  production: Production;
+  productionDeadlines: ProductionDeadlinePopulated[];
+  productionDepartamentStates: DepartamentState[];
 };
 
 export type DepartamentDeadlineState = {
-  movimentation: MovimentationPopulated;
+  production: Production;
   departament: Departament;
-  processStates: ProcessState[];
-  movimentationProcessStates: ProcessState[];
+  departamentStates: DepartamentState[];
   status: DepartamenStatus;
   expiredDays: number;
-  deadline?: MovimentationDeadlinePopulated;
+  deadline?: ProductionDeadlinePopulated;
 };
 
 export default function calcDepartamentDeadlineState({
-  movimentation,
-  movimentationDeadlines,
-  movimentationProcessStates,
+  production,
+  productionDeadlines,
+  productionDepartamentStates,
 }: CalcDepartamentStateData) {
-  const processStatesByDepartament = new Map<number, ProcessState[]>();
-  const deadlinesByDepartament = new Map<number, MovimentationDeadlinePopulated>();
+  const statesByDepartament = new Map<number, DepartamentState[]>();
+  const deadlinesByDepartament = new Map<number, ProductionDeadlinePopulated>();
 
-  // deadlines map
-  for (const deadline of movimentationDeadlines) {
+  for (const deadline of productionDeadlines) {
     deadlinesByDepartament.set(deadline.departament.id, deadline);
   }
 
-  // agrupa process states
-  for (const state of movimentationProcessStates) {
-    const departamentId = state.process.departament.id;
+  // Agrupa os estados por departamento
+  for (const state of productionDepartamentStates) {
+    const departamentId = state.departament.id;
 
-    const current = processStatesByDepartament.get(departamentId) || [];
-
+    const current = statesByDepartament.get(departamentId) || [];
     current.push(state);
-
-    processStatesByDepartament.set(departamentId, current);
+    statesByDepartament.set(departamentId, current);
   }
 
   const states: DepartamentDeadlineState[] = [];
 
   // cria estados finais
-  for (const [departamentId, processStates] of processStatesByDepartament) {
-    const departament = processStates[0].process.departament;
+  for (const [departamentId, departamentStates] of statesByDepartament) {
+    const departament = departamentStates[0].departament;
 
     const deadline = deadlinesByDepartament.get(departamentId);
 
-    const { status, expiredDays } = calcDepartamentStatus(processStates, deadline);
+    const { status, expiredDays } = calcDepartamentDeadlineStatus({ departamentStates, deadline });
 
     states.push({
-      movimentation,
-      departament,
-      processStates,
-      movimentationProcessStates,
-      deadline,
-      status,
-      expiredDays,
+      departamentStates, // estados relacionados ao departamento atual
+      departament, // departamento atual
+      production, // produção
+      deadline, // prazo do departamento atual
+      status, // status do departamento atual
+      expiredDays, // dias para expirar o prazo do departamento atual
     });
   }
   return states;

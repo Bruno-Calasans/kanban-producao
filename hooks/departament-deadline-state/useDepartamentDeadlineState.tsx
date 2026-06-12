@@ -11,21 +11,21 @@ import calcDepartamentDeadlineState from "@/utils/calcDepartamentDeadlineState";
 type UseDepartamenteDeadlineStateProps = {
   production: ProductionPopulated;
   productionDeadlines: ProductionDeadlinePopulated[];
-  departamentStates: DepartamentState[];
+  productionDepartamentStates: DepartamentState[];
 };
 
 export default function useDepartamentDeadlineState({
   production,
   productionDeadlines,
-  departamentStates,
+  productionDepartamentStates,
 }: UseDepartamenteDeadlineStateProps) {
   const departamentDeadlineStates = useMemo(() => {
     return calcDepartamentDeadlineState({
-      movimentation,
+      production,
       productionDeadlines,
-      movimentationProcessStates,
+      productionDepartamentStates,
     });
-  }, [production, productionDeadlines, departamentStates]);
+  }, [production, productionDeadlines, productionDepartamentStates]);
 
   return {
     departamentDeadlineStates,

@@ -1,21 +1,16 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
 import { FieldGroup } from "@/components/ui/field";
 import SaveButton from "@/components/custom/buttons/SaveButton";
 import useUpdateProduct from "@/hooks/product/useUpdateProduct";
-import {
-  defaultProductFormValues,
-  formSchema,
-  ProductSchema,
-  useAppForm,
-} from "./productFormContext";
+import { formSchema, ProductSchema, useAppForm } from "./productFormContext";
 import { ProductNameField } from "./fields/ProductNameField";
 import { ProductRefField } from "./fields/ProductRefField";
 import handleFormError from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { Product } from "@/types/database.type";
+import CancelButton from "@/components/custom/buttons/CancelButton";
 
 type EditProductForm = {
   product: Product;
@@ -23,7 +18,7 @@ type EditProductForm = {
 
 export default function EditProductForm({ product }: EditProductForm) {
   const { closeDialog } = useDialog();
-  const { mutateAsync, isPending } = useUpdateProduct();
+  const { mutateAsync: updateProduct, isPending } = useUpdateProduct();
 
   const form = useAppForm({
     defaultValues: {
@@ -38,7 +33,7 @@ export default function EditProductForm({ product }: EditProductForm) {
       try {
         const { name, ref } = inputData;
 
-        await mutateAsync({
+        await updateProduct({
           id: product.id,
           updateData: {
             name,
@@ -50,8 +45,8 @@ export default function EditProductForm({ product }: EditProductForm) {
         form.reset();
       } catch (error) {
         handleFormError(error, {
-          duplicate: "Erro: já existe um produto com esse nome.",
           default: "Erro: Não foi possível atualizar o produto.",
+          duplicate: "Erro: já existe um produto com esse nome.",
         });
       }
     },
@@ -71,13 +66,8 @@ export default function EditProductForm({ product }: EditProductForm) {
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <ClearButton isLoading={isPending} onclick={() => form.reset()} />
-        <SaveButton
-          label="Salvar alterações"
-          isLoading={isPending}
-          loadingMsg="Salvando..."
-          hiddenIcon
-        />
+        <CancelButton isLoading={isPending} onClick={() => closeDialog("edit-product")} />
+        <SaveButton label="Salvar" isLoading={isPending} loadingMsg="Salvando..." hiddenIcon />
       </div>
     </form>
   );

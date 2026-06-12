@@ -8,7 +8,7 @@ import {
 import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
 import { ProductionPopulated } from "@/types/database.type";
 import { calcProductionStatus } from "@/utils/calcProductionStatus";
-import { calcDepartamentStates } from "@/utils/calcProcessStates";
+import { calcDepartamentStates } from "@/utils/calcDepartamentState";
 import { updateProduction } from "@/service/api/productionApi";
 
 export async function createMovimentationAction(

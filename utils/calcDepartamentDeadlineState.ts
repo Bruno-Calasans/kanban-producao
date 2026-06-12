@@ -1,9 +1,4 @@
-import {
-  Departament,
-  MovimentationDeadlinePopulated,
-  MovimentationPopulated,
-  ProcessState,
-} from "@/types/database.type";
+import { Departament, MovimentationPopulated } from "@/types/database.type";
 import { calcDepartamentStatus, DepartamenStatus } from "./calcDepartamentStatus";
 
 type CalcDepartamentStateData = {

@@ -2,11 +2,7 @@ import { createFormHook, createFormHookContexts } from "@tanstack/react-form-nex
 import * as z from "zod";
 
 export const formSchema = z.object({
-  name: z
-    .string()
-    .nonempty("Nome do responsável é obrigatório.")
-    .max(32, "Nome do responsável deve ter no máximo 32 caracteres.")
-    .toUpperCase(),
+  name: z.string().nonempty("Nome do responsável é obrigatório.").toUpperCase(),
   departamentName: z.string().nonempty("Nome do departamento é obrigatório."),
 });
 

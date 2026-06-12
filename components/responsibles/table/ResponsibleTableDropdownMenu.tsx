@@ -9,7 +9,7 @@ import {
 import EditResponsibleDialog from "../dialogs/EditResponsibleDialog";
 import DeleteResponsibleDialog from "../dialogs/DeleteResponsibleDialog";
 import useActiveResponsible from "@/hooks/responsible/useActiveResponsible";
-import useGetAllExecutionsByResponsible from "@/hooks/movimentation/useGetAllExecutionsByResponsible";
+import useGetAllMovimentationsByResponsible from "@/hooks/movimentation/useGetAllMovimentationsByResponsible";
 
 type ResponsibleDropdownMenuProps = {
   responsible: ResponsibleWithDepartament;
@@ -26,17 +26,17 @@ export default function ResponsibleDropdownMenu({ responsible }: ResponsibleDrop
 
   const {
     data,
-    error: executionsError,
+    error: movimentationsError,
     isPending: isExecutionsPending,
-  } = useGetAllExecutionsByResponsible(responsible.id);
+  } = useGetAllMovimentationsByResponsible(responsible.id);
 
-  const executions = data?.data || [];
+  const movimentations = data?.data || [];
   const isPending = isActivePending || isExecutionsPending;
-  const isError = activeError || executionsError;
+  const isError = activeError || movimentationsError;
 
   const canEdit = !isPending && responsible.is_active;
-  const canDelete = !isPending && executions.length == 0;
-  const hideFields = !isPending && executions.length > 0;
+  const canDelete = !isPending && movimentations.length == 0;
+  const hideFields = !isPending && movimentations.length > 0;
 
   return (
     <DropdownMenu>

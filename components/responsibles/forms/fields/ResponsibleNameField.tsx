@@ -13,7 +13,7 @@ export const ResponsibleNameField = withForm({
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
             <Field data-invalid={isInvalid}>
-              <FieldLabel htmlFor={field.name}>Nome do Responsável</FieldLabel>
+              <FieldLabel htmlFor={field.name}>Nome</FieldLabel>
               <Input
                 id={field.name}
                 name={field.name}

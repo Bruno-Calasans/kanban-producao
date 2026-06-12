@@ -12,6 +12,7 @@ import { ResponsibleDepartamentName } from "./fields/ResponsibleDepartamentName"
 import useDialog from "@/hooks/dialog/useDialog";
 import errorHandler from "@/utils/errorHandler";
 import { useAppForm, formSchema, ResponsibleFormSchema } from "./responsibleFormContext";
+import CancelButton from "@/components/custom/buttons/CancelButton";
 
 type CreateResponsibleFormProps = {
   responsible: ResponsibleWithDepartament;
@@ -77,7 +78,7 @@ export default function UpdateResponsibleForm({
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <ClearButton isLoading={isPending} onclick={() => form.reset()} />
+        <CancelButton isLoading={isPending} onClick={() =>  closeDialog("edit-responsible")} />
         <SaveButton hiddenIcon isLoading={isPending} />
       </div>
     </form>

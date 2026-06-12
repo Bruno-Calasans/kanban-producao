@@ -12,7 +12,7 @@ type ProcessStatusData = {
   flowTemplates: ProductionFlowTemplatePopulated[];
 };
 
-export function calcDepartamentStates({
+export function calcDepartamentState({
   production,
   flowTemplates,
   movimentations,

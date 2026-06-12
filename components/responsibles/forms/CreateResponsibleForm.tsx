@@ -1,7 +1,6 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import useCreateResponsible from "@/hooks/responsible/useCreateResponsible";
 import { FieldGroup } from "@/components/ui/field";
@@ -12,6 +11,7 @@ import { defaultResponsibleFormValues, useAppForm, formSchema } from "./responsi
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { ResponsibleDepartamentName } from "./fields/ResponsibleDepartamentName";
+import CancelButton from "@/components/custom/buttons/CancelButton";
 
 export default function CreateResponsibleForm() {
   const { closeDialog } = useDialog();
@@ -38,7 +38,6 @@ export default function CreateResponsibleForm() {
       } catch (error) {
         errorHandler(error, {
           default: "Erro: não foi possível criar o responsável.",
-          duplicate: "Erro: responsável com esse nome já existe.",
         });
       }
     },
@@ -62,7 +61,7 @@ export default function CreateResponsibleForm() {
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <ClearButton isLoading={isPending} onclick={() => form.reset()} />
+        <CancelButton isLoading={isPending} onClick={() => closeDialog("create-responsible")} />
         <ConfirmButton hiddenIcon isLoading={isPending} label="Criar responsável" />
       </div>
     </form>

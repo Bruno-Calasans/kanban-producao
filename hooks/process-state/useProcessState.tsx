@@ -1,53 +1,52 @@
 /* eslint-disable react-hooks/preserve-manual-memoization */
 "use client";
 
-import { MovimentationPopulated } from "@/types/database.type";
+import { ProductionPopulated } from "@/types/database.type";
 import useGetAllProductionFlowTemplates from "../production-flow-template/useGetAllProductionFlowTemplates";
-import useGetAllProcessExecutionsByMovimentation from "../movimentation/useGetAllProcessExecutionsByMovimentation";
+import useGetAllMovimentationsByProduction from "../movimentation/useGetAllMovimentationsByProduction";
 import { useMemo } from "react";
-import { calcProcessStates } from "@/utils/calcProcessStates";
+import { calcDepartamentState } from "@/utils/calcDepartamentState";
 
 type UseProcessStateProps = {
-  movimentation?: MovimentationPopulated;
+  production?: ProductionPopulated;
 };
 
-export default function useProcessState({ movimentation }: UseProcessStateProps) {
+export default function useProcessState({ production }: UseProcessStateProps) {
   const {
     data: flowTemplateData,
     error: flowTemplateError,
     isPending: isFlowTemplatePending,
-  } = useGetAllProductionFlowTemplates(movimentation?.production_flow_id);
+  } = useGetAllProductionFlowTemplates(production?.production_flow_id);
 
   const {
-    data: processExecutionsData,
+    data: movimentationsData,
     error: processExecutionError,
     isPending: isProcessExecutionsPending,
-  } = useGetAllProcessExecutionsByMovimentation(movimentation?.id);
+  } = useGetAllMovimentationsByProduction(production?.id);
 
-  const processExecutions = processExecutionsData?.data || [];
+  const movimentations = movimentationsData?.data || [];
   const flowTemplates = flowTemplateData?.data || [];
 
   const isPending = isFlowTemplatePending || isProcessExecutionsPending;
   const isError = flowTemplateError || processExecutionError;
 
   const processStates = useMemo(() => {
-    if (isPending || isError || !movimentation || !flowTemplateData || !processExecutionsData)
-      return [];
-    return calcProcessStates({
-      movimentation,
+    if (isPending || isError || !production || !flowTemplateData || !movimentationsData) return [];
+    return calcDepartamentState({
+      production,
       flowTemplates,
-      processExecutions,
+      movimentations,
     });
   }, [
-    movimentation?.id,
-    movimentation?.status,
-    movimentation?.amount,
-    processExecutionsData,
+    production?.id,
+    production?.status,
+    production?.amount,
+    movimentationsData,
     flowTemplateData,
   ]);
 
   return {
-    processExecutions,
+    movimentations,
     processStates,
     isPending,
     isError,

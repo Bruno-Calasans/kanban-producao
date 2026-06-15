@@ -11,7 +11,7 @@ import { InfoAlert } from "@/components/custom/alerts/InfoAlert";
 import { differenceInDays } from "date-fns";
 import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import ReturnDepartamentDialog from "@/components/process-execution/dialogs/ReturnDepartamentDialog";
-import useExternalProcessState from "@/hooks/external-departament-state/useExternalDepartamentState";
+import useExternalDepartamentState from "@/hooks/external-departament-state/useExternalDepartamentState";
 
 type ProductionHeaderAlertsProps = {
   production: ProductionPopulated;
@@ -30,7 +30,7 @@ export default function ProductionHeaderAlerts({
   departamentStates,
   departamentDeadlineStates,
 }: ProductionHeaderAlertsProps) {
-  const { externalDepartamentStates } = useExternalProcessState({
+  const { externalDepartamentStates } = useExternalDepartamentState({
     production,
     movimentations,
   });

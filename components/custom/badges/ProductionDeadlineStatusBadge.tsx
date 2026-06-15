@@ -1,16 +1,16 @@
-import CustomTooltip from "@/components/custom/CustomTooltip";
 import { Badge } from "@/components/ui/badge";
 import { DepartamenStatus } from "@/utils/calcDepartamentDeadlineStatus";
+import CustomTooltip from "@/components/custom/CustomTooltip";
 
-type MovimentationDeadlineStatusBadgeProps = {
+type ProductionDeadlineStatusBadgeProps = {
   status: DepartamenStatus;
   expiredDays: number;
 };
 
-export default function MovimentationDeadlineStatusBadge({
+export default function ProductionDeadlineStatusBadge({
   status,
   expiredDays,
-}: MovimentationDeadlineStatusBadgeProps) {
+}: ProductionDeadlineStatusBadgeProps) {
   if (status == "EXPIRED")
     return (
       <CustomTooltip content="Departamento está em atraso">
@@ -27,7 +27,7 @@ export default function MovimentationDeadlineStatusBadge({
 
   if (status == "IN_PROGRESS")
     return (
-      <CustomTooltip content="Departamento tem processo(s) em execução">
+      <CustomTooltip content="Departamento está em execução">
         <Badge className="bg-indigo-400 text-white">EM PROGRESSO</Badge>
       </CustomTooltip>
     );

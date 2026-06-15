@@ -21,7 +21,13 @@ export async function createProduct(createData: CreateProductData) {
 }
 
 export async function updateProduct(productId: number, updateData: UpdateProductData) {
-  return await supabase.from("Product").update(updateData).eq("id", productId).throwOnError();
+  return await supabase
+    .from("Product")
+    .update(updateData)
+    .eq("id", productId)
+    .select("*")
+    .single()
+    .throwOnError();
 }
 
 export async function deleteProduct(productId: number) {

@@ -29,6 +29,7 @@ import {
   CalendarIcon,
   CalendarMinus2Icon,
   CalendarDaysIcon,
+  PackageIcon,
 } from "lucide-react";
 import CustomTooltip from "./CustomTooltip";
 
@@ -41,12 +42,12 @@ const items = [
   {
     name: "Produções",
     url: "/productions",
-    icon: ArrowLeftRightIcon,
+    icon: PackageIcon,
   },
   {
     name: "Fluxos de Produção",
     url: "/production-flows",
-    icon: FormIcon,
+    icon: ArrowLeftRightIcon,
   },
   {
     name: "Produtos",

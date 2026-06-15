@@ -2,28 +2,19 @@
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { defaultMoveExternalFormValues, withForm } from "../moveExternalFormContext";
 import { Departament } from "@/types/database.type";
-import { SingleSelector } from "@/components/custom/selectors/SingleSelector";
 import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
+import ExternalDepartamentSelector from "@/components/custom/selectors/ExternalDepartamentSelector";
 
 type ExternalDepartamentFieldProps = {
-  departaments: Departament[];
   defaultDepartament?: Departament;
   selectedDepartament?: Departament;
-  isLoading?: boolean;
   onChangeDepartament: (departament?: Departament) => void;
 };
 
 export const ExternalDepartamentField = withForm({
   defaultValues: defaultMoveExternalFormValues,
   props: {} as ExternalDepartamentFieldProps,
-  render({
-    form,
-    departaments,
-    defaultDepartament,
-    selectedDepartament,
-    isLoading,
-    onChangeDepartament,
-  }) {
+  render({ form, defaultDepartament, selectedDepartament, onChangeDepartament }) {
     return (
       <form.Field
         name="externalDepartamentName"
@@ -35,18 +26,12 @@ export const ExternalDepartamentField = withForm({
                 Departamento
                 <RequiredFieldTooltip />
               </FieldLabel>
-              <SingleSelector<Departament>
-                labelSelector="name"
-                data={departaments}
-                defaultData={defaultDepartament}
-                selectedData={selectedDepartament}
-                isLoading={isLoading}
-                loadingMsg="Carregando departamentos externos..."
-                placeholder="Selecione o departamento"
-                noItemFoundMsg={<p>Nenhum departamento externo cadastrado</p>}
-                onChange={(departamento) => {
-                  field.handleChange(departamento?.name || "");
-                  onChangeDepartament(departamento);
+              <ExternalDepartamentSelector
+                defaultDepartament={defaultDepartament}
+                selectedDepartament={selectedDepartament}
+                onValueChange={function (departament?: Departament): void {
+                  field.handleChange(departament?.name || "");
+                  onChangeDepartament(departament);
                 }}
               />
               <FieldDescription>Seleciona para qual departamento deseja enviar</FieldDescription>

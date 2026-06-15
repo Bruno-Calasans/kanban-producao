@@ -3,15 +3,15 @@ import { ExternalDepartamentState } from "./calcDepartamentExternalState";
 
 export type GroupExternalProcessState = Record<number, ExternalDepartamentState>;
 
-type CalcExternalProcessStatesProps = {
+type CalcExternalDepartamentStateProps = {
   production: ProductionPopulated;
   movimentations: MovimentationPopulated[];
 };
 
-export function calcExternalProcessStates({
+export function calcExternalDepartamentState({
   production,
   movimentations,
-}: CalcExternalProcessStatesProps) {
+}: CalcExternalDepartamentStateProps) {
   const groups: GroupExternalProcessState = {};
 
   for (const movimentation of movimentations) {
@@ -57,10 +57,10 @@ export function calcExternalProcessStates({
         };
       }
 
-      groups[movimentation.id].departamentMovimentations.push(movimentation);
-      groups[movimentation.id].returnMovimentations.push(movimentation);
-      groups[movimentation.id].avaliableAmount -= movimentation.amount;
-      groups[movimentation.id].returnAmount += movimentation.amount;
+      groups[departament.id].departamentMovimentations.push(movimentation);
+      groups[departament.id].returnMovimentations.push(movimentation);
+      groups[departament.id].avaliableAmount -= movimentation.amount;
+      groups[departament.id].returnAmount += movimentation.amount;
     }
   }
 

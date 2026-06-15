@@ -7,7 +7,7 @@ import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { Departament, DepartamentState } from "@/types/database.type";
-import useCreateProcessExecution from "@/hooks/movimentation/useCreateMovimentation";
+import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import { ReprocessExecutionSchema, useAppForm, formSchema } from "./reprocessExecutionFormContext";
 import { ReprocessAmountField } from "./fields/ReprocessAmountField";
 import { ReprocessDepartamentField } from "./fields/ReprocessDepartamentField";
@@ -24,8 +24,8 @@ export default function CreateReprocessForm({
   departamentStates,
 }: CreateReprocessFormrops) {
   const { closeDialog } = useDialog();
-  const { mutateAsync: createProcessExecution, isPending: isCreateExecutionPending } =
-    useCreateProcessExecution();
+  const { mutateAsync: createMovimentation, isPending: isMovimentationPending } =
+    useCreateMovimentation();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament | undefined>(
     departamentState.previousDepartament || undefined,
   );
@@ -49,7 +49,7 @@ export default function CreateReprocessForm({
         if (!selectedDepartament) return;
 
         // Cria execução de processo
-        await createProcessExecution({
+        await createMovimentation({
           production,
           createData: {
             amount,
@@ -76,7 +76,7 @@ export default function CreateReprocessForm({
     },
   });
 
-  const isPending = isCreateExecutionPending;
+  const isPending = isMovimentationPending;
 
   const avaliableDepartaments = useMemo(() => {
     return departamentStates

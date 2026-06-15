@@ -3,7 +3,7 @@
 import { DepartamentState } from "@/types/database.type";
 import CreateMovimentationDialog from "./dialogs/CreateMovimentationDialog";
 import CreateReprocessExecutionDialog from "./dialogs/CreateReprocessExecutionDialog";
-import MoveExternalProcessExecutionDialog from "./dialogs/ExternalMovimentationDialog";
+import MoveExternalProcessExecutionDialog from "./dialogs/ExternalDepartamentDialog";
 import SkipDepartamentDialog from "./dialogs/SkipDepartamentDialog";
 
 type DepartamentActionsProps = {

@@ -9,12 +9,11 @@ import { Departament, DepartamentState } from "@/types/database.type";
 import { MoveAmountField } from "./fields/MoveAmountField";
 import { ExternalDepartamentField } from "./fields/ExternalDepartamentField";
 import { ExternalDeadlineField } from "./fields/ExternalDeadlineField";
+import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
-import useCreateMovimentation from "@/hooks/movimentation/useCreateMovimentation";
 import useCreateProductionDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
-import useGetAllActiveExternalDepartaments from "@/hooks/departament/useGetAllActiveExternalDepartaments";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 
 type MoveExternalFormProps = {
@@ -35,13 +34,6 @@ export default function MoveExternalForm({ departamentState }: MoveExternalFormP
     isPending: isDeadlinePending,
     error: deadlineError,
   } = useCreateProductionDeadline();
-
-  const {
-    data,
-    isPending: isDepartamentsPending,
-    error: processError,
-  } = useGetAllActiveExternalDepartaments();
-  const departaments = data?.data || [];
 
   const form = useAppForm({
     defaultValues: { ...defaultMoveExternalFormValues, amount: departamentState.avaliableAmount },
@@ -93,8 +85,8 @@ export default function MoveExternalForm({ departamentState }: MoveExternalFormP
     },
   });
 
-  const isPending = isMovimentationPending || isDepartamentsPending || isDeadlinePending;
-  const isError = executionError || processError || deadlineError;
+  const isPending = isMovimentationPending || isDeadlinePending;
+  const isError = executionError || deadlineError;
 
   return (
     <form
@@ -107,11 +99,8 @@ export default function MoveExternalForm({ departamentState }: MoveExternalFormP
       <FieldGroup className="flex gap-4 mb-4">
         <ExternalDepartamentField
           form={form}
-          departaments={departaments}
-          defaultDepartament={departaments[0]}
           selectedDepartament={selectedDepartament}
           onChangeDepartament={setSelectedDepartament}
-          isLoading={isDepartamentsPending}
         />
         <MoveAmountField form={form} maxAmount={departamentState.avaliableAmount} />
         <ExternalDeadlineField form={form} />

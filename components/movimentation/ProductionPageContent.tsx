@@ -2,7 +2,7 @@ import { ProductionPopulated } from "@/types/database.type";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import Loader from "@/components/custom/Loader";
 import ProductionHeaderActions from "./header/ProductionHeaderActions";
-import MovimentationTabs from "./tabs/MovimentationTab";
+import ProductionTabs from "./tabs/ProductionTabs";
 import useDepartamentState from "@/hooks/process-state/useDepartamentState";
 import useGetAllMovimentationsByProduction from "@/hooks/movimentation/useGetAllMovimentationsByProduction";
 import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
@@ -66,7 +66,7 @@ export default function ProductionPageContent({ production }: ProductionPageCont
         departamentStates={departamentStates}
         departamentDeadlineStates={departamentDeadlineStates}
       />
-      <MovimentationTabs
+      <ProductionTabs
         production={production}
         deadlines={productionDeadlines}
         movimentations={movimentations}

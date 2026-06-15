@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import useGetOneProduction from "@/hooks/production/useGetOneProduction";
-import MovimentationPageContent from "@/components/movimentation/ProductionPageContent";
+import ProductionPageContent from "@/components/movimentation/ProductionPageContent";
 
 export default function MovimentationIdPage() {
   const params = useParams<{ production_id: string }>();
@@ -42,5 +42,5 @@ export default function MovimentationIdPage() {
       />
     );
 
-  return <MovimentationPageContent production={production} />;
+  return <ProductionPageContent production={production} />;
 }

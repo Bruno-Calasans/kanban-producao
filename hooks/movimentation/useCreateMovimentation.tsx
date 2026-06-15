@@ -6,7 +6,7 @@ import { productionDeadlineKeys } from "@/constants/productionDeadlineKeys";
 import { movimentationKeys } from "@/constants/movimentationKeys";
 import { productionKeys } from "@/constants/productionKeys";
 
-export default function useCreateMovimentation() {
+export function useCreateMovimentation() {
   const queryClient = useQueryClient();
 
   return useMutation({

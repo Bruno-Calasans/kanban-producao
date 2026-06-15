@@ -1,21 +1,15 @@
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { defaultMovimentationFormValues, withForm } from "../ProductMovimentationFormContext";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
+import { defaultProductProductionFormValues, withForm } from "../ProductProductionFormContext";
 import { Input } from "@/components/ui/input";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
-type ProductMovimentationAmountFieldGroupProps = {
+type ProductProductionAmountFieldGroupProps = {
   disabled?: boolean;
 };
 
-export const ProductProductMovimentationAmountField = withForm({
-  defaultValues: defaultMovimentationFormValues,
-  props: {} as ProductMovimentationAmountFieldGroupProps,
+export const ProductProductProductionAmountField = withForm({
+  defaultValues: defaultProductProductionFormValues,
+  props: {} as ProductProductionAmountFieldGroupProps,
   render({ form, disabled }) {
     return (
       <form.Field
@@ -26,7 +20,9 @@ export const ProductProductMovimentationAmountField = withForm({
 
           return (
             <Field data-invalid={isInvalid}>
-              <FieldLabel htmlFor={field.name}>Quantidade</FieldLabel>
+              <FieldLabel className="gap-0" htmlFor={field.name}>
+                Quantidade <RequiredFieldTooltip />
+              </FieldLabel>
               <Input
                 id={field.name}
                 name={field.name}

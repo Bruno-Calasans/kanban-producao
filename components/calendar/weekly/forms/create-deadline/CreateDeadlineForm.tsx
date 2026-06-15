@@ -14,7 +14,7 @@ import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import useCreateMovimentationDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
 import { MovimentationSelectorField } from "./fields/MovimentationSelectorField";
-import MovimentationDeadlinesTable from "@/components/movimentation/table/MovimentationDeadlinesTable";
+import MovimentationDeadlinesTable from "@/components/movimentation/table/ProductionDeadlineStatusBadge";
 import calcDepartamentState from "@/utils/calcDepartamentDeadlineState";
 
 type CreateDeadlineFormProps = {

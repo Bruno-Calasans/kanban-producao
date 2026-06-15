@@ -15,7 +15,8 @@ import useDialog from "@/hooks/dialog/useDialog";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
-import useCreateProcessExecution from "@/hooks/movimentation/useCreateMovimentation";
+import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
+import CancelButton from "@/components/custom/buttons/CancelButton";
 
 type ReturnDepartamentFormProps = {
   externalDepartamentState: ExternalDepartamentState;
@@ -39,10 +40,10 @@ export default function ReturnDepartamentForm({
   } = useUpdateMovimentationDeadline();
 
   const {
-    mutateAsync: createProcessExecution,
-    isPending: isCreateExecutionPending,
-    isError: isCreateExecutionError,
-  } = useCreateProcessExecution();
+    mutateAsync: createMovimentation,
+    isPending: isMovimentationPending,
+    isError: movimentationError,
+  } = useCreateMovimentation();
 
   const form = useAppForm({
     defaultValues: {
@@ -62,7 +63,7 @@ export default function ReturnDepartamentForm({
       const endDate = finished_at ? new Date(finished_at).toISOString() : null;
 
       try {
-        await createProcessExecution({
+        await createMovimentation({
           production,
           createData: {
             amount,
@@ -99,8 +100,8 @@ export default function ReturnDepartamentForm({
     },
   });
 
-  const isPending = isUpdateDeadlinePending || isCreateExecutionPending;
-  const isError = isUpdateDeadlineError || isCreateExecutionError;
+  const isPending = isUpdateDeadlinePending || isMovimentationPending;
+  const isError = isUpdateDeadlineError || movimentationError;
 
   return (
     <form
@@ -122,6 +123,7 @@ export default function ReturnDepartamentForm({
       </FieldGroup>
 
       <div id="return-form-buttons" className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end">
+        <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
         <ConfirmButton
           hiddenIcon
           isLoading={isPending}

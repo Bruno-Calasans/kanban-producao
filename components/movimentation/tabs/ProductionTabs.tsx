@@ -10,11 +10,11 @@ import {
 import { useState } from "react";
 import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import { Badge } from "@/components/ui/badge";
-import MovimentationDeadlinesTable from "../table/MovimentationDeadlinesTable";
+import ProductionDeadlineTable from "../table/ProductionDeadlineStatusBadge";
 import DepartamentStateTable from "../table/DepartamentStateTable";
 import MovimentationTable from "@/components/product/tables/MovimentationTable";
 
-type MovimentationTabsProps = {
+type ProductionTabsProps = {
   production: ProductionPopulated;
   movimentations: MovimentationPopulated[];
   deadlines: ProductionDeadlinePopulated[];
@@ -24,13 +24,13 @@ type MovimentationTabsProps = {
 
 const TABS = ["ACTIONS", "DEADLINE", "HISTORY"];
 
-export default function MovimentationTabs({
+export default function ProductionTabs({
   departamentStates,
   departamentDeadlineStates,
   movimentations,
   deadlines,
   production,
-}: MovimentationTabsProps) {
+}: ProductionTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
   const expiredDepartaments = departamentDeadlineStates.filter((dpt) => dpt.status === "EXPIRED");
 
@@ -60,7 +60,7 @@ export default function MovimentationTabs({
       </TabsContent>
 
       <TabsContent value={TABS[1]}>
-        <MovimentationDeadlinesTable departamentDeadlineStates={departamentDeadlineStates} />
+        <ProductionDeadlineTable departamentDeadlineStates={departamentDeadlineStates} hideSearch />
       </TabsContent>
 
       <TabsContent value={TABS[2]}>

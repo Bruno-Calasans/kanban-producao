@@ -6,13 +6,13 @@ import { MoveUpRightIcon } from "lucide-react";
 import { DepartamentState } from "@/types/database.type";
 import MoveExternalForm from "@/components/process-execution/forms/move-external-form/MoveExternalForm";
 
-type ExternalMovimentationDialogProps = {
+type ExternalDepartamentDialogProps = {
   departamentState: DepartamentState;
 };
 
-export default function ExternalMovimentationDialog({
+export default function ExternalDepartamentDialog({
   departamentState,
-}: ExternalMovimentationDialogProps) {
+}: ExternalDepartamentDialogProps) {
   return (
     <CustomDialog
       id={`external-movimentation-${departamentState.departament.id}`}

@@ -14,21 +14,18 @@ type ProductionTableProps = {
   hideProductColumn?: boolean;
 };
 
-export default function MovimentationTable({
-  productions,
-  hideProductColumn,
-}: ProductionTableProps) {
+export default function ProductionTable({ productions, hideProductColumn }: ProductionTableProps) {
   const router = useRouter();
 
   const movimentationColumns: ColumnDef<ProductionPopulated>[] = [
     {
+      accessorKey: "op",
+      header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,
+    },
+    {
       id: "product.ref",
       accessorKey: "product.ref",
       header: ({ column }) => <DataTableColumnHeader column={column} title="REF" />,
-    },
-    {
-      accessorKey: "op",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,
     },
     {
       id: "product.name",
@@ -75,8 +72,8 @@ export default function MovimentationTable({
 
   return (
     <DataTable
-      filterPlaceholder="Procurar por produto, OP ou Ref"
-      filterColumn={["op", "product.ref"]}
+      filterPlaceholder="Procurar por OP, ref ou produto"
+      filterColumn={["op", "product.name", "product.ref"]}
       columns={filteredColumns}
       data={productions}
       onClickCell={({ column, row: { original } }) =>

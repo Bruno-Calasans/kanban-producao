@@ -1,7 +1,7 @@
 "use client";
 
 import { MovimentationPopulated, ProductionPopulated } from "@/types/database.type";
-import { calcExternalProcessStates } from "@/utils/calcExternalProcessState";
+import { calcExternalDepartamentState } from "@/utils/calcExternalDepartamentState";
 import { useMemo } from "react";
 
 type UseExternalDepartamentState = {
@@ -14,7 +14,7 @@ export default function useExternalDepartamentState({
   movimentations,
 }: UseExternalDepartamentState) {
   const externalDepartamentStates = useMemo(
-    () => calcExternalProcessStates({ production, movimentations }),
+    () => calcExternalDepartamentState({ production, movimentations }),
     [production, movimentations],
   );
 

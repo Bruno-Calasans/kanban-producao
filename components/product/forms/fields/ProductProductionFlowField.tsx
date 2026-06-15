@@ -1,8 +1,9 @@
 /* eslint-disable react/no-children-prop */
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { defaultMovimentationFormValues, withForm } from "../ProductMovimentationFormContext";
+import { defaultProductProductionFormValues, withForm } from "../ProductProductionFormContext";
 import { ProductionFlow } from "@/types/database.type";
 import ProductionFlowSelectorWithCheckbox from "@/components/custom/selectors/ProductionFlowSelectorWithCheckbox";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type ProductProductionFlowFieldProps = {
   selectedProductionFlow?: ProductionFlow;
@@ -12,7 +13,7 @@ type ProductProductionFlowFieldProps = {
 };
 
 export const ProductProductionFlowField = withForm({
-  defaultValues: defaultMovimentationFormValues,
+  defaultValues: defaultProductProductionFormValues,
   props: {} as ProductProductionFlowFieldProps,
   render({
     form,
@@ -28,7 +29,9 @@ export const ProductProductionFlowField = withForm({
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
             <Field className="mt-4" hidden={disabled}>
-              <FieldLabel htmlFor={field.name}>Fluxo de Produção</FieldLabel>
+              <FieldLabel htmlFor={field.name} className="gap-0">
+                Fluxo de Produção <RequiredFieldTooltip />
+              </FieldLabel>
               <ProductionFlowSelectorWithCheckbox
                 disabled={disabled}
                 selectedProductionFlow={selectedProductionFlow}

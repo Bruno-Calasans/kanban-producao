@@ -1,13 +1,13 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import ProductInfoHeader from "@/components/product/ProductInfoHeader";
 import ProductInfoTabs from "@/components/product/ProductInfoTabs";
-import useGetAllMovimentationsByProduct from "@/hooks/production/useGetAllProductionsByProduct";
-import useGetAllProcessExecutationsByProduct from "@/hooks/movimentation/useGetAllMovimentationsByProduct";
+import useGetAllProductionsByProduct from "@/hooks/production/useGetAllProductionsByProduct";
+import useGetAllMovimentationsByProduct from "@/hooks/movimentation/useGetAllMovimentationsByProduct";
 import useGetOneProduct from "@/hooks/product/useGetOneProduct";
-import { useParams } from "next/navigation";
 
 export default function ProductInfoPage() {
   const params = useParams<{ product_id: string }>();
@@ -20,21 +20,21 @@ export default function ProductInfoPage() {
   const product = productData?.data;
 
   const {
-    data: productMovimentationData,
-    error: productMovimentationError,
-    isPending: isProductMovimentationsPending,
-  } = useGetAllMovimentationsByProduct(product?.id);
-  const movimentations = productMovimentationData?.data || [];
+    data: productionsData,
+    error: productionsError,
+    isPending: isProductionsPending,
+  } = useGetAllProductionsByProduct(product?.id);
+  const productions = productionsData?.data || [];
 
   const {
-    data: executionsData,
-    error: executionsError,
-    isPending: isExecutionsPending,
-  } = useGetAllProcessExecutationsByProduct(product?.id);
-  const executions = executionsData?.data || [];
+    data: movimentationsData,
+    error: movimentationsError,
+    isPending: isMovimentationsPending,
+  } = useGetAllMovimentationsByProduct(product?.id);
+  const movimentations = movimentationsData?.data || [];
 
-  const isError = productError || productMovimentationError || executionsError;
-  const isPending = isProductMovimentationsPending || isProductPending || isExecutionsPending;
+  const isError = productError || productionsError || movimentationsError;
+  const isPending = isProductionsPending || isProductPending || isMovimentationsPending;
 
   if (isPending) return <Loader title="Carregando produto..." />;
 
@@ -65,8 +65,12 @@ export default function ProductInfoPage() {
 
   return (
     <section>
-      <ProductInfoHeader product={product} movimentations={movimentations} />
-      <ProductInfoTabs product={product} movimentations={movimentations} executions={executions} />
+      <ProductInfoHeader product={product} productions={productions} />
+      <ProductInfoTabs
+        product={product}
+        productions={productions}
+        movimentations={movimentations}
+      />
     </section>
   );
 }

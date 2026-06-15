@@ -21,7 +21,7 @@ import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament
 import { useMemo } from "react";
 import useGroupAllMetasInRangeByDeadline from "@/hooks/deadline-meta/useGroupAllMetasInRangeByDeadline";
 import { sortByDeadlinePriority } from "@/utils/sortByDeadlinePriority";
-import { calcExternalProcessStates } from "@/utils/calcExternalProcessState";
+import { calcExternalProcessStates } from "@/utils/calcExternalDepartamentState";
 import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";
 import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import { isToday } from "date-fns";

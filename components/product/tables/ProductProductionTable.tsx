@@ -2,24 +2,21 @@
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import type { MovimentationPopulated } from "@/types/database.type";
-import MovimentationStatusBadge from "@/components/custom/badges/ProductionStatusBadge";
-import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 import { useRouter } from "next/navigation";
-import { ProductMovimentationDropdownMenu } from "./ProductMovimentationDropdownMenu";
+import { ProductProductionDropdownMenu } from "./ProductMovimentationDropdownMenu";
+import type { MovimentationPopulated, ProductionPopulated } from "@/types/database.type";
+import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
+import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
+import ProductionStatusBadge from "@/components/custom/badges/ProductionStatusBadge";
 
-type ProductMovimentationTableProps = {
-  movimentations: MovimentationPopulated[];
+type ProductionProductionTableProps = {
+  productions: ProductionPopulated[];
 };
 
-const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
+const movimentationColumns: ColumnDef<ProductionPopulated>[] = [
   {
-    accessorKey: "id",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Movimentação" />,
-    cell({ row: { original: movimentation } }) {
-      return <p>#{movimentation.id}</p>;
-    },
+    accessorKey: "op",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,
   },
   {
     id: "productionFlow.name",
@@ -33,8 +30,8 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-    cell({ row: { original: movimentation } }) {
-      return <MovimentationStatusBadge movimentation={movimentation} />;
+    cell({ row: { original: production } }) {
+      return <ProductionStatusBadge production={production} />;
     },
   },
   {
@@ -49,24 +46,22 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
   },
   {
     id: "action",
-    cell: ({ row: { original: movimentation } }) => (
-      <ProductMovimentationDropdownMenu movimentation={movimentation} />
+    cell: ({ row: { original: production } }) => (
+      <ProductProductionDropdownMenu production={production} />
     ),
   },
 ];
 
-export default function ProductMovimentationTable({
-  movimentations,
-}: ProductMovimentationTableProps) {
+export default function ProductProductionTable({ productions }: ProductionProductionTableProps) {
   const router = useRouter();
   return (
     <DataTable
-      filterPlaceholder="Procurar movimentação do produto"
-      filterColumn="id"
+      filterPlaceholder="Procurar produção por OP"
+      filterColumn="op"
       columns={movimentationColumns}
-      data={movimentations}
+      data={productions}
       onClickCell={({ column, row: { original } }) =>
-        column.id != "action" && router.push(`/movimentations/${original.id}`)
+        column.id != "action" && router.push(`/productions/${original.id}`)
       }
     />
   );

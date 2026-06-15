@@ -12,7 +12,7 @@ import { SkipReasonField } from "./fields/SkipReasonField";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import useCreateMovimentation from "@/hooks/movimentation/useCreateMovimentation";
+import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 
 type SkipMovimentationFormProps = {
   departamentState: DepartamentState;

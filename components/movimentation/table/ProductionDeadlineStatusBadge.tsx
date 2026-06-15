@@ -3,11 +3,11 @@
 import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import MovimentationDeadlineStatusBadge from "@/components/custom/badges/MovimentationDeadlineStatus";
-import MovimentationDeadlineDatesInput from "../inputs/MovimentationDeadlineDatesInput";
+import ProductionDeadlineStatusBadge from "@/components/custom/badges/ProductionDeadlineStatusBadge";
+import ProductionDeadlineDatesInput from "../inputs/ProductionDeadlineDatesInput";
 import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 
-type MovimentationDeadlineState = {
+type ProductionDeadlineTableProps = {
   departamentDeadlineStates: DepartamentDeadlineState[];
   hideSearch?: boolean;
 };
@@ -21,12 +21,10 @@ const processColumns: ColumnDef<DepartamentDeadlineState>[] = [
   },
   {
     id: "deadline-data",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Data de início e data de fim" />
-    ),
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Data de Início e Fim" />,
     enableSorting: false,
     cell: ({ row: { original: departamentState } }) => (
-      <MovimentationDeadlineDatesInput departamentState={departamentState} />
+      <ProductionDeadlineDatesInput departamentState={departamentState} />
     ),
   },
   {
@@ -37,14 +35,14 @@ const processColumns: ColumnDef<DepartamentDeadlineState>[] = [
       row: {
         original: { status, expiredDays },
       },
-    }) => <MovimentationDeadlineStatusBadge status={status} expiredDays={expiredDays} />,
+    }) => <ProductionDeadlineStatusBadge status={status} expiredDays={expiredDays} />,
   },
 ];
 
-export default function MovimentationDeadlinesTable({
+export default function ProductionDeadlineTable({
   departamentDeadlineStates,
   hideSearch,
-}: MovimentationDeadlineState) {
+}: ProductionDeadlineTableProps) {
   return (
     <DataTable
       filterPlaceholder="Procurar por departamento"

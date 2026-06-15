@@ -1,52 +1,51 @@
 "use client";
 
-import {
-  Departament,
-  MovimentationDeadlinePopulated,
-  MovimentationPopulated,
-} from "@/types/database.type";
 import { DatePickerInput } from "@/components/custom/DatePicker";
-import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
+import useCreateProductionDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
 import errorHandler from "@/utils/errorHandler";
 import { toast } from "sonner";
-import useCreateMovimentationDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
+import useUpdateProductionDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
 import { XIcon } from "lucide-react";
 import { useState } from "react";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
-import { DepartamentState } from "@/utils/calcDepartamentDeadlineState";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import { cn } from "@/lib/utils";
 
-type MovimentationDeadlineDatesInputProps = {
-  departamentState: DepartamentState;
+type ProductionDeadlineDatesInputProps = {
+  departamentState: DepartamentDeadlineState;
 };
 
-export default function MovimentationDeadlineDatesInput({
+export default function ProductionDeadlineDatesInput({
   departamentState,
-}: MovimentationDeadlineDatesInputProps) {
-  const { departament, movimentation, deadline, status } = departamentState;
+}: ProductionDeadlineDatesInputProps) {
+  const { departament, production, deadline, status } = departamentState;
   const [selectedStartDate, setSelectedStartDate] = useState<Date>();
   const [selectedEndDate, setSelectedEndDate] = useState<Date>();
 
   const {
-    mutateAsync: updateMovimentationDeadline,
+    mutateAsync: createProductionDeadline,
     isPending: isUpdateDeadlinePending,
     isError: isUpdateDeadlineError,
-  } = useUpdateMovimentationDeadline();
+  } = useCreateProductionDeadline();
 
   const {
-    mutateAsync: createMovimentationDeadline,
+    mutateAsync: updateProductionDeadline,
     isPending: createDeadlinePending,
     isError: createDeadlineError,
-  } = useCreateMovimentationDeadline();
+  } = useUpdateProductionDeadline();
 
   const today = new Date();
-  const actualStartDate = deadline?.actual_start_at ? new Date(deadline.actual_start_at) : null;
-  const actualEndDate = deadline?.actual_end_at ? new Date(deadline.actual_end_at) : null;
-  const plannedEndDate = deadline?.planned_end_at ? new Date(deadline?.planned_end_at) : undefined;
+
+  const actualStartDate = deadline?.actual_start_at
+    ? new Date(deadline.actual_start_at)
+    : undefined;
+  const actualEndDate = deadline?.actual_end_at ? new Date(deadline.actual_end_at) : undefined;
+
   const plannedStartDate = deadline?.planned_start_at
     ? new Date(deadline?.planned_start_at)
     : undefined;
+  const plannedEndDate = deadline?.planned_end_at ? new Date(deadline?.planned_end_at) : undefined;
 
   today.setHours(0, 0, 0, 0);
   plannedStartDate?.setHours(0, 0, 0, 0);
@@ -67,7 +66,7 @@ export default function MovimentationDeadlineDatesInput({
   const removePlannedStartDate = async () => {
     if (!deadline?.id) return;
     try {
-      await updateMovimentationDeadline({
+      await updateProductionDeadline({
         movimentationDeadlineId: deadline.id,
         updateData: {
           planned_start_at: null,
@@ -84,7 +83,7 @@ export default function MovimentationDeadlineDatesInput({
   const removePlannedEndDate = async () => {
     if (!deadline?.id) return;
     try {
-      await updateMovimentationDeadline({
+      await updateProductionDeadline({
         movimentationDeadlineId: deadline.id,
         updateData: {
           planned_end_at: null,
@@ -100,6 +99,9 @@ export default function MovimentationDeadlineDatesInput({
 
   const onChangeDate = (date?: Date, type: "START" | "END" = "START") => {
     date?.setHours(0, 0, 0, 0);
+    selectedStartDate?.setHours(0, 0, 0, 0);
+    selectedEndDate?.setHours(0, 0, 0, 0);
+
     if (type == "START") {
       setSelectedStartDate(date);
       if (date && selectedEndDate && date.getTime() > selectedEndDate.getTime())
@@ -111,13 +113,28 @@ export default function MovimentationDeadlineDatesInput({
 
   const onSave = async () => {
     if (deadline) {
+      let startDate: Date | undefined;
+      let endDate: Date | undefined;
+
+      if (selectedStartDate) {
+        startDate = selectedStartDate;
+      } else if (deadline?.planned_start_at) {
+        startDate = new Date(deadline?.planned_start_at);
+      }
+
+      if (selectedEndDate) {
+        endDate = selectedEndDate;
+      } else if (deadline?.planned_end_at) {
+        endDate = new Date(deadline?.planned_end_at);
+      }
+
       try {
-        await updateMovimentationDeadline({
+        await updateProductionDeadline({
           movimentationDeadlineId: deadline.id,
           updateData: {
             departament_id: departament.id,
-            planned_start_at: selectedStartDate ? selectedStartDate.toISOString() : null,
-            planned_end_at: selectedEndDate ? selectedEndDate.toISOString() : null,
+            planned_start_at: startDate ? startDate.toISOString() : null,
+            planned_end_at: endDate ? endDate.toISOString() : null,
           },
         });
         toast.success("Prazo atualizado");
@@ -129,8 +146,8 @@ export default function MovimentationDeadlineDatesInput({
       }
     } else {
       try {
-        await createMovimentationDeadline({
-          movimentation_id: movimentation.id,
+        await createProductionDeadline({
+          production_id: production.id,
           departament_id: departament.id,
           planned_start_at: selectedStartDate ? selectedStartDate.toISOString() : null,
           planned_end_at: selectedEndDate ? selectedEndDate.toISOString() : null,
@@ -154,12 +171,16 @@ export default function MovimentationDeadlineDatesInput({
 
   const isPending = isUpdateDeadlinePending || createDeadlinePending;
   const isError = isUpdateDeadlineError || createDeadlineError;
-  const isStarDateInputDisabled =
-    status === "COMPLETED" || departamentState.movimentation.status == "CANCELLED";
+
+  const productionStatus = departamentState.production.status;
+
+  const isStartDateInputDisabled = status === "COMPLETED" || productionStatus == "CANCELLED";
+
   const isEndDateInputDisabled =
     status === "COMPLETED" ||
     !(selectedStartDate || plannedStartDate) ||
-    departamentState.movimentation.status == "CANCELLED";
+    productionStatus == "CANCELLED" ||
+    productionStatus == "COMPLETED";
 
   return (
     <div
@@ -172,11 +193,11 @@ export default function MovimentationDeadlineDatesInput({
         currentDate={selectedStartDate || plannedStartDate}
         placeholder={plannedStartDate ? "" : "Data de início"}
         onChangeDate={(date) => onChangeDate(date, "START")}
-        disabled={isStarDateInputDisabled}
+        disabled={isStartDateInputDisabled}
         extraAddon={
           plannedStartDate &&
           !isPending &&
-          !isStarDateInputDisabled && (
+          !isStartDateInputDisabled && (
             <div
               title="Remover data de início planejada"
               className="cursor-default bg-red-500 rounded-full hover:bg-red-600"

@@ -10,7 +10,7 @@ import { ErrorAlert } from "@/components/custom/alerts/ErrorAlert";
 import { InfoAlert } from "@/components/custom/alerts/InfoAlert";
 import { differenceInDays } from "date-fns";
 import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
-import ReturnDepartamentDialog from "@/components/process-execution/dialogs/ReturnDepartamentDialog";
+import ReturnDepartamentDialog from "@/components/production/dialogs/ReturnDepartamentDialog";
 import useExternalDepartamentState from "@/hooks/external-departament-state/useExternalDepartamentState";
 
 type ProductionHeaderAlertsProps = {

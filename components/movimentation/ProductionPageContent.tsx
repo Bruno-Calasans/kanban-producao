@@ -3,7 +3,7 @@ import PageMsg from "@/components/custom/msgs/PageMsg";
 import Loader from "@/components/custom/Loader";
 import ProductionHeaderActions from "./header/ProductionHeaderActions";
 import ProductionTabs from "./tabs/ProductionTabs";
-import useDepartamentState from "@/hooks/process-state/useDepartamentState";
+import useDepartamentState from "@/hooks/departament-state/useDepartamentState";
 import useGetAllMovimentationsByProduction from "@/hooks/movimentation/useGetAllMovimentationsByProduction";
 import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
 import useDepartamentDeadlineState from "@/hooks/departament-deadline-state/useDepartamentDeadlineState";
@@ -51,7 +51,7 @@ export default function ProductionPageContent({ production }: ProductionPageCont
       <PageMsg
         title="Erro ao carregar dados da produção"
         content="Desculpe, mas não foi possível carregar as informações dessa produção"
-        backBtnLabel="Voltar às movimentações"
+        backBtnLabel="Voltar às produções"
         backBtnUrl="/productions"
       />
     );

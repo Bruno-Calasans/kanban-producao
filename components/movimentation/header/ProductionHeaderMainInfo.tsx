@@ -1,9 +1,9 @@
+import { ProductionPopulated } from "@/types/database.type";
 import Link from "next/link";
 import MovimentationStatusBadge from "@/components/custom/badges/ProductionStatusBadge";
 import PageTitle from "@/components/custom/PageTitle";
 import BackButton from "@/components/custom/buttons/BackButton";
 import GoToCalendarButton from "@/components//custom/buttons/GoToCalendarButton";
-import { ProductionPopulated } from "@/types/database.type";
 
 type ProductionHeaderMainInfoProps = {
   production: ProductionPopulated;
@@ -15,7 +15,7 @@ export default function ProductionHeaderMainInfo({ production }: ProductionHeade
       <div className="flex justify-between">
         <PageTitle>Produção #{production.id}</PageTitle>
         <div className="flex  justify-end items-end gap-1">
-          <BackButton to="/producions" label="Voltar à página de Produções" />
+          <BackButton to="/productions" label="Voltar à página de Produções" />
           <GoToCalendarButton to="/calendar/weekly" label="Ver calendário semanal" />
         </div>
       </div>

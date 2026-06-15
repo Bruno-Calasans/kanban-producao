@@ -4,7 +4,7 @@ import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import type { MovimentationPopulated } from "@/types/database.type";
-import MovimentationTypeBadge from "@/components/process-execution/badges/MovimentationTypeBadge";
+import MovimentationTypeBadge from "@/components/production/badges/MovimentationTypeBadge";
 import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
 
 type MovimentationTableProps = {

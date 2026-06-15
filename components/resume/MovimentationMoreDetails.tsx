@@ -1,7 +1,7 @@
 import { ProductionPopulated } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
 import Loader from "../custom/Loader";
-import useDepartamentState from "@/hooks/process-state/useDepartamentState";
+import useDepartamentState from "@/hooks/departament-state/useDepartamentState";
 
 type ProductionMoreDetailsProps = {
   production: ProductionPopulated;

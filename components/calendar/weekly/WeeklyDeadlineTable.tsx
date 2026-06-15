@@ -12,14 +12,14 @@ import {
 } from "@/components/ui/table";
 import { DAYS_OF_WEEK } from "@/constants/date";
 import useGetAllProductionDeadlinesInRange from "@/hooks/production-deadline/useGetAllProductionDeadlinesInRange";
-import useGetAllProductionDepartamentStates from "@/hooks/movimentation-process-state/useGetAllProductionDepartamentStates";
+import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
 import useWeek from "@/hooks/use-week/useWeek";
 import { cn } from "@/lib/utils";
 import { createCalendarMatrix } from "@/utils/createCalendarMatrix";
 import { normalizeWeekDays } from "@/utils/createNormalizedWeekDays";
 import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
 import { useMemo } from "react";
-import useGroupAllGoalsInRangeByDeadline from "@/hooks/deadline-meta/useGroupAllGoalsInRangeByDeadline";
+import useGroupAllGoalsInRangeByDeadline from "@/hooks/deadline-goal/useGroupAllGoalsInRangeByDeadline";
 import { sortByDeadlinePriority } from "@/utils/sortByDeadlinePriority";
 import { calcExternalDepartamentState } from "@/utils/calcExternalDepartamentState";
 import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";

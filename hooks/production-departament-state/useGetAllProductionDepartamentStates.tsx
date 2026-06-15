@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { DepartamentState, ProductionPopulated } from "@/types/database.type";
 import { calcDepartamentStates } from "@/utils/calcDepartamentStates";
-import { useGetAllProductionMovimentationsTemplates } from "../movimentation-execution-template/useGetAllProductionMovimentationsTemplates";
+import { useGetAllProductionMovimentationsTemplates } from "../production-movimentation-template/useGetAllProductionMovimentationsTemplates";
 
 type UseGetAllProductionDepartamentStates = {
   productions: ProductionPopulated[];

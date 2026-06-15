@@ -3,7 +3,7 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import { MoveDownLeftIcon } from "lucide-react";
 import { Departament, ProductionDeadlinePopulated } from "@/types/database.type";
-import ReturnProcessForm from "@/components/process-execution/forms/return-form/ReturnDepartamentForm";
+import ReturnProcessForm from "@/components/production/forms/return-form/ReturnDepartamentForm";
 import { ExternalDepartamentState } from "@/utils/calcDepartamentExternalState";
 
 type ReturnDialogProps = {

@@ -12,18 +12,18 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   withForm,
-  defaultExecutionFormValues,
-} from "@/components/process-execution/forms/create-movimentation-form/processExecutionFormContext";
+  defaultSkipMovimentationFormValues,
+} from "@/components/production/forms/skip-movimentation/skipMovimentationFormContext";
 import { Checkbox } from "@/components/ui/checkbox";
 import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
-type ExecutionAmountFieldProps = {
+type SkipAmountFieldProps = {
   maxAmount: number;
 };
 
-export const ExecutionAmountField = withForm({
-  defaultValues: defaultExecutionFormValues,
-  props: {} as ExecutionAmountFieldProps,
+export const SkipAmountField = withForm({
+  defaultValues: defaultSkipMovimentationFormValues,
+  props: {} as SkipAmountFieldProps,
   render({ form, maxAmount }) {
     const onUseMaxAmount = (value: boolean) => {
       if (value) form.setFieldValue("amount", maxAmount);
@@ -59,9 +59,7 @@ export const ExecutionAmountField = withForm({
                       disabled={useMaxAmount}
                       onFocus={(e) => field.handleChange("" as unknown as number)}
                     />
-                    <FieldDescription>
-                      Define a quantidade que será movida para próximo departamento.
-                    </FieldDescription>
+                    <FieldDescription>Define a quantidade que será movida</FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 );

@@ -4,8 +4,8 @@ import { DataTable } from "@/components/custom/data-table/DataTable";
 import { DepartamentState } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import DepartamentStatusBadge from "@/components/process-execution/badges/DepartamentStatusBadge";
-import DepartamentActions from "@/components/process-execution/DepartamentActions";
+import DepartamentStatusBadge from "@/components/production/badges/DepartamentStatusBadge";
+import DepartamentActions from "@/components/production/DepartamentActions";
 
 type DepartamentStateTableProps = {
   departamentStates: DepartamentState[];

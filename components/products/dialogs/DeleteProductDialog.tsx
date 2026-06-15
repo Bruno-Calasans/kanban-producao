@@ -1,6 +1,7 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import DeleteButton from "@/components/custom/buttons/DeleteButton";
+import { DialogID } from "@/hooks/dialog/DialogContext";
 import useDialog from "@/hooks/dialog/useDialog";
 import useDeleteProduct from "@/hooks/product/useDeleteProduct";
 import { Product } from "@/types/database.type";
@@ -15,12 +16,13 @@ type DeleteProductDialogProps = {
 export default function DeleteProductDialog({ product, children }: DeleteProductDialogProps) {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useDeleteProduct();
+  const dialogId: DialogID = `delete-product-${product.id}`;
 
   const handleDelete = async () => {
     try {
       await mutateAsync({ id: product.id });
       toast.success("Produto excluído com sucesso!");
-      closeDialog("delete-product");
+      closeDialog(dialogId);
     } catch (error) {
       errorHandler(error, {
         default: "Error: Não foi possível excluir o produto. Tente novamente.",
@@ -29,7 +31,7 @@ export default function DeleteProductDialog({ product, children }: DeleteProduct
   };
 
   return (
-    <CustomDialog id="delete-product" title="Excluir produto" trigger={children}>
+    <CustomDialog id={dialogId} title="Excluir produto" trigger={children}>
       <div className="flex flex-col gap-2">
         <p>
           Tem certeza que deseja excluir o produto <strong>{product.name}</strong>?
@@ -37,7 +39,7 @@ export default function DeleteProductDialog({ product, children }: DeleteProduct
         <p>Essa ação não pode ser desfeita.</p>
         <p></p>
         <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-          <CancelButton isLoading={isPending} onClick={() => closeDialog("delete-product")} />
+          <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
           <DeleteButton isLoading={isPending} onClick={handleDelete} />
         </div>
       </div>

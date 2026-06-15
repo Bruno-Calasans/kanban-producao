@@ -5,7 +5,7 @@ import CreateMovimentationForm from "@/components/productions/forms/CreateMovime
 export default function CreateMovimentationDialog() {
   return (
     <CustomDialog
-      id="create-movimentation"
+      id="create-production"
       title="Criar nova Produção"
       trigger={<AddButton label="Nova Produção" />}
     >

@@ -1,9 +1,9 @@
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { getDeadlinePriority } from "./getDeadlinePriority";
 
 export function sortByDeadlinePriority(
-  deadlineA: MovimentationDeadlinePopulated,
-  deadlineB: MovimentationDeadlinePopulated,
+  deadlineA: ProductionDeadlinePopulated,
+  deadlineB: ProductionDeadlinePopulated,
 ) {
   return getDeadlinePriority(deadlineB) - getDeadlinePriority(deadlineA);
 }

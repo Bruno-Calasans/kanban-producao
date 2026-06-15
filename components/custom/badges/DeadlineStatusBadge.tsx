@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { differenceInDays } from "date-fns";
 
 type DeadlineStatusBadgeProps = {

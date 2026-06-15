@@ -1,12 +1,12 @@
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { isWithinInterval } from "date-fns";
 import { NormalizedWeekDay } from "./createNormalizedWeekDays";
 
 export function groupDeadlinesByWeekDay(
-  deadlines: MovimentationDeadlinePopulated[],
+  deadlines: ProductionDeadlinePopulated[],
   normalizedWeekDays: NormalizedWeekDay[],
 ) {
-  const deadlinesByDate = new Map<string, MovimentationDeadlinePopulated[]>();
+  const deadlinesByDate = new Map<string, ProductionDeadlinePopulated[]>();
 
   for (const deadline of deadlines) {
     const plannedStartDate = deadline.planned_start_at

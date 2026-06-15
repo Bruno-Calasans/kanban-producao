@@ -10,7 +10,7 @@ type EditProductDialogProps = {
 
 export default function EditProductDialog({ product, children }: EditProductDialogProps) {
   return (
-    <CustomDialog id="edit-product" title="Editar produto" trigger={children}>
+    <CustomDialog id={`edit-product-${product.id}`} title="Editar produto" trigger={children}>
       <EditProductForm product={product} />
     </CustomDialog>
   );

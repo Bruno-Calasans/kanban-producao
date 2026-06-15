@@ -6,14 +6,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MovimentationDeadlinePopulated, Product } from "@/types/database.type";
+import { ProductionDeadlinePopulated, Product } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 type DeadlineCardProps = {
-  deadline: MovimentationDeadlinePopulated & {
-    movimentation: {
+  deadline: ProductionDeadlinePopulated & {
+    production: {
       product: Product;
     };
   };
@@ -34,14 +34,14 @@ export default function DeadlineCard({ deadline }: DeadlineCardProps) {
   return (
     <Card className={cn("w-flex-1 p-3", isExpired && "border border-red-500")}>
       <CardHeader>
-        <Link className="hover:underline" href={`/products/${deadline.movimentation.id}`}>
-          <CardTitle className="text-md">{deadline.movimentation.product.name}</CardTitle>
+        <Link className="hover:underline" href={`/products/${deadline.production.id}`}>
+          <CardTitle className="text-md">{deadline.production.product.name}</CardTitle>
         </Link>
 
-        <Link className="hover:underline" href={`/movimentations/${deadline.movimentation.id}`}>
-          <CardDescription>Movimentação #{deadline.movimentation.id}</CardDescription>
+        <Link className="hover:underline" href={`/productions/${deadline.production.id}`}>
+          <CardDescription>Movimentação #{deadline.production.id}</CardDescription>
         </Link>
-        <CardDescription>Quantidade: {deadline.movimentation.amount}</CardDescription>
+        <CardDescription>Quantidade: {deadline.production.amount}</CardDescription>
         <CardAction className="text-sm">
           <span className="font-bold">Prazo</span>:{" "}
           {deadline.planned_end_at

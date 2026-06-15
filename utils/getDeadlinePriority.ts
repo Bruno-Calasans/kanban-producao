@@ -1,6 +1,6 @@
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 
-export function getDeadlinePriority(deadline: MovimentationDeadlinePopulated) {
+export function getDeadlinePriority(deadline: ProductionDeadlinePopulated) {
   const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : null;
 
   const isFinished = !!deadline.actual_end_at;

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllProductionDeadlines } from "@/service/api/productionDeadline";
-import { movimentationDeadlineKeys } from "@/constants/productionDeadlineKeys";
+import { productionDeadlineKeys } from "@/constants/productionDeadlineKeys";
 
 export default function useGetAllProductionDeadlines() {
   return useQuery({
-    queryKey: movimentationDeadlineKeys.lists(),
+    queryKey: productionDeadlineKeys.lists(),
     queryFn: getAllProductionDeadlines,
   });
 }

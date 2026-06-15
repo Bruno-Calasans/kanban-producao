@@ -11,6 +11,7 @@ import handleFormError from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { Product } from "@/types/database.type";
 import CancelButton from "@/components/custom/buttons/CancelButton";
+import { DialogID } from "@/hooks/dialog/DialogContext";
 
 type EditProductForm = {
   product: Product;
@@ -19,6 +20,7 @@ type EditProductForm = {
 export default function EditProductForm({ product }: EditProductForm) {
   const { closeDialog } = useDialog();
   const { mutateAsync: updateProduct, isPending } = useUpdateProduct();
+  const dialogId: DialogID = `edit-product-${product.id}`;
 
   const form = useAppForm({
     defaultValues: {
@@ -41,7 +43,7 @@ export default function EditProductForm({ product }: EditProductForm) {
           },
         });
         toast.success("Produto atualizado com sucesso!");
-        closeDialog("edit-product");
+        closeDialog(dialogId);
         form.reset();
       } catch (error) {
         handleFormError(error, {
@@ -66,7 +68,7 @@ export default function EditProductForm({ product }: EditProductForm) {
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <CancelButton isLoading={isPending} onClick={() => closeDialog("edit-product")} />
+        <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
         <SaveButton label="Salvar" isLoading={isPending} loadingMsg="Salvando..." hiddenIcon />
       </div>
     </form>

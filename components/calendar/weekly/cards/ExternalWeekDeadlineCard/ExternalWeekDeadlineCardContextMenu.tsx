@@ -4,27 +4,27 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
+import { ProductionDeadlinePopulated, DepartamentState } from "@/types/database.type";
+import { ExternalDepartamentState } from "@/utils/calcDepartamentExternalState";
 import ReturnDialog from "../../dialogs/ReturnDialog";
-import { ExternalProcessState } from "@/utils/calcDepartamentExternalState";
 
 type ExternalWeekDeadlineCardContextMenuProps = {
   children: React.ReactNode;
-  processStates: ProcessState[];
-  deadline: MovimentationDeadlinePopulated;
+  departamentStates: DepartamentState[];
+  deadline: ProductionDeadlinePopulated;
   departamentAvaliableAmount: number;
-  departamentExternalState: ExternalProcessState;
+  departamentExternalState: ExternalDepartamentState;
   hidden?: boolean;
 };
 
 export default function ExternalWeekDeadlineCardContextMenu({
   children,
   deadline,
-  processStates,
+  departamentStates,
   departamentExternalState,
   hidden,
 }: ExternalWeekDeadlineCardContextMenuProps) {
-  const avaliableDepartaments = processStates.map((state) => state.de);
+  const avaliableDepartaments = departamentStates.map((state) => state.departament);
 
   return (
     <ContextMenu>

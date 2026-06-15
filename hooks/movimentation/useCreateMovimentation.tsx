@@ -16,7 +16,11 @@ export function useCreateMovimentation() {
     }: {
       createData: CreateMovimentationData;
       production: ProductionPopulated;
-    }) => createMovimentationAction(createData, production),
+    }) =>
+      createMovimentationAction({
+        createMovimentationData: createData,
+        production,
+      }),
     onSuccess: ({ data }) => {
       // Refetch produção
       queryClient.invalidateQueries({

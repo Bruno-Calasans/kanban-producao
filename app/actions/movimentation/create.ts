@@ -12,13 +12,13 @@ import { calcDepartamentStates } from "@/utils/calcDepartamentStates";
 import { updateProduction } from "@/service/api/productionApi";
 
 type CreateMovimentationAction = {
-  createMovimentationData: CreateMovimentationData;
   production: ProductionPopulated;
+  createMovimentationData: CreateMovimentationData;
 };
 
 export async function createMovimentationAction({
-  createMovimentationData,
   production,
+  createMovimentationData,
 }: CreateMovimentationAction) {
   // Cria movimentação
   const movimentation = await createMovimentation(createMovimentationData);

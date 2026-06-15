@@ -1,11 +1,11 @@
 import CustomTooltip from "@/components/custom/CustomTooltip";
 import { cn } from "@/lib/utils";
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { checkDeadlineType } from "@/utils/checkDeadlineType";
 import { FlagIcon, GoalIcon, Calendar1Icon } from "lucide-react";
 
 type DeadlineTypeBadgeProps = {
-  deadline: MovimentationDeadlinePopulated;
+  deadline: ProductionDeadlinePopulated;
   isExpectedThisWeekDay?: boolean;
   isStartedThisWeekDay?: boolean;
   isShort?: boolean;

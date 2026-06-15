@@ -42,7 +42,7 @@ export default function ExternalWeekDeadlineCard({
 
   return (
     <ExternalWeekDeadlineCardContextMenu
-      processStates={departamentStates}
+      departamentStates={departamentStates}
       deadline={deadline}
       departamentAvaliableAmount={avaliableAmount}
       departamentExternalState={departamentExternalState}

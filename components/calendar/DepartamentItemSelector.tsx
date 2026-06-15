@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { useEffect, useState } from "react";
-import { Badge } from "../ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export type DepartamentItem = {
@@ -10,7 +10,7 @@ export type DepartamentItem = {
 };
 
 type DepartamentItemSelectorProps = {
-  deadlines: MovimentationDeadlinePopulated[];
+  deadlines: ProductionDeadlinePopulated[];
   isLoading?: boolean;
   onSelectDepartaments: (departamentIds: DepartamentItem[]) => void;
 };

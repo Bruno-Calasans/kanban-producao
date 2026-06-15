@@ -60,11 +60,6 @@ const items = [
     icon: FactoryIcon,
   },
   {
-    name: "Processos",
-    url: "/processes",
-    icon: CogIcon,
-  },
-  {
     name: "Responsáveis",
     url: "/responsibles",
     icon: BriefcaseBusinessIcon,

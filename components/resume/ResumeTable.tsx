@@ -1,22 +1,28 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
-import { ProductMovimentation } from "@/types/database.type";
+import { ProductProduction } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
-import MovimentationStatusBadge from "../custom/badges/ProductionStatusBadge";
-import MovimentationMoreDetails from "./MovimentationMoreDetails";
+import ProductionStatusBadge from "@/components/custom/badges/ProductionStatusBadge";
+import ProductionMoreDetails from "./MovimentationMoreDetails";
 import Link from "next/link";
-import MovimentationDepartamentDetails from "./MovimentationDepartamentDetails";
+import ProductionDetails from "./ProductionDetails";
 
 type ProductPageProps = {
-  productMovimentations: ProductMovimentation[];
+  productProductions: ProductProduction[];
 };
 
-const productColumns: ColumnDef<ProductMovimentation>[] = [
+const productColumns: ColumnDef<ProductProduction>[] = [
   {
-    accessorKey: "product.op",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="OP" />,
+    id: "product.ref",
+    accessorKey: "product.ref",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Ref" />,
+    cell: ({
+      row: {
+        original: { product },
+      },
+    }) => product.ref,
   },
   {
     id: "product.name",
@@ -33,54 +39,52 @@ const productColumns: ColumnDef<ProductMovimentation>[] = [
     ),
   },
   {
-    id: "movimentations",
-    accessorFn: ({ movimentations }) => movimentations.length,
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Movimentações" />,
+    id: "productions",
+    accessorFn: ({ productions }) => productions.length,
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Produções" />,
     cell({
       row: {
-        original: { movimentations },
+        original: { productions },
       },
     }) {
-      return movimentations ? movimentations.length : 0;
+      return productions ? productions.length : 0;
     },
   },
   {
-    id: "last-movimentation",
-    accessorFn: ({ movimentations }) =>
-      movimentations.length > 0 ? `#${movimentations[movimentations.length - 1].id}` : "",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Última movimentação" />,
+    id: "last-production",
+    accessorFn: ({ productions }) =>
+      productions.length > 0 ? productions[productions.length - 1].op : "",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Última produção" />,
     cell: ({
       row: {
-        original: { movimentations },
+        original: { productions },
       },
     }) => {
-      const lastMovimentation =
-        movimentations.length > 0 ? movimentations[movimentations.length - 1] : undefined;
+      const lastProduction =
+        productions.length > 0 ? productions[productions.length - 1] : undefined;
       return (
         <Link
           className="flex gap-1 hover:underline items-center"
-          href={`/movimentations/${lastMovimentation?.id}`}
+          href={`/productions/${lastProduction?.id}`}
         >
-          {lastMovimentation && (
-            <MovimentationDepartamentDetails movimentation={lastMovimentation} />
-          )}
-          #{lastMovimentation?.id}
+          {lastProduction && <ProductionDetails production={lastProduction} />}
+          {lastProduction?.op}
         </Link>
       );
     },
   },
   {
     id: "last-movimentation-status",
-    accessorFn: ({ movimentations }) =>
-      movimentations.length > 0 ? `${movimentations[movimentations.length - 1].status}` : undefined,
+    accessorFn: ({ productions }) =>
+      productions.length > 0 ? `${productions[productions.length - 1].status}` : undefined,
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({
       row: {
-        original: { movimentations },
+        original: { productions },
       },
     }) =>
-      movimentations.length > 0 ? (
-        <MovimentationStatusBadge movimentation={movimentations[movimentations.length - 1]} />
+      productions.length > 0 ? (
+        <ProductionStatusBadge production={productions[productions.length - 1]} />
       ) : null,
   },
   {
@@ -88,25 +92,23 @@ const productColumns: ColumnDef<ProductMovimentation>[] = [
     header: "Detalhes",
     cell: ({
       row: {
-        original: { movimentations },
+        original: { productions },
       },
     }) => {
       const lastMovimentation =
-        movimentations.length > 0 ? movimentations[movimentations.length - 1] : undefined;
-      return lastMovimentation ? (
-        <MovimentationMoreDetails movimentation={lastMovimentation} />
-      ) : null;
+        productions.length > 0 ? productions[productions.length - 1] : undefined;
+      return lastMovimentation ? <ProductionMoreDetails production={lastMovimentation} /> : null;
     },
   },
 ];
 
-export default function ResumeTable({ productMovimentations }: ProductPageProps) {
+export default function ResumeTable({ productProductions }: ProductPageProps) {
   return (
     <DataTable
-      filterPlaceholder="Procurar produto"
-      filterColumn="product.name"
+      filterPlaceholder="Procurar por produto, OP ou ref"
+      filterColumn={["product.name", "product.ref", "last-production"]}
       columns={productColumns}
-      data={productMovimentations}
+      data={productProductions}
     />
   );
 }

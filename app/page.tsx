@@ -1,28 +1,30 @@
 "use client";
 
-import PageTitle from "@/components/custom/PageTitle";
-import type { ProductMovimentation } from "@/types/database.type";
-import Loader from "@/components/custom/Loader";
-import ResumeTable from "@/components/resume/ResumeTable";
-import useGetAllMovimentations from "@/hooks/production/useGetAllProductions";
 import { useMemo } from "react";
+import type { ProductProduction } from "@/types/database.type";
+import Loader from "@/components/custom/Loader";
+import PageTitle from "@/components/custom/PageTitle";
+import ResumeTable from "@/components/resume/ResumeTable";
+import useGetAllProductions from "@/hooks/production/useGetAllProductions";
 
 export default function Home() {
-  const { data, error, isPending } = useGetAllMovimentations();
-  const movimentations = data?.data || [];
+  const { data, error, isPending } = useGetAllProductions();
+  const productions = data?.data || [];
 
-  const groupMovimentations = () => {
+  const groupProductProductions = () => {
     if (isPending) return [];
-    const groups: ProductMovimentation[] = [];
-    movimentations.forEach((mov) => {
+
+    const groups: ProductProduction[] = [];
+
+    productions.forEach((mov) => {
       const groupIndex = groups.findIndex((group) => group.product.id == mov.product.id);
 
       if (groupIndex != -1) {
-        groups[groupIndex].movimentations.push(mov);
+        groups[groupIndex].productions.push(mov);
       } else {
         groups.push({
           product: mov.product,
-          movimentations: [mov],
+          productions: [mov],
         });
       }
     });
@@ -30,7 +32,7 @@ export default function Home() {
     return groups;
   };
 
-  const groups = useMemo(() => groupMovimentations(), [movimentations]);
+  const productProductions = useMemo(() => groupProductProductions(), [productions]);
 
   if (isPending) {
     return (
@@ -54,7 +56,7 @@ export default function Home() {
     <section>
       <PageTitle>Resumo</PageTitle>
       <p>Aqui está um resumo dos produtos cadastrados.</p>
-      <ResumeTable productMovimentations={groups} />
+      <ResumeTable productProductions={productProductions} />
     </section>
   );
 }

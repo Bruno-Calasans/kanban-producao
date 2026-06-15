@@ -1,26 +1,26 @@
-import useProcessState from "@/hooks/process-state/useDepartamentState";
-import { MovimentationPopulated } from "@/types/database.type";
-import Loader from "../custom/Loader";
+import { ProductionPopulated } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
+import Loader from "../custom/Loader";
+import useDepartamentState from "@/hooks/process-state/useDepartamentState";
 
-type MovimentationMoreDetailsProps = {
-  movimentation: MovimentationPopulated;
+type ProductionMoreDetailsProps = {
+  production: ProductionPopulated;
 };
 
-export default function MovimentationMoreDetails({ movimentation }: MovimentationMoreDetailsProps) {
-  const { processStates, isError, isPending } = useProcessState({ movimentation });
+export default function ProductionMoreDetails({ production }: ProductionMoreDetailsProps) {
+  const { departamentStates, isError, isPending } = useDepartamentState({ production });
 
   if (isPending) return <Loader title="Carregando..." />;
   if (isError) return <div>Algo deu errado</div>;
 
-  const positiveProcesses = processStates.filter((p) => p.avaliableAmount > 0);
+  const positiveProcesses = departamentStates.filter((p) => p.avaliableAmount > 0);
 
   return (
     <div className="flex flex-col gap-1">
       {positiveProcesses.map((p) => (
-        <Badge key={p.process.id} className="text-xs">
+        <Badge key={p.departament.id} className="text-xs">
           <p>
-            <strong className="capitalize">{p.process.name} </strong>({p.avaliableAmount})
+            <strong className="capitalize">{p.departament.name} </strong>({p.avaliableAmount})
           </p>
         </Badge>
       ))}

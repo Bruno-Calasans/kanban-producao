@@ -1,6 +1,4 @@
-import { MovimentationPopulated } from "@/types/database.type";
-import Loader from "../custom/Loader";
-import useGetAllMovimentationDeadlinesByMovimentation from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
+import { ProductionPopulated } from "@/types/database.type";
 import {
   InfoIcon,
   ClockCheckIcon,
@@ -8,18 +6,16 @@ import {
   ClockAlert,
   TriangleAlertIcon,
 } from "lucide-react";
-import CustomTooltip from "../custom/CustomTooltip";
+import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
+import Loader from "@/components/custom/Loader";
+import CustomTooltip from "@/components/custom/CustomTooltip";
 
-type MovimentationDepartamentDetailsProps = {
-  movimentation: MovimentationPopulated;
+type ProductionDetailsProps = {
+  production: ProductionPopulated;
 };
 
-export default function MovimentationDepartamentDetails({
-  movimentation,
-}: MovimentationDepartamentDetailsProps) {
-  const { data, isPending, error } = useGetAllMovimentationDeadlinesByMovimentation(
-    movimentation.id,
-  );
+export default function ProductionDetails({ production }: ProductionDetailsProps) {
+  const { data, isPending, error } = useGetAllDeadlinesByProduction(production.id);
   const deadlines = data?.data || [];
 
   if (isPending) return <Loader title="Carregando..." />;

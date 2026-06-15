@@ -76,9 +76,9 @@ export type DepartamentState = {
   flags?: DepartamentStateFlags;
 };
 
-export type ProductMovimentation = {
+export type ProductProduction = {
   product: Product;
-  movimentations: MovimentationPopulated[];
+  productions: ProductionPopulated[];
 };
 
 export type ProductionDeadline = Database["public"]["Tables"]["ProductionDeadline"]["Row"];

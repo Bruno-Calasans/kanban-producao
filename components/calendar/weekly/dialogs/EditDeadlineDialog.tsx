@@ -2,11 +2,11 @@
 
 import CustomDialog from "@/components/custom/CustomDialog";
 import EditDeadlineForm from "../forms/edit-deadline/EditDeadlineForm";
-import { Departament, MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
+import { Departament, ProductionDeadlinePopulated } from "@/types/database.type";
 import { CalendarSyncIcon } from "lucide-react";
 
 type EditDeadlineDialogProps = {
-  deadline: MovimentationDeadlinePopulated;
+  deadline: ProductionDeadlinePopulated;
   departament: Departament;
   departamentAvaliableAmount: number;
 };

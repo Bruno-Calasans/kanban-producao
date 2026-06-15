@@ -15,6 +15,7 @@ import {
   defaultExecutionFormValues,
 } from "@/components/calendar/weekly/forms/finish-meta/FinishMetaFormContext";
 import { Checkbox } from "@/components/ui/checkbox";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type MetaAmountFieldFieldProps = {
   maxAmount: number;
@@ -39,7 +40,9 @@ export const MetaAmountField = withForm({
                 const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field id="execution-amount-field" data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Quantidade*</FieldLabel>
+                    <FieldLabel htmlFor={field.name} className="gap-0">
+                      Quantidade <RequiredFieldTooltip />
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}

@@ -1,70 +1,70 @@
+import { supabase } from "@/lib/supabase/client";
 import {
   MovimentationPopulated,
-  ProcessExecutionPopulated,
-  ProductionFlowTemplateWithProcess,
+  ProductionFlowTemplatePopulated,
+  ProductionPopulated,
 } from "@/types/database.type";
-import { supabase } from "@/lib/supabase/client";
 
-export type MovimentationExecutionTemplate = {
-  movimentation: MovimentationPopulated;
-  executions: ProcessExecutionPopulated[];
-  templates: ProductionFlowTemplateWithProcess[];
+export type ProductionMovimentationTemplate = {
+  production: ProductionPopulated;
+  movimentations: MovimentationPopulated[];
+  templates: ProductionFlowTemplatePopulated[];
 };
 
-export async function getAllMovimentationExecutionsTemplates(
-  movimentations: MovimentationPopulated[],
-) {
-  const dataByMovimentation = new Map<number, MovimentationExecutionTemplate>();
-  const executionsByMovimentation = new Map<number, ProcessExecutionPopulated[]>();
-  const templatesByProductionFlow = new Map<number, ProductionFlowTemplateWithProcess[]>();
-
-  if (!movimentations || movimentations.length == 0) return dataByMovimentation;
-
-  const movimentationsIds = [...new Set(movimentations.map((movimentation) => movimentation.id))];
-  const flowIds = [...new Set(movimentations.map((m) => m.production_flow_id))];
-
-  // Mapear todos os ids das movimentações
-  if (movimentationsIds.length == 0) return dataByMovimentation;
-
-  // Pega todas as execuções das movimentações
-  const { data: executions } = await supabase
-    .from("ProcessExecution")
+export async function getAllMovimentationsByProductions(productionIds: number[]) {
+  return await supabase
+    .from("Movimentation")
     .select(
       `
     *,
-    movimentation:Movimentation!movimentation_id(*),
+    production:Production!production_id(*),
     product:Product!product_id(*),
-    process:Process!process_id(*),
-    from_process:Process!from_process_id(*),
+    departament:Departament!departament_id(*),
+    from_departament:Departament!from_departament_id(*),
     responsible:Responsible!responsible_id(*)
   `,
     )
-    .in("movimentation_id", movimentationsIds)
+    .in("production_id", productionIds)
     .throwOnError();
+}
 
-  // Pega todos os flow templates
-  const { data: templates } = await supabase
+export async function getAllFlowTemplates(flowIds: number[]) {
+  return await supabase
     .from("ProductionFlowTemplate")
     .select(
       `
     *,
-    process:Process!process_id(
-      *,
-      departament:Departament!departament_id(*)
-    )
+    departament:Departament!departament_id(*)
   `,
     )
     .in("production_flow_id", flowIds)
     .order("sequence", { ascending: true })
     .throwOnError();
+}
 
-  // Agrupa execuções por movimentação
-  for (const execution of executions) {
-    const key = execution.movimentation_id;
+export async function getAllProductionMovimentationsTemplates(productions: ProductionPopulated[]) {
+  const dataByProduction = new Map<number, ProductionMovimentationTemplate>();
+  const movimentationsByProduction = new Map<number, MovimentationPopulated[]>();
+  const templatesByProductionFlow = new Map<number, ProductionFlowTemplatePopulated[]>();
 
-    const curr = executionsByMovimentation.get(key) || [];
-    curr.push(execution);
-    executionsByMovimentation.set(key, curr);
+  if (!productions || productions.length == 0) return dataByProduction;
+
+  const productionIds = [...new Set(productions.map((production) => production.id))];
+  const flowIds = [...new Set(productions.map((m) => m.production_flow_id))];
+
+  // Pega todas as movimentações relacionadas com esses ids de produção
+  const { data: movimentations } = await getAllMovimentationsByProductions(productionIds);
+
+  // Pega todos os flow templates relacionados com esses ids de produção
+  const { data: templates } = await getAllFlowTemplates(flowIds);
+
+  // Agrupa movimentações por produção
+  for (const movimentation of movimentations) {
+    const key = movimentation.production_id;
+
+    const curr = movimentationsByProduction.get(key) || [];
+    curr.push(movimentation);
+    movimentationsByProduction.set(key, curr);
   }
 
   // agrupa template por fluxo de produção
@@ -76,16 +76,19 @@ export async function getAllMovimentationExecutionsTemplates(
     templatesByProductionFlow.set(key, curr);
   }
 
-  for (const movimentation of movimentations) {
-    const movimentationId = movimentation.id;
-    const executions = executionsByMovimentation.get(movimentationId) || [];
-    const templates = templatesByProductionFlow.get(movimentation.production_flow_id) || [];
-    dataByMovimentation.set(movimentationId, {
-      movimentation,
-      executions,
+  for (const production of productions) {
+    const productionId = production.id;
+    const productionFlowId = production.production_flow_id;
+
+    const movimentations = movimentationsByProduction.get(productionId) || [];
+    const templates = templatesByProductionFlow.get(productionFlowId) || [];
+
+    dataByProduction.set(productionId, {
+      production,
+      movimentations,
       templates,
     });
   }
 
-  return dataByMovimentation;
+  return dataByProduction;
 }

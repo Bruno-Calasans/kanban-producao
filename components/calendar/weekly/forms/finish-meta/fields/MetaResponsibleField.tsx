@@ -6,6 +6,7 @@ import {
 import { FieldError, FieldLabel, FieldDescription } from "@/components/ui/field";
 import ResponsibleSelector from "@/components/custom/selectors/ResponsibleSelector";
 import { Departament, Responsible } from "@/types/database.type";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 type MetaResponsibleFieldProps = {
   departament: Departament;
@@ -25,7 +26,9 @@ export const MetaResponsibleField = withForm({
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
             <Field>
-              <FieldLabel htmlFor={field.name}>Responsável*</FieldLabel>
+              <FieldLabel htmlFor={field.name} className="gap-0">
+                Responsável <RequiredFieldTooltip />
+              </FieldLabel>
               <ResponsibleSelector
                 departament={departament}
                 selectedResponsible={selectedResponsible}

@@ -11,12 +11,17 @@ import { calcProductionStatus } from "@/utils/calcProductionStatus";
 import { calcDepartamentStates } from "@/utils/calcDepartamentStates";
 import { updateProduction } from "@/service/api/productionApi";
 
-export async function createMovimentationAction(
-  data: CreateMovimentationData,
-  production: ProductionPopulated,
-) {
+type CreateMovimentationAction = {
+  createMovimentationData: CreateMovimentationData;
+  production: ProductionPopulated;
+};
+
+export async function createMovimentationAction({
+  createMovimentationData,
+  production,
+}: CreateMovimentationAction) {
   // Cria movimentação
-  const movimentation = await createMovimentation(data);
+  const movimentation = await createMovimentation(createMovimentationData);
 
   // Pega todas as movimentações da produção
   const { data: movimentations } = await getAllMovimentationsByProduction(production.id);

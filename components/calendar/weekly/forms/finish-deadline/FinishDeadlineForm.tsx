@@ -2,22 +2,28 @@
 "use client";
 
 import { toast } from "sonner";
-import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { formSchema, useAppForm, FinishDeadlineFormSchema } from "./finishDeadlineFormContext";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
+import { FinishedDeadlineDatesField } from "./fields/FinishedDeadlineDatesField";
+import { differenceInDays } from "date-fns";
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
-import { FinishedDeadlineDatesField } from "./fields/FinishedDeadlineDatesField";
 import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
-import { differenceInDays } from "date-fns";
 import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
+import CancelButton from "@/components/custom/buttons/CancelButton";
+import { DialogID } from "@/hooks/dialog/DialogContext";
 
 type FinishDeadlineFormProps = {
-  processStates: ProcessState[];
-  deadline: MovimentationDeadlinePopulated;
+  deadline: ProductionDeadlinePopulated;
+  departamentStates: DepartamentState[];
 };
 
-export default function FinishDeadlineForm({ processStates, deadline }: FinishDeadlineFormProps) {
+export default function FinishDeadlineForm({
+  deadline,
+  departamentStates,
+}: FinishDeadlineFormProps) {
+  const dialogId: DialogID = `finish-deadline-${deadline.id}`;
   const { closeDialog } = useDialog();
   const {
     mutateAsync: updateDeadline,
@@ -42,7 +48,7 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
       const { startDate, endDate } = value;
       if (!startDate || !endDate) return;
 
-      const { movimentation } = deadline;
+      const { production } = deadline;
       const actualStartDate = new Date(startDate).toISOString();
       const actualEndDate = new Date(endDate).toISOString();
 
@@ -56,15 +62,15 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
         });
 
         await moveNextDepartament({
-          processStates,
-          amount: movimentation.amount,
+          departamentStates,
+          amount: production.amount,
           startedAt: startDate,
           finished_at: endDate,
           responsibleId: null,
         });
 
         toast.success("Prazo finalizado com sucesso!");
-        closeDialog(`finish-deadline-${deadline.id}`);
+        closeDialog(dialogId);
         form.reset();
       } catch (error) {
         errorHandler(error, {
@@ -81,14 +87,14 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
     ? new Date(deadline.planned_start_at)
     : undefined;
 
-  const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : undefined;
   const today = new Date();
+  const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : undefined;
 
   const isExpired =
     plannedEndDate && plannedStartDate && plannedEndDate.getTime() < today.getTime();
 
   const remainingDays =
-    plannedEndDate && plannedStartDate ? differenceInDays(plannedEndDate, plannedStartDate) + 1 : 0;
+    plannedEndDate && plannedStartDate ? differenceInDays(plannedEndDate, today) + 2 : 0;
 
   return (
     <form
@@ -99,6 +105,7 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
       }}
     >
       <div className="flex flex-col  gap-1 mb-4">
+        <p>{deadline.production.product.name}</p>
         <p>
           <span className="font-bold">Data de início planejada:</span>{" "}
           {plannedStartDate ? plannedStartDate.toLocaleDateString() : "N/A"}
@@ -121,11 +128,12 @@ export default function FinishDeadlineForm({ processStates, deadline }: FinishDe
         id="finish-deadline-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
+        <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
         <ConfirmButton
           hiddenIcon
           isLoading={isPending}
-          label="Finalizar"
-          loadingMsg="Finalizando..."
+          label="Concluir"
+          loadingMsg="Concluindo..."
         />
       </div>
     </form>

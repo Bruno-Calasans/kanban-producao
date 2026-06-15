@@ -1,19 +1,21 @@
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { groupDeadlinesByDepartament } from "./groupDeadlinesByDepartament";
 import { NormalizedWeekDay } from "./createNormalizedWeekDays";
 
 type CreateCalendarMatrixInput = {
-  deadlines: MovimentationDeadlinePopulated[];
+  deadlines: ProductionDeadlinePopulated[];
   normalizedWeekDays: NormalizedWeekDay[];
 };
 
 export function createCalendarMatrix({ deadlines, normalizedWeekDays }: CreateCalendarMatrixInput) {
-  const matrix = new Map<number, Map<string, MovimentationDeadlinePopulated[]>>();
-
+  // Prazos por departamento
+  const matrix = new Map<number, Map<string, ProductionDeadlinePopulated[]>>();
   const deadlinesByDepartment = groupDeadlinesByDepartament(deadlines);
 
   for (const [departmentId, departmentDeadlines] of deadlinesByDepartment) {
-    const weekMap = new Map<string, MovimentationDeadlinePopulated[]>();
+    
+    // Dias da semana
+    const weekMap = new Map<string, ProductionDeadlinePopulated[]>();
 
     for (const day of normalizedWeekDays) {
       weekMap.set(day.key, []);

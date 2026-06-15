@@ -4,18 +4,18 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
-import FinishDeadlineDialog from "../../dialogs/FinishDeadlineDialog";
-import { Departament, MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import FinishMetaDialog from "../../dialogs/FinishMetaDialog";
+import FinishDeadlineDialog from "../../dialogs/FinishDeadlineDialog";
 import EditDeadlineDialog from "../../dialogs/EditDeadlineDialog";
 
 type InternalWeekDeadlineCardContextMenurops = {
   children: React.ReactNode;
-  processStates: ProcessState[];
+  departamentStates: DepartamentState[];
   departament: Departament;
-  metaAmount: number;
+  goalAmount: number;
   metaWeekDate: Date;
-  deadline: MovimentationDeadlinePopulated;
+  deadline: ProductionDeadlinePopulated;
   departamentAvaliableAmount: number;
   hideFinishDeadlineAction?: boolean;
   hideFinishMetaAction?: boolean;
@@ -25,9 +25,9 @@ type InternalWeekDeadlineCardContextMenurops = {
 
 export default function InternalWeekDeadlineCardContextMenu({
   children,
-  processStates,
+  departamentStates,
   departament,
-  metaAmount,
+  goalAmount,
   metaWeekDate,
   deadline,
   hideFinishDeadlineAction,
@@ -41,10 +41,17 @@ export default function InternalWeekDeadlineCardContextMenu({
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
 
       <ContextMenuContent hidden={hidden}>
-        {/* Concluir deadline */}
-        {!hideFinishDeadlineAction && (
+        {/* Concluir meta */}
+        {!hideFinishMetaAction && (
           <ContextMenuItem asChild>
-            <FinishDeadlineDialog deadline={deadline} processStates={processStates} />
+            <FinishMetaDialog
+              departamentStates={departamentStates}
+              goalAmount={goalAmount}
+              departament={departament}
+              metaWeekDate={metaWeekDate}
+              deadline={deadline}
+              departamentAvaliableAmount={departamentAvaliableAmount}
+            />
           </ContextMenuItem>
         )}
 
@@ -59,17 +66,10 @@ export default function InternalWeekDeadlineCardContextMenu({
           </ContextMenuItem>
         )}
 
-        {/* Concluir meta */}
-        {!hideFinishMetaAction && (
+        {/* Concluir deadline */}
+        {!hideFinishDeadlineAction && (
           <ContextMenuItem asChild>
-            <FinishMetaDialog
-              processStates={processStates}
-              metaAmount={metaAmount}
-              departament={departament}
-              metaWeekDate={metaWeekDate}
-              deadline={deadline}
-              departamentAvaliableAmount={departamentAvaliableAmount}
-            />
+            <FinishDeadlineDialog deadline={deadline} departamentStates={departamentStates} />
           </ContextMenuItem>
         )}
       </ContextMenuContent>

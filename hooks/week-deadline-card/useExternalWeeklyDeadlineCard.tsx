@@ -1,20 +1,20 @@
 "use client";
 
-import { MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { calcDepartamentExternalState } from "@/utils/calcDepartamentExternalState";
 
 type UseExternalWeeklyDeadlineCardProps = {
-  deadline: MovimentationDeadlinePopulated;
   weekDay: Date;
-  processStates: ProcessState[];
+  deadline: ProductionDeadlinePopulated;
+  departamentStates: DepartamentState[];
 };
 
 export default function useExternalWeeklyDeadlineCard({
   deadline,
   weekDay,
-  processStates,
+  departamentStates,
 }: UseExternalWeeklyDeadlineCardProps) {
-  const { movimentation, planned_start_at, planned_end_at, actual_end_at, departament } = deadline;
+  const { production, planned_start_at, planned_end_at, actual_end_at, departament } = deadline;
 
   // Datas
   const startDate = planned_start_at ? new Date(planned_start_at) : undefined;
@@ -28,11 +28,11 @@ export default function useExternalWeeklyDeadlineCard({
   weekDay.setHours(0, 0, 0, 0);
 
   // Verificando os departamentos externos
-  const movimentationExecutions = processStates.flatMap((state) => state.executions);
+  const movimentations = departamentStates.flatMap((state) => state.movimentations);
   const departamentExternalState = calcDepartamentExternalState({
     departament,
-    movimentation,
-    movimentationExecutions,
+    production,
+    movimentations,
   });
 
   // Quantidade disponível no departamento externo

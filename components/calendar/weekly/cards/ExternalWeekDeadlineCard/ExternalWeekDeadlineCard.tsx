@@ -1,33 +1,33 @@
-import { Departament, MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import ExternalWeekDeadlineCardContextMenu from "./ExternalWeekDeadlineCardContextMenu";
 import { ShirtIcon, HashIcon, BoxesIcon } from "lucide-react";
 import { useWeeklyDeadlineStore } from "@/store/weeklyDeadlineCardStore";
 import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
+import Link from "next/link";
+import ExternalWeekDeadlineCardContextMenu from "./ExternalWeekDeadlineCardContextMenu";
 import useExternalWeeklyDeadlineCard from "@/hooks/week-deadline-card/useExternalWeeklyDeadlineCard";
 import DeadlineTypeBadge from "../../DeadlineTypeBadge";
 
 export type ExternalWeekDeadlineCardProps = {
   weekDay: Date;
-  deadline: MovimentationDeadlinePopulated;
   departament: Departament;
-  processStates: ProcessState[];
+  deadline: ProductionDeadlinePopulated;
+  departamentStates: DepartamentState[];
 };
 
 export default function ExternalWeekDeadlineCard({
   deadline,
   departament,
   weekDay,
-  processStates,
+  departamentStates,
 }: ExternalWeekDeadlineCardProps) {
   const setSelectedDeadlineId = useWeeklyDeadlineStore((state) => state.setSelectedDeadlineId);
   const isSameDeadline = useWeeklyDeadlineStore(
     (state) => state.selectedDeadlineId === deadline.id,
   );
   const isShort = useShortCardVersion((state) => state.isShort);
-  const movimentation = deadline.movimentation;
+  const production = deadline.production;
 
   const {
     isDone,
@@ -38,11 +38,11 @@ export default function ExternalWeekDeadlineCard({
     avaliableAmount,
     isExpectedThisWeekDay,
     departamentExternalState,
-  } = useExternalWeeklyDeadlineCard({ deadline, processStates, weekDay });
+  } = useExternalWeeklyDeadlineCard({ deadline, departamentStates, weekDay });
 
   return (
     <ExternalWeekDeadlineCardContextMenu
-      processStates={processStates}
+      processStates={departamentStates}
       deadline={deadline}
       departamentAvaliableAmount={avaliableAmount}
       departamentExternalState={departamentExternalState}
@@ -50,7 +50,7 @@ export default function ExternalWeekDeadlineCard({
     >
       <Link
         className="[a]:hover:bg-secondary p-0 m-0 relative w-fit [a]:w-fit flex"
-        href={`/movimentations/${movimentation.id}`}
+        href={`/productions/${production.id}`}
       >
         <Badge
           asChild
@@ -83,7 +83,7 @@ export default function ExternalWeekDeadlineCard({
           <div className="flex flex-col items-start gap-1.5">
             {/* Title */}
             <p className="font-bold mb-1 text-md">
-              {movimentation.product.name} | {movimentation.product.op}
+              {production.product.name} | {production.op}
             </p>
 
             {/* Quantidade */}

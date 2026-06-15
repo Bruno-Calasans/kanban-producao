@@ -11,22 +11,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DAYS_OF_WEEK } from "@/constants/date";
-import useGetAllMovimentationDeadlineInRange from "@/hooks/production-deadline/useGetAllProductionDeadlinesInRange";
-import useGetAllMovimentationsProcesStates from "@/hooks/movimentation-process-state/useGetAllMovimentationsProcesStates";
+import useGetAllProductionDeadlinesInRange from "@/hooks/production-deadline/useGetAllProductionDeadlinesInRange";
+import useGetAllProductionDepartamentStates from "@/hooks/movimentation-process-state/useGetAllProductionDepartamentStates";
 import useWeek from "@/hooks/use-week/useWeek";
 import { cn } from "@/lib/utils";
 import { createCalendarMatrix } from "@/utils/createCalendarMatrix";
 import { normalizeWeekDays } from "@/utils/createNormalizedWeekDays";
 import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
 import { useMemo } from "react";
-import useGroupAllMetasInRangeByDeadline from "@/hooks/deadline-meta/useGroupAllMetasInRangeByDeadline";
+import useGroupAllGoalsInRangeByDeadline from "@/hooks/deadline-meta/useGroupAllGoalsInRangeByDeadline";
 import { sortByDeadlinePriority } from "@/utils/sortByDeadlinePriority";
-import { calcExternalProcessStates } from "@/utils/calcExternalDepartamentState";
+import { calcExternalDepartamentState } from "@/utils/calcExternalDepartamentState";
 import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";
 import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import { isToday } from "date-fns";
 import { useSelectedWeekDay } from "@/hooks/local-storage/useSelectedWeekDay";
-import { groupDeadlinesByMovimentation } from "@/utils/groupDeadlinesByMovimentation";
+import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
 
 export default function WeeklyDeadlineTable() {
   const { selectedWeekDay } = useSelectedWeekDay();
@@ -35,36 +35,42 @@ export default function WeeklyDeadlineTable() {
       startDate: selectedWeekDay ? new Date(selectedWeekDay) : new Date(),
     });
 
+  // Pega todas as produções no intervalo de data
   const {
-    data: movimentationDeadlineData,
-    isLoading: isMovimentationDeadlineLoading,
-    isError: movimentationDeadlineError,
-  } = useGetAllMovimentationDeadlineInRange(startDayOfWeek, endDayOfWeek);
-  const deadlines = movimentationDeadlineData?.data || [];
+    data: deadlinesData,
+    isLoading: isDeadlinesLoading,
+    isError: deadlineError,
+  } = useGetAllProductionDeadlinesInRange(startDayOfWeek, endDayOfWeek);
+  const deadlines = deadlinesData?.data || [];
 
-  const movimentations = deadlines.map((deadline) => deadline.movimentation);
+  // agrupa todos os estados do departamento por produção
+  const productions = deadlines.map((deadline) => deadline.production);
   const {
-    processStatesByMovimentation,
-    isLoading: isMovimentationExecutionTemplateLoading,
-    isError: movimentationExecutionTemplateError,
-  } = useGetAllMovimentationsProcesStates({ movimentations });
+    departamentStatesByProduction,
+    isLoading: isDepartamentStatesByProductionLoading,
+    isError: departamentStatesByProductionError,
+  } = useGetAllProductionDepartamentStates({ productions });
 
+  // Agrupa metas por deadline
   const {
-    data: metasInRangeByDeadlineData,
-    isError: metasInRangeByDeadlineError,
-    isLoading: isMetasInRangeByDeadlineLoading,
-  } = useGroupAllMetasInRangeByDeadline({ from: startDayOfWeek, to: endDayOfWeek, deadlines });
-  const metasInRangeByDeadline = metasInRangeByDeadlineData;
+    data: goalsInRangeByDeadlineData,
+    isError: goalsInRangeByDeadlineDataError,
+    isLoading: isGoalsInRangeByDeadlineDataPending,
+  } = useGroupAllGoalsInRangeByDeadline({ from: startDayOfWeek, to: endDayOfWeek, deadlines });
+  const goalsByDeadline = goalsInRangeByDeadlineData;
 
   const normalizedWeekDays = useMemo(() => normalizeWeekDays(weekDays), [weekDays]);
 
+  // Agrupa prazos por departamento
   const deadlinesByDepartament = useMemo(() => groupDeadlinesByDepartament(deadlines), [deadlines]);
 
-  const deadlinesByMovimentation = useMemo(
-    () => groupDeadlinesByMovimentation(deadlines),
-    [deadlines, processStatesByMovimentation],
+  // Agrupa prazos por produção
+  const deadlinesByProduction = useMemo(
+    () => groupDeadlinesByProduction(deadlines),
+    [deadlines, departamentStatesByProduction],
   );
 
+  // Prazos por departamento, por dia da semana
   const calendarMatrix = useMemo(
     () =>
       createCalendarMatrix({
@@ -117,8 +123,8 @@ export default function WeeklyDeadlineTable() {
                         deadline={deadline}
                         weekDay={day.date}
                         departament={department}
-                        processStates={
-                          processStatesByMovimentation.get(deadline.movimentation.id) || []
+                        departamentStates={
+                          departamentStatesByProduction.get(deadline.production.id) || []
                         }
                       />
                     );
@@ -130,9 +136,9 @@ export default function WeeklyDeadlineTable() {
                       deadline={deadline}
                       weekDay={day.date}
                       departament={department}
-                      metasInThisWeek={metasInRangeByDeadline?.get(deadline.id) || []}
-                      processStates={
-                        processStatesByMovimentation.get(deadline.movimentation.id) || []
+                      weekDailyGoals={goalsByDeadline?.get(deadline.id) || []}
+                      departamentStates={
+                        departamentStatesByProduction.get(deadline.production.id) || []
                       }
                     />
                   );
@@ -152,25 +158,23 @@ export default function WeeklyDeadlineTable() {
       deadlinesByDepartament,
       normalizedWeekDays,
       weekDays,
-      metasInRangeByDeadline,
-      processStatesByMovimentation,
+      goalsByDeadline,
+      departamentStatesByProduction,
     ],
   );
 
-  const uniqueMovimentations = useMemo(
-    () => Array.from(new Map(movimentations.map((item) => [item.id, item])).values()),
-    [movimentations],
+  const uniqueProductions = useMemo(
+    () => Array.from(new Map(productions.map((item) => [item.id, item])).values()),
+    [productions],
   );
 
   const isLoading =
-    isMovimentationDeadlineLoading ||
-    isMovimentationExecutionTemplateLoading ||
-    isMetasInRangeByDeadlineLoading;
+    isDeadlinesLoading ||
+    isDepartamentStatesByProductionLoading ||
+    isGoalsInRangeByDeadlineDataPending;
 
   const isError =
-    movimentationDeadlineError ||
-    movimentationExecutionTemplateError ||
-    metasInRangeByDeadlineError;
+    deadlineError || departamentStatesByProductionError || goalsInRangeByDeadlineDataError;
 
   if (isLoading) return <Loader title="Carregando prazos..." />;
 
@@ -183,9 +187,9 @@ export default function WeeklyDeadlineTable() {
         getCurrentWeek={getCurrentWeek}
         getNextWeek={getNextWeek}
         getPreviousWeek={getPreviousWeek}
-        movimentations={uniqueMovimentations}
-        deadlinesByMovimentation={deadlinesByMovimentation}
-        processStatesByMovimentation={processStatesByMovimentation}
+        productions={uniqueProductions}
+        deadlinesByProduction={deadlinesByProduction}
+        departamentStatesByProduction={departamentStatesByProduction}
       />
 
       <div className="overflow-auto max-h-[90vh]">

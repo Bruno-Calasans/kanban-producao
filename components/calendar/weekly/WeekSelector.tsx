@@ -1,21 +1,21 @@
 "use client";
 
-import PageTitle from "@/components/custom/PageTitle";
 import { Button } from "@/components/ui/button";
 import { MONTHS } from "@/constants/date";
 import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
-import { ChevronLeftIcon, ChevronRightIcon, ExpandIcon, ShrinkIcon, PlusIcon } from "lucide-react";
-import CreateDeadlineDialog from "./dialogs/CreateDeadlineDialog";
+import { ChevronLeftIcon, ChevronRightIcon, ExpandIcon, ShrinkIcon } from "lucide-react";
 import {
-  MovimentationDeadlinePopulated,
-  MovimentationPopulated,
-  ProcessState,
+  DepartamentState,
+  ProductionDeadlinePopulated,
+  ProductionPopulated,
 } from "@/types/database.type";
+import PageTitle from "@/components/custom/PageTitle";
+import CreateDeadlineDialog from "./dialogs/CreateDeadlineDialog";
 
 type WeekSelectorProps = {
-  movimentations: MovimentationPopulated[];
-  deadlinesByMovimentation: Map<number, MovimentationDeadlinePopulated[]>;
-  processStatesByMovimentation: Map<number, ProcessState[]>;
+  productions: ProductionPopulated[];
+  deadlinesByProduction: Map<number, ProductionDeadlinePopulated[]>;
+  departamentStatesByProduction: Map<number, DepartamentState[]>;
   startDayOfWeek: Date;
   getPreviousWeek: () => void;
   getCurrentWeek: () => void;
@@ -23,9 +23,6 @@ type WeekSelectorProps = {
 };
 
 export default function WeekSelector({
-  movimentations,
-  deadlinesByMovimentation,
-  processStatesByMovimentation,
   startDayOfWeek,
   getPreviousWeek,
   getCurrentWeek,
@@ -39,11 +36,7 @@ export default function WeekSelector({
         Calendário Semanal ({MONTHS[startDayOfWeek.getMonth() as keyof typeof MONTHS]})
       </PageTitle>
       <div className="flex gap-1">
-        <CreateDeadlineDialog
-          movimentations={movimentations}
-          deadlinesByMovimentation={deadlinesByMovimentation}
-          processStatesByMovimentation={processStatesByMovimentation}
-        />
+        <CreateDeadlineDialog />
 
         <Button
           size="xs"

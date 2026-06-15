@@ -1,5 +1,5 @@
 import DeadlineStatusBadge from "@/components/custom/badges/DeadlineStatusBadge";
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { differenceInDays } from "date-fns";
 import {
   HashIcon,
@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 type DeadlineStateMsgProps = {
-  deadline: MovimentationDeadlinePopulated;
+  deadline: ProductionDeadlinePopulated;
   departamentAvaliableAmount: number;
 };
 
@@ -59,11 +59,11 @@ export default function DeadlineStateMsg({
         <div className="flex items-center gap-0.5">
           <ShirtIcon size={14} />
           <p>
-            <span className="font-bold">Produto:</span> {deadline.movimentation?.product?.name}
+            <span className="font-bold">Produto:</span> {deadline.production?.product?.name}
           </p>
         </div>
         <p>
-          <span className="font-bold">OP:</span> {deadline.movimentation?.product?.op}
+          <span className="font-bold">OP:</span> {deadline.production?.op}
         </p>
       </div>
 

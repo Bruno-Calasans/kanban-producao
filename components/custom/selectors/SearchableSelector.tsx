@@ -32,6 +32,7 @@ type SelectorProps<T extends DataItem> = {
   labelSelector: keyof T;
   disabled?: boolean | "indeterminate";
   searchPlaceholder?: string;
+  classname?: string;
   onChange: (data?: T) => void;
   onChangeItem?: (item?: SelectorItem) => void;
   customLabelSelector?: (item: T) => string;
@@ -48,6 +49,7 @@ export function SearchableSelector<T extends DataItem>({
   labelSelector,
   disabled,
   searchPlaceholder,
+  classname,
   onChange,
   onChangeItem,
   customLabelSelector,
@@ -107,7 +109,7 @@ export function SearchableSelector<T extends DataItem>({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="p-2 w-[400px]">
+      <PopoverContent className={cn("p-2 w-[400px]", classname)}>
         <Input
           placeholder={searchPlaceholder || "Pesquisar..."}
           value={search}

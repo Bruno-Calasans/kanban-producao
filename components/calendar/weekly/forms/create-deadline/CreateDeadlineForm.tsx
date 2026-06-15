@@ -2,36 +2,55 @@
 
 import { toast } from "sonner";
 import { FieldGroup } from "@/components/ui/field";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Departament,
-  MovimentationDeadlinePopulated,
-  MovimentationPopulated,
-  ProcessState,
+  DepartamentState,
+  ProductionDeadlinePopulated,
+  ProductionPopulated,
 } from "@/types/database.type";
 import { defaultCreateDeadlineForm, useAppForm, formSchema } from "./createDeadlineFormContext";
+import { calcDepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
+import { ProductionSelectorFieldField } from "./fields/ProductionSelectorField";
+import { calcDepartamentStates } from "@/utils/calcDepartamentStates";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import useCreateMovimentationDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
-import { MovimentationSelectorField } from "./fields/MovimentationSelectorField";
-import MovimentationDeadlinesTable from "@/components/movimentation/table/ProductionDeadlineStatusBadge";
-import calcDepartamentState from "@/utils/calcDepartamentDeadlineState";
+import ProductionDeadlineTable from "@/components/movimentation/table/ProductionDeadlineStatusBadge";
+import useGetAllProductionDepartamentStates from "@/hooks/movimentation-process-state/useGetAllProductionDepartamentStates";
+import useGetAllProductions from "@/hooks/production/useGetAllProductions";
+import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
+import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
 
-type CreateDeadlineFormProps = {
-  movimentations: MovimentationPopulated[];
-  deadlinesByMovimentation: Map<number, MovimentationDeadlinePopulated[]>;
-  processStatesByMovimentation: Map<number, ProcessState[]>;
-};
-
-export default function CreateDeadlineForm({
-  movimentations,
-  deadlinesByMovimentation,
-  processStatesByMovimentation,
-}: CreateDeadlineFormProps) {
+export default function CreateDeadlineForm() {
   const { closeDialog } = useDialog();
   const { mutateAsync: createDeadline, isPending } = useCreateMovimentationDeadline();
-  const [selectedMovimentation, setSelectedMovimentation] = useState<MovimentationPopulated>();
+  const [selectedProduction, setSelectedProduction] = useState<ProductionPopulated>();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament>();
+
+  const {
+    data: productionsData,
+    isLoading: isProductionsLoading,
+    isError: isProductionsError,
+  } = useGetAllProductions();
+  const productions = productionsData?.data || [];
+
+  const {
+    departamentStatesByProduction,
+    isLoading: isDepartamentStatesLoading,
+    isError: isDepartamentStatesError,
+  } = useGetAllProductionDepartamentStates({
+    productions,
+  });
+
+  const {
+    data: productionDeadlinesData,
+    isLoading: isDeadlinesLoading,
+    isError: isDeadlinesError,
+  } = useGetAllDeadlinesByProduction(selectedProduction?.id);
+  const deadlines = productionDeadlinesData?.data || [];
+
+  const deadlinesByProduction = groupDeadlinesByProduction(deadlines);
 
   const form = useAppForm({
     defaultValues: defaultCreateDeadlineForm,
@@ -41,10 +60,11 @@ export default function CreateDeadlineForm({
     },
     onSubmit: async ({ value }) => {
       try {
-        if (!selectedDepartament || !selectedMovimentation) return;
+        if (!selectedDepartament || !selectedProduction) return;
         const { plannedStartDate, plannedEndDate } = value;
+
         await createDeadline({
-          movimentation_id: selectedMovimentation.id,
+          production_id: selectedProduction.id,
           departament_id: selectedDepartament.id,
           planned_start_at: plannedStartDate,
           planned_end_at: plannedEndDate,
@@ -63,21 +83,27 @@ export default function CreateDeadlineForm({
     },
   });
 
-  const movimentationDeadlines = selectedMovimentation
-    ? deadlinesByMovimentation.get(selectedMovimentation.id) || []
+  const productionDepartamentStates = selectedProduction
+    ? departamentStatesByProduction.get(selectedProduction.id) || []
     : [];
 
-  const movimentationProcessStates = selectedMovimentation
-    ? processStatesByMovimentation.get(selectedMovimentation.id) || []
-    : [];
+  const departamentDeadlineStates = useMemo(() => {
+    if (!selectedProduction) return;
 
-  const departamentStates = selectedMovimentation
-    ? calcDepartamentState({
-        movimentation: selectedMovimentation,
-        movimentationDeadlines,
-        movimentationProcessStates,
-      })
-    : undefined;
+    // Pega os prazos da produção selecionada
+    const productionDeadlines = selectedProduction
+      ? deadlinesByProduction.get(selectedProduction.id) || []
+      : [];
+
+    return calcDepartamentDeadlineState({
+      production: selectedProduction,
+      productionDeadlines,
+      productionDepartamentStates,
+    });
+  }, [selectedProduction]);
+
+  const isLoading = isProductionsLoading || isDepartamentStatesLoading || isDeadlinesLoading;
+  const isError = isProductionsError || isDepartamentStatesError || isDeadlinesError;
 
   return (
     <form
@@ -88,14 +114,18 @@ export default function CreateDeadlineForm({
       }}
     >
       <FieldGroup className="flex flex-col gap-2">
-        <MovimentationSelectorField
+        <ProductionSelectorFieldField
           form={form}
-          avaliableMovimentations={movimentations}
-          selectedMovimentation={selectedMovimentation}
-          onChangeMovimentation={setSelectedMovimentation}
+          productions={productions}
+          isLoading={isLoading}
+          selectedProduction={selectedProduction}
+          onChangeProduction={setSelectedProduction}
         />
-        {departamentStates && (
-          <MovimentationDeadlinesTable departamentStates={departamentStates} hideSearch />
+        {departamentDeadlineStates && (
+          <ProductionDeadlineTable
+            departamentDeadlineStates={departamentDeadlineStates}
+            hideSearch
+          />
         )}
       </FieldGroup>
     </form>

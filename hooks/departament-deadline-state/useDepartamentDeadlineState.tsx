@@ -6,7 +6,7 @@ import {
   ProductionDeadlinePopulated,
   ProductionPopulated,
 } from "@/types/database.type";
-import calcDepartamentDeadlineState from "@/utils/calcDepartamentDeadlineState";
+import { calcDepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 
 type UseDepartamenteDeadlineStateProps = {
   production: ProductionPopulated;

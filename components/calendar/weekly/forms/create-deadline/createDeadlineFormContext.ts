@@ -2,7 +2,7 @@ import { createFormHook, createFormHookContexts } from "@tanstack/react-form-nex
 import * as z from "zod";
 
 export const formSchema = z.object({
-  productMovimentation: z.string().nonempty("Nome do departamento é obrigatório."),
+  productProduction: z.string().nonempty("Produção é obrigatório."),
   departamentName: z.string().nonempty("Nome do departamento é obrigatório."),
   plannedStartDate: z.string().nonempty("Data de início planejada é obrigatória."),
   plannedEndDate: z.string().nonempty("Data de término planejada é obrigatória."),
@@ -11,7 +11,7 @@ export const formSchema = z.object({
 export type DeadlineFormSchema = z.infer<typeof formSchema>;
 
 export const defaultCreateDeadlineForm: DeadlineFormSchema = {
-  productMovimentation: "",
+  productProduction: "",
   departamentName: "",
   plannedStartDate: "",
   plannedEndDate: "",

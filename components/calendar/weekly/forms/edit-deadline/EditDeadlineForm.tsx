@@ -10,14 +10,14 @@ import {
 } from "./editDeadlineFormContext";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { Departament, MovimentationDeadlinePopulated } from "@/types/database.type";
+import { Departament, ProductionDeadlinePopulated } from "@/types/database.type";
 import { EditDeadlineDatesField } from "./fields/EditDeadlineDatesField";
 import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import DeadlineStateMsg from "@/components/calendar/weekly/DeadlineStateMsg";
 
 type EditDeadlineFormProps = {
-  deadline: MovimentationDeadlinePopulated;
+  deadline: ProductionDeadlinePopulated;
   departament: Departament;
   departamentAvaliableAmount: number;
 };

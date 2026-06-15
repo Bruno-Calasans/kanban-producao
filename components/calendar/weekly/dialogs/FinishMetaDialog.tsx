@@ -1,22 +1,22 @@
 "use client";
 
-import CustomDialog from "@/components/custom/CustomDialog";
-import { Departament, MovimentationDeadlinePopulated, ProcessState } from "@/types/database.type";
-import FinishMetaForm from "@/components/calendar/weekly/forms/finish-meta/FinishMetaForm";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { TrophyIcon } from "lucide-react";
+import CustomDialog from "@/components/custom/CustomDialog";
+import FinishMetaForm from "@/components/calendar/weekly/forms/finish-meta/FinishMetaForm";
 
 type FinishMetaDialogProps = {
-  processStates: ProcessState[];
-  departament: Departament;
-  metaAmount: number;
+  goalAmount: number;
   metaWeekDate: Date;
-  deadline: MovimentationDeadlinePopulated;
+  departament: Departament;
+  deadline: ProductionDeadlinePopulated;
+  departamentStates: DepartamentState[];
   departamentAvaliableAmount: number;
 };
 
 export default function FinishMetaDialog({
-  processStates,
-  metaAmount,
+  departamentStates,
+  goalAmount,
   departament,
   metaWeekDate,
   deadline,
@@ -34,8 +34,8 @@ export default function FinishMetaDialog({
       }
     >
       <FinishMetaForm
-        processStates={processStates}
-        metaAmount={metaAmount}
+        departamentStates={departamentStates}
+        goalAmount={goalAmount}
         departament={departament}
         metaWeekDate={metaWeekDate}
         deadline={deadline}

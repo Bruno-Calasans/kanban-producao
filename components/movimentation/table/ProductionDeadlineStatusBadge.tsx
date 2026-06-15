@@ -2,10 +2,10 @@
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import ProductionDeadlineStatusBadge from "@/components/custom/badges/ProductionDeadlineStatusBadge";
 import ProductionDeadlineDatesInput from "../inputs/ProductionDeadlineDatesInput";
-import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 
 type ProductionDeadlineTableProps = {
   departamentDeadlineStates: DepartamentDeadlineState[];

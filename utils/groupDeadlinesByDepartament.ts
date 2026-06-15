@@ -1,7 +1,7 @@
-import { MovimentationDeadlinePopulated } from "@/types/database.type";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 
-export function groupDeadlinesByDepartament(deadlines: MovimentationDeadlinePopulated[]) {
-  const deadlinesByDepartament = new Map<number, MovimentationDeadlinePopulated[]>();
+export function groupDeadlinesByDepartament(deadlines: ProductionDeadlinePopulated[]) {
+  const deadlinesByDepartament = new Map<number, ProductionDeadlinePopulated[]>();
 
   for (const deadline of deadlines) {
     const { departament } = deadline;

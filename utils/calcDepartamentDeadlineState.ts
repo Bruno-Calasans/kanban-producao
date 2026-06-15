@@ -21,7 +21,7 @@ export type DepartamentDeadlineState = {
   deadline?: ProductionDeadlinePopulated;
 };
 
-export default function calcDepartamentDeadlineState({
+export function calcDepartamentDeadlineState({
   production,
   productionDeadlines,
   productionDepartamentStates,

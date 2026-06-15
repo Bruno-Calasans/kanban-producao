@@ -92,7 +92,7 @@ export async function getOneProductionDeadline(productionDeadlineId: number) {
     .throwOnError();
 }
 
-export async function createProductionnDeadline(createData: CreateProductionDeadlineData) {
+export async function createProductionDeadline(createData: CreateProductionDeadlineData) {
   return await supabase.from("ProductionDeadline").insert(createData).throwOnError();
 }
 

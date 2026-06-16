@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { DepartamenStatus } from "@/utils/calcDepartamentDeadlineStatus";
+import { DeadlineStatus } from "@/utils/calcDeadlineStatus";
+import { DESC } from "@/constants/desc";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 
 type ProductionDeadlineStatusBadgeProps = {
-  status: DepartamenStatus;
+  status: DeadlineStatus;
   expiredDays: number;
 };
 
@@ -11,29 +12,29 @@ export default function ProductionDeadlineStatusBadge({
   status,
   expiredDays,
 }: ProductionDeadlineStatusBadgeProps) {
+  if (status == "NOT_DEFINED")
+    return (
+      <CustomTooltip content={DESC.deadline.notDefined}>
+        <Badge className="bg-stone-400 text-white">SEM PRAZO</Badge>
+      </CustomTooltip>
+    );
+
   if (status == "EXPIRED")
     return (
-      <CustomTooltip content="Departamento está em atraso">
+      <CustomTooltip content={DESC.deadline.expired}>
         <Badge className="bg-red-400 text-white">ATRASADO ({expiredDays} dias atrás)</Badge>
       </CustomTooltip>
     );
 
-  if (status == "PENDING")
+  if (status == "VALID")
     return (
-      <CustomTooltip content="Departamento ainda não começou">
-        <Badge className="bg-amber-400 text-white">PENDENTE</Badge>
-      </CustomTooltip>
-    );
-
-  if (status == "IN_PROGRESS")
-    return (
-      <CustomTooltip content="Departamento está em execução">
-        <Badge className="bg-indigo-400 text-white">EM PROGRESSO</Badge>
+      <CustomTooltip content={DESC.deadline.valid}>
+        <Badge className="bg-indigo-400 text-white">VÁLIDO</Badge>
       </CustomTooltip>
     );
 
   return (
-    <CustomTooltip content="Departamento terminou">
+    <CustomTooltip content={DESC.deadline.completed}>
       <Badge className="bg-emerald-400 text-white">CONCLUÍDO</Badge>
     </CustomTooltip>
   );

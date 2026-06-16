@@ -1,6 +1,6 @@
 import { ProductionPopulated } from "@/types/database.type";
 import Link from "next/link";
-import MovimentationStatusBadge from "@/components/custom/badges/ProductionStatusBadge";
+import ProductionStatusBadge from "@/components/custom/badges/ProductionStatusBadge";
 import PageTitle from "@/components/custom/PageTitle";
 import BackButton from "@/components/custom/buttons/BackButton";
 import GoToCalendarButton from "@/components//custom/buttons/GoToCalendarButton";
@@ -56,7 +56,7 @@ export default function ProductionHeaderMainInfo({ production }: ProductionHeade
           </p>
         )}
         <p className="flex gap-1 items-start text-center">
-          <strong>Status:</strong> <MovimentationStatusBadge production={production} />
+          <strong>Status:</strong> <ProductionStatusBadge production={production} />
         </p>
       </div>
     </div>

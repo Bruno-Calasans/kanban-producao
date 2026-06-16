@@ -4,7 +4,7 @@ import {
   Production,
   ProductionDeadlinePopulated,
 } from "@/types/database.type";
-import { calcDepartamentDeadlineStatus, DepartamenStatus } from "./calcDepartamentDeadlineStatus";
+import { calcDeadlineStatus, DeadlineStatus } from "./calcDeadlineStatus";
 
 type CalcDepartamentStateData = {
   production: Production;
@@ -16,7 +16,7 @@ export type DepartamentDeadlineState = {
   production: Production;
   departament: Departament;
   departamentStates: DepartamentState[];
-  status: DepartamenStatus;
+  status: DeadlineStatus;
   expiredDays: number;
   deadline?: ProductionDeadlinePopulated;
 };
@@ -28,6 +28,7 @@ export function calcDepartamentDeadlineState({
 }: CalcDepartamentStateData) {
   const statesByDepartament = new Map<number, DepartamentState[]>();
   const deadlinesByDepartament = new Map<number, ProductionDeadlinePopulated>();
+  const states: DepartamentDeadlineState[] = [];
 
   for (const deadline of productionDeadlines) {
     deadlinesByDepartament.set(deadline.departament.id, deadline);
@@ -42,23 +43,21 @@ export function calcDepartamentDeadlineState({
     statesByDepartament.set(departamentId, current);
   }
 
-  const states: DepartamentDeadlineState[] = [];
-
   // cria estados finais
   for (const [departamentId, departamentStates] of statesByDepartament) {
     const departament = departamentStates[0].departament;
 
     const deadline = deadlinesByDepartament.get(departamentId);
 
-    const { status, expiredDays } = calcDepartamentDeadlineStatus({ departamentStates, deadline });
+    const { status, expiredDays } = calcDeadlineStatus({ deadline });
 
     states.push({
-      departamentStates, // estados relacionados ao departamento atual
       departament, // departamento atual
       production, // produção
       deadline, // prazo do departamento atual
       status, // status do departamento atual
       expiredDays, // dias para expirar o prazo do departamento atual
+      departamentStates, // estados relacionados ao departamento atual
     });
   }
   return states;

@@ -1,7 +1,8 @@
 import { DepartamentState } from "@/types/database.type";
-import CustomTooltip from "@/components/custom/CustomTooltip";
+import { CircleAlertIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { CircleAlertIcon, TriangleAlertIcon } from "lucide-react";
+import { DESC } from "@/constants/desc";
+import CustomTooltip from "@/components/custom/CustomTooltip";
 
 type DepartamentStatusBadgeProps = {
   departamentState: DepartamentState;
@@ -12,7 +13,7 @@ export default function DepartamentStatusBadge({ departamentState }: Departament
 
   if (status == "PENDING")
     return (
-      <CustomTooltip content="Produção ainda não começou neste departamento" side="top">
+      <CustomTooltip content={DESC.departament.pending} side="top">
         <Badge className="bg-amber-400 text-white">PENDENTE</Badge>
       </CustomTooltip>
     );
@@ -23,8 +24,8 @@ export default function DepartamentStatusBadge({ departamentState }: Departament
         <CustomTooltip
           content={
             flags?.hasPendingReprocess
-              ? "Departamento em andamento com reprocesso"
-              : "Departamento em andamento"
+              ? DESC.departament.inProgressWithReprocess
+              : DESC.departament.inProgress
           }
           side="top"
         >
@@ -48,21 +49,21 @@ export default function DepartamentStatusBadge({ departamentState }: Departament
 
   if (status == "SKIPPED")
     return (
-      <CustomTooltip content="Departamento foi pulado" side="top">
+      <CustomTooltip content={DESC.departament.skipped} side="top">
         <Badge className="bg-stone-400 text-white">PULADO</Badge>
       </CustomTooltip>
     );
 
   if (status == "REPROCESSING")
     return (
-      <CustomTooltip content="Departamento aguardando retrabalho" side="top">
+      <CustomTooltip content={DESC.departament.reprocess} side="top">
         <Badge className="bg-orange-600 text-white">REPROCESSO TOTAL</Badge>
       </CustomTooltip>
     );
 
   if (status == "EXTERNAL")
     return (
-      <CustomTooltip content="Peças enviadas para fora deste departamento" side="top">
+      <CustomTooltip content={DESC.departament.external} side="top">
         <Badge className="bg-purple-600 text-white">EXTERNO</Badge>
       </CustomTooltip>
     );
@@ -71,9 +72,7 @@ export default function DepartamentStatusBadge({ departamentState }: Departament
     <div className="relative w-fit cursor-default">
       <CustomTooltip
         content={
-          flags?.hasReprocess
-            ? "Departamento finalizado com reprocesso"
-            : "Departamento finalizado sem reprocesso"
+          flags?.hasReprocess ? DESC.departament.completedWithReprocess : DESC.departament.completed
         }
         side="top"
       >

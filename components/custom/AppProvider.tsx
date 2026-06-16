@@ -17,7 +17,7 @@ export default function AppProvider({ children }: { children: React.ReactNode })
   const isCalendarPath = pathname.includes("calendar");
 
   return (
-    <TooltipProvider>
+    <TooltipProvider >
       <SidebarProvider defaultOpen={false}>
         <AppSidebar />
         <SidebarTrigger />

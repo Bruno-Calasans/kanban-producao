@@ -2,14 +2,13 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
 import { useState } from "react";
 import { ProductionFlow } from "@/types/database.type";
-import SaveButton from "@/components/custom/buttons/SaveButton";
-import handleFormError from "@/utils/errorHandler";
-import useSetDefaultProductionFlow from "@/hooks/production-flow/useSetDefaultProductionFlow";
 import { DefaultProductionFlowField } from "./form/fields/DefaultProductionFlowField";
 import { useAppForm, ConfigurationFormSchema, formSchema } from "./form/configurationFormContext";
+import SaveButton from "@/components/custom/buttons/SaveButton";
+import errorHandler from "@/utils/errorHandler";
+import useSetDefaultProductionFlow from "@/hooks/production-flow/useSetDefaultProductionFlow";
 
 export default function ConfigurationForm() {
   const [selectedProductionFlow, setSelectedProductionFlow] = useState<ProductionFlow>();
@@ -30,7 +29,7 @@ export default function ConfigurationForm() {
           form.reset();
         }
       } catch (error) {
-        handleFormError(error, {
+        errorHandler(error, {
           default: "Erro: não foi possível salvar as configurações.",
         });
       }
@@ -52,8 +51,8 @@ export default function ConfigurationForm() {
       />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <ClearButton isLoading={isPending} onclick={() => form.reset()} />
-        <SaveButton isLoading={isPending} />
+        {/* <ClearButton isLoading={isPending} onclick={() => form.reset()} /> */}
+        <SaveButton isLoading={isPending} hiddenIcon />
       </div>
     </form>
   );

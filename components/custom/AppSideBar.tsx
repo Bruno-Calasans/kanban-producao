@@ -83,14 +83,14 @@ const calendarSubMenu = {
   },
   subs: [
     {
-      name: "Mensal",
-      url: "/calendar/monthly",
-      icon: CalendarDaysIcon,
-    },
-    {
       name: "Semanal",
       url: "/calendar/weekly",
       icon: CalendarMinus2Icon,
+    },
+    {
+      name: "Mensal",
+      url: "/calendar/monthly",
+      icon: CalendarDaysIcon,
     },
   ],
 };

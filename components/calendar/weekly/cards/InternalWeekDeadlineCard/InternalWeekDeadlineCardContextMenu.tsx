@@ -5,7 +5,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
-import FinishMetaDialog from "../../dialogs/FinishMetaDialog";
+import FinishGoalDialog from "../../dialogs/FinishGoalDialog";
 import FinishDeadlineDialog from "../../dialogs/FinishDeadlineDialog";
 import EditDeadlineDialog from "../../dialogs/EditDeadlineDialog";
 import DeleteDeadlineDialogDialog from "../../dialogs/DeleteDeadlineDialog";
@@ -44,10 +44,20 @@ export default function InternalWeekDeadlineCardContextMenu({
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
 
       <ContextMenuContent hidden={hidden}>
+        {/* Concluir deadline */}
+        {!hideFinishDeadlineAction && (
+          <ContextMenuItem asChild>
+            <FinishDeadlineDialog
+              deadline={deadline}
+              departamentStates={departamentStates}
+              departamentAvaliableAmount={departamentAvaliableAmount}
+            />
+          </ContextMenuItem>
+        )}
         {/* Concluir meta */}
         {!hideFinishMetaAction && (
           <ContextMenuItem asChild>
-            <FinishMetaDialog
+            <FinishGoalDialog
               departamentStates={departamentStates}
               goalAmount={goalAmount}
               departament={departament}
@@ -69,17 +79,11 @@ export default function InternalWeekDeadlineCardContextMenu({
           </ContextMenuItem>
         )}
 
-        {/* Concluir deadline */}
-        {!hideFinishDeadlineAction && (
+        {!hideDeleteDeadlineAction && (
           <ContextMenuItem asChild>
-            <FinishDeadlineDialog deadline={deadline} departamentStates={departamentStates} />
+            <DeleteDeadlineDialogDialog deadline={deadline} />
           </ContextMenuItem>
         )}
-
-        <ContextMenuItem asChild>
-          <DeleteDeadlineDialogDialog deadline={deadline} />
-        </ContextMenuItem>
-        
       </ContextMenuContent>
     </ContextMenu>
   );

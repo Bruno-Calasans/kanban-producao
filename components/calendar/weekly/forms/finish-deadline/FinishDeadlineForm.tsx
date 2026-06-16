@@ -13,15 +13,18 @@ import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdat
 import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import { DialogID } from "@/hooks/dialog/DialogContext";
+import DeadlineStateMsg from "../../DeadlineStateMsg";
 
 type FinishDeadlineFormProps = {
   deadline: ProductionDeadlinePopulated;
   departamentStates: DepartamentState[];
+  departamentAvaliableAmount: number;
 };
 
 export default function FinishDeadlineForm({
   deadline,
   departamentStates,
+  departamentAvaliableAmount,
 }: FinishDeadlineFormProps) {
   const dialogId: DialogID = `finish-deadline-${deadline.id}`;
   const { closeDialog } = useDialog();
@@ -104,24 +107,11 @@ export default function FinishDeadlineForm({
         form.handleSubmit();
       }}
     >
-      <div className="flex flex-col  gap-1 mb-4">
-        <p>{deadline.production.product.name}</p>
-        <p>
-          <span className="font-bold">Data de início planejada:</span>{" "}
-          {plannedStartDate ? plannedStartDate.toLocaleDateString() : "N/A"}
-        </p>
-        <p>
-          <span className="font-bold">Date de fim planejada:</span>{" "}
-          {plannedEndDate ? plannedEndDate.toLocaleDateString() : "N/A"}
-        </p>
-        <p>
-          <span className="font-bold">Dias em atraso:</span>{" "}
-          {isExpired ? differenceInDays(today, plannedEndDate) : "N/A"}
-        </p>
-        <p>
-          <span className="font-bold">Dias restantes:</span> {remainingDays || "N/A"}
-        </p>
-      </div>
+      <DeadlineStateMsg
+        deadline={deadline}
+        departamentAvaliableAmount={departamentAvaliableAmount}
+      />
+      <br />
       <FinishedDeadlineDatesField form={form} />
 
       <div

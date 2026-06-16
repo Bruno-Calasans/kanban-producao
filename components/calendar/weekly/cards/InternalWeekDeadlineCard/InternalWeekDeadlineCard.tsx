@@ -120,8 +120,8 @@ export default function InternalWeekDeadlineCard({
           <div className="flex flex-col items-start gap-1.5 relative">
             {/* Versão curta com entrada disponível no departamento */}
             {isShort && (
-              <div className="mr-2">
-                <p className="font-bold mb-1 text-md">{production.op}</p>
+              <div className="mr-4">
+                <p className="font-bold mb-1 text-md">OP: {production.op}</p>
                 <p className="font-bold mb-1 text-md">Meta: {goalAmount}</p>
                 {workState == "COMPLETED" && (
                   <p className="flex gap-0.5 items-center justify-center text-xs">

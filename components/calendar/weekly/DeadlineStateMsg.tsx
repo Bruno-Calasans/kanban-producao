@@ -1,22 +1,19 @@
-import DeadlineStatusBadge from "@/components/custom/badges/DeadlineStatusBadge";
 import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { differenceInDays } from "date-fns";
-import {
-  HashIcon,
-  FactoryIcon,
-  ShirtIcon,
-  CalendarMinus2Icon,
-  CalendarClockIcon,
-} from "lucide-react";
+import { HashIcon, FactoryIcon, ShirtIcon, CalendarMinus2Icon } from "lucide-react";
+import ItemInfo from "@/components/custom/ItemInfo";
+import DeadlineStatusBadge from "@/components/custom/badges/DeadlineStatusBadge";
 
 type DeadlineStateMsgProps = {
   deadline: ProductionDeadlinePopulated;
   departamentAvaliableAmount: number;
+  hidePlannedDateSection?: boolean;
 };
 
 export default function DeadlineStateMsg({
   deadline,
   departamentAvaliableAmount,
+  hidePlannedDateSection,
 }: DeadlineStateMsgProps) {
   const plannedStartDate = deadline.planned_start_at
     ? new Date(deadline.planned_start_at)
@@ -37,46 +34,86 @@ export default function DeadlineStateMsg({
   const expiredDays = isExpired ? differenceInDays(today, plannedEndDate) : 0;
 
   return (
-    <div className="flex flex-col gap-3 mb-4">
-      <div className="flex justify-between gap-1 mb-1">
-        <div className="flex items-center gap-0.5">
-          <FactoryIcon size={14} />
-          <p>
-            <span className="font-bold">Departamento:</span> {deadline.departament.name}
-          </p>
-        </div>
-
-        {/* Quantidade disponível no departamento */}
-        <div className="flex items-center gap-0.5">
-          <HashIcon size={14} />
-          <p>
-            <span className="font-bold">Quant. Disponível:</span> {departamentAvaliableAmount}
-          </p>
-        </div>
-      </div>
-
+    <div className="flex flex-col gap-4 mb-1">
+      {/* Departamento e quantidade disponível */}
       <div className="flex justify-between gap-1">
-        <div className="flex items-center gap-0.5">
-          <ShirtIcon size={14} />
-          <p>
-            <span className="font-bold">Produto:</span> {deadline.production?.product?.name}
-          </p>
-        </div>
-        <p>
-          <span className="font-bold">OP:</span> {deadline.production?.op}
-        </p>
+        <ItemInfo
+          item={{
+            label: "Departamento",
+            value: deadline.departament.name,
+            icon: FactoryIcon,
+          }}
+        />
+        <ItemInfo
+          item={{
+            label: "Quant. Disponível",
+            value: departamentAvaliableAmount,
+            icon: HashIcon,
+          }}
+        />
       </div>
 
-      <div className="flex justify-between gap-1 pb-1 mb-2">
-        <div className="flex items-center gap-0.5">
-          <CalendarMinus2Icon size={14} />
-          <p>
-            <span className="font-bold">Dias restantes:</span>{" "}
-            {remainingDays ? `${remainingDays}/${totalDays}` : "N/A"}
-          </p>
-        </div>
+      {/* Seção de Produto e OP */}
+      <div className="flex justify-between gap-1">
+        <ItemInfo
+          vertical
+          item={{
+            label: "Produto",
+            value: deadline.production?.product?.name,
+            icon: ShirtIcon,
+          }}
+        />
 
-        <DeadlineStatusBadge isExpired={isExpired} expiredDays={expiredDays} />
+        <ItemInfo
+          vertical
+          item={{
+            label: "OP",
+            value: deadline.production?.op,
+          }}
+        />
+      </div>
+
+      {/* Seção de datas */}
+      {!hidePlannedDateSection && (
+        <div className="flex justify-between">
+          <ItemInfo
+            vertical
+            item={{
+              label: "Data de início planejada",
+              value: plannedStartDate ? plannedStartDate.toLocaleDateString() : "N/A",
+              icon: CalendarMinus2Icon,
+            }}
+          />
+
+          <ItemInfo
+            vertical
+            item={{
+              label: "Data de FIM planejada",
+              value: plannedEndDate ? plannedEndDate.toLocaleDateString() : "N/A",
+              icon: CalendarMinus2Icon,
+            }}
+          />
+        </div>
+      )}
+
+      {/*  Seção de dias restantes e situação */}
+      <div className="flex justify-between gap-1 pb-1">
+        <ItemInfo
+          vertical
+          item={{
+            label: "Dias restantes:",
+            value: remainingDays ? `${remainingDays}/${totalDays}` : "N/A",
+            icon: CalendarMinus2Icon,
+          }}
+        />
+        <ItemInfo
+          vertical
+          item={{
+            label: "Status",
+            value: <DeadlineStatusBadge isExpired={isExpired} expiredDays={expiredDays} />,
+            icon: CalendarMinus2Icon,
+          }}
+        />
       </div>
     </div>
   );

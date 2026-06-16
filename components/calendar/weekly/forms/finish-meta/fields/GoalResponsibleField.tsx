@@ -8,15 +8,15 @@ import ResponsibleSelector from "@/components/custom/selectors/ResponsibleSelect
 import { Departament, Responsible } from "@/types/database.type";
 import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
-type MetaResponsibleFieldProps = {
+type GoalResponsibleFieldProps = {
   departament: Departament;
   selectedResponsible?: Responsible;
   onChangeResponsible: (responsible?: Responsible) => void;
 };
 
-export const MetaResponsibleField = withForm({
+export const GoalResponsibleField = withForm({
   defaultValues: defaultExecutionFormValues,
-  props: {} as MetaResponsibleFieldProps,
+  props: {} as GoalResponsibleFieldProps,
   render({ form, departament, selectedResponsible, onChangeResponsible }) {
     return (
       <form.Field

@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { DatePickerInput } from "@/components/custom/DatePicker";
 
-export const MetaDatesField = withForm({
+export const GoalDatesField = withForm({
   defaultValues: defaultExecutionFormValues,
   props: {},
   render({ form }) {

@@ -8,11 +8,13 @@ import FinishDeadlineForm from "@/components/calendar/weekly/forms/finish-deadli
 type FinishDeadlineDialogProps = {
   deadline: ProductionDeadlinePopulated;
   departamentStates: DepartamentState[];
+  departamentAvaliableAmount: number;
 };
 
 export default function FinishDeadlineDialog({
   deadline,
   departamentStates,
+  departamentAvaliableAmount,
 }: FinishDeadlineDialogProps) {
   return (
     <CustomDialog
@@ -25,7 +27,11 @@ export default function FinishDeadlineDialog({
         </p>
       }
     >
-      <FinishDeadlineForm deadline={deadline} departamentStates={departamentStates} />
+      <FinishDeadlineForm
+        deadline={deadline}
+        departamentStates={departamentStates}
+        departamentAvaliableAmount={departamentAvaliableAmount}
+      />
     </CustomDialog>
   );
 }

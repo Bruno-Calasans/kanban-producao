@@ -83,7 +83,9 @@ export default function EditDeadlineForm({
       <DeadlineStateMsg
         deadline={deadline}
         departamentAvaliableAmount={departamentAvaliableAmount}
+        hidePlannedDateSection
       />
+      <br />
       <EditDeadlineDatesField form={form} />
 
       <div

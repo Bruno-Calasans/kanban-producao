@@ -17,15 +17,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
-type MetaAmountFieldFieldProps = {
+type GoalAmountFieldProps = {
   maxAmount: number;
-  metaAmount: number;
+  goalAmount: number;
 };
 
-export const MetaAmountField = withForm({
+export const GoalAmountField = withForm({
   defaultValues: defaultExecutionFormValues,
-  props: {} as MetaAmountFieldFieldProps,
-  render({ form, metaAmount, maxAmount }) {
+  props: {} as GoalAmountFieldProps,
+  render({ form, goalAmount, maxAmount }) {
     const onUseMaxAmount = (value: boolean) => {
       if (value) form.setFieldValue("amount", maxAmount);
     };
@@ -41,7 +41,7 @@ export const MetaAmountField = withForm({
                 return (
                   <Field id="execution-amount-field" data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name} className="gap-0">
-                      Quantidade <RequiredFieldTooltip />
+                      Quantidade feita <RequiredFieldTooltip />
                     </FieldLabel>
                     <Input
                       id={field.name}
@@ -61,7 +61,7 @@ export const MetaAmountField = withForm({
                     />
                     <FieldDescription className="flex gap-1">
                       Define a quantidade que foi concluída. Meta prevista é{" "}
-                      <span className="font-bold">{metaAmount}</span>
+                      <span className="font-bold">{goalAmount}</span>
                     </FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>

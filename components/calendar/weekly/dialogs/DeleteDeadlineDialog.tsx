@@ -45,7 +45,7 @@ export default function DeleteDeadlineDialogDialog({
   return (
     <CustomDialog
       id={dialogId}
-      title="Excluir produto"
+      title="Excluir prazo"
       trigger={
         <p className="flex hover:bg-muted cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-inset:pl-8 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive dark:data-[variant=destructive]:focus:bg-destructive/20 data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 focus:*:[svg]:text-accent-foreground data-[variant=destructive]:*:[svg]:text-destructive">
           <TrashIcon size={16} />
@@ -56,7 +56,8 @@ export default function DeleteDeadlineDialogDialog({
       <div className="flex flex-col gap-2">
         <p>
           Tem certeza que deseja excluir o prazo do departamento{" "}
-          <strong>{deadline.departament.name}</strong>?
+          <strong>{deadline.departament.name}</strong> da produção com{" "}
+          <strong> OP {deadline.production.op}</strong>?
         </p>
         <p>Essa ação não pode ser desfeita.</p>
         <p></p>

@@ -2,11 +2,8 @@
 "use client";
 
 import { toast } from "sonner";
-import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { formSchema, useAppForm, FinishMetaFormContextFormSchema } from "./FinishMetaFormContext";
 import { FieldGroup } from "@/components/ui/field";
-import errorHandler from "@/utils/errorHandler";
-import useDialog from "@/hooks/dialog/useDialog";
 import { useState } from "react";
 import {
   Departament,
@@ -14,16 +11,19 @@ import {
   ProductionDeadlinePopulated,
   Responsible,
 } from "@/types/database.type";
-import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
-import { MetaAmountField } from "./fields/MetaAmountField";
-import { MetaDatesField } from "./fields/MetaDatesField";
-import { MetaResponsibleField } from "./fields/MetaResponsibleField";
-import usecreateMeta from "@/hooks/meta/useCreateMeta";
-import CancelButton from "@/components/custom/buttons/CancelButton";
+import { GoalAmountField } from "./fields/GoalAmountField";
+import { GoalDatesField } from "./fields/GoalDatesField";
+import { GoalResponsibleField } from "./fields/GoalResponsibleField";
 import { DialogID } from "@/hooks/dialog/DialogContext";
 import { createMovimentationAction } from "@/app/actions/movimentation/create";
+import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
+import usecreateMeta from "@/hooks/meta/useCreateMeta";
+import CancelButton from "@/components/custom/buttons/CancelButton";
+import errorHandler from "@/utils/errorHandler";
+import useDialog from "@/hooks/dialog/useDialog";
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 
-type MoveNextDepartamentFormProps = {
+type FinishGoalFormProps = {
   goalAmount: number;
   metaWeekDate: Date;
   departament: Departament;
@@ -32,14 +32,14 @@ type MoveNextDepartamentFormProps = {
   departamentAvaliableAmount: number;
 };
 
-export default function FinishMetaForm({
+export default function FinishGoalForm({
   departamentStates,
   goalAmount,
   departament,
   metaWeekDate,
   deadline,
   departamentAvaliableAmount,
-}: MoveNextDepartamentFormProps) {
+}: FinishGoalFormProps) {
   const { closeDialog } = useDialog();
   const dialogId: DialogID = `finish-meta-${metaWeekDate.toISOString()}`;
   const [responsible, setResponsible] = useState<Responsible>();
@@ -131,18 +131,18 @@ export default function FinishMetaForm({
       }}
     >
       <FieldGroup>
-        <MetaAmountField
+        <GoalAmountField
           form={form}
-          metaAmount={goalAmount}
+          goalAmount={goalAmount}
           maxAmount={departamentAvaliableAmount}
         />
-        <MetaResponsibleField
+        <GoalResponsibleField
           form={form}
           departament={departament}
           selectedResponsible={responsible}
           onChangeResponsible={setResponsible}
         />
-        <MetaDatesField form={form} />
+        <GoalDatesField form={form} />
       </FieldGroup>
 
       <div id="amount-form-buttons" className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end">

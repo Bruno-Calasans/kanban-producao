@@ -11,6 +11,8 @@ import useCreateProductionDeadline from "@/hooks/production-deadline/useCreatePr
 import useUpdateProductionDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import SaveButton from "@/components/custom/buttons/SaveButton";
+import DeleteButton from "@/components/custom/buttons/DeleteButton";
+import useDeleteProductionDeadline from "@/hooks/production-deadline/useDeleteProductionDeadline";
 
 type ProductionDeadlineDatesInputProps = {
   departamentState: DepartamentDeadlineState;
@@ -31,9 +33,15 @@ export default function ProductionDeadlineDatesInput({
 
   const {
     mutateAsync: updateProductionDeadline,
-    isPending: createDeadlinePending,
+    isPending: isCreateDeadlinePending,
     isError: createDeadlineError,
   } = useUpdateProductionDeadline();
+
+  const {
+    mutateAsync: deleteDeadline,
+    isPending: isDeleteDeadlinePending,
+    isError: deleteDeadlineError,
+  } = useDeleteProductionDeadline();
 
   const today = new Date();
 
@@ -169,8 +177,21 @@ export default function ProductionDeadlineDatesInput({
     setSelectedEndDate(undefined);
   };
 
-  const isPending = isUpdateDeadlinePending || createDeadlinePending;
-  const isError = isUpdateDeadlineError || createDeadlineError;
+  const onDelete = async () => {
+    if (!deadline) return;
+    try {
+      await deleteDeadline(deadline.id);
+      toast.success("Prazo removido");
+    } catch (error) {
+      toast.error("Erro: não foi possível remover o prazo");
+    }
+  };
+
+  const isPending = isUpdateDeadlinePending || isCreateDeadlinePending || isDeleteDeadlinePending;
+  const isError = isUpdateDeadlineError || createDeadlineError || deleteDeadlineError;
+
+  const canDeleteDeadline =
+    deadline && production.status != "CANCELLED" && production.status != "COMPLETED";
 
   const productionStatus = departamentState.production.status;
 
@@ -230,20 +251,42 @@ export default function ProductionDeadlineDatesInput({
           )
         }
       />
-      <div></div>
-      <div className="pt-1 flex justify-self-end gap-1">
-        {(hasStartDateChanged || hasEndDateChanged) && (
-          <>
-            <CancelButton label="Cancelar" size="xs" onClick={onCancel} isLoading={isPending} />
-            <SaveButton
-              label="Salvar"
-              size="xs"
-              onClick={onSave}
+
+      <div className="pt-1 flex justify-between gap-1 col-span-2">
+        {/* Mostra quando o prazo concluído */}
+        <div>
+          {deadline && deadline.actual_end_at && status === "COMPLETED" && (
+            <p className="text-stone-800/70 self-start">
+              Prazo concluído em: {new Date(deadline.actual_end_at).toLocaleDateString()}
+            </p>
+          )}
+        </div>
+
+        <div className="flex gap-2">
+          {/* Botão para deletar prazo */}
+          {canDeleteDeadline && (
+            <DeleteButton
+              label="Excluir prazo"
+              onClick={onDelete}
               isLoading={isPending}
+              size="xs"
               hiddenIcon
             />
-          </>
-        )}
+          )}
+          {/* Botão para salvar prazo */}
+          {(hasStartDateChanged || hasEndDateChanged) && (
+            <>
+              <CancelButton label="Cancelar" size="xs" onClick={onCancel} isLoading={isPending} />
+              <SaveButton
+                label="Salvar"
+                size="xs"
+                onClick={onSave}
+                isLoading={isPending}
+                hiddenIcon
+              />
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

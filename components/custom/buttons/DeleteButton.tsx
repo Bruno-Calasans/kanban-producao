@@ -7,6 +7,7 @@ type DeleteButtonProps = {
   disabled?: boolean;
   loadingMsg?: string;
   hiddenIcon?: boolean;
+  size?: "default" | "xs" | "sm" | "lg" | "icon";
   onClick: () => void;
 };
 
@@ -16,6 +17,7 @@ export default function DeleteButton({
   isLoading,
   hiddenIcon,
   loadingMsg,
+  size,
   onClick,
 }: DeleteButtonProps) {
   const defaultLabel = label || "Excluir";
@@ -29,6 +31,7 @@ export default function DeleteButton({
       className="cursor-pointer bg-red-500 hover:bg-red-600 text-white hover:text-white"
       variant="outline"
       disabled={isLoading}
+      size={size}
       type="button"
     >
       {canLoad ? defaultLoadingMsg : defaultLabel}

@@ -13,13 +13,12 @@ import { useState } from "react";
 import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
 import { useCreateProduction } from "@/hooks/production/useCreateProduction";
 import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
+import { DialogID } from "@/hooks/dialog/DialogContext";
+import { ProductProductionOpField } from "./fields/ProductProductionOpField";
 import MoveButton from "@/components/custom/buttons/MoveButton";
 import useDialog from "@/hooks/dialog/useDialog";
-import handleFormError from "@/utils/errorHandler";
-import ClearButton from "@/components/custom/buttons/ClearButton";
-import { ProductProductionOpField } from "./fields/ProductProductionOpField";
 import CancelButton from "@/components/custom/buttons/CancelButton";
-import { DialogID } from "@/hooks/dialog/DialogContext";
+import handleFormError from "@/utils/errorHandler";
 
 type CreateProductProductionFormProps = {
   product: Product;
@@ -66,6 +65,7 @@ export default function CreateProductProductionForm({ product }: CreateProductPr
             product_id: product.id,
             started_at: new Date().toISOString(),
             finished_at: new Date().toISOString(),
+            deadline_id: null,
             type: "INIT",
             reason: "",
           },

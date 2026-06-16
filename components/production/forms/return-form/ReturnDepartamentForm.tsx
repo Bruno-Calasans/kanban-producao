@@ -76,6 +76,7 @@ export default function ReturnDepartamentForm({
             type: "RETURN",
             responsible_id: null,
             reason: null,
+            deadline_id: deadline ? deadline.id : null,
           },
         });
 

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { formSchema, useAppForm, SkipFormContextSchema } from "./skipMovimentationFormContext";
 import { FieldGroup } from "@/components/ui/field";
 import { useState } from "react";
-import { Departament, DepartamentState } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { SkipAmountField } from "./fields/SkipAmountField";
 import { SkipDepartamentField } from "./fields/SkipDepartamentField";
 import { SkipReasonField } from "./fields/SkipReasonField";
@@ -17,11 +17,13 @@ import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimenta
 type SkipMovimentationFormProps = {
   departamentState: DepartamentState;
   departamentStates: DepartamentState[];
+  departamentDeadline: ProductionDeadlinePopulated | null;
 };
 
 export default function SkipMovimentationForm({
   departamentState,
   departamentStates,
+  departamentDeadline,
 }: SkipMovimentationFormProps) {
   const { closeDialog } = useDialog();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament>();
@@ -59,6 +61,7 @@ export default function SkipMovimentationForm({
             started_at: null,
             finished_at: null,
             responsible_id: null,
+            deadline_id: departamentDeadline ? departamentDeadline.id : null,
           },
         });
 

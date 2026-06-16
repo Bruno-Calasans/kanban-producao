@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { formSchema, useAppForm, defaultMoveExternalFormValues } from "./moveExternalFormContext";
 import { FieldGroup } from "@/components/ui/field";
 import { useState } from "react";
-import { Departament, DepartamentState } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { MoveAmountField } from "./fields/MoveAmountField";
 import { ExternalDepartamentField } from "./fields/ExternalDepartamentField";
 import { ExternalDeadlineField } from "./fields/ExternalDeadlineField";
@@ -18,9 +18,13 @@ import CancelButton from "@/components/custom/buttons/CancelButton";
 
 type MoveExternalFormProps = {
   departamentState: DepartamentState;
+  departamentDeadline: ProductionDeadlinePopulated | null;
 };
 
-export default function MoveExternalForm({ departamentState }: MoveExternalFormProps) {
+export default function MoveExternalForm({
+  departamentState,
+  departamentDeadline,
+}: MoveExternalFormProps) {
   const { closeDialog } = useDialog();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament>();
   const {
@@ -60,6 +64,7 @@ export default function MoveExternalForm({ departamentState }: MoveExternalFormP
             started_at: null,
             finished_at: null,
             reason: null,
+            deadline_id: departamentDeadline ? departamentDeadline.id : null,
           },
         });
 

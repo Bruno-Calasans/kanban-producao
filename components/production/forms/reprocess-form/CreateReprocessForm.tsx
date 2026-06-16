@@ -6,7 +6,7 @@ import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { FieldGroup } from "@/components/ui/field";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { Departament, DepartamentState } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import { ReprocessExecutionSchema, useAppForm, formSchema } from "./reprocessExecutionFormContext";
 import { ReprocessAmountField } from "./fields/ReprocessAmountField";
@@ -17,11 +17,13 @@ import { ReprocessReasonField } from "./fields/ReprocessReasonField";
 type CreateReprocessFormrops = {
   departamentState: DepartamentState;
   departamentStates: DepartamentState[];
+  departamentDeadline: ProductionDeadlinePopulated | null;
 };
 
 export default function CreateReprocessForm({
   departamentState,
   departamentStates,
+  departamentDeadline,
 }: CreateReprocessFormrops) {
   const { closeDialog } = useDialog();
   const { mutateAsync: createMovimentation, isPending: isMovimentationPending } =
@@ -62,6 +64,7 @@ export default function CreateReprocessForm({
             finished_at: new Date().toISOString(),
             type: "REPROCESS",
             reason: null,
+            deadline_id: departamentDeadline ? departamentDeadline.id : null,
           },
         });
 

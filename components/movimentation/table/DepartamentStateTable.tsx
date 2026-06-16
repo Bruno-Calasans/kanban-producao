@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
-import { DepartamentState } from "@/types/database.type";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import DepartamentStatusBadge from "@/components/production/badges/DepartamentStatusBadge";
@@ -9,9 +9,13 @@ import DepartamentActions from "@/components/production/DepartamentActions";
 
 type DepartamentStateTableProps = {
   departamentStates: DepartamentState[];
+  deadlines: ProductionDeadlinePopulated[];
 };
 
-export default function DepartamentStateTable({ departamentStates }: DepartamentStateTableProps) {
+export default function DepartamentStateTable({
+  departamentStates,
+  deadlines,
+}: DepartamentStateTableProps) {
   const processColumns: ColumnDef<DepartamentState>[] = [
     {
       id: "template.sequence",
@@ -44,8 +48,9 @@ export default function DepartamentStateTable({ departamentStates }: Departament
       cell: ({ row: { original: departamentState } }) => {
         return (
           <DepartamentActions
-            departamentStates={departamentStates}
+            deadlines={deadlines}
             departamentState={departamentState}
+            departamentStates={departamentStates}
           />
         );
       },

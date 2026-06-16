@@ -14,7 +14,6 @@ import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimenta
 import { useCreateProduction } from "@/hooks/production/useCreateProduction";
 import useDialog from "@/hooks/dialog/useDialog";
 import handleFormError from "@/utils/errorHandler";
-import ClearButton from "@/components/custom/buttons/ClearButton";
 import CreateManySwitch from "@/components/custom/CreateManySwitch";
 import MoveButton from "@/components/custom/buttons/MoveButton";
 import CancelButton from "@/components/custom/buttons/CancelButton";
@@ -67,6 +66,7 @@ export default function CreateProductionForm({ defaultProduct }: CreateProductio
             started_at: new Date().toISOString(),
             finished_at: new Date().toISOString(),
             reason: "",
+            deadline_id: null,
           },
         });
 

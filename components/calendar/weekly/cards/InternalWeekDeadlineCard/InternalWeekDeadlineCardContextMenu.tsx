@@ -8,6 +8,7 @@ import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/ty
 import FinishMetaDialog from "../../dialogs/FinishMetaDialog";
 import FinishDeadlineDialog from "../../dialogs/FinishDeadlineDialog";
 import EditDeadlineDialog from "../../dialogs/EditDeadlineDialog";
+import DeleteDeadlineDialogDialog from "../../dialogs/DeleteDeadlineDialog";
 
 type InternalWeekDeadlineCardContextMenurops = {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ type InternalWeekDeadlineCardContextMenurops = {
   hideFinishDeadlineAction?: boolean;
   hideFinishMetaAction?: boolean;
   hideEditDeadlineAction?: boolean;
+  hideDeleteDeadlineAction?: boolean;
   hidden?: boolean;
 };
 
@@ -33,6 +35,7 @@ export default function InternalWeekDeadlineCardContextMenu({
   hideFinishDeadlineAction,
   hideEditDeadlineAction,
   hideFinishMetaAction,
+  hideDeleteDeadlineAction,
   departamentAvaliableAmount,
   hidden,
 }: InternalWeekDeadlineCardContextMenurops) {
@@ -72,6 +75,11 @@ export default function InternalWeekDeadlineCardContextMenu({
             <FinishDeadlineDialog deadline={deadline} departamentStates={departamentStates} />
           </ContextMenuItem>
         )}
+
+        <ContextMenuItem asChild>
+          <DeleteDeadlineDialogDialog deadline={deadline} />
+        </ContextMenuItem>
+        
       </ContextMenuContent>
     </ContextMenu>
   );

@@ -58,6 +58,7 @@ export default function CreateMovimentationForm({
             responsible_id: responsible.id,
             started_at: started_at ? new Date(started_at).toISOString() : null,
             finished_at: finished_at ? new Date(finished_at).toISOString() : null,
+            deadline_id: null,
             type: "TRANSFER",
             reason: null,
           },

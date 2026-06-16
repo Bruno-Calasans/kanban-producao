@@ -102,6 +102,7 @@ export default function FinishMetaForm({
               production_id: currDepartamentState?.production.id,
               product_id: currDepartamentState?.production.product_id,
               responsible_id: responsible?.id || null,
+              deadline_id: deadline.id,
               type: "TRANSFER",
               reason: "",
             },

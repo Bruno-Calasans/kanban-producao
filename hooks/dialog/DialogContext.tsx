@@ -45,6 +45,7 @@ export type DialogID =
   // Prazos
   | `create-deadline`
   | `edit-deadline-${number}`
+  | `delete-deadline-${number | string}`
   | `finish-deadline-${number}`
   | `finish-meta-${number | string}`
 

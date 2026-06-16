@@ -56,7 +56,7 @@ export default function ProductionTabs({
       </div>
 
       <TabsContent value={TABS[0]}>
-        <DepartamentStateTable departamentStates={departamentStates} />
+        <DepartamentStateTable departamentStates={departamentStates} deadlines={deadlines} />
       </TabsContent>
 
       <TabsContent value={TABS[1]}>

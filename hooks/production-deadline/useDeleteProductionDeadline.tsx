@@ -6,8 +6,7 @@ export default function useDeleteProductionDeadline() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { movimenttionDeadlineId: number }) =>
-      deleteProductionDeadline(data.movimenttionDeadlineId),
+    mutationFn: deleteProductionDeadline,
     onSuccess() {
       queryClient.invalidateQueries({
         queryKey: productionDeadlineKeys.lists(),

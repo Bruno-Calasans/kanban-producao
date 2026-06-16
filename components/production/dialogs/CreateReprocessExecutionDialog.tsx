@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { DepartamentState } from "@/types/database.type";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { RotateCcwIcon } from "lucide-react";
 import CustomDialog from "@/components/custom/CustomDialog";
 import CreateReprocessForm from "../forms/reprocess-form/CreateReprocessForm";
@@ -7,11 +7,13 @@ import CreateReprocessForm from "../forms/reprocess-form/CreateReprocessForm";
 type CreateReprocessExecutionDialogProps = {
   departamentState: DepartamentState;
   departamentStates: DepartamentState[];
+  departamentDeadline: ProductionDeadlinePopulated | null;
 };
 
 export default function CreateReprocessExecutionDialog({
   departamentState,
   departamentStates,
+  departamentDeadline,
 }: CreateReprocessExecutionDialogProps) {
   return (
     <CustomDialog
@@ -27,6 +29,7 @@ export default function CreateReprocessExecutionDialog({
       <CreateReprocessForm
         departamentState={departamentState}
         departamentStates={departamentStates}
+        departamentDeadline={departamentDeadline}
       />
     </CustomDialog>
   );

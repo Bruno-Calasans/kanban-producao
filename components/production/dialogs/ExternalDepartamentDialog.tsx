@@ -3,15 +3,17 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import { Button } from "@/components/ui/button";
 import { MoveUpRightIcon } from "lucide-react";
-import { DepartamentState } from "@/types/database.type";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import MoveExternalForm from "@/components/production/forms/move-external-form/MoveExternalForm";
 
 type ExternalDepartamentDialogProps = {
   departamentState: DepartamentState;
+  departamentDeadline: ProductionDeadlinePopulated | null;
 };
 
 export default function ExternalDepartamentDialog({
   departamentState,
+  departamentDeadline,
 }: ExternalDepartamentDialogProps) {
   return (
     <CustomDialog
@@ -28,7 +30,10 @@ export default function ExternalDepartamentDialog({
         </Button>
       }
     >
-      <MoveExternalForm departamentState={departamentState} />
+      <MoveExternalForm
+        departamentState={departamentState}
+        departamentDeadline={departamentDeadline}
+      />
     </CustomDialog>
   );
 }

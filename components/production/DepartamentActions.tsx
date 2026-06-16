@@ -1,26 +1,31 @@
 "use client";
 
-import { DepartamentState } from "@/types/database.type";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import CreateMovimentationDialog from "./dialogs/CreateMovimentationDialog";
 import CreateReprocessExecutionDialog from "./dialogs/CreateReprocessExecutionDialog";
-import MoveExternalProcessExecutionDialog from "./dialogs/ExternalDepartamentDialog";
+import ExternalDepartamentDialog from "./dialogs/ExternalDepartamentDialog";
 import SkipDepartamentDialog from "./dialogs/SkipDepartamentDialog";
 
 type DepartamentActionsProps = {
   departamentState: DepartamentState;
   departamentStates: DepartamentState[];
+  deadlines: ProductionDeadlinePopulated[];
 };
 
 export default function DepartamentActions({
   departamentState,
   departamentStates,
+  deadlines,
 }: DepartamentActionsProps) {
-  const { previousDepartament, nextDepartament, production } = departamentState;
+  const { departament, previousDepartament, nextDepartament, production } = departamentState;
 
   const isLastDepartament = nextDepartament == null;
   const antiLastDepartament = departamentStates[departamentStates.length - 2];
   const isAntiLastDepartament =
     antiLastDepartament.departament.id === departamentState.departament.id;
+
+  const departamentDeadline =
+    deadlines.find((deadline) => deadline.departament.id == departament.id) || null;
 
   if (departamentState.avaliableAmount == 0) return null;
 
@@ -38,6 +43,7 @@ export default function DepartamentActions({
         <SkipDepartamentDialog
           departamentState={departamentState}
           departamentStates={departamentStates}
+          departamentDeadline={departamentDeadline}
         />
       )}
 
@@ -45,11 +51,15 @@ export default function DepartamentActions({
         <CreateReprocessExecutionDialog
           departamentState={departamentState}
           departamentStates={departamentStates}
+          departamentDeadline={departamentDeadline}
         />
       )}
 
       {nextDepartament && (
-        <MoveExternalProcessExecutionDialog departamentState={departamentState} />
+        <ExternalDepartamentDialog
+          departamentState={departamentState}
+          departamentDeadline={departamentDeadline}
+        />
       )}
     </div>
   );

@@ -71,6 +71,10 @@ export async function deleteMovimentation(movimentationId: number) {
   return await supabase.from("Movimentation").delete().eq("id", movimentationId).throwOnError();
 }
 
+export async function deleteMovimentationsByDeadline(deadlineId: number) {
+  return await supabase.from("Movimentation").delete().eq("deadline_id", deadlineId).throwOnError();
+}
+
 export async function getAllMovimentationsByProduct(productId: number) {
   return await supabase
     .from("Movimentation")
@@ -198,6 +202,7 @@ export async function moveToNextDepartament({
       started_at: startedAt,
       finished_at: finished_at,
       type: "TRANSFER",
+      deadline_id: null,
       reason: null,
     });
 

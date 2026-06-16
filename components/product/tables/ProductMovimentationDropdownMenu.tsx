@@ -16,7 +16,7 @@ type ProductProductionDropdownMenuProps = {
 };
 
 export function ProductProductionDropdownMenu({ production }: ProductProductionDropdownMenuProps) {
-  const { status, product } = production;
+  const { status } = production;
 
   const canEdit = status == "PENDING";
   const canDelete = status == "PENDING";

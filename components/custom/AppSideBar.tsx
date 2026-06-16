@@ -5,16 +5,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupAction,
-  SidebarGroupContent,
   useSidebar,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
 
 import {
@@ -22,18 +13,18 @@ import {
   ArrowLeftRightIcon,
   ShirtIcon,
   FactoryIcon,
-  CogIcon,
   BriefcaseBusinessIcon,
   Settings2Icon,
-  FormIcon,
   CalendarIcon,
   CalendarMinus2Icon,
   CalendarDaysIcon,
   PackageIcon,
+  LayoutGridIcon,
 } from "lucide-react";
-import CustomTooltip from "./CustomTooltip";
+import { MenuItem } from "./app-sidebar/MenuItem";
+import SubMenu from "./app-sidebar/SubMenu";
 
-const items = [
+const topMenu = [
   {
     name: "Home",
     url: "/",
@@ -44,32 +35,65 @@ const items = [
     url: "/productions",
     icon: PackageIcon,
   },
+];
+
+const bottomMenu = [
   {
-    name: "Fluxos de Produção",
-    url: "/production-flows",
-    icon: ArrowLeftRightIcon,
-  },
-  {
-    name: "Produtos",
-    url: "/products",
-    icon: ShirtIcon,
-  },
-  {
-    name: "Departamentos",
-    url: "/departaments",
-    icon: FactoryIcon,
-  },
-  {
-    name: "Responsáveis",
-    url: "/responsibles",
-    icon: BriefcaseBusinessIcon,
-  },
-  {
-    name: "Configuração",
+    name: "Configurações",
     url: "/configuration",
     icon: Settings2Icon,
   },
 ];
+
+const paramentersSubmenu = {
+  main: {
+    name: "Parâmetros",
+    // url: "/parameters",
+    icon: LayoutGridIcon,
+  },
+  subs: [
+    {
+      name: "Produtos",
+      url: "/products",
+      icon: ShirtIcon,
+    },
+    {
+      name: "Departamentos",
+      url: "/departaments",
+      icon: FactoryIcon,
+    },
+    {
+      name: "Responsáveis",
+      url: "/responsibles",
+      icon: BriefcaseBusinessIcon,
+    },
+    {
+      name: "Fluxos de Produção",
+      url: "/production-flows",
+      icon: ArrowLeftRightIcon,
+    },
+  ],
+};
+
+const calendarSubMenu = {
+  main: {
+    name: "Calendário",
+    // url: "/calendars",
+    icon: CalendarIcon,
+  },
+  subs: [
+    {
+      name: "Mensal",
+      url: "/calendar/monthly",
+      icon: CalendarDaysIcon,
+    },
+    {
+      name: "Semanal",
+      url: "/calendar/weekly",
+      icon: CalendarMinus2Icon,
+    },
+  ],
+};
 
 export function AppSidebar() {
   const { open } = useSidebar();
@@ -78,76 +102,27 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent className="p-2">
         <SidebarMenu>
-          {items.map((item) =>
-            open ? (
-              <SidebarMenuItem key={item.name}>
-                <SidebarMenuButton asChild>
-                  <a href={item.url}>
-                    <item.icon />
-                    <span>{item.name}</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ) : (
-              <CustomTooltip key={item.name} content={item.name} side="right">
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.name}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              </CustomTooltip>
-            ),
-          )}
+          {/* Menu superior */}
+          {topMenu.map((item) => (
+            <MenuItem key={item.name} open={open} item={item} />
+          ))}
 
-          {/* Calendário */}
-          <SidebarMenuItem>
-            {open ? (
-              <SidebarMenuButton asChild className="w-full">
-                <a href="/calendar" className="w-full">
-                  <CalendarIcon />
-                  <span>Calendário</span>
-                </a>
-              </SidebarMenuButton>
-            ) : (
-              <CustomTooltip content="Calendário" side="right">
-                <SidebarMenuButton asChild className="w-full">
-                  <a href="/calendar" className="w-full">
-                    <CalendarIcon />
-                    <span>Calendário</span>
-                  </a>
-                </SidebarMenuButton>
-              </CustomTooltip>
-            )}
+          {/* Calendário Submenu */}
+          <SubMenu open={open} mainItem={calendarSubMenu.main} subItems={calendarSubMenu.subs} />
 
-            {/* Submenus */}
-            <SidebarMenuSub>
-              <SidebarMenuSubItem>
-                <SidebarMenuSubButton asChild>
-                  <a className="flex" href="/calendar/weekly">
-                    <CalendarMinus2Icon />
-                    <span>Semanal</span>
-                  </a>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            </SidebarMenuSub>
+          {/* Paramêtros submenu */}
+          <SubMenu
+            open={open}
+            mainItem={paramentersSubmenu.main}
+            subItems={paramentersSubmenu.subs}
+          />
 
-            <SidebarMenuSub>
-              <SidebarMenuSubItem>
-                <SidebarMenuSubButton asChild>
-                  <a className="flex" href="/calendar/monthly">
-                    <CalendarDaysIcon />
-                    <span>Mensal</span>
-                  </a>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            </SidebarMenuSub>
-          </SidebarMenuItem>
+          {/* Menu */}
+          {bottomMenu.map((item) => (
+            <MenuItem key={item.name} open={open} item={item} />
+          ))}
         </SidebarMenu>
       </SidebarContent>
-
       <SidebarFooter />
     </Sidebar>
   );

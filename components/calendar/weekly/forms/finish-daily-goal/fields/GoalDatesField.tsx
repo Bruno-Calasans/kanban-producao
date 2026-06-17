@@ -5,7 +5,7 @@ import { Field, FieldError, FieldGroup, FieldLabel, FieldDescription } from "@/c
 import {
   withForm,
   defaultExecutionFormValues,
-} from "@/components/calendar/weekly/forms/finish-meta/FinishMetaFormContext";
+} from "@/components/calendar/weekly/forms/finish-daily-goal/FinishGoalFormContext";
 import { Input } from "@/components/ui/input";
 import { DatePickerInput } from "@/components/custom/DatePicker";
 

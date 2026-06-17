@@ -3,7 +3,7 @@
 import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { TrophyIcon } from "lucide-react";
 import CustomDialog from "@/components/custom/CustomDialog";
-import FinishMetaForm from "@/components/calendar/weekly/forms/finish-meta/FinishGoalForm";
+import FinishMetaForm from "@/components/calendar/weekly/forms/finish-daily-goal/FinishGoalForm";
 
 type FinishGoalDialogProps = {
   goalAmount: number;

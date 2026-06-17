@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { metaKeys } from "@/constants/metaKeys";
+import { dailyGoalKeys } from "@/constants/dailyGoalKeys";
 import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { groupAllGoalsByDeadline } from "@/utils/groupAllGoalsInByDeadline";
 
@@ -13,7 +13,7 @@ export default function useGroupAllGoalsInRangeByDeadline({
   const deadlineIds = deadlines.map((deadline) => deadline.id);
 
   return useQuery({
-    queryKey: [...metaKeys.lists(), ...deadlineIds],
+    queryKey: [...dailyGoalKeys.lists(), ...deadlineIds],
     queryFn: () => groupAllGoalsByDeadline(deadlineIds),
     enabled: !!deadlines && deadlines.length > 0,
   });

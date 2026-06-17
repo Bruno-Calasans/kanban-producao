@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import {
   withForm,
   defaultExecutionFormValues,
-} from "@/components/calendar/weekly/forms/finish-meta/FinishMetaFormContext";
+} from "@/components/calendar/weekly/forms/finish-daily-goal/FinishGoalFormContext";
 import { Checkbox } from "@/components/ui/checkbox";
 import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 

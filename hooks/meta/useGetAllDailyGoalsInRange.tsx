@@ -1,10 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { metaKeys } from "@/constants/metaKeys";
+import { dailyGoalKeys } from "@/constants/dailyGoalKeys";
 import { getAllMetasInRange } from "@/service/api/dailyGoal";
 
-export default function useGetAllMetasInRange(fromDate: Date, toDate: Date, deadlineId: number) {
+export default function useGetAllDailyGoalsInRange(
+  fromDate: Date,
+  toDate: Date,
+  deadlineId: number,
+) {
   return useQuery({
-    queryKey: metaKeys.list(deadlineId),
+    queryKey: dailyGoalKeys.list(deadlineId),
     queryFn: () => getAllMetasInRange(fromDate, toDate, deadlineId),
     enabled: !!fromDate && !!toDate,
   });

@@ -6,7 +6,7 @@ import {
   ProductionDeadlinePopulated,
 } from "@/types/database.type";
 import { formatDate } from "@/utils/formatDate";
-import { differenceInDays } from "date-fns";
+import { differenceInDays, isWithinInterval, parseISO, startOfDay } from "date-fns";
 
 type UseWeeklyDeadlineCardProps = {
   weekDay: Date;
@@ -30,12 +30,13 @@ export default function useWeeklyDeadlineCard({
     (meta) => formatDate(new Date(meta.ref_date + "T00:00:00")) == formatDate(weekDay),
   );
 
+  const today = new Date();
   const plannedStartDate = planned_start_at ? new Date(planned_start_at) : undefined;
   const plannedEndDate = planned_end_at ? new Date(planned_end_at) : undefined;
   const endDate = actual_end_at ? new Date(actual_end_at) : undefined;
-  const today = new Date();
 
   today.setHours(0, 0, 0, 0);
+  plannedStartDate?.setHours(0, 0, 0, 0);
   plannedEndDate?.setHours(0, 0, 0, 0);
   endDate?.setHours(0, 0, 0, 0);
   weekDay.setHours(0, 0, 0, 0);
@@ -43,7 +44,7 @@ export default function useWeeklyDeadlineCard({
   // Quantidade total que tem que fazer
   const totalAmount = production.amount;
 
-  // Total feito nesta semana
+  // Total de metas feitas nesta semana
   const weekTotalAmount = weekDailyGoals.reduce((prev, curr) => prev + curr.amount_done, 0);
 
   // Quantidade feita neste dia da semana
@@ -52,7 +53,23 @@ export default function useWeeklyDeadlineCard({
   // Dias para fazer
   const daysAmount =
     plannedStartDate && plannedEndDate ? differenceInDays(plannedEndDate, plannedStartDate) + 1 : 1;
-  const totalDays = Math.max(daysAmount - weekDailyGoals.length, 1);
+
+  // metas feitas no intervalo do prazo
+  const intervalDoneGoals =
+    (plannedStartDate &&
+      plannedEndDate &&
+      weekDailyGoals.filter((goal) => {
+        const refDate = startOfDay(parseISO(goal.ref_date));
+
+        return isWithinInterval(refDate, {
+          start: startOfDay(plannedStartDate),
+          end: startOfDay(plannedEndDate),
+        });
+      }).length) ||
+    0;
+
+  // Dias para fazer sem as metas já feitas
+  const totalDays = Math.max(daysAmount - intervalDoneGoals, 1);
 
   // Quantidade restante no departamento para fazer
   const departmentStates = departamentStates.filter(
@@ -65,6 +82,7 @@ export default function useWeeklyDeadlineCard({
     0,
   );
 
+  // Diz se o card está completo ou não
   const isFinished = !!endDate && avaliableAmount == 0;
 
   // Quantidade de peças que deve ser feita neste dia
@@ -100,20 +118,20 @@ export default function useWeeklyDeadlineCard({
   }
 
   return {
-    dayGoal,
-    totalAmount,
-    amountDoneInThisDay,
-    daysAmount,
-    avaliableAmount,
-    goalAmount,
-    isExpired,
-    isFinished,
-    isDailyGoalDone,
-    isDailyGoalIncomplete,
     hasWork,
-    weekTotalAmount,
+    dayGoal,
+    isExpired,
     workState,
-    isExpectedThisWeekDay,
+    daysAmount,
+    goalAmount,
+    isFinished,
+    totalAmount,
+    avaliableAmount,
+    isDailyGoalDone,
+    weekTotalAmount,
+    amountDoneInThisDay,
     isStartedThisWeekDay,
+    isExpectedThisWeekDay,
+    isDailyGoalIncomplete,
   };
 }

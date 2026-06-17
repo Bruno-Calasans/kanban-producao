@@ -5,10 +5,10 @@ import { Field, FieldError, FieldGroup, FieldLabel, FieldDescription } from "@/c
 import {
   withForm,
   defaultEditDeadlineFormContextFormValues,
-} from "@/components/calendar/weekly/forms/edit-deadline/editDeadlineFormContext";
+} from "@/components/calendar/weekly/forms/replan-deadline/editDeadlineFormContext";
 import { DatePickerInput } from "@/components/custom/DatePicker";
 
-export const EditDeadlineDatesField = withForm({
+export const ReplanDeadlineDatesField = withForm({
   defaultValues: defaultEditDeadlineFormContextFormValues,
   props: {},
   render({ form }) {

@@ -2,26 +2,26 @@ import { supabase } from "@/lib/supabase/client";
 import { DailyGoal } from "@/types/database.type";
 import { format } from "date-fns";
 
-export type CreateMetaData = Omit<DailyGoal, "id" | "created_at" | "updated_at">;
-export type UpdateMetaData = Partial<CreateMetaData>;
+export type CreateDailyGoalData = Omit<DailyGoal, "id" | "created_at" | "updated_at">;
+export type UpdateDailyGoalData = Partial<DailyGoal>;
 
-export async function getAllMetas() {
+export async function getAllDailyGoals() {
   return await supabase
     .from("DailyGoal")
     .select("*, deadline:MovimentationDeadline!deadline_id(*)")
     .throwOnError();
 }
 
-export async function getOneMeta(metaId: number) {
+export async function getOneDailyGoal(goalId: number) {
   return await supabase
     .from("DailyGoal")
     .select("*, deadline:MovimentationDeadline!deadline_id(*)")
-    .eq("id", metaId)
+    .eq("id", goalId)
     .single()
     .throwOnError();
 }
 
-export async function getAllMetasByDepartament(departamentId: number) {
+export async function getAllDailyGoalsByDepartament(departamentId: number) {
   return await supabase
     .from("DailyGoal")
     .select("*, deadline:MovimentationDeadline!deadline_id(*)")
@@ -29,16 +29,16 @@ export async function getAllMetasByDepartament(departamentId: number) {
     .throwOnError();
 }
 
-export async function createMeta(data: CreateMetaData) {
+export async function createDailyGoal(data: CreateDailyGoalData) {
   return await supabase.from("DailyGoal").insert(data).select().single().throwOnError();
 }
 
-export async function updateMeta(metaId: number, data: UpdateMetaData) {
-  return await supabase.from("DailyGoal").update(data).eq("id", metaId).throwOnError();
+export async function updateDailyGoal(goalId: number, data: UpdateDailyGoalData) {
+  return await supabase.from("DailyGoal").update(data).eq("id", goalId).throwOnError();
 }
 
-export async function deleteMeta(metaId: number) {
-  return await supabase.from("DailyGoal").delete().eq("id", metaId).throwOnError();
+export async function deleteDailyGoal(goalId: number) {
+  return await supabase.from("DailyGoal").delete().eq("id", goalId).throwOnError();
 }
 
 export async function getAllMetasInRange(from: Date, to: Date, deadlineId: number) {
@@ -62,7 +62,15 @@ export async function getAllGoalsInRangeByDeadlines(from: Date, to: Date, deadli
     .from("DailyGoal")
     .select("*, deadline:ProductionDeadline!deadline_id(*)")
     .in("deadline_id", deadlineIds)
-    .gte("ref_date", fromDate)
-    .lte("ref_date", toDate)
+    // .gte("ref_date", fromDate)
+    // .lte("ref_date", toDate)
+    .throwOnError();
+}
+
+export async function getAllGoalsByDeadlines(deadlineIds: number[]) {
+  return await supabase
+    .from("DailyGoal")
+    .select("*, deadline:ProductionDeadline!deadline_id(*)")
+    .in("deadline_id", deadlineIds)
     .throwOnError();
 }

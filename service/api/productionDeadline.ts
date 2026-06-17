@@ -13,7 +13,11 @@ export async function getAllProductionDeadlines() {
     .select(
       `
         *, 
-        production:Production!production_id(*),
+         production:Production!production_id(  
+          *,
+          product:Product!product_id(*),
+          productionFlow:ProductionFlow!production_flow_id(*)
+        ),
         departament:Departament!departament_id(*)
     `,
     )

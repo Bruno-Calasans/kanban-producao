@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { metaKeys } from "@/constants/metaKeys";
-import { getAllMetasInRange } from "@/service/api/metaApi";
+import { getAllMetasInRange } from "@/service/api/dailyGoal";
 
 export default function useGetAllMetasInRange(fromDate: Date, toDate: Date, deadlineId: number) {
   return useQuery({

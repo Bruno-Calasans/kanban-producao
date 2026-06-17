@@ -17,12 +17,13 @@ export default function DepartamentStateTable({
   deadlines,
 }: DepartamentStateTableProps) {
   const processColumns: ColumnDef<DepartamentState>[] = [
-    {
-      id: "template.sequence",
-      accessorKey: "template.sequence",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
-      enableSorting: false,
-    },
+    // {
+    //   id: "template.sequence",
+    //   accessorKey: "template.sequence",
+    //   header: ({ column }) => <DataTableColumnHeader column={column} title="Sequência" />,
+    //   cell: ({ row: { original } }) => original.template.sequence + 1,
+    //   enableSorting: false,
+    // },
     {
       id: "departament.name",
       accessorKey: "departament.name",
@@ -65,6 +66,7 @@ export default function DepartamentStateTable({
       columns={processColumns}
       data={departamentStates}
       hidePagination
+      hideSearch
     />
   );
 }

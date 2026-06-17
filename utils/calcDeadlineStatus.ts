@@ -15,6 +15,7 @@ export function calcDeadlineStatus({ deadline }: CalcDeadlineStatusProps): {
   status: DeadlineStatus;
   expiredDays: number;
 } {
+  // Se não criou prazo
   let statusData: DeadlineStatusData = {
     status: "NOT_DEFINED",
     expiredDays: 0,

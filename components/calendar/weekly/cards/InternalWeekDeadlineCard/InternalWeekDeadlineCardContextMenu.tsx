@@ -7,7 +7,7 @@ import {
 import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import FinishGoalDialog from "../../dialogs/FinishGoalDialog";
 import FinishDeadlineDialog from "../../dialogs/FinishDeadlineDialog";
-import EditDeadlineDialog from "../../dialogs/EditDeadlineDialog";
+import EditDeadlineDialog from "../../dialogs/ReplanDeadlineDialog";
 import DeleteDeadlineDialogDialog from "../../dialogs/DeleteDeadlineDialog";
 
 type InternalWeekDeadlineCardContextMenurops = {
@@ -19,7 +19,7 @@ type InternalWeekDeadlineCardContextMenurops = {
   deadline: ProductionDeadlinePopulated;
   departamentAvaliableAmount: number;
   hideFinishDeadlineAction?: boolean;
-  hideFinishMetaAction?: boolean;
+  hideFinishDailyGoalAction?: boolean;
   hideEditDeadlineAction?: boolean;
   hideDeleteDeadlineAction?: boolean;
   hidden?: boolean;
@@ -34,7 +34,7 @@ export default function InternalWeekDeadlineCardContextMenu({
   deadline,
   hideFinishDeadlineAction,
   hideEditDeadlineAction,
-  hideFinishMetaAction,
+  hideFinishDailyGoalAction,
   hideDeleteDeadlineAction,
   departamentAvaliableAmount,
   hidden,
@@ -44,18 +44,8 @@ export default function InternalWeekDeadlineCardContextMenu({
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
 
       <ContextMenuContent hidden={hidden}>
-        {/* Concluir deadline */}
-        {!hideFinishDeadlineAction && (
-          <ContextMenuItem asChild>
-            <FinishDeadlineDialog
-              deadline={deadline}
-              departamentStates={departamentStates}
-              departamentAvaliableAmount={departamentAvaliableAmount}
-            />
-          </ContextMenuItem>
-        )}
         {/* Concluir meta */}
-        {!hideFinishMetaAction && (
+        {!hideFinishDailyGoalAction && (
           <ContextMenuItem asChild>
             <FinishGoalDialog
               departamentStates={departamentStates}
@@ -63,6 +53,17 @@ export default function InternalWeekDeadlineCardContextMenu({
               departament={departament}
               metaWeekDate={metaWeekDate}
               deadline={deadline}
+              departamentAvaliableAmount={departamentAvaliableAmount}
+            />
+          </ContextMenuItem>
+        )}
+
+        {/* Concluir deadline */}
+        {!hideFinishDeadlineAction && (
+          <ContextMenuItem asChild>
+            <FinishDeadlineDialog
+              deadline={deadline}
+              departamentStates={departamentStates}
               departamentAvaliableAmount={departamentAvaliableAmount}
             />
           </ContextMenuItem>

@@ -6,13 +6,13 @@ import { formSchema, useAppForm, FinishDeadlineFormSchema } from "./finishDeadli
 import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { FinishedDeadlineDatesField } from "./fields/FinishedDeadlineDatesField";
 import { differenceInDays } from "date-fns";
+import { DialogID } from "@/hooks/dialog/DialogContext";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
 import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
 import CancelButton from "@/components/custom/buttons/CancelButton";
-import { DialogID } from "@/hooks/dialog/DialogContext";
 import DeadlineStateMsg from "../../DeadlineStateMsg";
 
 type FinishDeadlineFormProps = {
@@ -65,6 +65,7 @@ export default function FinishDeadlineForm({
         });
 
         await moveNextDepartament({
+          production: deadline.production,
           departamentStates,
           amount: production.amount,
           startedAt: startDate,

@@ -2,10 +2,10 @@
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import type { MovimentationPopulated } from "@/types/database.type";
+import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import MovimentationTypeBadge from "@/components/production/badges/MovimentationTypeBadge";
-import formatDateTimeCellValue from "@/utils/formatCelltoDataTime";
+import formatStringToDate from "@/utils/formatStringToDate";
 
 type MovimentationTableProps = {
   movimentations: MovimentationPopulated[];
@@ -50,13 +50,13 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
     accessorKey: "started_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Data: Início" />,
     cell: ({ row: { original: movimentation } }) =>
-      movimentation.started_at ? formatDateTimeCellValue(movimentation.started_at) : null,
+      movimentation.started_at ? formatStringToDate(movimentation.started_at) : null,
   },
   {
     accessorKey: "finished_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Data:Término" />,
     cell: ({ row: { original: movimentation } }) =>
-      movimentation.finished_at ? formatDateTimeCellValue(movimentation.finished_at) : null,
+      movimentation.finished_at ? formatStringToDate(movimentation.finished_at) : null,
   },
 ];
 

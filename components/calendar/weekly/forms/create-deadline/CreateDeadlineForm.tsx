@@ -16,7 +16,7 @@ import { calcDepartamentStates } from "@/utils/calcDepartamentStates";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import useCreateMovimentationDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
-import ProductionDeadlineTable from "@/components/movimentation/table/ProductionDeadlineStatusBadge";
+import ProductionDeadlineTable from "@/components/movimentation/table/ProductionDeadlineTable";
 import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
 import useGetAllProductions from "@/hooks/production/useGetAllProductions";
 import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";

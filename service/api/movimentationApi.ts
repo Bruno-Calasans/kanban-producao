@@ -1,10 +1,12 @@
 /* eslint-disable prefer-const */
+import { createMovimentationAction } from "@/app/actions/movimentation/create";
 import { supabase } from "@/lib/supabase/client";
-import { Movimentation, DepartamentState } from "@/types/database.type";
+import { Movimentation, DepartamentState, ProductionPopulated } from "@/types/database.type";
 
 export type CreateMovimentationData = Omit<Movimentation, "id" | "created_at" | "updated_at">;
 export type UpdateMovimentationData = Partial<CreateMovimentationData>;
 export type MoveNextDepartamentData = {
+  production: ProductionPopulated;
   departamentStates: DepartamentState[];
   responsibleId: number | null;
   startedAt: string | null;
@@ -173,10 +175,11 @@ export async function updateInitialMovimentation({
 }
 
 export async function moveToNextDepartament({
+  production,
+  amount,
   startedAt,
   finished_at,
   responsibleId,
-  amount,
   departamentStates,
 }: MoveNextDepartamentData) {
   let movedAmount = 0;
@@ -192,18 +195,21 @@ export async function moveToNextDepartament({
     const amountToMove = amount && amount > 0 && amount <= tempAmount ? amount : tempAmount;
     if (movedAmount == 0) movedAmount = amountToMove;
 
-    const data = await createMovimentation({
-      amount: amountToMove,
-      from_departament_id: state.departament.id,
-      production_id: state.production.id,
-      departament_id: state.nextDepartament!.id,
-      product_id: state.production.product.id,
-      responsible_id: responsibleId,
-      started_at: startedAt,
-      finished_at: finished_at,
-      type: "TRANSFER",
-      deadline_id: null,
-      reason: null,
+    const data = await createMovimentationAction({
+      production,
+      createMovimentationData: {
+        amount: amountToMove,
+        from_departament_id: state.departament.id,
+        production_id: state.production.id,
+        departament_id: state.nextDepartament!.id,
+        product_id: state.production.product.id,
+        responsible_id: responsibleId,
+        started_at: startedAt,
+        finished_at: finished_at,
+        type: "TRANSFER",
+        deadline_id: null,
+        reason: null,
+      },
     });
 
     if (isFirstNextDepartamentDepartament) return data;

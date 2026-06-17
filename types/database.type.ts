@@ -95,3 +95,9 @@ export type DailyGoalPopulated = Omit<DailyGoal, "deadline_id"> & {
 };
 
 export type ProductionStatus = Database["public"]["Tables"]["Production"]["Row"]["status"];
+
+// histórico de prazos
+export type ProductionDeadlineLog = Database["public"]["Tables"]["ProductionDeadlineLog"]["Row"];
+export type ProductionDeadlineLogPopulated = ProductionDeadlineLog & {
+  deadline: ProductionDeadline & { departament: Departament };
+};

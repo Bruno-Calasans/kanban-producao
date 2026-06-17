@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/preserve-manual-memoization */
-import WeekSelector from "@/components/calendar/weekly/WeekSelector";
-import Loader from "@/components/custom/Loader";
-import PageMsg from "@/components/custom/msgs/PageMsg";
+
 import {
   Table,
   TableBody,
@@ -11,36 +9,38 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { DAYS_OF_WEEK } from "@/constants/date";
-import useGetAllProductionDeadlinesInRange from "@/hooks/production-deadline/useGetAllProductionDeadlinesInRange";
-import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
-import useWeek from "@/hooks/use-week/useWeek";
 import { cn } from "@/lib/utils";
 import { createCalendarMatrix } from "@/utils/createCalendarMatrix";
 import { normalizeWeekDays } from "@/utils/createNormalizedWeekDays";
 import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
 import { useMemo } from "react";
-import useGroupAllGoalsInRangeByDeadline from "@/hooks/deadline-goal/useGroupAllGoalsInRangeByDeadline";
 import { sortByDeadlinePriority } from "@/utils/sortByDeadlinePriority";
 import { calcExternalDepartamentState } from "@/utils/calcExternalDepartamentState";
-import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";
-import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import { isToday } from "date-fns";
 import { useSelectedWeekDay } from "@/hooks/local-storage/useSelectedWeekDay";
 import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
+import WeekSelector from "@/components/calendar/weekly/WeekSelector";
+import Loader from "@/components/custom/Loader";
+import PageMsg from "@/components/custom/msgs/PageMsg";
+import useWeek from "@/hooks/use-week/useWeek";
+import useGroupAllGoalsByDeadline from "@/hooks/deadline-goal/useGroupAllGoalsByDeadline";
+import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
+import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";
+import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
+import useGetAllProductionDeadlines from "@/hooks/production-deadline/useGetAllProductionDeadlines";
 
 export default function WeeklyDeadlineTable() {
   const { selectedWeekDay } = useSelectedWeekDay();
-  const { weekDays, startDayOfWeek, endDayOfWeek, getCurrentWeek, getNextWeek, getPreviousWeek } =
-    useWeek({
-      startDate: selectedWeekDay ? new Date(selectedWeekDay) : new Date(),
-    });
+  const { weekDays, startDayOfWeek, getCurrentWeek, getNextWeek, getPreviousWeek } = useWeek({
+    startDate: selectedWeekDay ? new Date(selectedWeekDay) : new Date(),
+  });
 
-  // Pega todas as produções no intervalo de data
+  // Pega todas as produções no intervalo de data (talvez refazer)
   const {
     data: deadlinesData,
     isLoading: isDeadlinesLoading,
     isError: deadlineError,
-  } = useGetAllProductionDeadlinesInRange(startDayOfWeek, endDayOfWeek);
+  } = useGetAllProductionDeadlines();
   const deadlines = deadlinesData?.data || [];
 
   // agrupa todos os estados do departamento por produção
@@ -53,11 +53,11 @@ export default function WeeklyDeadlineTable() {
 
   // Agrupa metas por deadline
   const {
-    data: goalsInRangeByDeadlineData,
-    isError: goalsInRangeByDeadlineDataError,
-    isLoading: isGoalsInRangeByDeadlineDataPending,
-  } = useGroupAllGoalsInRangeByDeadline({ from: startDayOfWeek, to: endDayOfWeek, deadlines });
-  const goalsByDeadline = goalsInRangeByDeadlineData;
+    data: goalsByDeadlineData,
+    isError: goalsByDeadlineDataError,
+    isLoading: isGoalsByDeadlineDataPending,
+  } = useGroupAllGoalsByDeadline({ deadlines });
+  const goalsByDeadline = goalsByDeadlineData;
 
   const normalizedWeekDays = useMemo(() => normalizeWeekDays(weekDays), [weekDays]);
 
@@ -169,12 +169,8 @@ export default function WeeklyDeadlineTable() {
   );
 
   const isLoading =
-    isDeadlinesLoading ||
-    isDepartamentStatesByProductionLoading ||
-    isGoalsInRangeByDeadlineDataPending;
-
-  const isError =
-    deadlineError || departamentStatesByProductionError || goalsInRangeByDeadlineDataError;
+    isDeadlinesLoading || isDepartamentStatesByProductionLoading || isGoalsByDeadlineDataPending;
+  const isError = deadlineError || departamentStatesByProductionError || goalsByDeadlineDataError;
 
   if (isLoading) return <Loader title="Carregando prazos..." />;
 

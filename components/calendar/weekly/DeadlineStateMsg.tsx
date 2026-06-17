@@ -34,10 +34,11 @@ export default function DeadlineStateMsg({
   const expiredDays = isExpired ? differenceInDays(today, plannedEndDate) : 0;
 
   return (
-    <div className="flex flex-col gap-4 mb-1">
+    <div className="flex flex-col gap-3 mb-1">
       {/* Departamento e quantidade disponível */}
       <div className="flex justify-between gap-1">
         <ItemInfo
+          vertical
           item={{
             label: "Departamento",
             value: deadline.departament.name,
@@ -45,6 +46,7 @@ export default function DeadlineStateMsg({
           }}
         />
         <ItemInfo
+          vertical
           item={{
             label: "Quant. Disponível",
             value: departamentAvaliableAmount,
@@ -101,7 +103,7 @@ export default function DeadlineStateMsg({
         <ItemInfo
           vertical
           item={{
-            label: "Dias restantes:",
+            label: "Dias restantes",
             value: remainingDays ? `${remainingDays}/${totalDays}` : "N/A",
             icon: CalendarMinus2Icon,
           }}

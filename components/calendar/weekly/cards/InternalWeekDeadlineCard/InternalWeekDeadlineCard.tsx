@@ -51,6 +51,17 @@ export default function InternalWeekDeadlineCard({
     hasWork,
   } = useWeeklyDeadlineCard({ deadline, weekDailyGoals, departamentStates, weekDay });
 
+  // Movimentações dessa produção, exceto a inicial
+  const movimentations = departamentStates
+    .flatMap((state) => state.movimentations)
+    .filter((mov) => mov.type != "INIT");
+
+  const hideDeleteDeadlineAction = movimentations.length > 1;
+  const hideEditDeadlineAction = isFinished || avaliableAmount == 0;
+  const hideFinishDeadlineAction = isFinished || avaliableAmount == 0;
+  const hideFinishDailyGoalAction =
+    isDailyGoalDone || isFinished || (isDailyGoalIncomplete && amountDoneInThisDay > 0);
+
   return (
     <WeekDeadlineCardContextMenu
       departament={departament}
@@ -60,11 +71,10 @@ export default function InternalWeekDeadlineCard({
       deadline={deadline}
       departamentAvaliableAmount={avaliableAmount}
       hidden={!avaliableAmount || isDailyGoalDone}
-      hideEditDeadlineAction={isFinished || avaliableAmount == 0}
-      hideFinishDeadlineAction={isFinished || avaliableAmount == 0}
-      hideFinishMetaAction={
-        isDailyGoalDone || isFinished || (isDailyGoalIncomplete && amountDoneInThisDay > 0)
-      }
+      hideDeleteDeadlineAction={hideDeleteDeadlineAction}
+      hideEditDeadlineAction={hideEditDeadlineAction}
+      hideFinishDeadlineAction={hideFinishDeadlineAction}
+      hideFinishDailyGoalAction={hideFinishDailyGoalAction}
     >
       <Link
         className={cn("flex flex-col h-fit rounded-none mt-2 p-1", !hasWork && "cursor-default")}

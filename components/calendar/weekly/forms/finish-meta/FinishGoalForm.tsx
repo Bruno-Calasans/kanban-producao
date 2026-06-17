@@ -15,9 +15,8 @@ import { GoalAmountField } from "./fields/GoalAmountField";
 import { GoalDatesField } from "./fields/GoalDatesField";
 import { GoalResponsibleField } from "./fields/GoalResponsibleField";
 import { DialogID } from "@/hooks/dialog/DialogContext";
-import { createMovimentationAction } from "@/app/actions/movimentation/create";
 import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
-import usecreateMeta from "@/hooks/meta/useCreateMeta";
+import useCreateDailyGoal from "@/hooks/meta/useCreateDailyGoal";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
@@ -43,7 +42,7 @@ export default function FinishGoalForm({
   const { closeDialog } = useDialog();
   const dialogId: DialogID = `finish-meta-${metaWeekDate.toISOString()}`;
   const [responsible, setResponsible] = useState<Responsible>();
-  const { mutateAsync: createMeta, isPending: isMetaPending } = usecreateMeta();
+  const { mutateAsync: createDailyGoal, isPending: isMetaPending } = useCreateDailyGoal();
   const { mutateAsync: moveNextDepartament, isPending: isNextDepartamentPending } =
     useMoveToNextDepartament();
 
@@ -65,15 +64,16 @@ export default function FinishGoalForm({
         const startedAtString = started_at ? new Date(started_at).toISOString() : null;
         const finishedAtString = finished_at ? new Date(finished_at).toISOString() : null;
 
-        // await moveNextDepartament({
-        //   departamentStates,
-        //   amount: amount,
-        //   finished_at: finishedAtString,
-        //   startedAt: startedAtString,
-        //   responsibleId: responsible ? responsible.id : null,
-        // });
+        await moveNextDepartament({
+          production: deadline.production,
+          departamentStates,
+          amount: amount,
+          finished_at: finishedAtString,
+          startedAt: startedAtString,
+          responsibleId: responsible ? responsible.id : null,
+        });
 
-        await createMeta({
+        await createDailyGoal({
           amount_done: amount,
           expected_amount: goalAmount,
           deadline_id: deadline.id,
@@ -82,39 +82,12 @@ export default function FinishGoalForm({
           finished_at: finishedAtString,
         });
 
-        const currDepartamentState = departamentStates.find(
-          (state) => state.departament.id === departament.id,
-        );
-        const nextDepartament = currDepartamentState?.nextDepartament;
-
-        // Move para próximo departamento
-        if (currDepartamentState && nextDepartament) {
-          const production = currDepartamentState?.production;
-
-          await createMovimentationAction({
-            production,
-            createMovimentationData: {
-              amount,
-              from_departament_id: departament.id,
-              departament_id: nextDepartament?.id,
-              started_at: startedAtString,
-              finished_at: finishedAtString,
-              production_id: currDepartamentState?.production.id,
-              product_id: currDepartamentState?.production.product_id,
-              responsible_id: responsible?.id || null,
-              deadline_id: deadline.id,
-              type: "TRANSFER",
-              reason: "",
-            },
-          });
-        }
-
-        toast.success("Meta criada com sucesso!");
+        toast.success("Meta concluída com sucesso!");
         closeDialog(dialogId);
         form.reset();
       } catch (error) {
         errorHandler(error, {
-          default: "Erro: não foi possível criar a meta",
+          default: "Erro: não foi concluir criar a meta",
         });
       }
     },

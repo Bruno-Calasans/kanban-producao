@@ -58,23 +58,23 @@ export default function InternalWeekDeadlineCardContextMenu({
           </ContextMenuItem>
         )}
 
-        {/* Concluir deadline */}
-        {!hideFinishDeadlineAction && (
-          <ContextMenuItem asChild>
-            <FinishDeadlineDialog
-              deadline={deadline}
-              departamentStates={departamentStates}
-              departamentAvaliableAmount={departamentAvaliableAmount}
-            />
-          </ContextMenuItem>
-        )}
-
         {/* Editar deadline */}
         {!hideEditDeadlineAction && (
           <ContextMenuItem asChild>
             <EditDeadlineDialog
               deadline={deadline}
               departament={departament}
+              departamentAvaliableAmount={departamentAvaliableAmount}
+            />
+          </ContextMenuItem>
+        )}
+
+        {/* Concluir deadline */}
+        {!hideFinishDeadlineAction && (
+          <ContextMenuItem asChild>
+            <FinishDeadlineDialog
+              deadline={deadline}
+              departamentStates={departamentStates}
               departamentAvaliableAmount={departamentAvaliableAmount}
             />
           </ContextMenuItem>

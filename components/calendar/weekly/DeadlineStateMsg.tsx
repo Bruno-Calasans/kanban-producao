@@ -3,6 +3,9 @@ import { differenceInDays } from "date-fns";
 import { HashIcon, FactoryIcon, ShirtIcon, CalendarMinus2Icon } from "lucide-react";
 import ItemInfo from "@/components/custom/ItemInfo";
 import DeadlineStatusBadge from "@/components/custom/badges/DeadlineStatusBadge";
+import daysDiffExceptSunday from "@/utils/daysDiffExceptSunday";
+import { calcDeadlineStatus } from "@/utils/calcDeadlineStatus";
+import ProductionDeadlineStatusBadge from "@/components/custom/badges/ProductionDeadlineStatusBadge";
 
 type DeadlineStateMsgProps = {
   deadline: ProductionDeadlinePopulated;
@@ -15,23 +18,17 @@ export default function DeadlineStateMsg({
   departamentAvaliableAmount,
   hidePlannedDateSection,
 }: DeadlineStateMsgProps) {
+  const { status, expiredDays } = calcDeadlineStatus({ deadline });
+
   const plannedStartDate = deadline.planned_start_at
     ? new Date(deadline.planned_start_at)
     : undefined;
 
   const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : undefined;
-  const today = new Date();
-
-  const isExpired =
-    plannedEndDate && plannedStartDate && plannedEndDate.getTime() < today.getTime();
-
-  const remainingDays = plannedEndDate ? differenceInDays(plannedEndDate, today) + 1 : 0;
 
   // Inclue o dia de início e o dia de término no cálculo, por isso o +2 (1 para incluir o dia de início e 1 para incluir o dia de término)
   const totalDays =
-    plannedEndDate && plannedStartDate ? differenceInDays(plannedEndDate, plannedStartDate) + 1 : 0;
-
-  const expiredDays = isExpired ? differenceInDays(today, plannedEndDate) : 0;
+    plannedEndDate && plannedStartDate ? daysDiffExceptSunday(plannedStartDate, plannedEndDate) : 0;
 
   return (
     <div className="flex flex-col gap-3 mb-1">
@@ -104,7 +101,7 @@ export default function DeadlineStateMsg({
           vertical
           item={{
             label: "Dias restantes",
-            value: remainingDays ? `${remainingDays}/${totalDays}` : "N/A",
+            value: expiredDays ? `${expiredDays}/${totalDays}` : "N/A",
             icon: CalendarMinus2Icon,
           }}
         />
@@ -112,7 +109,7 @@ export default function DeadlineStateMsg({
           vertical
           item={{
             label: "Status",
-            value: <DeadlineStatusBadge isExpired={isExpired} expiredDays={expiredDays} />,
+            value: <ProductionDeadlineStatusBadge status={status} expiredDays={expiredDays} />,
             icon: CalendarMinus2Icon,
           }}
         />

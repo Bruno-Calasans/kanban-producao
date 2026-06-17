@@ -1,6 +1,7 @@
 import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { differenceInDays, startOfDay } from "date-fns";
-export type DeadlineStatus = "NOT_DEFINED" | "VALID" | "EXPIRED" | "COMPLETED";
+import daysDiffExceptSunday from "./daysDiffExceptSunday";
+export type DeadlineStatus = "NOT_DEFINED" | "VALID" | "EXPIRED" | "COMPLETED" | "NOT_READY";
 
 type CalcDeadlineStatusProps = {
   deadline?: ProductionDeadlinePopulated;
@@ -31,7 +32,7 @@ export function calcDeadlineStatus({ deadline }: CalcDeadlineStatusProps): {
     const today = startOfDay(new Date());
     const plannedEndDate = startOfDay(new Date(deadline.planned_end_at));
 
-    const expireDays = differenceInDays(plannedEndDate, today);
+    const expireDays = daysDiffExceptSunday(plannedEndDate, today);
 
     statusData = {
       status: expireDays < 0 ? "EXPIRED" : "VALID",

@@ -5,8 +5,16 @@ import {
   DepartamentState,
   ProductionDeadlinePopulated,
 } from "@/types/database.type";
+import daysDiffExceptSunday from "@/utils/daysDiffExceptSunday";
 import { formatDate } from "@/utils/formatDate";
-import { differenceInDays, isWithinInterval, parseISO, startOfDay } from "date-fns";
+import {
+  differenceInDays,
+  eachDayOfInterval,
+  isSunday,
+  isWithinInterval,
+  parseISO,
+  startOfDay,
+} from "date-fns";
 
 type UseWeeklyDeadlineCardProps = {
   weekDay: Date;
@@ -50,9 +58,9 @@ export default function useWeeklyDeadlineCard({
   // Quantidade feita neste dia da semana
   const amountDoneInThisDay = dayGoal ? dayGoal.amount_done : 0;
 
-  // Dias para fazer
+  // Dias para fazer (SEM CONSIDERAR DOMINGO)
   const daysAmount =
-    plannedStartDate && plannedEndDate ? differenceInDays(plannedEndDate, plannedStartDate) + 1 : 1;
+    plannedStartDate && plannedEndDate ? daysDiffExceptSunday(plannedStartDate, plannedEndDate) : 1;
 
   // metas feitas no intervalo do prazo
   const intervalDoneGoals =

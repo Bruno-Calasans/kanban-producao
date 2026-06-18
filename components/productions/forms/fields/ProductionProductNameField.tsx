@@ -1,7 +1,7 @@
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { defaultProductionFormValues, withForm } from "../productionFormContext";
-import ProductSelector from "@/components/custom/ProductSelector";
 import { Product } from "@/types/database.type";
+import ProductSelector from "@/components/custom/ProductSelector";
 
 type ProductionProductNameFieldProps = {
   selectedProduct?: Product;
@@ -20,7 +20,7 @@ export const ProductionProductNameField = withForm({
         children={(field) => {
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
-            <Field data-invalid={isInvalid}>
+            <Field>
               <FieldLabel htmlFor={field.name}>Produto</FieldLabel>
               <ProductSelector
                 selectedProduct={selectedProduct}

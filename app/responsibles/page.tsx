@@ -8,10 +8,10 @@ import ResponsibleTable from "@/components/responsibles/table/ResponsibleTable";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 
 export default function ResponsiblePage() {
-  const { data, isLoading, error } = useGetAllResponsibles();
+  const { data, isPending, error } = useGetAllResponsibles();
   const responsibles = data?.data || [];
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <section>
         <Loader title="Carregando Responsáveis..." />
@@ -19,16 +19,20 @@ export default function ResponsiblePage() {
     );
   }
 
-  if (error) {
+  if (error)
     return (
       <PageMsg
         title="Erro ao carregar responsáveis"
-        content="Não foi possível carregar os responsáveis. Tente novamente."
-        backBtnLabel="Voltar à página inical"
-        backBtnUrl="/"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar os responsáveis</p>
+            <p>
+              Error: <code>{error.message}</code>
+            </p>
+          </>
+        }
       />
     );
-  }
 
   return (
     <section>

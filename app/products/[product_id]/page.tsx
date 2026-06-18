@@ -33,18 +33,23 @@ export default function ProductInfoPage() {
   } = useGetAllMovimentationsByProduct(product?.id);
   const movimentations = movimentationsData?.data || [];
 
-  const isError = productError || productionsError || movimentationsError;
-  const isPending = isProductionsPending || isProductPending || isMovimentationsPending;
+  const productDataError = productionsError || movimentationsError;
+  const isProductDataPending = isProductionsPending || isMovimentationsPending;
 
-  if (isPending) return <Loader title="Carregando produto..." />;
+  if (isProductPending) return <Loader title="Carregando produto..." />;
 
-  if (isError)
+  if (productError)
     return (
       <PageMsg
-        title="Erro ao carregar o produto"
-        content="Desculpe, não foi possível carregar esse produto"
-        backBtnUrl="/products"
-        backBtnLabel="Voltar à página de produtos"
+        title="Erro ao carregar este produto"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar esta produto</p>
+            <p>
+              Error: <code>{productError.message}</code>
+            </p>
+          </>
+        }
       />
     );
 
@@ -60,6 +65,23 @@ export default function ProductInfoPage() {
         }
         backBtnUrl="/products"
         backBtnLabel="Voltar à página de produtos"
+      />
+    );
+
+  if (isProductDataPending) return <Loader title="Carregando dados do produto..." />;
+
+  if (productDataError)
+    return (
+      <PageMsg
+        title="Erro ao carregar este produto"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar esta produto</p>
+            <p>
+              Error: <code>{productDataError.message}</code>
+            </p>
+          </>
+        }
       />
     );
 

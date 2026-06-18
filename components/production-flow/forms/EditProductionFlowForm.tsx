@@ -3,22 +3,23 @@
 "use client";
 
 import { toast } from "sonner";
-import ClearButton from "@/components/custom/buttons/ClearButton";
-import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { formSchema, ProductionFlowSchema, useAppForm } from "./ProductionFlowFormContext";
 import { FieldGroup } from "@/components/ui/field";
-import errorHandler from "@/utils/errorHandler";
 import { ProductionFlowNameField } from "./fields/ProductionFlowNameField";
 import { ProductionFlowDescField } from "./fields/ProductionFlowDescField";
 import { ProductionFlowDepartamentsField } from "./fields/ProductionFlowDepartamentsField";
 import { useState } from "react";
 import { Departament, ProductionFlow } from "@/types/database.type";
-import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
 import { useRouter } from "next/navigation";
 import { ProductionFlowUseDefaultField } from "./fields/ProductionFlowUseDefaultField";
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
+import errorHandler from "@/utils/errorHandler";
+import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
 import useGetAllProductionFlowTemplates from "@/hooks/production-flow-template/useGetAllProductionFlowTemplates";
 import useDeleteProductionFlowTemplates from "@/hooks/production-flow-template/useDeleteProductionFlowTemplates";
 import useUpdateProductionFlow from "@/hooks/production-flow/useUpdateProductionFlow";
+import CancelButton from "@/components/custom/buttons/CancelButton";
+import ClearButton from "@/components/custom/buttons/ClearButton";
 
 type CreateProductionFlowFormProps = {
   productionFlow: ProductionFlow;
@@ -46,7 +47,9 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
   );
 
   const productionFlowTemplates = data?.data || [];
-  const defaultSelectedProcesses = productionFlowTemplates.map((template) => template.departament);
+  const defaultSelectedDepartaments = productionFlowTemplates.map(
+    (template) => template.departament,
+  );
   const isPending =
     isProductionFlowPending ||
     isProductionFlowTemplatesPending ||
@@ -109,8 +112,9 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
       name: productionFlow.name,
       desc: productionFlow.desc || "",
       useDefault: productionFlow.is_default || false,
-      departamentNames: defaultSelectedProcesses.map((process) => process.name) || [],
+      departamentNames: defaultSelectedDepartaments.map((departament) => departament.name) || [],
     });
+    setSelectedDepartaments(defaultSelectedDepartaments);
   };
 
   return (
@@ -128,7 +132,7 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
         {!isProductionFlowTemplatesPending && (
           <ProductionFlowDepartamentsField
             form={form}
-            defaultDepartaments={defaultSelectedProcesses}
+            defaultDepartaments={defaultSelectedDepartaments}
             selectedDepartaments={selectedDepartaments}
             onSelect={setSelectedDepartaments}
           />
@@ -139,10 +143,11 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
         id="edit-production-flow-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
+        <CancelButton label="Cancelar" onClick={() => router.push("/production-flows")} />
         <ClearButton
-          label="Resetar"
+          label="Limpar"
           isLoading={isPending}
-          onclick={() => resetFormToDefaultValues()}
+          onClick={() => resetFormToDefaultValues()}
         />
 
         <form.Subscribe selector={(state) => state}>

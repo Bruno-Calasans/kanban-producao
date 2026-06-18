@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ProductionFlow } from "@/types/database.type";
 import { useState } from "react";
-import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { SingleSelector } from "./SingleSelector";
+import Link from "next/link";
 import useGetAllActiveProductionFlows from "@/hooks/production-flow/useGetAllActiveProductionFlows";
+import NoItemFoundMsg from "../msgs/NoItemMsg";
 
 type ProductionFlowSelectorWithCheckboxProps = {
   selectedProductionFlow?: ProductionFlow;
@@ -21,21 +22,15 @@ export default function ProductionFlowSelectorWithCheckbox({
   disabled,
   onValueChange,
 }: ProductionFlowSelectorWithCheckboxProps) {
-  const [useDefault, setUseDefault] = useState<boolean | "indeterminate">(
-    defaultProductionFlow ? false : true,
-  );
+  const [useDefault, setUseDefault] = useState<boolean | "indeterminate">(false);
   const { data, isPending } = useGetAllActiveProductionFlows();
   const productionFlows = data ? data.data : [];
-  const hasDefault = productionFlows.find((flow) => flow.is_default);
-  const defaultflow = defaultProductionFlow || hasDefault || productionFlows[0];
+  const foundDefaultFlow = productionFlows.find((flow) => flow.is_default);
+  const defaultflow = defaultProductionFlow || foundDefaultFlow || productionFlows[0];
 
   const handleUseDefault = (value: boolean) => {
-    if (value) valueChangeHandler(hasDefault);
+    if (value) onValueChange(foundDefaultFlow);
     setUseDefault(value);
-  };
-
-  const valueChangeHandler = (productionFlow?: ProductionFlow) => {
-    onValueChange(productionFlow);
   };
 
   return (
@@ -43,32 +38,24 @@ export default function ProductionFlowSelectorWithCheckbox({
       <SingleSelector<ProductionFlow>
         disabled={disabled || useDefault}
         data={productionFlows}
-        selectedData={
-          !useDefault ? selectedProductionFlow : productionFlows.find((flow) => flow.is_default)
-        }
+        selectedData={selectedProductionFlow}
         defaultData={defaultflow}
         labelSelector="name"
         isLoading={isPending}
-        onChange={valueChangeHandler}
+        onChange={onValueChange}
         placeholder="Selecione um fluxo de produção"
         loadingMsg="Carregando fluxos de produção..."
         noItemFoundMsg={
-          <div>
-            <p>Nenhum fluxo de produção encontrado</p>
-            <p>
-              Defina um fluxo em{" "}
-              <Link href="/configuracao">
-                <Button className="self-start p-0" variant="link">
-                  configurações
-                </Button>
-              </Link>
-              .
-            </p>
-          </div>
+          <NoItemFoundMsg
+            title="Nenhum fluxo de produção encontrado"
+            desc="Cadastre um novo fluxo em"
+            url="/production-flows"
+            urlName="fluxos de produção"
+          />
         }
       />
 
-      {hasDefault && (
+      {foundDefaultFlow && (
         <Field orientation="horizontal">
           <Checkbox
             id="use-default-production-flow"

@@ -4,17 +4,17 @@ import { RotateCcwIcon } from "lucide-react";
 import CustomDialog from "@/components/custom/CustomDialog";
 import CreateReprocessForm from "../forms/reprocess-form/CreateReprocessForm";
 
-type CreateReprocessExecutionDialogProps = {
+type CreateReprocessMovimentationDialogProps = {
   departamentState: DepartamentState;
   departamentStates: DepartamentState[];
   departamentDeadline: ProductionDeadlinePopulated | null;
 };
 
-export default function CreateReprocessExecutionDialog({
+export default function CreateReprocessMovimentationDialog({
   departamentState,
   departamentStates,
   departamentDeadline,
-}: CreateReprocessExecutionDialogProps) {
+}: CreateReprocessMovimentationDialogProps) {
   return (
     <CustomDialog
       id={`reprocess-movimentation-${departamentState.departament.id}`}

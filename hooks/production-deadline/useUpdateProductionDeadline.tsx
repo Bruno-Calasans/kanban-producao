@@ -11,10 +11,8 @@ export default function useUpdateProductionDeadline() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: {
-      movimentationDeadlineId: number;
-      updateData: UpdateProductionDeadlineData;
-    }) => updateProductionDeadline(data.movimentationDeadlineId, data.updateData),
+    mutationFn: (data: { deadlineId: number; updateData: UpdateProductionDeadlineData }) =>
+      updateProductionDeadline(data.deadlineId, data.updateData),
     onSuccess: ({ data }) => {
       queryClient.invalidateQueries({
         queryKey: productionDeadlineKeys.lists(),

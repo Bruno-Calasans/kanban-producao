@@ -1,11 +1,11 @@
 "use client";
 
-import PageTitle from "@/components/custom/PageTitle";
-import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments";
 import { DepartamentTable } from "@/components/departament/table/DepartamentTable";
-import CreateDepartamentDialog from "@/components/departament/dialogs/CreateDepartamentDialog";
 import Loader from "@/components/custom/Loader";
 import PageMsg from "@/components/custom/msgs/PageMsg";
+import PageTitle from "@/components/custom/PageTitle";
+import useGetAllDepartaments from "@/hooks/departament/useGetAllDepartaments";
+import CreateDepartamentDialog from "@/components/departament/dialogs/CreateDepartamentDialog";
 
 export default function DepartamentsPage() {
   const { data, isPending, error } = useGetAllDepartaments();
@@ -15,16 +15,20 @@ export default function DepartamentsPage() {
     return <Loader title="Carregando departamentos..." />;
   }
 
-  if (error) {
+  if (error)
     return (
       <PageMsg
-        title="Erro"
-        content="Algo deu errado ao carregar os departamentos"
-        backBtnLabel="Voltar à página inicial"
-        backBtnUrl="/"
+        title="Erro ao carregar departamentos"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar os departamentos</p>
+            <p>
+              Error: <code>{error.message}</code>
+            </p>
+          </>
+        }
       />
     );
-  }
 
   return (
     <section>

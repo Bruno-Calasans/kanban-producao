@@ -31,14 +31,14 @@ export default function CreateDeadlineForm() {
   const {
     data: productionsData,
     isLoading: isProductionsLoading,
-    isError: isProductionsError,
+    error: productionsError,
   } = useGetAllProductions();
   const productions = productionsData?.data || [];
 
   const {
     departamentStatesByProduction,
     isLoading: isDepartamentStatesLoading,
-    isError: isDepartamentStatesError,
+    error: departamentStatesError,
   } = useGetAllProductionDepartamentStates({
     productions,
   });
@@ -46,7 +46,7 @@ export default function CreateDeadlineForm() {
   const {
     data: productionDeadlinesData,
     isLoading: isDeadlinesLoading,
-    isError: isDeadlinesError,
+    error: deadlinesError,
   } = useGetAllDeadlinesByProduction(selectedProduction?.id);
   const deadlines = productionDeadlinesData?.data || [];
 
@@ -103,7 +103,7 @@ export default function CreateDeadlineForm() {
   }, [selectedProduction]);
 
   const isLoading = isProductionsLoading || isDepartamentStatesLoading || isDeadlinesLoading;
-  const isError = isProductionsError || isDepartamentStatesError || isDeadlinesError;
+  const isError = productionsError || departamentStatesError || deadlinesError;
 
   return (
     <form

@@ -107,12 +107,21 @@ export default function CreateProductionForm({ defaultProduct }: CreateProductio
       />
       <ProductionAmountField form={form} />
       <ProductionOpField form={form} />
-      <ProductionFlowField form={form} onChangeProductionFlow={setProductionFlow} />
+      <ProductionFlowField
+        form={form}
+        selectedProductionFlow={productionFlow}
+        onChangeProductionFlow={setProductionFlow}
+      />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
         <CreateManySwitch value={many} onChangeValue={setMany} />
         <CancelButton isLoading={isPending} onClick={() => closeDialog("create-production")} />
-        <MoveButton title="Criar" isLoading={isPending} hiddenIcon />
+        <MoveButton
+          title="Criar"
+          disabled={!product || !productionFlow}
+          isLoading={isPending}
+          hiddenIcon
+        />
       </div>
     </form>
   );

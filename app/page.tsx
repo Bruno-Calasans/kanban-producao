@@ -1,61 +1,42 @@
 "use client";
 
 import { useMemo } from "react";
-import type { ProductProduction } from "@/types/database.type";
 import Loader from "@/components/custom/Loader";
 import PageTitle from "@/components/custom/PageTitle";
 import ResumeTable from "@/components/resume/ResumeTable";
 import useGetAllProductions from "@/hooks/production/useGetAllProductions";
+import PageMsg from "@/components/custom/msgs/PageMsg";
+import groupProductProductions from "@/utils/groupProductByProductions";
 
 export default function Home() {
   const { data, error, isPending } = useGetAllProductions();
   const productions = data?.data || [];
 
-  const groupProductProductions = () => {
-    if (isPending) return [];
-
-    const groups: ProductProduction[] = [];
-
-    productions.forEach((mov) => {
-      const groupIndex = groups.findIndex((group) => group.product.id == mov.product.id);
-
-      if (groupIndex != -1) {
-        groups[groupIndex].productions.push(mov);
-      } else {
-        groups.push({
-          product: mov.product,
-          productions: [mov],
-        });
-      }
-    });
-
-    return groups;
-  };
-
-  const productProductions = useMemo(() => groupProductProductions(), [productions]);
+  const productProductions = useMemo(() => groupProductProductions(productions), [productions]);
 
   if (isPending) {
-    return (
-      <section>
-        <PageTitle>Resumo</PageTitle>
-        <Loader title="Carregando Resumo..." />
-      </section>
-    );
+    return <Loader title="Carregando Resumo..." />;
   }
 
-  if (error) {
+  if (error)
     return (
-      <section>
-        <PageTitle>Resumo</PageTitle>
-        <p>Ocorreu um erro ao carregar os produtos.</p>
-      </section>
+      <PageMsg
+        title="Erro ao carregar produções dos produtos"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar as produções dos produtos</p>
+            <p>
+              Error: <code>{error.message}</code>
+            </p>
+          </>
+        }
+      />
     );
-  }
 
   return (
     <section>
-      <PageTitle>Resumo</PageTitle>
-      <p>Aqui está um resumo dos produtos cadastrados.</p>
+      <PageTitle>Home</PageTitle>
+      <p>Resume todos os produtos e suas últimas produções. </p>
       <ResumeTable productProductions={productProductions} />
     </section>
   );

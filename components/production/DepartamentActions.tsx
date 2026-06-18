@@ -2,7 +2,7 @@
 
 import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import CreateMovimentationDialog from "./dialogs/CreateMovimentationDialog";
-import CreateReprocessExecutionDialog from "./dialogs/CreateReprocessExecutionDialog";
+import CreateReprocessExecutionDialog from "./dialogs/CreateReprocessMovimentationDialog";
 import ExternalDepartamentDialog from "./dialogs/ExternalDepartamentDialog";
 import SkipDepartamentDialog from "./dialogs/SkipDepartamentDialog";
 
@@ -37,7 +37,12 @@ export default function DepartamentActions({
 
   return (
     <div className="flex gap-1">
-      {nextDepartament && <CreateMovimentationDialog departamentState={departamentState} />}
+      {nextDepartament && departamentDeadline && (
+        <CreateMovimentationDialog
+          departamentState={departamentState}
+          departamentDeadline={departamentDeadline}
+        />
+      )}
 
       {nextDepartament && !isAntiLastDepartament && (
         <SkipDepartamentDialog

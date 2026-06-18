@@ -1,22 +1,24 @@
 "use client";
 
 import { toast } from "sonner";
-import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
-import useCreateResponsible from "@/hooks/responsible/useCreateResponsible";
 import { FieldGroup } from "@/components/ui/field";
 import { useState } from "react";
 import { Departament } from "@/types/database.type";
 import { ResponsibleNameField } from "./fields/ResponsibleNameField";
 import { defaultResponsibleFormValues, useAppForm, formSchema } from "./responsibleFormContext";
+import { ResponsibleDepartamentName } from "./fields/ResponsibleDepartamentName";
+import { DialogID } from "@/hooks/dialog/DialogContext";
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
+import useCreateResponsible from "@/hooks/responsible/useCreateResponsible";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { ResponsibleDepartamentName } from "./fields/ResponsibleDepartamentName";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 
 export default function CreateResponsibleForm() {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useCreateResponsible();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament | undefined>();
+  const dialogId: DialogID = "create-responsible";
 
   const form = useAppForm({
     defaultValues: defaultResponsibleFormValues,
@@ -33,7 +35,7 @@ export default function CreateResponsibleForm() {
           is_active: true,
         });
         toast.success("Responsável criado com sucesso!");
-        closeDialog("create-responsible");
+        closeDialog(dialogId);
         form.reset();
       } catch (error) {
         errorHandler(error, {
@@ -61,8 +63,13 @@ export default function CreateResponsibleForm() {
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        <CancelButton isLoading={isPending} onClick={() => closeDialog("create-responsible")} />
-        <ConfirmButton hiddenIcon isLoading={isPending} label="Criar responsável" />
+        <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
+        <ConfirmButton
+          hiddenIcon
+          isLoading={isPending}
+          label="Criar responsável"
+          loadingMsg="Criando..."
+        />
       </div>
     </form>
   );

@@ -1,6 +1,6 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import type { ProductionPopulated } from "@/types/database.type";
-import EditMovimentationForm from "../forms/EditProductionForm";
+import EditProductionForm from "../forms/EditProductionForm";
 
 type EditProductionDialogProps = {
   production: ProductionPopulated;
@@ -19,7 +19,7 @@ export default function EditProductionDialog({
       title="Editar Movimentação"
       trigger={children}
     >
-      <EditMovimentationForm
+      <EditProductionForm
         production={production}
         hideProductionFlowField={hideProductionFlowField}
       />

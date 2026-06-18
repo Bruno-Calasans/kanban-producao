@@ -1,17 +1,18 @@
 import { Product, ProductionPopulated } from "@/types/database.type";
-import PageTitle from "@/components/custom/PageTitle";
-import BackButton from "@/components/custom/buttons/BackButton";
 import { Button } from "@/components/ui/button";
-import CustomDialog from "@/components/custom/CustomDialog";
 import { CheckIcon, Edit2Icon, Trash2Icon } from "lucide-react";
+import { InfoAlert } from "@/components/custom/alerts/InfoAlert";
+import { CustomAlert } from "@/components/custom/alerts/CustomAlert";
+import PageTitle from "@/components/custom/PageTitle";
+import CustomDialog from "@/components/custom/CustomDialog";
+import BackButton from "@/components/custom/buttons/BackButton";
 import EditProductForm from "@/components/products/forms/EditProductForm";
 import DeleteProductDialog from "@/components/products/dialogs/DeleteProductDialog";
 import useActiveProduct from "@/hooks/product/useActiveProduct";
 import ActiveBadge from "@/components/custom/badges/ActiveBadge";
 import GoToCalendarButton from "@/components/custom/buttons/GoToCalendarButton";
-import CreateProductMovimentationDialog from "./dialogs/CreateProductProductionDialog";
-import { InfoAlert } from "@/components/custom/alerts/InfoAlert";
-import { CustomAlert } from "@/components/custom/alerts/CustomAlert";
+import CreateProductProductionDialog from "./dialogs/CreateProductProductionDialog";
+import { ActionAlert } from "../custom/alerts/ActionAlert";
 
 type ProductInfoHeaderProps = {
   product: Product;
@@ -23,7 +24,6 @@ export default function ProductInfoHeader({ product, productions }: ProductInfoH
 
   const productId = product.id;
   const canEdit = product.is_active;
-  const hideProductionFlowSelector = productions.length > 0;
   const canDeleteProduct = productions.length == 0;
 
   return (
@@ -58,7 +58,7 @@ export default function ProductInfoHeader({ product, productions }: ProductInfoH
         <div className="flex items-start mb-0 gap-2">
           {canEdit && (
             <>
-              <CreateProductMovimentationDialog product={product} />
+              <CreateProductProductionDialog product={product} />
               <CustomDialog
                 id={`edit-product-${productId}`}
                 title="Editar Produto"
@@ -102,11 +102,11 @@ export default function ProductInfoHeader({ product, productions }: ProductInfoH
       )}
 
       {/* Alertas do produto */}
-      <div id="product-alerts" className="flex flex-col gap-2 mb-0">
+      <div id="product-alerts" className="flex flex-col gap-2 my-1">
         {!product.is_active && (
           <CustomAlert
             title="Produto desativado"
-            description="Ative-o para poder criar ou editar o produto e suas produções."
+            description="Ative-o para poder editar ou criar produções."
             actionLabel={
               <Button
                 id="toggle-active-button"
@@ -130,7 +130,7 @@ export default function ProductInfoHeader({ product, productions }: ProductInfoH
           <InfoAlert
             title="Nenhuma produção criada"
             description='Clique no botão "Nova produção" para poder criar uma produção do produto.'
-            actionLabel={<CreateProductMovimentationDialog product={product} />}
+            actionLabel={<CreateProductProductionDialog product={product} />}
           />
         )}
       </div>

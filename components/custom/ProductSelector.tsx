@@ -1,6 +1,7 @@
 import { Product } from "@/types/database.type";
 import useGetAllActiveProducts from "@/hooks/product/useGetAllActiveProducts";
 import { SearchableSelector } from "./selectors/SearchableSelector";
+import NoItemFoundMsg from "./msgs/NoItemMsg";
 
 type ProductSelectorProps = {
   selectedProduct?: Product;
@@ -28,7 +29,14 @@ export default function ProductSelector({
       isLoading={isPending}
       loadingMsg="Carregando produtos..."
       placeholder="Escolha um produto"
-      noItemFoundMsg="Nenhum produto encontrado"
+      noItemFoundMsg={
+        <NoItemFoundMsg
+          title="Nenhum produto encontrado"
+          desc="Crie um novo produto em"
+          url="/products"
+          urlName="produtos"
+        />
+      }
       disabled={disabled}
     />
   );

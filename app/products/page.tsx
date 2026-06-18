@@ -8,23 +8,27 @@ import ProductTable from "@/components/products/table/ProductTable";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 
 export default function ProductPage() {
-  const { data, isLoading, error } = useGetAllProducts();
+  const { data, isPending, error } = useGetAllProducts();
   const products = data?.data || [];
 
-  if (isLoading) {
+  if (isPending) {
     return <Loader title="Carregando produtos..." />;
   }
 
-  if (error) {
+  if (error)
     return (
       <PageMsg
-        title="Erro"
-        content="Algo deu errado ao carregar os produtos"
-        backBtnLabel="Voltar à página inicial"
-        backBtnUrl="/"
+        title="Erro ao carregar produtos"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar os produtos</p>
+            <p>
+              Error: <code>{error.message}</code>
+            </p>
+          </>
+        }
       />
     );
-  }
 
   return (
     <section>

@@ -51,7 +51,6 @@ export default function ConfigurationForm() {
       />
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
-        {/* <ClearButton isLoading={isPending} onclick={() => form.reset()} /> */}
         <SaveButton isLoading={isPending} hiddenIcon />
       </div>
     </form>

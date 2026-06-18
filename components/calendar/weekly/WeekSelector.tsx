@@ -13,7 +13,6 @@ import PageTitle from "@/components/custom/PageTitle";
 import CreateDeadlineDialog from "./dialogs/CreateDeadlineDialog";
 
 type WeekSelectorProps = {
-  productions: ProductionPopulated[];
   deadlinesByProduction: Map<number, ProductionDeadlinePopulated[]>;
   departamentStatesByProduction: Map<number, DepartamentState[]>;
   startDayOfWeek: Date;

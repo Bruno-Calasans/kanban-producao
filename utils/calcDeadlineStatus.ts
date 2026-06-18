@@ -1,10 +1,19 @@
-import { ProductionDeadlinePopulated } from "@/types/database.type";
-import { differenceInDays, startOfDay } from "date-fns";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
+import { startOfDay } from "date-fns";
 import daysDiffExceptSunday from "./daysDiffExceptSunday";
-export type DeadlineStatus = "NOT_DEFINED" | "VALID" | "EXPIRED" | "COMPLETED" | "NOT_READY";
+
+export type DeadlineStatus =
+  | "NOT_DEFINED" // DEADLINE NÃO FOI CRIADA
+  | "NOT_READY" // SEM QUANTIDADE DISPONÍVEL
+  | "IN_PROGRESS" // QUANTIDADE DISPONÍVEL E NÃO EXPIROU
+  | "EXPIRED" // QUANTIDADE DISPONÍVEL E EXPIROU
+  | "COMPLETED" // DEADLINE CONCLÚIDA E SEM QUANTIDADE DISPONÍVEL
+  | "REOPEN" // DEADLINE CONCLUÍDA COM QUANTIDADE DISPONÍVEL
+  | "COMPLETED_EXPIRED"; // CONCLUÍDO COM ATRASO
 
 type CalcDeadlineStatusProps = {
   deadline?: ProductionDeadlinePopulated;
+  departamentState: DepartamentState;
 };
 
 type DeadlineStatusData = {
@@ -12,32 +21,63 @@ type DeadlineStatusData = {
   expiredDays: number;
 };
 
-export function calcDeadlineStatus({ deadline }: CalcDeadlineStatusProps): {
+export function calcDeadlineStatus({ deadline, departamentState }: CalcDeadlineStatusProps): {
   status: DeadlineStatus;
   expiredDays: number;
 } {
-  // Se não criou prazo
+  // Sem prazo
   let statusData: DeadlineStatusData = {
     status: "NOT_DEFINED",
     expiredDays: 0,
   };
 
-  // Prazo concluído
-  if (deadline && deadline.actual_end_at) {
-    statusData.status = "COMPLETED";
-  }
-
-  // Prazo não concluído
-  if (deadline && deadline.planned_end_at && !deadline.actual_end_at) {
+  if (deadline) {
     const today = startOfDay(new Date());
-    const plannedEndDate = startOfDay(new Date(deadline.planned_end_at));
+    const hasInput = departamentState.inputAmount > 0;
+    const hasWork = departamentState.avaliableAmount > 0;
 
-    const expireDays = daysDiffExceptSunday(plannedEndDate, today);
+    const plannedEndDate = deadline.planned_end_at
+      ? startOfDay(new Date(deadline.planned_end_at))
+      : null;
 
-    statusData = {
-      status: expireDays < 0 ? "EXPIRED" : "VALID",
-      expiredDays: Math.abs(expireDays),
-    };
+    const actualEndDate = deadline.actual_end_at
+      ? startOfDay(new Date(deadline.actual_end_at))
+      : null;
+
+    const expireDays = plannedEndDate ? daysDiffExceptSunday(plannedEndDate, today) : 0;
+
+    const expireDaysAfterEnd =
+      plannedEndDate && actualEndDate ? daysDiffExceptSunday(plannedEndDate, actualEndDate) : 0;
+
+    // Prazo não recebeu entrada e não tem nada disponível
+    if (!hasInput && !hasWork) {
+      statusData.status = "NOT_READY";
+    }
+
+    // Prazo não concluído
+    if (plannedEndDate && !actualEndDate && hasWork) {
+      statusData = {
+        status: expireDays < 0 ? "EXPIRED" : "IN_PROGRESS",
+        expiredDays: Math.abs(expireDays),
+      };
+    }
+
+    // Prazo concluído com quantidade disponível
+    if (actualEndDate && hasWork) {
+      statusData.status = "REOPEN";
+    }
+
+    // Prazo concluído com quantidade disponível, geralmente por reprocesso ou externo
+    if (actualEndDate && !hasWork) {
+      statusData.status = "COMPLETED";
+    }
+
+    // Prazo concluído com atraso
+    if (actualEndDate && !hasWork && expireDays < 0) {
+      statusData.status = "COMPLETED_EXPIRED";
+    }
+
+    console.log(expireDays);
   }
 
   return statusData;

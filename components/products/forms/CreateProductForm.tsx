@@ -1,22 +1,24 @@
 "use client";
 
 import { toast } from "sonner";
-import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
-import useCreateProduct from "@/hooks/product/useCreateProduct";
 import { ProductNameField } from "./fields/ProductNameField";
 import { defaultProductFormValues, formSchema, useAppForm } from "./productFormContext";
+import { useState } from "react";
 import { ProductRefField } from "./fields/ProductRefField";
 import { FieldGroup } from "@/components/ui/field";
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { useState } from "react";
+import useCreateProduct from "@/hooks/product/useCreateProduct";
 import CreateManySwitch from "@/components/custom/CreateManySwitch";
 import CancelButton from "@/components/custom/buttons/CancelButton";
+import { DialogID } from "@/hooks/dialog/DialogContext";
 
 export default function CreateProductForm() {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useCreateProduct();
   const [many, setMany] = useState(false);
+  const dialogId: DialogID = "create-product";
 
   const form = useAppForm({
     defaultValues: defaultProductFormValues,
@@ -34,7 +36,7 @@ export default function CreateProductForm() {
         });
         toast.success("Produto criado com sucesso!");
         if (!many) {
-          closeDialog("create-product");
+          closeDialog(dialogId);
         }
         form.reset();
       } catch (error) {
@@ -64,7 +66,7 @@ export default function CreateProductForm() {
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
         <CreateManySwitch value={many} onChangeValue={setMany} />
-        <CancelButton isLoading={isPending} onClick={() => closeDialog("create-product")} />
+        <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
         <ConfirmButton
           hiddenIcon
           isLoading={isPending}

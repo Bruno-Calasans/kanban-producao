@@ -1,20 +1,20 @@
 "use client";
 
 import { toast } from "sonner";
-import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { defaultProductionFlowValues, formSchema, useAppForm } from "./ProductionFlowFormContext";
 import { FieldGroup } from "@/components/ui/field";
-import errorHandler from "@/utils/errorHandler";
 import { ProductionFlowNameField } from "./fields/ProductionFlowNameField";
-import useCreateProductionFlow from "@/hooks/production-flow/useCreateProductionFlow";
 import { ProductionFlowDescField } from "./fields/ProductionFlowDescField";
 import { useState } from "react";
-import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
 import { useRouter } from "next/navigation";
 import { ProductionFlowUseDefaultField } from "./fields/ProductionFlowUseDefaultField";
-import CancelButton from "@/components/custom/buttons/CancelButton";
 import { Departament } from "@/types/database.type";
 import { ProductionFlowDepartamentsField } from "./fields/ProductionFlowDepartamentsField";
+import CancelButton from "@/components/custom/buttons/CancelButton";
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
+import errorHandler from "@/utils/errorHandler";
+import useCreateProductionFlow from "@/hooks/production-flow/useCreateProductionFlow";
+import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
 
 export default function CreateProductionFlowForm() {
   const { mutateAsync: productionAsync, isPending } = useCreateProductionFlow();
@@ -51,7 +51,7 @@ export default function CreateProductionFlowForm() {
       } catch (error) {
         errorHandler(error, {
           default: "Erro: não foi possível criar o fluxo de produção",
-          duplicate: "Erro: já existe UM fluxo de produção com esse nome. Escolha outro",
+          duplicate: "Erro: já existe um fluxo de produção com esse nome. Escolha outro",
         });
       }
     },

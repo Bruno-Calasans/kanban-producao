@@ -3,36 +3,38 @@
 import PageTitle from "@/components/custom/PageTitle";
 import Loader from "@/components/custom/Loader";
 import useGetAllProductions from "@/hooks/production/useGetAllProductions";
-import CreateMovimentationDialog from "@/components/productions/dialogs/CreateMovimentationDialog";
+import CreateProductionDialog from "@/components/productions/dialogs/CreateProductionDialog";
 import ProductionTable from "@/components/productions/table/ProductionTable";
+import PageMsg from "@/components/custom/msgs/PageMsg";
 
 export default function ProductionPage() {
-  const { data, isLoading, error } = useGetAllProductions();
+  const { data, isPending, error } = useGetAllProductions();
   const productions = data?.data || [];
 
-  if (isLoading) {
-    return (
-      <section>
-        <PageTitle>Produção</PageTitle>
-        <Loader title="Carregando produções..." />
-      </section>
-    );
-  }
+  if (isPending) return <Loader title="Carregando produções..." />;
 
-  if (error) {
+  if (error)
     return (
-      <section>
-        <PageTitle>Produção</PageTitle>
-        <p>Ocorreu um erro ao carregar as produções.</p>
-      </section>
+      <PageMsg
+        title="Erro ao carregar produções"
+        backBtnLabel="Voltar às produções"
+        backBtnUrl="/productions"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar as produções</p>
+            <p>
+              Error: <code>{error.message}</code>
+            </p>
+          </>
+        }
+      />
     );
-  }
 
   return (
     <section>
       <PageTitle>Produções</PageTitle>
       <div className="flex flex-col">
-        <CreateMovimentationDialog />
+        <CreateProductionDialog />
         <ProductionTable productions={productions} />
       </div>
     </section>

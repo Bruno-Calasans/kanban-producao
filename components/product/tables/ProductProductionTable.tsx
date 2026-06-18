@@ -4,7 +4,7 @@ import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
 import { ProductProductionDropdownMenu } from "./ProductMovimentationDropdownMenu";
-import type { MovimentationPopulated, ProductionPopulated } from "@/types/database.type";
+import type { ProductionPopulated } from "@/types/database.type";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import stringDateTimeToDate from "@/utils/stringDateTimeToDate";
 import ProductionStatusBadge from "@/components/custom/badges/ProductionStatusBadge";

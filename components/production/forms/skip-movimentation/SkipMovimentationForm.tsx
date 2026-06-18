@@ -13,6 +13,8 @@ import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
+import CancelButton from "@/components/custom/buttons/CancelButton";
+import { DialogID } from "@/hooks/dialog/DialogContext";
 
 type SkipMovimentationFormProps = {
   departamentState: DepartamentState;
@@ -29,6 +31,7 @@ export default function SkipMovimentationForm({
   const [selectedDepartament, setSelectedDepartament] = useState<Departament>();
   const { mutateAsync: createMovimentation, isPending: isCreateExecutionPending } =
     useCreateMovimentation();
+  const dialogId: DialogID = `skip-movimentation-${departamentState.departament.id}`;
 
   const form = useAppForm({
     defaultValues: {
@@ -66,7 +69,7 @@ export default function SkipMovimentationForm({
         });
 
         toast.success("Departamento pulado com sucesso!");
-        closeDialog(`skip-movimentation-${currDepartament.id}`);
+        closeDialog(dialogId);
         form.reset();
       } catch (error) {
         errorHandler(error, {
@@ -78,7 +81,7 @@ export default function SkipMovimentationForm({
 
   const isPending = isCreateExecutionPending;
   const avaliableDepartaments = departamentStates
-    .filter(({ departament, template }) => departament.id != departamentState.departament.id)
+    .filter(({ departament }) => departament.id != departamentState.departament.id)
     .map((state) => state.departament);
 
   return (
@@ -101,6 +104,7 @@ export default function SkipMovimentationForm({
       </FieldGroup>
 
       <div id="skip-form-buttons" className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end">
+        <CancelButton label="Cancelar" onClick={() => closeDialog(dialogId)} />
         <ConfirmButton hiddenIcon isLoading={isPending} label="Pular" loadingMsg="Pulando.." />
       </div>
     </form>

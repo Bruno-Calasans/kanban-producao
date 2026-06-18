@@ -1,17 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DepartamentState } from "@/types/database.type";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { Play } from "lucide-react";
 import CustomDialog from "@/components/custom/CustomDialog";
 import CreateMovimentationForm from "../forms/create-movimentation-form/CreateMovimentationForm";
 
 type CreateMovimentationDialogProps = {
   departamentState: DepartamentState;
+  departamentDeadline: ProductionDeadlinePopulated;
 };
 
 export default function CreateMovimentationDialog({
   departamentState,
+  departamentDeadline,
 }: CreateMovimentationDialogProps) {
   return (
     <CustomDialog
@@ -28,7 +30,10 @@ export default function CreateMovimentationDialog({
         </Button>
       }
     >
-      <CreateMovimentationForm departamentState={departamentState} />
+      <CreateMovimentationForm
+        departamentState={departamentState}
+        departamentDeadline={departamentDeadline}
+      />
     </CustomDialog>
   );
 }

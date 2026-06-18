@@ -1,15 +1,15 @@
 import CustomDialog from "@/components/custom/CustomDialog";
 import AddButton from "@/components/custom/buttons/AddButton";
-import CreateMovimentationForm from "@/components/productions/forms/CreateMovimentationForm";
+import CreateProductionForm from "@/components/productions/forms/CreateProductionForm";
 
-export default function CreateMovimentationDialog() {
+export default function CreateProductionDialog() {
   return (
     <CustomDialog
       id="create-production"
       title="Criar nova Produção"
       trigger={<AddButton label="Nova Produção" />}
     >
-      <CreateMovimentationForm />
+      <CreateProductionForm />
     </CustomDialog>
   );
 }

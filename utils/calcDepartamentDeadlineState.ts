@@ -15,7 +15,7 @@ type CalcDepartamentStateData = {
 export type DepartamentDeadlineState = {
   production: Production;
   departament: Departament;
-  departamentStates: DepartamentState[];
+  departamentState: DepartamentState;
   status: DeadlineStatus;
   expiredDays: number;
   deadline?: ProductionDeadlinePopulated;
@@ -26,10 +26,11 @@ export function calcDepartamentDeadlineState({
   productionDeadlines,
   productionDepartamentStates,
 }: CalcDepartamentStateData) {
-  const statesByDepartament = new Map<number, DepartamentState[]>();
+  const statesByDepartament = new Map<number, DepartamentState>();
   const deadlinesByDepartament = new Map<number, ProductionDeadlinePopulated>();
   const states: DepartamentDeadlineState[] = [];
 
+  // Agrupa prazos por
   for (const deadline of productionDeadlines) {
     deadlinesByDepartament.set(deadline.departament.id, deadline);
   }
@@ -37,19 +38,18 @@ export function calcDepartamentDeadlineState({
   // Agrupa os estados por departamento
   for (const state of productionDepartamentStates) {
     const departamentId = state.departament.id;
-
     const current = statesByDepartament.get(departamentId) || [];
-    current.push(state);
-    statesByDepartament.set(departamentId, current);
+    statesByDepartament.set(departamentId, state);
   }
 
   // cria estados finais
-  for (const [departamentId, departamentStates] of statesByDepartament) {
-    const departament = departamentStates[0].departament;
+  for (const [departamentId, departamentState] of statesByDepartament) {
+    const departament = departamentState.departament;
 
     const deadline = deadlinesByDepartament.get(departamentId);
+    console.log(departament.name, departamentState)
 
-    const { status, expiredDays } = calcDeadlineStatus({ deadline });
+    const { status, expiredDays } = calcDeadlineStatus({ deadline, departamentState });
 
     states.push({
       departament, // departamento atual
@@ -57,8 +57,9 @@ export function calcDepartamentDeadlineState({
       deadline, // prazo do departamento atual
       status, // status do departamento atual
       expiredDays, // dias para expirar o prazo do departamento atual
-      departamentStates, // estados relacionados ao departamento atual
+      departamentState, // estado do departamento
     });
   }
+
   return states;
 }

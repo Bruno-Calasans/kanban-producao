@@ -6,7 +6,7 @@ import PageMsg from "@/components/custom/msgs/PageMsg";
 import useGetOneProduction from "@/hooks/production/useGetOneProduction";
 import ProductionPageContent from "@/components/movimentation/ProductionPageContent";
 
-export default function MovimentationIdPage() {
+export default function ProductionPage() {
   const params = useParams<{ production_id: string }>();
   const {
     data: productionData,
@@ -21,9 +21,16 @@ export default function MovimentationIdPage() {
     return (
       <PageMsg
         title="Erro ao carregar produção"
-        content="Desculpe, mas não foi possível carregar essa produção"
-        backBtnLabel="Voltar às movimentações"
+        backBtnLabel="Voltar às produções"
         backBtnUrl="/productions"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar esta produção</p>
+            <p>
+              Error: <code>{error.message}</code>
+            </p>
+          </>
+        }
       />
     );
 
@@ -31,14 +38,14 @@ export default function MovimentationIdPage() {
     return (
       <PageMsg
         title="Produção não encontrada"
+        backBtnLabel="Voltar às produções"
+        backBtnUrl="/productions"
         content={
           <>
-            <p>O produção que você está procurando não foi encontrado.</p>
-            <p>Verifique se a URL está correta ou se o produção existe.</p>
+            <p>O produção que você está procurando não foi encontrada.</p>
+            <p>Tente novamente ou verifique se a URL está correta ou se o produção existe.</p>
           </>
         }
-        backBtnLabel="Voltar às produções"
-        backBtnUrl="/movimentations"
       />
     );
 

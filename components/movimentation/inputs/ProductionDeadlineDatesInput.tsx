@@ -84,7 +84,7 @@ export default function ProductionDeadlineDatesInput({
     if (!deadline?.id) return;
     try {
       await updateProductionDeadline({
-        movimentationDeadlineId: deadline.id,
+        deadlineId: deadline.id,
         updateData: {
           planned_start_at: null,
         },
@@ -101,7 +101,7 @@ export default function ProductionDeadlineDatesInput({
     if (!deadline?.id) return;
     try {
       await updateProductionDeadline({
-        movimentationDeadlineId: deadline.id,
+        deadlineId: deadline.id,
         updateData: {
           planned_end_at: null,
         },
@@ -150,7 +150,7 @@ export default function ProductionDeadlineDatesInput({
 
       try {
         await updateProductionDeadline({
-          movimentationDeadlineId: deadline.id,
+          deadlineId: deadline.id,
           updateData: {
             departament_id: departament.id,
             planned_start_at: stringStartDate,
@@ -213,7 +213,7 @@ export default function ProductionDeadlineDatesInput({
     isDeleteDeadlinePending ||
     isCreateDeadlineLogPending;
 
-  const isError =
+  const error =
     isUpdateDeadlineError ||
     createDeadlineError ||
     deleteDeadlineError ||
@@ -249,7 +249,8 @@ export default function ProductionDeadlineDatesInput({
         extraAddon={
           plannedStartDate &&
           !isPending &&
-          !isStartDateInputDisabled && (
+          !isStartDateInputDisabled &&
+          canDeleteDeadline && (
             <div
               title="Remover data de início planejada"
               className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
@@ -272,7 +273,8 @@ export default function ProductionDeadlineDatesInput({
         extraAddon={
           plannedEndDate &&
           !isPending &&
-          !isEndDateInputDisabled && (
+          !isEndDateInputDisabled &&
+          canDeleteDeadline && (
             <div
               title="Remover data de fim planejada"
               className="cursor-default bg-red-500 rounded-full hover:bg-red-600"

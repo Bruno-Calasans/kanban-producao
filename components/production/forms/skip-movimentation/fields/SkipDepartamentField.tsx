@@ -22,11 +22,11 @@ export const SkipDepartamentField = withForm({
           return (
             <Field data-invalid={isInvalid}>
               <FieldLabel className="gap-0" htmlFor={field.name}>
-                Processo <RequiredFieldTooltip />
+                Departamento <RequiredFieldTooltip />
               </FieldLabel>
               <SingleSelector<Departament>
                 data={avaliableDepartaments}
-                placeholder="Selecione o departament"
+                placeholder="Selecione o departamento"
                 labelSelector="name"
                 selectedData={selectedDepartament}
                 onChange={(departament) => {
@@ -34,7 +34,7 @@ export const SkipDepartamentField = withForm({
                   onChangeDepartament(departament);
                 }}
               />
-              <FieldDescription>Escolhe para qual processo você quer pular</FieldDescription>
+              <FieldDescription>Escolhe para qual departamento você quer pular</FieldDescription>
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </Field>
           );

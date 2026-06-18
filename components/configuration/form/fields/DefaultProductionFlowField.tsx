@@ -1,7 +1,7 @@
 import { Field, FieldError, FieldLabel, FieldDescription } from "@/components/ui/field";
 import { defaultConfigurationFormValues, withForm } from "../configurationFormContext";
-import ProductionFlowSelector from "@/components/custom/selectors/ProductionFlowSelector";
 import { ProductionFlow } from "@/types/database.type";
+import ProductionFlowSelector from "@/components/custom/selectors/ProductionFlowSelector";
 
 type DefaultProductionFlowFieldProps = {
   selectedProductionFlow?: ProductionFlow;
@@ -18,7 +18,7 @@ export const DefaultProductionFlowField = withForm({
         children={(field) => {
           const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
           return (
-            <Field data-invalid={isInvalid}>
+            <Field>
               <FieldLabel htmlFor={field.name}>Fluxo de Produção</FieldLabel>
               <ProductionFlowSelector
                 selectedProductionFlow={selectedProductionFlow}
@@ -29,7 +29,7 @@ export const DefaultProductionFlowField = withForm({
               />
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
               <FieldDescription>
-                Selecione o fluxo de produção padrão para os novos produtos criados.
+                Selecione o fluxo de produção padrão para as novas produções criadas.
               </FieldDescription>
             </Field>
           );

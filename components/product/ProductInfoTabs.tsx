@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MovimentationPopulated, Product, ProductionPopulated } from "@/types/database.type";
-import ProcessExecutationTable from "./tables/MovimentationTable";
+import MovimentationTable from "./tables/MovimentationTable";
 import ProductProductionTable from "./tables/ProductProductionTable";
 
 type ProductInfoTabsProps = {
@@ -42,7 +42,7 @@ export default function ProductInfoTabs({
       </TabsContent>
       {/* 
       <TabsContent value="process-executation">
-        <ProcessExecutationTable hideMovimentationColumn processExecutions={executions} />
+        <MovimentationTable hideMovimentationColumn processExecutions={executions} />
       </TabsContent> */}
     </Tabs>
   );

@@ -3,6 +3,7 @@ import { SingleSelector } from "./SingleSelector";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import useGetAllActiveProductionFlows from "@/hooks/production-flow/useGetAllActiveProductionFlows";
+import NoItemFoundMsg from "../msgs/NoItemMsg";
 
 type ProductionFlowSelectorProps = {
   selectedProductionFlow?: ProductionFlow;
@@ -31,18 +32,12 @@ export default function ProductionFlowSelector({
       placeholder="Selecione um fluxo de produção"
       loadingMsg="Carregando fluxos de produção..."
       noItemFoundMsg={
-        <div>
-          <p>Nenhum fluxo de produção encontrado</p>
-          <p>
-            Defina um fluxo em{" "}
-            <Link href="/configuracao">
-              <Button className="self-start p-0" variant="link">
-                configurações
-              </Button>
-            </Link>
-            .
-          </p>
-        </div>
+        <NoItemFoundMsg
+          title="Nenhum fluxo de produção encontrado"
+          desc="Cadastre um novo fluxo de produção em"
+          url="/production-flows"
+          urlName="fluxos de produção"
+        />
       }
     />
   );

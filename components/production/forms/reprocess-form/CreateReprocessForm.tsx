@@ -2,10 +2,7 @@
 "use client";
 
 import { toast } from "sonner";
-import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import { FieldGroup } from "@/components/ui/field";
-import errorHandler from "@/utils/errorHandler";
-import useDialog from "@/hooks/dialog/useDialog";
 import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import { ReprocessExecutionSchema, useAppForm, formSchema } from "./reprocessExecutionFormContext";
@@ -13,6 +10,11 @@ import { ReprocessAmountField } from "./fields/ReprocessAmountField";
 import { ReprocessDepartamentField } from "./fields/ReprocessDepartamentField";
 import { useMemo, useState } from "react";
 import { ReprocessReasonField } from "./fields/ReprocessReasonField";
+import { DialogID } from "@/hooks/dialog/DialogContext";
+import errorHandler from "@/utils/errorHandler";
+import useDialog from "@/hooks/dialog/useDialog";
+import CancelButton from "@/components/custom/buttons/CancelButton";
+import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 
 type CreateReprocessFormrops = {
   departamentState: DepartamentState;
@@ -25,6 +27,7 @@ export default function CreateReprocessForm({
   departamentStates,
   departamentDeadline,
 }: CreateReprocessFormrops) {
+  const dialogId: DialogID = `reprocess-movimentation-${departamentState.departament.id}`;
   const { closeDialog } = useDialog();
   const { mutateAsync: createMovimentation, isPending: isMovimentationPending } =
     useCreateMovimentation();
@@ -69,7 +72,7 @@ export default function CreateReprocessForm({
         });
 
         toast.success("Reprocesso criado com sucesso!");
-        closeDialog(`reprocess-movimentation-${departamentState.departament.id}`);
+        closeDialog(dialogId);
         form.reset();
       } catch (error) {
         errorHandler(error, {
@@ -118,6 +121,11 @@ export default function CreateReprocessForm({
         id="create-reprocess-form-buttons"
         className="flex flex-row mt-4 not-only:p-2 gap-2 justify-end"
       >
+        <CancelButton
+          label="Cancelar"
+          isLoading={isPending}
+          onClick={() => closeDialog(dialogId)}
+        />
         <ConfirmButton
           hiddenIcon
           isLoading={isPending}

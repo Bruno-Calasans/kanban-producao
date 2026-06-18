@@ -14,13 +14,7 @@ type ProductionFlowFieldProps = {
 export const ProductionFlowField = withForm({
   defaultValues: defaultProductionFormValues,
   props: {} as ProductionFlowFieldProps,
-  render({
-    form,
-    selectedProductionFlow,
-    defaultProductionFlow,
-    disabled,
-    onChangeProductionFlow,
-  }) {
+  render({ form, selectedProductionFlow, disabled, onChangeProductionFlow }) {
     return (
       <form.Field
         name="productionFlow"
@@ -32,7 +26,6 @@ export const ProductionFlowField = withForm({
               <ProductionFlowSelectorWithCheckbox
                 disabled={disabled}
                 selectedProductionFlow={selectedProductionFlow}
-                defaultProductionFlow={defaultProductionFlow}
                 onValueChange={(productionFlow) => {
                   field.handleChange(productionFlow?.name || "");
                   onChangeProductionFlow(productionFlow);

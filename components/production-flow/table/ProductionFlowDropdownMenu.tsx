@@ -17,7 +17,7 @@ import DeleteProductionFlowDialog from "../dialogs/DeleteProductionFlowDialog";
 import Link from "next/link";
 import useSetDefaultProductionFlow from "@/hooks/production-flow/useSetDefaultProductionFlow";
 import useActiveProductionFlow from "@/hooks/production-flow/useActiveProductionFlow";
-import useGetlAllMovimentationsByProductionFlow from "@/hooks/production/useGetlAllProductionssByProductionFlow";
+import useGetlAllMovimentationsByProductionFlow from "@/hooks/production/useGetlAllProductionsByProductionFlow";
 
 type ProductionFlowDropdownMenuProps = {
   productionFlow: ProductionFlow;

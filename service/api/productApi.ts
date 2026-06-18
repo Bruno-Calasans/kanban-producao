@@ -13,7 +13,12 @@ export async function getAllActiveProducts() {
 }
 
 export async function getOneProduct(productId: number) {
-  return await supabase.from("Product").select("*").eq("id", productId).single().throwOnError();
+  return await supabase
+    .from("Product")
+    .select("*")
+    .eq("id", productId)
+    .maybeSingle()
+    .throwOnError();
 }
 
 export async function createProduct(createData: CreateProductData) {

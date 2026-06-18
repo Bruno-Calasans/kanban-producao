@@ -79,7 +79,7 @@ export default function ProductionFlowTable({ productionFlows }: FlowTemplatePag
   const pageSizes = [5, 10, 15, 20, 25];
   return (
     <DataTable
-      filterPlaceholder="Procurar por fluxo ou descrição"
+      filterPlaceholder="Procurar por nome ou descrição"
       filterColumn={["name", "desc"]}
       columns={productionFlowColumns}
       data={productionFlows}

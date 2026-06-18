@@ -12,13 +12,13 @@ type UseGetAllProductionDepartamentStates = {
 export default function useGetAllProductionDepartamentStates({
   productions,
 }: UseGetAllProductionDepartamentStates) {
-  const { data, isError, isLoading } = useGetAllProductionMovimentationsTemplates(productions);
+  const { data, error, isLoading } = useGetAllProductionMovimentationsTemplates(productions);
 
   const departamentStatesByProduction = useMemo(() => {
     // Agrupa os estados dos departamentos por movimentação
     const groups = new Map<number, DepartamentState[]>();
 
-    if (!data || isError || isLoading || productions.length === 0) return groups;
+    if (!data || error || isLoading || productions.length === 0) return groups;
 
     for (const [movimentationId, movimentationExecutionTemplate] of data) {
       const { production, movimentations, templates } = movimentationExecutionTemplate;
@@ -38,6 +38,6 @@ export default function useGetAllProductionDepartamentStates({
   return {
     departamentStatesByProduction,
     isLoading,
-    isError,
+    error,
   };
 }

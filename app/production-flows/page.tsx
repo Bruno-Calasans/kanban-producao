@@ -15,21 +15,25 @@ export default function ProductionFlowsPage() {
     return <Loader title="Carregando Fluxos.." />;
   }
 
-  if (error) {
+  if (error)
     return (
       <PageMsg
-        title="Erro ao carregar fluxos"
-        content="Não foi possível carregar os fluxos de produção"
-        backBtnLabel="Voltar à página de fluxos"
-        backBtnUrl="/production-flows"
+        title="Erro ao carregar fluxos de prdoução"
+        content={
+          <>
+            <p>Desculpe, mas não foi possível carregar os fluxos de produção</p>
+            <p>
+              Error: <code>{error.message}</code>
+            </p>
+          </>
+        }
       />
     );
-  }
 
   return (
     <section>
       <PageTitle>Fluxos de Produção</PageTitle>
-      <p>Defina como o produto vai transitar entre os departamentos.</p>
+      <p>Defina a sequência que o produto vai se mover entre os departamentos.</p>
       <div className="flex flex-col">
         <CreateProductionFlowDialog />
         <ProductionFlowTable productionFlows={productionFlows} />

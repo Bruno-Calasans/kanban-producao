@@ -57,9 +57,7 @@ export const ReprocessAmountField = withForm({
                         !form.state.isTouched && field.handleChange("" as unknown as number)
                       }
                     />
-                    <FieldDescription>
-                      Define a quantidade que será refeita para o processo anterior.
-                    </FieldDescription>
+                    <FieldDescription>Define a quantidade que será refeita.</FieldDescription>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
                 );

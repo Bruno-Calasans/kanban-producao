@@ -25,9 +25,7 @@ export default function ProductionFlowDepartaments({
     <div>
       <div className={cn("flex flex-col gap-1 overflow-hidden max-h-20", expand && "max-h-fit")}>
         {templates.map((template) => (
-          <Badge key={template.id}>
-            {template.sequence} - {template.departament.name}
-          </Badge>
+          <Badge key={template.id}>{template.departament.name}</Badge>
         ))}
       </div>
       {canShowExpandButton && (

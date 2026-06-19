@@ -42,17 +42,25 @@ export default function ProductionHeaderAlerts({
     (deadline) => deadline.departament.is_external === true,
   );
 
-  return (
-    <div id="production-alerts" className="flex gap-2 flex-col my-3">
-      {deadlines.length == 0 &&
-        !(["CANCELLED", "COMPLETED"] as ProductionStatus[]).includes(productionStatus) && (
-          <InfoAlert
-            title="Produção sem prazo definido"
-            description="Nenhum departamento tem prazo de entrega. Vá na aba 'Prazos' e defina os prazos para os departamentos."
-          />
-        )}
+  const noDeadlineAlert = (["CANCELLED", "COMPLETED"] as ProductionStatus[]).includes(
+    productionStatus,
+  );
 
-      {productionStatus == "CANCELLED" && (
+  const cancelledAlert = productionStatus == "CANCELLED";
+
+  const expiredDeadlineAlert = expiredDepartaments.length > 0 && productionStatus != "CANCELLED";
+
+  return (
+    <div id="production-alerts" className="flex gap-2 flex-col my-1">
+      
+      {deadlines.length == 0 && !noDeadlineAlert && (
+        <InfoAlert
+          title="Produção sem prazo definido"
+          description="Nenhum departamento tem prazo de entrega. Vá na aba 'Prazos' e defina os prazos para os departamentos."
+        />
+      )}
+
+      {cancelledAlert && (
         <ErrorAlert
           title="Produção Cancelada"
           description={`Esta produção foi cancelada dia ${new Date(production.updated_at).toLocaleDateString()}. Você não pode realizar mais ações ou definir prazos para esta movimentação.`}
@@ -60,13 +68,14 @@ export default function ProductionHeaderAlerts({
         />
       )}
 
-      {expiredDepartaments.length > 0 && productionStatus != "CANCELLED" && (
+      {expiredDeadlineAlert && (
         <ErrorAlert
           title="Departamento com prazo expirado"
           description="Existem departamentos com prazos expirados. Verifique a aba de prazos para mais detalhes."
         />
       )}
 
+      {/* Departamentos externos */}
       {externalDepartamentStates &&
         externalDepartamentStates.length > 0 &&
         productionStatus != "CANCELLED" &&

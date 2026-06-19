@@ -55,6 +55,7 @@ export default function ProductionHeaderMainInfo({ production }: ProductionHeade
             <strong>Concluída em:</strong> {new Date(production.updated_at).toLocaleDateString()}
           </p>
         )}
+
         <p className="flex gap-1 items-start text-center">
           <strong>Status:</strong> <ProductionStatusBadge production={production} />
         </p>

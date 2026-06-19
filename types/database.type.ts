@@ -46,6 +46,7 @@ export type MovimentationStatus =
   | "REPROCESSING"
   | "EXTERNAL";
 
+  
 export type DepartamentStateStatus =
   | "PENDING" // Departamento ainda não começou a trabalhar
   | "COMPLETED" // Departamento terminou de trabalhar

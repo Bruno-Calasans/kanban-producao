@@ -9,6 +9,16 @@ export async function getAllDepartaments() {
     .from("Departament")
     .select("*")
     .order("created_at", { ascending: true })
+    .not("is_final", "is", true)
+    .throwOnError();
+}
+
+export async function getFinalDepartament() {
+  return await supabase
+    .from("Departament")
+    .select("*")
+    .eq("is_final", true)
+    .maybeSingle()
     .throwOnError();
 }
 
@@ -18,6 +28,7 @@ export async function getAllActiveDepartaments() {
     .select("*")
     .eq("is_active", true)
     .order("created_at", { ascending: true })
+    .not("is_final", "is", true)
     .throwOnError();
 }
 
@@ -28,6 +39,7 @@ export async function getAllActiveExternalDepartaments() {
     .eq("is_active", true)
     .eq("is_external", true)
     .order("created_at", { ascending: true })
+    .not("is_final", "is", true)
     .throwOnError();
 }
 
@@ -38,6 +50,7 @@ export async function getAllActiveInternalDepartaments() {
     .eq("is_active", true)
     .eq("is_external", false)
     .order("created_at", { ascending: true })
+    .not("is_final", "is", true)
     .throwOnError();
 }
 
@@ -50,10 +63,6 @@ export async function getOneDepartament(departamentId: number) {
     .throwOnError();
 }
 
-export async function getDepartamentByName(departamentName: string) {
-  return await supabase.from("Departament").select("*").eq("name", departamentName).throwOnError();
-}
-
 export async function createDepartament(data: CreateDepartamentData) {
   return await supabase.from("Departament").insert(data).throwOnError();
 }
@@ -64,13 +73,4 @@ export async function updateDepartament(id: number, data: UpdateDepartamentData)
 
 export async function deleteDepartament(departamentId: number) {
   return await supabase.from("Departament").delete().eq("id", departamentId).throwOnError();
-}
-
-export async function getAllDepartamentsByMovimentation() {
-  return await supabase
-    .from("Departament")
-    .select("*")
-    .eq("is_active", true)
-    .order("created_at", { ascending: true })
-    .throwOnError();
 }

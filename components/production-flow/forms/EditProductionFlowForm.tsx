@@ -45,11 +45,12 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
   const { data, isPending: isProductionFlowTemplatesPending } = useGetAllProductionFlowTemplates(
     productionFlow.id,
   );
-
   const productionFlowTemplates = data?.data || [];
-  const defaultSelectedDepartaments = productionFlowTemplates.map(
-    (template) => template.departament,
-  );
+
+  const departaments = productionFlowTemplates.map((template) => template.departament);
+  const defaultSelectedDepartaments = departaments.filter((dep) => dep.is_final != true);
+  const finalDepartament = departaments.find((dpt) => dpt.is_final);
+
   const isPending =
     isProductionFlowPending ||
     isProductionFlowTemplatesPending ||
@@ -87,14 +88,25 @@ export default function EditProductionFlowForm({ productionFlow }: CreateProduct
           productionFlowTemplateIds: templateIdsToDelete,
         });
 
-        // criar novos processos do fluxo de produção com os processos selecionados
-        await createProductionFlowTemplateAsync(
-          selectedDepartaments.map((departament, index) => ({
+        // criar novos departamentos do fluxo de produção com os processos selecionados
+        const templates = [
+          ...selectedDepartaments.map((departament, index) => ({
             production_flow_id: productionFlow.id,
             departament_id: departament.id,
             sequence: index,
           })),
-        );
+        ];
+
+        finalDepartament
+          ? templates.push({
+              production_flow_id: productionFlow.id,
+              departament_id: finalDepartament.id,
+              sequence: 9999999,
+            })
+          : null;
+
+        await createProductionFlowTemplateAsync(templates);
+
         toast.success("Fluxo de produção atualizado com sucesso!");
         router.push("/production-flows");
       } catch (error) {

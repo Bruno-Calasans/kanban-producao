@@ -26,6 +26,12 @@ export default function FinishedDeadlineMsg({
           {expireDaysAfterEnd} dia(s) de atraso
         </p>
       )}
+
+      {deadline && deadline.actual_end_at && status == "REOPEN" && (
+        <p className="text-stone-800/70 self-start">
+          Prazo concluído em: {new Date(deadline.actual_end_at).toLocaleDateString()}
+        </p>
+      )}
     </div>
   );
 }

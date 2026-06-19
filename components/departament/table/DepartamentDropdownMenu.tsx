@@ -35,9 +35,12 @@ export default function DepartamentDropdownMenu({ departament }: DepartamentDrop
   const isPending = isActivePending || isTemplatesPending;
   const isError = activeError || templatesError;
 
-  const canEdit = !isPending && departament.is_active;
-  const canDelete = !isPending && templates.length == 0;
-  const hideFields = !isPending && templates.length > 0;
+  const isFinal = departament.is_final;
+  const canEdit = !isPending && departament.is_active && !isFinal;
+  const canDelete = !isPending && templates.length == 0 && !isFinal;
+  const hideFields = !isPending && templates.length > 0 && !isFinal;
+
+  if (departament.is_final) return null;
 
   return (
     <DropdownMenu>

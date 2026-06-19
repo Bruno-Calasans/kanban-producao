@@ -49,12 +49,17 @@ export default function ProductionDeadlineTable({
   departamentDeadlineStates,
   hideSearch,
 }: ProductionDeadlineTableProps) {
+  // Remove o departamento final
+  const filteredDeadlineStates = departamentDeadlineStates.filter(
+    (deadline) => !deadline.departament.is_final,
+  );
+
   return (
     <DataTable
       filterPlaceholder="Procurar por departamento"
       filterColumn="departament.name"
       columns={columns}
-      data={departamentDeadlineStates}
+      data={filteredDeadlineStates}
       hideSearch={hideSearch}
       hidePagination
     />

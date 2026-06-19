@@ -15,11 +15,21 @@ import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useCreateProductionFlow from "@/hooks/production-flow/useCreateProductionFlow";
 import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
+import { getFinalDepartament } from "@/service/api/departamentApi";
+import useGetFinalDepartament from "@/hooks/departament/useGetFinalDepartament";
 
 export default function CreateProductionFlowForm() {
-  const { mutateAsync: productionAsync, isPending } = useCreateProductionFlow();
-  const { mutateAsync: mutateTemplateAsync } = useCreateProductionFlowTemplate();
   const [selectedDepartaments, setselectedDepartaments] = useState<Departament[]>([]);
+  const { mutateAsync: createProductionFlow, isPending: isProductionFlowPending } =
+    useCreateProductionFlow();
+  const { mutateAsync: createProductionFlowTemplate, isPending: isTemplatePending } =
+    useCreateProductionFlowTemplate();
+  const {
+    data,
+    isPending: isFinalDepartamentPending,
+    error: finalDepartamentError,
+  } = useGetFinalDepartament();
+  const finalDepartament = data?.data;
   const router = useRouter();
 
   const form = useAppForm({
@@ -31,20 +41,33 @@ export default function CreateProductionFlowForm() {
     onSubmit: async ({ value }) => {
       try {
         const { name, desc, useDefault } = value;
-        const { data: createdProductionFlow } = await productionAsync({
+
+        const { data: createdProductionFlow } = await createProductionFlow({
           name,
           desc: desc || "",
           is_default: !!useDefault,
           is_active: true,
         });
 
-        await mutateTemplateAsync(
-          selectedDepartaments.map((departament, index) => ({
+        // Cria templates
+        const templates = [
+          ...selectedDepartaments.map((departament, index) => ({
             production_flow_id: createdProductionFlow.id,
             departament_id: departament.id,
-            sequence: index,
+            sequence: index + 1,
           })),
-        );
+        ];
+
+        // Adiciona departamento final na lista
+        finalDepartament
+          ? templates.push({
+              departament_id: finalDepartament.id,
+              production_flow_id: createdProductionFlow.id,
+              sequence: 9999999,
+            })
+          : null;
+
+        await createProductionFlowTemplate(templates);
 
         toast.success("Fluxo de produção criado com sucesso!");
         router.push("/production-flows");
@@ -56,6 +79,8 @@ export default function CreateProductionFlowForm() {
       }
     },
   });
+
+  const isPending = isProductionFlowPending || isTemplatePending || isFinalDepartamentPending;
 
   return (
     <form

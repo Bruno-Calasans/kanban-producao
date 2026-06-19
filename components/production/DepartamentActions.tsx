@@ -52,7 +52,7 @@ export default function DepartamentActions({
         />
       )}
 
-      {previousDepartament && departamentDeadline && (
+      {((previousDepartament && departamentDeadline) || departament.is_final) && (
         <CreateReprocessExecutionDialog
           departamentState={departamentState}
           departamentStates={departamentStates}

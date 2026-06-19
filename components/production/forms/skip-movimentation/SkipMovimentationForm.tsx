@@ -83,7 +83,10 @@ export default function SkipMovimentationForm({
 
   // Departamentos disponíveis para pular
   const avaliableDepartaments = departamentStates
-    .filter(({ departament }) => departament.id != departamentState.departament.id)
+    .filter(
+      ({ departament }) =>
+        departament.id != departamentState.departament.id && !departament.is_final,
+    )
     .map((state) => state.departament);
 
   return (

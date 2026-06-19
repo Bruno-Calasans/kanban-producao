@@ -22,6 +22,7 @@ import useGetAllActiveDepartaments from "@/hooks/departament/useGetAllActiveDepa
 import Loader from "./Loader";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import useGetAllActiveInternalDepartaments from "@/hooks/departament/useGetAllActiveInternalDepartaments";
 
 type ComboItem = {
   id: string;
@@ -48,7 +49,7 @@ export default function MultiDepartamentSelector({
 }: MultiDepartamentSelectorProps) {
   const anchor = useComboboxAnchor();
   const [hasDefault, setHasDefault] = useState<boolean>(false);
-  const { data, isPending } = useGetAllActiveDepartaments();
+  const { data, isPending } = useGetAllActiveInternalDepartaments();
 
   const departaments = data?.data || [];
 

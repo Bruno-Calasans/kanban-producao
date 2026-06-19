@@ -2,10 +2,10 @@ export const DESC = {
   deadline: {
     inProgress: "Prazo ainda não expirou",
     expired: "Prazo expirado",
-    completed: "Prazo finalizado sem atraso",
     notDefined: "Nenhum prazo definido",
     reopen: "Prazo reaberto para edição",
     notReady: "Ainda não recebeu quantidade",
+    completed: "Prazo concluído sem atraso",
     completedExpired: "Prazo concluído com atraso",
   },
   production: {

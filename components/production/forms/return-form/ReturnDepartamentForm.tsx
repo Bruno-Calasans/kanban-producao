@@ -82,7 +82,7 @@ export default function ReturnDepartamentForm({
 
         if (deadline) {
           updateDeadline({
-            movimentationDeadlineId: deadline.id,
+            deadlineId: deadline.id,
             updateData: {
               actual_start_at: startDate,
               actual_end_at: endDate,

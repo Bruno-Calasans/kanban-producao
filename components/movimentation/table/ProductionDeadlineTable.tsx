@@ -12,7 +12,7 @@ type ProductionDeadlineTableProps = {
   hideSearch?: boolean;
 };
 
-const processColumns: ColumnDef<DepartamentDeadlineState>[] = [
+const columns: ColumnDef<DepartamentDeadlineState>[] = [
   {
     id: "departament.name",
     accessorKey: "departament.name",
@@ -23,8 +23,8 @@ const processColumns: ColumnDef<DepartamentDeadlineState>[] = [
     id: "deadline-data",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Data de Início e Fim" />,
     enableSorting: false,
-    cell: ({ row: { original: departamentState } }) => (
-      <ProductionDeadlineDatesInput departamentState={departamentState} />
+    cell: ({ row: { original: departamentDeadlineState } }) => (
+      <ProductionDeadlineDatesInput departamentDeadlineState={departamentDeadlineState} />
     ),
   },
   {
@@ -33,9 +33,15 @@ const processColumns: ColumnDef<DepartamentDeadlineState>[] = [
     enableSorting: false,
     cell: ({
       row: {
-        original: { status, expiredDays },
+        original: { status, expireDays, expireDaysAfterEnd },
       },
-    }) => <ProductionDeadlineStatusBadge status={status} expiredDays={expiredDays} />,
+    }) => (
+      <ProductionDeadlineStatusBadge
+        status={status}
+        expireDays={expireDays}
+        expireDaysAfterEnd={expireDaysAfterEnd}
+      />
+    ),
   },
 ];
 
@@ -47,7 +53,7 @@ export default function ProductionDeadlineTable({
     <DataTable
       filterPlaceholder="Procurar por departamento"
       filterColumn="departament.name"
-      columns={processColumns}
+      columns={columns}
       data={departamentDeadlineStates}
       hideSearch={hideSearch}
       hidePagination

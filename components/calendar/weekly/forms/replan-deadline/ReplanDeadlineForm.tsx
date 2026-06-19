@@ -8,7 +8,7 @@ import {
   EditDeadlineFormContextFormSchema,
 } from "./editDeadlineFormContext";
 import { DialogID } from "@/hooks/dialog/DialogContext";
-import { Departament, ProductionDeadlinePopulated } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { ReplanDeadlineDatesField } from "./fields/ReplanDeadlineDatesField";
 import { ReplanDeadlineReasonField } from "./fields/ReplanDeadlineReasonField";
 import useDialog from "@/hooks/dialog/useDialog";
@@ -22,13 +22,14 @@ import useCreateProductionDeadlineLog from "@/hooks/production-deadline-log/useC
 type ReplanDeadlineFormProps = {
   deadline: ProductionDeadlinePopulated;
   departament: Departament;
-  departamentAvaliableAmount: number;
+  departamentState: DepartamentState;
 };
 
 export default function ReplanDeadlineForm({
   deadline,
-  departamentAvaliableAmount,
+  departamentState,
 }: ReplanDeadlineFormProps) {
+  const dialogId: DialogID = `edit-deadline-${deadline.id}`;
   const { closeDialog } = useDialog();
 
   const {
@@ -42,8 +43,6 @@ export default function ReplanDeadlineForm({
     isPending: isCreateDeadlineLogPending,
     isError: iscCreateDeadlineLogError,
   } = useCreateProductionDeadlineLog();
-
-  const dialogId: DialogID = `edit-deadline-${deadline.id}`;
 
   const form = useAppForm({
     defaultValues: {
@@ -63,7 +62,7 @@ export default function ReplanDeadlineForm({
 
       try {
         await updateDeadline({
-          movimentationDeadlineId: deadline.id,
+          deadlineId: deadline.id,
           updateData: {
             planned_start_at: plannedStartDate,
             planned_end_at: plannedEndDate,
@@ -105,7 +104,7 @@ export default function ReplanDeadlineForm({
       <div className="flex flex-col gap-4">
         <DeadlineStateMsg
           deadline={deadline}
-          departamentAvaliableAmount={departamentAvaliableAmount}
+          departamentState={departamentState}
           hidePlannedDateSection
         />
         <ReplanDeadlineReasonField form={form} />

@@ -44,7 +44,7 @@ export default function DepartamentActions({
         />
       )}
 
-      {nextDepartament && !isAntiLastDepartament && (
+      {nextDepartament && (
         <SkipDepartamentDialog
           departamentState={departamentState}
           departamentStates={departamentStates}
@@ -52,7 +52,7 @@ export default function DepartamentActions({
         />
       )}
 
-      {previousDepartament && (
+      {previousDepartament && departamentDeadline && (
         <CreateReprocessExecutionDialog
           departamentState={departamentState}
           departamentStates={departamentStates}

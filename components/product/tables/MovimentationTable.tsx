@@ -21,6 +21,10 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
     ),
   },
   {
+    accessorKey: "amount",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd." />,
+  },
+  {
     id: "movimentation.id",
     accessorKey: "movimentation.id",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Movimentação" />,
@@ -36,10 +40,7 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
     accessorKey: "departament.name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Para" />,
   },
-  {
-    accessorKey: "amount",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Qtd." />,
-  },
+
   {
     id: "responsible.name",
     accessorFn: ({ responsible }) => responsible?.name || "",

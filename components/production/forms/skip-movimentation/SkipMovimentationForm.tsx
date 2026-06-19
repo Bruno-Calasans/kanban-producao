@@ -8,13 +8,13 @@ import { useState } from "react";
 import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { SkipAmountField } from "./fields/SkipAmountField";
 import { SkipDepartamentField } from "./fields/SkipDepartamentField";
+import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import { SkipReasonField } from "./fields/SkipReasonField";
+import { DialogID } from "@/hooks/dialog/DialogContext";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
-import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import CancelButton from "@/components/custom/buttons/CancelButton";
-import { DialogID } from "@/hooks/dialog/DialogContext";
 
 type SkipMovimentationFormProps = {
   departamentState: DepartamentState;
@@ -27,11 +27,11 @@ export default function SkipMovimentationForm({
   departamentStates,
   departamentDeadline,
 }: SkipMovimentationFormProps) {
+  const dialogId: DialogID = `skip-movimentation-${departamentState.departament.id}`;
   const { closeDialog } = useDialog();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament>();
-  const { mutateAsync: createMovimentation, isPending: isCreateExecutionPending } =
+  const { mutateAsync: createMovimentation, isPending: isCreateMovimentationPending } =
     useCreateMovimentation();
-  const dialogId: DialogID = `skip-movimentation-${departamentState.departament.id}`;
 
   const form = useAppForm({
     defaultValues: {
@@ -79,7 +79,9 @@ export default function SkipMovimentationForm({
     },
   });
 
-  const isPending = isCreateExecutionPending;
+  const isPending = isCreateMovimentationPending;
+
+  // Departamentos disponíveis para pular
   const avaliableDepartaments = departamentStates
     .filter(({ departament }) => departament.id != departamentState.departament.id)
     .map((state) => state.departament);

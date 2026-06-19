@@ -4,6 +4,7 @@ import {
   DepartamentState,
   ProductionFlowTemplatePopulated,
   ProductionPopulated,
+  DepartamentStateStatus,
 } from "@/types/database.type";
 
 type ProcessStatusData = {
@@ -75,8 +76,13 @@ export function calcDepartamentStates({
 
     const inputAmount = inputMovimentations.reduce((total, exe) => total + exe.amount, 0);
 
+    // Pega todas as saídas do departamento para outro interno
     const forwardAmount = outputMovimentations
       .filter((exe) => exe.type === "TRANSFER")
+      .reduce((total, exe) => total + exe.amount, 0);
+
+    const skippedAmount = outputMovimentations
+      .filter((exe) => exe.type === "SKIP")
       .reduce((total, exe) => total + exe.amount, 0);
 
     const externalAmount = outputMovimentations
@@ -87,9 +93,10 @@ export function calcDepartamentStates({
       .filter((exe) => exe.type === "REPROCESS")
       .reduce((total, exe) => total + exe.amount, 0);
 
-    const outputAmount = forwardAmount + externalAmount + reprocessAmount;
+    const outputAmount = forwardAmount + externalAmount + reprocessAmount + skippedAmount;
 
-    const avaliableAmount = inputAmount - forwardAmount - externalAmount - reprocessAmount;
+    const avaliableAmount =
+      inputAmount - forwardAmount - externalAmount - reprocessAmount - skippedAmount;
 
     // =========================
     // STATUS BASE
@@ -102,17 +109,19 @@ export function calcDepartamentStates({
 
     const isLastDepartament = currentDepartament.id === lastDepartament.id;
 
-    let status: MovimentationStatus = "PENDING";
+    let status: DepartamentStateStatus = "PENDING";
 
     if (!hasMovimentations || isInitialMovimentation) {
       status = "PENDING";
     } else if (isLastDepartament && avaliableAmount === production.amount) {
-      status = "SUCCESS";
+      status = "COMPLETED";
     } else if (avaliableAmount > 0) {
       status = "IN_PROGRESS";
     } else {
-      status = "SUCCESS";
+      status = "COMPLETED";
     }
+
+    console.log(skippedAmount);
 
     // =========================
     // FLAGS
@@ -184,6 +193,8 @@ export function calcDepartamentStates({
 
       avaliableAmount,
 
+      skippedAmount,
+
       // EXECUÇÕES
       inputMovimentations,
 
@@ -209,7 +220,7 @@ export function calcDepartamentStates({
   }
 
   // =========================
-  // PROCESSOS PULADOS
+  // DEPARTAMENTOS PULADOS
   // =========================
 
   checkSkippedDepartaments(states);
@@ -220,6 +231,12 @@ export function calcDepartamentStates({
 export function checkSkippedDepartaments(departamentStates: DepartamentState[]) {
   for (let i = 0; i < departamentStates.length; i++) {
     const current = departamentStates[i];
+
+    //
+    const fullySkipped = current.skippedAmount > 0 && current.avaliableAmount === 0;
+    if (fullySkipped) {
+      current.status = "SKIPPED";
+    }
 
     const hasmovimentations = current.movimentations.length > 0;
 

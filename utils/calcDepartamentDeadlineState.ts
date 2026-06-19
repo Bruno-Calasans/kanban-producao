@@ -17,7 +17,8 @@ export type DepartamentDeadlineState = {
   departament: Departament;
   departamentState: DepartamentState;
   status: DeadlineStatus;
-  expiredDays: number;
+  expireDays: number;
+  expireDaysAfterEnd: number;
   deadline?: ProductionDeadlinePopulated;
 };
 
@@ -38,7 +39,6 @@ export function calcDepartamentDeadlineState({
   // Agrupa os estados por departamento
   for (const state of productionDepartamentStates) {
     const departamentId = state.departament.id;
-    const current = statesByDepartament.get(departamentId) || [];
     statesByDepartament.set(departamentId, state);
   }
 
@@ -47,17 +47,19 @@ export function calcDepartamentDeadlineState({
     const departament = departamentState.departament;
 
     const deadline = deadlinesByDepartament.get(departamentId);
-    console.log(departament.name, departamentState)
-
-    const { status, expiredDays } = calcDeadlineStatus({ deadline, departamentState });
+    const { status, expireDays, expireDaysAfterEnd } = calcDeadlineStatus({
+      deadline,
+      departamentState,
+    });
 
     states.push({
       departament, // departamento atual
       production, // produção
       deadline, // prazo do departamento atual
       status, // status do departamento atual
-      expiredDays, // dias para expirar o prazo do departamento atual
+      expireDays, // dias para expirar o prazo do departamento atual
       departamentState, // estado do departamento
+      expireDaysAfterEnd,
     });
   }
 

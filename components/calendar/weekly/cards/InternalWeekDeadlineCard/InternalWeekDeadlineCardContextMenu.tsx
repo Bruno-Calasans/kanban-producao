@@ -39,6 +39,10 @@ export default function InternalWeekDeadlineCardContextMenu({
   departamentAvaliableAmount,
   hidden,
 }: InternalWeekDeadlineCardContextMenurops) {
+  const departamentState = departamentStates.find(
+    (state) => state.departament.id == departament.id,
+  )!;
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
@@ -64,7 +68,7 @@ export default function InternalWeekDeadlineCardContextMenu({
             <EditDeadlineDialog
               deadline={deadline}
               departament={departament}
-              departamentAvaliableAmount={departamentAvaliableAmount}
+              departamentState={departamentState}
             />
           </ContextMenuItem>
         )}

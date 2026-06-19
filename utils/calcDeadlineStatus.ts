@@ -1,5 +1,5 @@
 import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
-import { startOfDay } from "date-fns";
+import { differenceInDays, startOfDay } from "date-fns";
 import daysDiffExceptSunday from "./daysDiffExceptSunday";
 
 export type DeadlineStatus =
@@ -16,19 +16,21 @@ type CalcDeadlineStatusProps = {
   departamentState: DepartamentState;
 };
 
-type DeadlineStatusData = {
+export type DeadlineStatusData = {
   status: DeadlineStatus;
-  expiredDays: number;
+  expireDays: number;
+  expireDaysAfterEnd: number;
 };
 
-export function calcDeadlineStatus({ deadline, departamentState }: CalcDeadlineStatusProps): {
-  status: DeadlineStatus;
-  expiredDays: number;
-} {
+export function calcDeadlineStatus({
+  deadline,
+  departamentState,
+}: CalcDeadlineStatusProps): DeadlineStatusData {
   // Sem prazo
   let statusData: DeadlineStatusData = {
     status: "NOT_DEFINED",
-    expiredDays: 0,
+    expireDays: 0,
+    expireDaysAfterEnd: 0,
   };
 
   if (deadline) {
@@ -44,10 +46,12 @@ export function calcDeadlineStatus({ deadline, departamentState }: CalcDeadlineS
       ? startOfDay(new Date(deadline.actual_end_at))
       : null;
 
-    const expireDays = plannedEndDate ? daysDiffExceptSunday(plannedEndDate, today) : 0;
+    // Quantos dias para expirar
+    const expireDays = plannedEndDate ? differenceInDays(plannedEndDate, today) : 0;
 
+    // Verifica quantos dias terminou depois do prazo
     const expireDaysAfterEnd =
-      plannedEndDate && actualEndDate ? daysDiffExceptSunday(plannedEndDate, actualEndDate) : 0;
+      plannedEndDate && actualEndDate ? differenceInDays(actualEndDate, plannedEndDate) : 0;
 
     // Prazo não recebeu entrada e não tem nada disponível
     if (!hasInput && !hasWork) {
@@ -56,10 +60,7 @@ export function calcDeadlineStatus({ deadline, departamentState }: CalcDeadlineS
 
     // Prazo não concluído
     if (plannedEndDate && !actualEndDate && hasWork) {
-      statusData = {
-        status: expireDays < 0 ? "EXPIRED" : "IN_PROGRESS",
-        expiredDays: Math.abs(expireDays),
-      };
+      statusData.status = expireDays < 0 ? "EXPIRED" : "IN_PROGRESS";
     }
 
     // Prazo concluído com quantidade disponível
@@ -77,7 +78,12 @@ export function calcDeadlineStatus({ deadline, departamentState }: CalcDeadlineS
       statusData.status = "COMPLETED_EXPIRED";
     }
 
-    console.log(expireDays);
+    // Atualiza status data
+    statusData = {
+      ...statusData,
+      expireDays,
+      expireDaysAfterEnd,
+    };
   }
 
   return statusData;

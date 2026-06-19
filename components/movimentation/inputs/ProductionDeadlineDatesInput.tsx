@@ -2,7 +2,6 @@
 
 import { DatePickerInput } from "@/components/custom/DatePicker";
 import { toast } from "sonner";
-import { XIcon } from "lucide-react";
 import { useState } from "react";
 import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import { Input } from "@/components/ui/input";
@@ -15,15 +14,20 @@ import SaveButton from "@/components/custom/buttons/SaveButton";
 import DeleteButton from "@/components/custom/buttons/DeleteButton";
 import useDeleteProductionDeadline from "@/hooks/production-deadline/useDeleteProductionDeadline";
 import useCreateProductionDeadlineLog from "@/hooks/production-deadline-log/useCreateProductionDeadlineLog";
+import FinishedDeadlineMsg from "./FinishedDeadlineMsg";
+import normalizeDate from "@/utils/normalizeDate";
+import toIsoDateString from "@/utils/toIsoDate";
+import RemoveDateButton from "./RemoveDataButton";
 
 type ProductionDeadlineDatesInputProps = {
-  departamentState: DepartamentDeadlineState;
+  departamentDeadlineState: DepartamentDeadlineState;
 };
 
 export default function ProductionDeadlineDatesInput({
-  departamentState,
+  departamentDeadlineState,
 }: ProductionDeadlineDatesInputProps) {
-  const { departament, production, deadline, status } = departamentState;
+  const { departament, production, deadline, status, expireDaysAfterEnd, departamentState } =
+    departamentDeadlineState;
   const [selectedStartDate, setSelectedStartDate] = useState<Date>();
   const [selectedEndDate, setSelectedEndDate] = useState<Date>();
   const [reason, setReason] = useState("");
@@ -53,63 +57,36 @@ export default function ProductionDeadlineDatesInput({
   } = useCreateProductionDeadlineLog();
 
   const today = new Date();
+  const plannedStartDate = normalizeDate(deadline?.planned_start_at);
+  const plannedEndDate = normalizeDate(deadline?.planned_end_at);
+  const actualStartDate = normalizeDate(deadline?.actual_start_at);
+  const actualEndDate = normalizeDate(deadline?.actual_end_at);
 
-  const actualStartDate = deadline?.actual_start_at
-    ? new Date(deadline.actual_start_at)
-    : undefined;
-  const actualEndDate = deadline?.actual_end_at ? new Date(deadline.actual_end_at) : undefined;
-
-  const plannedStartDate = deadline?.planned_start_at
-    ? new Date(deadline.planned_start_at)
-    : undefined;
-  const plannedEndDate = deadline?.planned_end_at ? new Date(deadline.planned_end_at) : undefined;
-
-  today.setHours(0, 0, 0, 0);
-  plannedStartDate?.setHours(0, 0, 0, 0);
-  plannedEndDate?.setHours(0, 0, 0, 0);
-  selectedStartDate?.setHours(0, 0, 0, 0);
-  selectedEndDate?.setHours(0, 0, 0, 0);
-  actualStartDate?.setHours(0, 0, 0, 0);
-  actualEndDate?.setHours(0, 0, 0, 0);
-
+  // Verifica se o input da data de início mudou
   const hasStartDateChanged =
     selectedStartDate && selectedStartDate?.getTime() != plannedStartDate?.getTime();
 
+  // Verifica se o input da data de fim mudou
   const hasEndDateChanged =
-    selectedEndDate && selectedEndDate?.getTime() != plannedStartDate?.getTime();
+    selectedEndDate && selectedEndDate?.getTime() != plannedEndDate?.getTime();
 
   const hasChanged = hasStartDateChanged || hasEndDateChanged;
 
-  const removePlannedStartDate = async () => {
+  const removePlannedDate = async (field: "planned_start_at" | "planned_end_at") => {
     if (!deadline?.id) return;
-    try {
-      await updateProductionDeadline({
-        deadlineId: deadline.id,
-        updateData: {
-          planned_start_at: null,
-        },
-      });
-      toast.success("Data de início planejada removida");
-    } catch (error) {
-      errorHandler(error, {
-        default: "Erro: Não foi possível remover a data de início planejada",
-      });
-    }
-  };
 
-  const removePlannedEndDate = async () => {
-    if (!deadline?.id) return;
     try {
       await updateProductionDeadline({
         deadlineId: deadline.id,
         updateData: {
-          planned_end_at: null,
+          [field]: null,
         },
       });
-      toast.success("Data de fim planejada removida");
+
+      toast.success("Data removida com sucesso");
     } catch (error) {
       errorHandler(error, {
-        default: "Erro: Não foi possível remover a data de fim planejada",
+        default: "Erro ao remover data",
       });
     }
   };
@@ -128,67 +105,63 @@ export default function ProductionDeadlineDatesInput({
     }
   };
 
+  const getDatesToSave = () => ({
+    startDate: selectedStartDate ?? plannedStartDate,
+    endDate: selectedEndDate ?? plannedEndDate,
+  });
+
+  const updateDeadline = async () => {
+    if (!deadline) return;
+
+    const { startDate, endDate } = getDatesToSave();
+
+    const payload = {
+      departament_id: departament.id,
+      planned_start_at: toIsoDateString(startDate),
+      planned_end_at: toIsoDateString(endDate),
+    };
+
+    await updateProductionDeadline({
+      deadlineId: deadline.id,
+      updateData: payload,
+    });
+
+    await createDeadlineLog({
+      deadline_id: deadline.id,
+      old_planned_start_at: deadline.planned_start_at,
+      old_planned_end_at: deadline.planned_end_at,
+      new_planned_start_at: payload.planned_start_at,
+      new_planned_end_at: payload.planned_end_at,
+      reason,
+    });
+  };
+
+  const createDeadline = async () => {
+    await createProductionDeadline({
+      production_id: production.id,
+      departament_id: departament.id,
+      planned_start_at: toIsoDateString(selectedStartDate),
+      planned_end_at: toIsoDateString(selectedEndDate),
+      actual_start_at: null,
+      actual_end_at: null,
+    });
+  };
+
   const onSave = async () => {
-    if (deadline) {
-      let startDate: Date | undefined;
-      let endDate: Date | undefined;
-
-      if (selectedStartDate) {
-        startDate = selectedStartDate;
-      } else if (deadline?.planned_start_at) {
-        startDate = new Date(deadline?.planned_start_at);
-      }
-
-      if (selectedEndDate) {
-        endDate = selectedEndDate;
-      } else if (deadline?.planned_end_at) {
-        endDate = new Date(deadline?.planned_end_at);
-      }
-
-      const stringStartDate = startDate ? startDate.toISOString() : null;
-      const stringEndDate = endDate ? endDate.toISOString() : null;
-
-      try {
-        await updateProductionDeadline({
-          deadlineId: deadline.id,
-          updateData: {
-            departament_id: departament.id,
-            planned_start_at: stringStartDate,
-            planned_end_at: stringEndDate,
-          },
-        });
-        await createDeadlineLog({
-          deadline_id: deadline.id,
-          old_planned_start_at: deadline.planned_start_at,
-          old_planned_end_at: deadline.planned_end_at,
-          new_planned_start_at: stringStartDate,
-          new_planned_end_at: stringEndDate,
-          reason,
-        });
+    try {
+      if (deadline) {
+        await updateDeadline();
         toast.success("Prazo atualizado");
-        onCancel();
-      } catch (error) {
-        errorHandler(error, {
-          default: "Erro: prazo não foi salvo",
-        });
-      }
-    } else {
-      try {
-        await createProductionDeadline({
-          production_id: production.id,
-          departament_id: departament.id,
-          planned_start_at: selectedStartDate ? selectedStartDate.toISOString() : null,
-          planned_end_at: selectedEndDate ? selectedEndDate.toISOString() : null,
-          actual_start_at: null,
-          actual_end_at: null,
-        });
+      } else {
+        await createDeadline();
         toast.success("Prazo criado com sucesso");
-        onCancel();
-      } catch (error) {
-        errorHandler(error, {
-          default: "Erro: Não foi possível criar o prazo",
-        });
       }
+
+      onCancel();
+    } catch (error) {
+      errorHandler(error, {
+        default: "Erro ao salvar prazo",
+      });
     }
   };
 
@@ -201,9 +174,11 @@ export default function ProductionDeadlineDatesInput({
     if (!deadline) return;
     try {
       await deleteDeadline(deadline.id);
-      toast.success("Prazo removido");
+      toast.success("Prazo excluído com sucesso");
     } catch (error) {
-      toast.error("Erro: não foi possível remover o prazo");
+      errorHandler(error, {
+        default: "Erro: não foi possível excluir o prazo",
+      });
     }
   };
 
@@ -213,22 +188,20 @@ export default function ProductionDeadlineDatesInput({
     isDeleteDeadlinePending ||
     isCreateDeadlineLogPending;
 
-  const error =
-    isUpdateDeadlineError ||
-    createDeadlineError ||
-    deleteDeadlineError ||
-    iscCreateDeadlineLogError;
-
   const deadlineStatus = status;
-  const productionStatus = departamentState.production.status;
+  const productionStatus = departamentDeadlineState.production.status;
+  const departamentStatus = departamentState.status;
+
+  // Desativa os inputs para colocar data
+  const isInputDisabled =
+    deadlineStatus == "COMPLETED" ||
+    productionStatus == "COMPLETED" ||
+    departamentStatus == "SKIPPED" ||
+    departamentStatus == "COMPLETED";
 
   // Só pode definir prazo se a produção ainda não começou
-  const isStartDateInputDisabled = deadlineStatus == "COMPLETED" || productionStatus == "COMPLETED";
-
-  const isEndDateInputDisabled =
-    !(selectedStartDate || plannedStartDate) ||
-    deadlineStatus == "COMPLETED" ||
-    productionStatus == "COMPLETED";
+  const isStartDateInputDisabled = isInputDisabled;
+  const isEndDateInputDisabled = !(selectedStartDate || plannedStartDate) || isInputDisabled;
 
   // Só posso excluir o prazo se a produção ainda não começou
   const canDeleteDeadline =
@@ -237,7 +210,9 @@ export default function ProductionDeadlineDatesInput({
     productionStatus == "PENDING";
 
   return (
-    <div className={cn("grid grid-rows-1 grid-cols-2 items-center gap-1")}>
+    <div
+      className={cn("grid grid-rows-1 grid-cols-2 items-center gap-1")}
+    >
       {/* Escolher data de início planejada */}
       <DatePickerInput
         className="w-full"
@@ -251,13 +226,10 @@ export default function ProductionDeadlineDatesInput({
           !isPending &&
           !isStartDateInputDisabled &&
           canDeleteDeadline && (
-            <div
-              title="Remover data de início planejada"
-              className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
-              onClick={() => removePlannedStartDate()}
-            >
-              <XIcon className="text-white h-4 w-4" />
-            </div>
+            <RemoveDateButton
+              title="Remover data planejada de início"
+              onClick={() => removePlannedDate("planned_end_at")}
+            />
           )
         }
       />
@@ -275,26 +247,23 @@ export default function ProductionDeadlineDatesInput({
           !isPending &&
           !isEndDateInputDisabled &&
           canDeleteDeadline && (
-            <div
-              title="Remover data de fim planejada"
-              className="cursor-default bg-red-500 rounded-full hover:bg-red-600"
-              onClick={() => removePlannedEndDate()}
-            >
-              <XIcon className="text-white h-4 w-4" />
-            </div>
+            <RemoveDateButton
+              title="Remover data planejada de fim"
+              onClick={() => removePlannedDate("planned_end_at")}
+            />
           )
         }
       />
 
-      <div className="pt-1 flex justify-between gap-1 col-span-2">
+      <div className="pt-1 flex justify-end gap-1 col-span-2">
         {/* Mostra quando o prazo concluído */}
-        <div>
-          {deadline && deadline.actual_end_at && status === "COMPLETED" && (
-            <p className="text-stone-800/70 self-start">
-              Prazo concluído em: {new Date(deadline.actual_end_at).toLocaleDateString()}
-            </p>
-          )}
-        </div>
+        {deadline && (
+          <FinishedDeadlineMsg
+            deadline={deadline}
+            status={status}
+            expireDaysAfterEnd={expireDaysAfterEnd}
+          />
+        )}
 
         {/* Botões */}
         <div className="flex gap-2 items-end">
@@ -307,13 +276,11 @@ export default function ProductionDeadlineDatesInput({
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 placeholder="Motivo do replanejamento (opcional)"
-                className="w-[300px] p-2 border-2 rounded-sm"
+                className="w-75 p-2 border-2 rounded-sm"
               />
             )}
-            <div
-              className="flex justify-end items-end gap-1 mt-1
-                "
-            >
+
+            <div className="flex items-end gap-1 mt-1 flex-1">
               {canDeleteDeadline && (
                 <DeleteButton
                   label="Excluir"

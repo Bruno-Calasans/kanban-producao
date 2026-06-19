@@ -84,6 +84,7 @@ export default function CreateReprocessForm({
 
   const isPending = isMovimentationPending;
 
+  // Departamentos disponíveis para reprocessar
   const avaliableDepartaments = useMemo(() => {
     return departamentStates
       .filter(

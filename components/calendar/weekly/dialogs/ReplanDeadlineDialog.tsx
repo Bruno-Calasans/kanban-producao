@@ -2,19 +2,19 @@
 
 import CustomDialog from "@/components/custom/CustomDialog";
 import ReplanDeadlineForm from "../forms/replan-deadline/ReplanDeadlineForm";
-import { Departament, ProductionDeadlinePopulated } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { CalendarSyncIcon } from "lucide-react";
 
 type ReplanDeadlineDialogProps = {
   deadline: ProductionDeadlinePopulated;
   departament: Departament;
-  departamentAvaliableAmount: number;
+  departamentState: DepartamentState;
 };
 
 export default function ReplanDeadlineDialog({
   deadline,
   departament,
-  departamentAvaliableAmount,
+  departamentState,
 }: ReplanDeadlineDialogProps) {
   return (
     <CustomDialog
@@ -30,7 +30,7 @@ export default function ReplanDeadlineDialog({
       <ReplanDeadlineForm
         deadline={deadline}
         departament={departament}
-        departamentAvaliableAmount={departamentAvaliableAmount}
+        departamentState={departamentState}
       />
     </CustomDialog>
   );

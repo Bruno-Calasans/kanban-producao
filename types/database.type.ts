@@ -46,6 +46,14 @@ export type MovimentationStatus =
   | "REPROCESSING"
   | "EXTERNAL";
 
+export type DepartamentStateStatus =
+  | "PENDING" // Departamento ainda não começou a trabalhar
+  | "COMPLETED" // Departamento terminou de trabalhar
+  | "SKIPPED" // Departamento foi pulado
+  | "EXTERNAL" // Departamento foi enviado para departamento para departamento externo
+  | "IN_PROGRESS" // Departamento está trabalhando
+  | "REPROCESSING"; // Departamento está retrabalhando algo que não deu certo
+
 export type DepartamentStateFlags = {
   hasReprocess?: boolean;
   hasPendingReprocess?: boolean;
@@ -63,7 +71,8 @@ export type DepartamentState = {
   reprocessAmount: number;
   avaliableAmount: number;
   forwardAmount: number;
-  status: MovimentationStatus;
+  skippedAmount: number;
+  status: DepartamentStateStatus;
   flowTemplates: ProductionFlowTemplatePopulated[];
   production: ProductionPopulated;
   departament: Departament;

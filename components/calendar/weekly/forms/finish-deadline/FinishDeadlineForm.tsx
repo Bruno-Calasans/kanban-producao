@@ -28,11 +28,13 @@ export default function FinishDeadlineForm({
 }: FinishDeadlineFormProps) {
   const dialogId: DialogID = `finish-deadline-${deadline.id}`;
   const { closeDialog } = useDialog();
+
   const {
     mutateAsync: updateDeadline,
     isPending: isUpdateDeadlinePending,
     isError: updateDeadlineError,
   } = useUpdateMovimentationDeadline();
+
   const {
     mutateAsync: moveNextDepartament,
     isPending: isNextDepartamentPending,
@@ -57,7 +59,7 @@ export default function FinishDeadlineForm({
 
       try {
         await updateDeadline({
-          movimentationDeadlineId: deadline.id,
+          deadlineId: deadline.id,
           updateData: {
             actual_start_at: actualStartDate,
             actual_end_at: actualEndDate,
@@ -100,6 +102,10 @@ export default function FinishDeadlineForm({
   const remainingDays =
     plannedEndDate && plannedStartDate ? differenceInDays(plannedEndDate, today) + 2 : 0;
 
+  const departamentState = departamentStates.find(
+    (state) => state.departament.id === deadline.departament.id,
+  )!;
+
   return (
     <form
       id="finish-deadline-form"
@@ -108,10 +114,7 @@ export default function FinishDeadlineForm({
         form.handleSubmit();
       }}
     >
-      <DeadlineStateMsg
-        deadline={deadline}
-        departamentAvaliableAmount={departamentAvaliableAmount}
-      />
+      <DeadlineStateMsg deadline={deadline} departamentState={departamentState} />
       <br />
       <FinishedDeadlineDatesField form={form} />
 

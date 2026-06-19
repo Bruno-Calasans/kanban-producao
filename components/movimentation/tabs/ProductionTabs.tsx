@@ -33,6 +33,7 @@ export default function ProductionTabs({
   deadlineLogs,
 }: ProductionTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
+  console.log(departamentStates);
 
   return (
     <Tabs value={selectedTab} onValueChange={setSelectedTab}>

@@ -14,7 +14,7 @@ import useCreateDepartament from "@/hooks/departament/useCreateDepartament";
 
 export default function CreateDepartamentForm() {
   const { closeDialog } = useDialog();
-  const { mutateAsync, isPending } = useCreateDepartament();
+  const { mutateAsync: createDepartament, isPending } = useCreateDepartament();
   const dialogId: DialogID = "create-departament";
 
   const form = useAppForm({
@@ -25,7 +25,12 @@ export default function CreateDepartamentForm() {
     },
     onSubmit: async ({ value: { name, isExternal } }) => {
       try {
-        await mutateAsync({ name, is_external: isExternal, is_active: true });
+        await createDepartament({
+          name,
+          is_external: isExternal,
+          is_active: true,
+          is_final: false,
+        });
         toast.success("Departamento criado com sucesso!");
         closeDialog(dialogId);
         form.reset();

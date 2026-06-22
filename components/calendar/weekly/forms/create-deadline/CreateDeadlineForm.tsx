@@ -3,24 +3,18 @@
 import { toast } from "sonner";
 import { FieldGroup } from "@/components/ui/field";
 import { useMemo, useState } from "react";
-import {
-  Departament,
-  DepartamentState,
-  ProductionDeadlinePopulated,
-  ProductionPopulated,
-} from "@/types/database.type";
+import { Departament, ProductionPopulated } from "@/types/database.type";
 import { defaultCreateDeadlineForm, useAppForm, formSchema } from "./createDeadlineFormContext";
 import { calcDepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import { ProductionSelectorFieldField } from "./fields/ProductionSelectorField";
-import { calcDepartamentStates } from "@/utils/calcDepartamentStates";
+import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import useCreateMovimentationDeadline from "@/hooks/production-deadline/useCreateProductionDeadline";
 import ProductionDeadlineTable from "@/components/movimentation/table/ProductionDeadlineTable";
 import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
-import useGetAllProductions from "@/hooks/production/useGetAllProductions";
-import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
 import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
+import useGetAllActiveProductions from "@/hooks/production/useGetAllActiveProductions";
 
 export default function CreateDeadlineForm() {
   const { closeDialog } = useDialog();
@@ -32,7 +26,7 @@ export default function CreateDeadlineForm() {
     data: productionsData,
     isLoading: isProductionsLoading,
     error: productionsError,
-  } = useGetAllProductions();
+  } = useGetAllActiveProductions();
   const productions = productionsData?.data || [];
 
   const {

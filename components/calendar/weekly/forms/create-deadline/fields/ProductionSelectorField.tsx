@@ -25,7 +25,8 @@ export const ProductionSelectorFieldField = withForm({
           return (
             <Field>
               <FieldLabel className="gap-0" htmlFor={field.name}>
-                Produção <RequiredFieldTooltip />
+                Produção
+                <RequiredFieldTooltip />
               </FieldLabel>
               <ProductionSelector
                 classname="w-[650px]"

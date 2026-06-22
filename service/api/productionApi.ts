@@ -89,3 +89,17 @@ export async function getAllProductionsByProductionFlow(productionFlowId: number
     .eq("production_flow_id", productionFlowId)
     .throwOnError();
 }
+
+export async function getAllActiveProductions() {
+  return await supabase
+    .from("Production")
+    .select(
+      `
+        *,
+        product:Product!product_id(*),
+        productionFlow:ProductionFlow!production_flow_id(*)
+        `,
+    )
+    .notIn("status", ["COMPLETED", "CANCELLED"])
+    .throwOnError();
+}

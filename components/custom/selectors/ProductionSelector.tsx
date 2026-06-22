@@ -2,6 +2,7 @@ import { ProductionPopulated } from "@/types/database.type";
 import { Button } from "@/components/ui/button";
 import { SearchableSelector } from "./SearchableSelector";
 import Link from "next/link";
+import NoItemFoundMsg from "../msgs/NoItemMsg";
 
 type ProductionSelectorProps = {
   productions: ProductionPopulated[];
@@ -36,17 +37,12 @@ export default function ProductionSelector({
       loadingMsg="Carregando as produções..."
       isLoading={isLoading}
       noItemFoundMsg={
-        <div className="flex flex-col gap-1">
-          <p>Nenhuma produção encontrada.</p>
-          <p>
-            Cadastre uma nova produção em{" "}
-            <Link href="/productions">
-              <Button size="sm" variant="link" className="p-0 font-bold">
-                produções.
-              </Button>
-            </Link>
-          </p>
-        </div>
+        <NoItemFoundMsg
+          title="Nenhuma produção ativa encontrada"
+          desc="Cria uma nova produção em"
+          url="/productions"
+          urlName="produções"
+        />
       }
     />
   );

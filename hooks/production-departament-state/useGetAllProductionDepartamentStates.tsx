@@ -12,7 +12,8 @@ type UseGetAllProductionDepartamentStates = {
 export default function useGetAllProductionDepartamentStates({
   productions,
 }: UseGetAllProductionDepartamentStates) {
-  const { data, error, isLoading } = useGetAllProductionMovimentationsTemplates(productions);
+  const { data, error, isPending, isLoading } =
+    useGetAllProductionMovimentationsTemplates(productions);
 
   const departamentStatesByProduction = useMemo(() => {
     // Agrupa os estados dos departamentos por movimentação
@@ -37,6 +38,7 @@ export default function useGetAllProductionDepartamentStates({
 
   return {
     departamentStatesByProduction,
+    isPending,
     isLoading,
     error,
   };

@@ -18,7 +18,7 @@ import useGetAllActiveProductions from "@/hooks/production/useGetAllActiveProduc
 
 export default function CreateDeadlineForm() {
   const { closeDialog } = useDialog();
-  const { mutateAsync: createDeadline, isPending } = useCreateMovimentationDeadline();
+  const { mutateAsync: createDeadline } = useCreateMovimentationDeadline();
   const [selectedProduction, setSelectedProduction] = useState<ProductionPopulated>();
   const [selectedDepartament, setSelectedDepartament] = useState<Departament>();
 
@@ -94,9 +94,10 @@ export default function CreateDeadlineForm() {
       productionDeadlines,
       productionDepartamentStates,
     });
-  }, [selectedProduction]);
+  }, [selectedProduction, deadlines, departamentStatesByProduction]);
 
   const isLoading = isProductionsLoading || isDepartamentStatesLoading || isDeadlinesLoading;
+
   const isError = productionsError || departamentStatesError || deadlinesError;
 
   return (

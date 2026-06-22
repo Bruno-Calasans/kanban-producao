@@ -23,8 +23,8 @@ function formatDate(date: Date | string | undefined) {
   date = new Date(date);
 
   return date.toLocaleDateString("pt-Br", {
-    day: "2-digit",
-    month: "long",
+    day: "numeric",
+    month: "short",
     year: "numeric",
   });
 }

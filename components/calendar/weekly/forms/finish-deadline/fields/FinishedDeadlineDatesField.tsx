@@ -104,7 +104,7 @@ export const FinishedDeadlineDatesField = withForm({
           </form.Subscribe>
         </div>
         <FieldDescription className="mt-0">
-          Defina quando começou e terminou o retorno.
+          Defina quando começou e terminou o prazo.
         </FieldDescription>
       </FieldGroup>
     );

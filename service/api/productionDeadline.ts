@@ -21,6 +21,7 @@ export async function getAllProductionDeadlines() {
         departament:Departament!departament_id(*)
     `,
     )
+    .order("actual_end_at", { ascending: false })
     .throwOnError();
 }
 

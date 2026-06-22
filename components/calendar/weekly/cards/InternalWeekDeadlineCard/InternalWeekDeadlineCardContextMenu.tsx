@@ -45,7 +45,7 @@ export default function InternalWeekDeadlineCardContextMenu({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuTrigger className="w-fit">{children}</ContextMenuTrigger>
 
       <ContextMenuContent hidden={hidden}>
         {/* Concluir meta */}

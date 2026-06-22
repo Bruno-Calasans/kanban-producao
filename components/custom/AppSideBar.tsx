@@ -68,7 +68,7 @@ const paramentersSubmenu = {
       icon: BriefcaseBusinessIcon,
     },
     {
-      name: "Fluxos de Produção",
+      name: "Fluxos",
       url: "/production-flows",
       icon: ArrowLeftRightIcon,
     },

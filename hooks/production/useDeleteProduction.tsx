@@ -1,6 +1,6 @@
 import { deleteProduction, DeleteProductionData } from "@/service/api/productionApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productionKeys } from "@/constants/productionKeys";
+import { productionKeys } from "@/constants/keys/productionKeys";
 
 export default function useDeleteProduction() {
   const queryClient = useQueryClient();

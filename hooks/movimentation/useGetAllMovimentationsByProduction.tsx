@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllMovimentationsByProduction } from "@/service/api/movimentationApi";
-import { movimentationKeys } from "@/constants/movimentationKeys";
+import { movimentationKeys } from "@/constants/keys/movimentationKeys";
 
 export default function useGetAllMovimentationsByProduction(movimentationId: number | undefined) {
   return useQuery({

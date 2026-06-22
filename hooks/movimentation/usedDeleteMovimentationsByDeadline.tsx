@@ -1,6 +1,6 @@
 import { deleteMovimentationsByDeadline } from "@/service/api/movimentationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { movimentationKeys } from "@/constants/movimentationKeys";
+import { movimentationKeys } from "@/constants/keys/movimentationKeys";
 
 export default function usedDeleteMovimentationsByDeadline() {
   const queryClient = useQueryClient();

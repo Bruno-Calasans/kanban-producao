@@ -1,6 +1,6 @@
 import { createProduction, CreateProductionData } from "@/service/api/productionApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productionKeys } from "@/constants/productionKeys";
+import { productionKeys } from "@/constants/keys/productionKeys";
 
 export function useCreateProduction() {
   const queryClient = useQueryClient();

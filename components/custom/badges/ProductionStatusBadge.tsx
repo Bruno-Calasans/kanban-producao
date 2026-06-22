@@ -1,7 +1,6 @@
 import { ProductionPopulated } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
-import { DESC } from "@/constants/desc";
-import { PRODUCTION_STATUS_CONFIG } from "@/constants/productionStatusConfig";
+import { PRODUCTION_STATUS_CONFIG } from "@/constants/config/productionStatusConfig";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 
 type ProductionStatusBadgeProps = {

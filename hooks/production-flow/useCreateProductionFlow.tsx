@@ -1,20 +1,18 @@
-import { CreateProductionFlowData, createProductionFlow } from "@/service/api/productionFlow"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { productionFlowKeys } from "@/constants/productionFlowKeys"
-
+import { CreateProductionFlowData, createProductionFlow } from "@/service/api/productionFlow";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { productionFlowKeys } from "@/constants/keys/productionFlowKeys";
 
 export default function useCreateProductionFlow() {
-    const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: (data: CreateProductionFlowData) => createProductionFlow(data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: productionFlowKeys.lists(),
-                exact: false,
-                refetchType: "active",
-            });
-        },
-    });
-
+  return useMutation({
+    mutationFn: (data: CreateProductionFlowData) => createProductionFlow(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: productionFlowKeys.lists(),
+        exact: false,
+        refetchType: "active",
+      });
+    },
+  });
 }

@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { DeadlineStatusData } from "@/utils/calcDeadlineStatus";
-import { DEADLINE_STATUS_CONFIG } from "@/constants/deadlineStatusConfig";
+import { DEADLINE_STATUS_CONFIG } from "@/constants/config/deadlineStatusConfig";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 
 type ProductionDeadlineStatusBadgeProps = DeadlineStatusData;

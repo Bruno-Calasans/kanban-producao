@@ -1,6 +1,6 @@
 import { UpdateproductionFlowData, updateProductionFlow } from "@/service/api/productionFlow";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productionFlowKeys } from "@/constants/productionFlowKeys";
+import { productionFlowKeys } from "@/constants/keys/productionFlowKeys";
 
 export default function useUpdateProductionFlow() {
   const queryClient = useQueryClient();

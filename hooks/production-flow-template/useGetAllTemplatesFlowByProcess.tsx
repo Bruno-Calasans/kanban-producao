@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllFlowTemplatesByProcess } from "@/service/api/processFlowTemplate";
-import { productionFlowTemplateKeys } from "@/constants/productionFlowTemplateKeys";
+import { productionFlowTemplateKeys } from "@/constants/keys/productionFlowTemplateKeys";
 
 export default function useGetAllTemplatesFlowByProcess(processId: number) {
   return useQuery({

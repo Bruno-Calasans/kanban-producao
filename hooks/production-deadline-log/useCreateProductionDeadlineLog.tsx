@@ -3,7 +3,7 @@ import {
   createProductionDeadlineLog,
 } from "@/service/api/productionDeadlineLogApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productionDeadlineLogKeys } from "@/constants/productionDeadlineLogKeys";
+import { productionDeadlineLogKeys } from "@/constants/keys/productionDeadlineLogKeys";
 
 export default function useCreateProductionDeadlineLog() {
   const queryClient = useQueryClient();

@@ -1,21 +1,18 @@
-import { deleteProductionFlow } from "@/service/api/productionFlow"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { productionFlowKeys } from "@/constants/productionFlowKeys"
+import { deleteProductionFlow } from "@/service/api/productionFlow";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { productionFlowKeys } from "@/constants/keys/productionFlowKeys";
 
 export default function useDeleteProductionFlow() {
-    const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: (data: { id: number }) => deleteProductionFlow(data.id),
-        onSuccess() {
-            queryClient.invalidateQueries({
-                queryKey: productionFlowKeys.lists(),
-                exact: false,
-                refetchType: "active",
-            });
-
-        },
-    })
+  return useMutation({
+    mutationFn: (data: { id: number }) => deleteProductionFlow(data.id),
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: productionFlowKeys.lists(),
+        exact: false,
+        refetchType: "active",
+      });
+    },
+  });
 }
-
-

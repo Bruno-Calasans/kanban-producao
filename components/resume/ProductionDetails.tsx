@@ -3,6 +3,7 @@ import { InfoIcon, ClockCheckIcon, ClipboardClockIcon, TriangleAlertIcon } from 
 import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
 import Loader from "@/components/custom/Loader";
 import CustomTooltip from "@/components/custom/CustomTooltip";
+import { EXPIRE_WARNING_BEFORE_DAYS } from "@/constants/others/others";
 
 type ProductionDetailsProps = {
   production: ProductionPopulated;
@@ -25,7 +26,7 @@ export default function ProductionDetails({ production }: ProductionDetailsProps
     const now = new Date();
     const timeDiff = expectedDate.getTime() - now.getTime();
     const daysDiff = timeDiff / (1000 * 3600 * 24);
-    return daysDiff <= 7 && daysDiff > 0;
+    return daysDiff <= EXPIRE_WARNING_BEFORE_DAYS && daysDiff > 0;
   });
 
   if (deadlines.length == 0)

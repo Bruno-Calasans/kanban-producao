@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query"
-import { responsibleKeys } from "@/constants/responsibleKeys"
-import { getAllResponsibles } from "@/service/api/responsibleApi"
+import { useQuery } from "@tanstack/react-query";
+import { responsibleKeys } from "@/constants/keys/responsibleKeys";
+import { getAllResponsibles } from "@/service/api/responsibleApi";
 
 export default function useGetAllResponsibles() {
-    return useQuery({
-        queryKey: responsibleKeys.lists(),
-        queryFn: getAllResponsibles,
-    })
-
+  return useQuery({
+    queryKey: responsibleKeys.lists(),
+    queryFn: getAllResponsibles,
+  });
 }

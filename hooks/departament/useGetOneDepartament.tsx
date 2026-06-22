@@ -1,12 +1,11 @@
-import { getOneDepartament } from "@/service/api/departamentApi"
-import { useQuery } from "@tanstack/react-query"
-import { departamentKeys } from "@/constants/departamentKeys"
+import { getOneDepartament } from "@/service/api/departamentApi";
+import { useQuery } from "@tanstack/react-query";
+import { departamentKeys } from "@/constants/keys/departamentKeys";
 
 export default function useGetOneDepartament(id: number) {
-    return useQuery({
-        queryKey: departamentKeys.detail(id),
-        queryFn: () => getOneDepartament(id),
-        enabled: !!id
-    })
-
+  return useQuery({
+    queryKey: departamentKeys.detail(id),
+    queryFn: () => getOneDepartament(id),
+    enabled: !!id,
+  });
 }

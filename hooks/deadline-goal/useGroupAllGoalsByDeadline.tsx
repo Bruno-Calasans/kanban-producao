@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { dailyGoalKeys } from "@/constants/dailyGoalKeys";
+import { dailyGoalKeys } from "@/constants/keys/dailyGoalKeys";
 import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { groupAllGoalsByDeadline } from "@/utils/groupAllGoalsInByDeadline";
 

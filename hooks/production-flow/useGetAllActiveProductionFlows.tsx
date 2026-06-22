@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { productionFlowKeys } from "@/constants/productionFlowKeys";
+import { productionFlowKeys } from "@/constants/keys/productionFlowKeys";
 import { getAllActiveProductionFlows } from "@/service/api/productionFlow";
 
 export default function useGetAllActiveProductionFlows() {

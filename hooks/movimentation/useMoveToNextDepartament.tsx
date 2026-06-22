@@ -1,8 +1,8 @@
 import { moveToNextDepartament, MoveNextDepartamentData } from "@/service/api/movimentationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { movimentationKeys } from "@/constants/movimentationKeys";
-import { productionKeys } from "@/constants/productionKeys";
-import { productionFlowTemplateKeys } from "@/constants/productionFlowTemplateKeys";
+import { movimentationKeys } from "@/constants/keys/movimentationKeys";
+import { productionKeys } from "@/constants/keys/productionKeys";
+import { productionFlowTemplateKeys } from "@/constants/keys/productionFlowTemplateKeys";
 
 export default function useMoveToNextDepartament() {
   const queryClient = useQueryClient();

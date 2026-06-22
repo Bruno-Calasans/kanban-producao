@@ -1,6 +1,6 @@
 import { deleteProductionDeadline } from "@/service/api/productionDeadline";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productionDeadlineKeys } from "@/constants/productionDeadlineKeys";
+import { productionDeadlineKeys } from "@/constants/keys/productionDeadlineKeys";
 
 export default function useDeleteProductionDeadline() {
   const queryClient = useQueryClient();

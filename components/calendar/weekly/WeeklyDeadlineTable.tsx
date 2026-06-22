@@ -13,7 +13,7 @@ import {
   DepartamentState,
   ProductionDeadlinePopulated,
 } from "@/types/database.type";
-import { DAYS_OF_WEEK } from "@/constants/date";
+import { DAYS_OF_WEEK } from "@/constants/others/date";
 import { cn } from "@/lib/utils";
 import { createCalendarMatrix } from "@/utils/createCalendarMatrix";
 import { normalizeWeekDays } from "@/utils/createNormalizedWeekDays";

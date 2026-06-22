@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { dailyGoalKeys } from "@/constants/dailyGoalKeys";
+import { dailyGoalKeys } from "@/constants/keys/dailyGoalKeys";
 import { getAllMetasInRange } from "@/service/api/dailyGoal";
 
 export default function useGetAllDailyGoalsInRange(

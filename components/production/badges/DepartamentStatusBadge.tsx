@@ -1,6 +1,6 @@
 import { DepartamentState } from "@/types/database.type";
 import { Badge } from "@/components/ui/badge";
-import { getDepartamentStatusConfig } from "@/constants/departamentStatusConfig";
+import { getDepartamentStatusConfig } from "@/constants/config/departamentStatusConfig";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 
 type DepartamentStatusBadgeProps = {

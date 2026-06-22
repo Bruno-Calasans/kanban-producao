@@ -3,8 +3,8 @@ import {
   UpdateInitialMovimentation,
 } from "@/service/api/movimentationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productionKeys } from "@/constants/productionKeys";
-import { movimentationKeys } from "@/constants/movimentationKeys";
+import { productionKeys } from "@/constants/keys/productionKeys";
+import { movimentationKeys } from "@/constants/keys/movimentationKeys";
 
 export default function useUpdateInicialMovimentation() {
   const queryClient = useQueryClient();

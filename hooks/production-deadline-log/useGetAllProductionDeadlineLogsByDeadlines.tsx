@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllProductionDeadlineLogsByDeadlines } from "@/service/api/productionDeadlineLogApi";
-import { productionDeadlineLogKeys } from "@/constants/productionDeadlineLogKeys";
+import { productionDeadlineLogKeys } from "@/constants/keys/productionDeadlineLogKeys";
 
 export default function useGetAllProductionDeadlineLogsByDeadlines(deadlinesId: number[]) {
   return useQuery({

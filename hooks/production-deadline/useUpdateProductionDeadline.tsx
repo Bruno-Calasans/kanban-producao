@@ -3,9 +3,9 @@ import {
   updateProductionDeadline,
 } from "@/service/api/productionDeadline";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productionDeadlineKeys } from "@/constants/productionDeadlineKeys";
-import { productionFlowTemplateKeys } from "@/constants/productionFlowTemplateKeys";
-import { movimentationKeys } from "@/constants/movimentationKeys";
+import { productionDeadlineKeys } from "@/constants/keys/productionDeadlineKeys";
+import { productionFlowTemplateKeys } from "@/constants/keys/productionFlowTemplateKeys";
+import { movimentationKeys } from "@/constants/keys/movimentationKeys";
 
 export default function useUpdateProductionDeadline() {
   const queryClient = useQueryClient();

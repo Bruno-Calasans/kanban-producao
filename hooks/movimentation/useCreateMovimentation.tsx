@@ -2,9 +2,9 @@ import { CreateMovimentationData } from "@/service/api/movimentationApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createMovimentationAction } from "@/app/actions/movimentation/create";
 import { ProductionPopulated } from "@/types/database.type";
-import { productionDeadlineKeys } from "@/constants/productionDeadlineKeys";
-import { movimentationKeys } from "@/constants/movimentationKeys";
-import { productionKeys } from "@/constants/productionKeys";
+import { productionDeadlineKeys } from "@/constants/keys/productionDeadlineKeys";
+import { movimentationKeys } from "@/constants/keys/movimentationKeys";
+import { productionKeys } from "@/constants/keys/productionKeys";
 
 export function useCreateMovimentation() {
   const queryClient = useQueryClient();

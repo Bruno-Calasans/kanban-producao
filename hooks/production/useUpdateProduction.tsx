@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProduction, UpdateProductionData } from "@/service/api/productionApi";
-import { productionKeys } from "@/constants/productionKeys";
+import { productionKeys } from "@/constants/keys/productionKeys";
 
 export default function useUpdateProduction() {
   const queryClient = useQueryClient();

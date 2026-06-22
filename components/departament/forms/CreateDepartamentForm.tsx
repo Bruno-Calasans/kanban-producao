@@ -6,15 +6,18 @@ import { defaultDepartamentFormValues, useAppForm, formSchema } from "./departam
 import { DepartamentIsExternalCheckboxField } from "./fields/DepartamentIsExternalCheckboxField";
 import { DepartamentNameField } from "./fields/DepartamentNameField";
 import { DialogID } from "@/hooks/dialog/DialogContext";
+import { useState } from "react";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import useCreateDepartament from "@/hooks/departament/useCreateDepartament";
+import CreateManySwitch from "@/components/custom/CreateManySwitch";
 
 export default function CreateDepartamentForm() {
   const { closeDialog } = useDialog();
   const { mutateAsync: createDepartament, isPending } = useCreateDepartament();
+  const [many, setMany] = useState(false);
   const dialogId: DialogID = "create-departament";
 
   const form = useAppForm({
@@ -32,7 +35,7 @@ export default function CreateDepartamentForm() {
           is_final: false,
         });
         toast.success("Departamento criado com sucesso!");
-        closeDialog(dialogId);
+        if (!many) closeDialog(dialogId);
         form.reset();
       } catch (error) {
         errorHandler(error, {
@@ -57,6 +60,7 @@ export default function CreateDepartamentForm() {
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
+        <CreateManySwitch value={many} onChangeValue={setMany} />
         <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
         <ConfirmButton
           hiddenIcon

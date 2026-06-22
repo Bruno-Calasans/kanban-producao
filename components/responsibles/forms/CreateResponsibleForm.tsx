@@ -13,10 +13,12 @@ import useCreateResponsible from "@/hooks/responsible/useCreateResponsible";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import CancelButton from "@/components/custom/buttons/CancelButton";
+import CreateManySwitch from "@/components/custom/CreateManySwitch";
 
 export default function CreateResponsibleForm() {
   const { closeDialog } = useDialog();
   const { mutateAsync, isPending } = useCreateResponsible();
+  const [many, setMany] = useState(false);
   const [selectedDepartament, setSelectedDepartament] = useState<Departament | undefined>();
   const dialogId: DialogID = "create-responsible";
 
@@ -35,7 +37,7 @@ export default function CreateResponsibleForm() {
           is_active: true,
         });
         toast.success("Responsável criado com sucesso!");
-        closeDialog(dialogId);
+        if (!many) closeDialog(dialogId);
         form.reset();
       } catch (error) {
         errorHandler(error, {
@@ -63,6 +65,7 @@ export default function CreateResponsibleForm() {
       </FieldGroup>
 
       <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
+        <CreateManySwitch value={many} onChangeValue={setMany} />
         <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
         <ConfirmButton
           hiddenIcon

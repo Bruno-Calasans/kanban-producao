@@ -1,11 +1,5 @@
 import { ProductionPopulated } from "@/types/database.type";
-import {
-  InfoIcon,
-  ClockCheckIcon,
-  ClipboardClockIcon,
-  ClockAlert,
-  TriangleAlertIcon,
-} from "lucide-react";
+import { InfoIcon, ClockCheckIcon, ClipboardClockIcon, TriangleAlertIcon } from "lucide-react";
 import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
 import Loader from "@/components/custom/Loader";
 import CustomTooltip from "@/components/custom/CustomTooltip";

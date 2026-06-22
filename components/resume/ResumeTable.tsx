@@ -8,6 +8,7 @@ import ProductionStatusBadge from "@/components/custom/badges/ProductionStatusBa
 import ProductionMoreDetails from "./MovimentationMoreDetails";
 import Link from "next/link";
 import ProductionDetails from "./ProductionDetails";
+import classifyProductionStatus from "@/utils/classifyProductionStatus";
 
 type ProductPageProps = {
   productProductions: ProductProduction[];
@@ -72,6 +73,7 @@ const productColumns: ColumnDef<ProductProduction>[] = [
         </Link>
       );
     },
+    enableSorting: false,
   },
   {
     id: "last-movimentation-status",
@@ -86,6 +88,8 @@ const productColumns: ColumnDef<ProductProduction>[] = [
       productions.length > 0 ? (
         <ProductionStatusBadge production={productions[productions.length - 1]} />
       ) : null,
+    sortingFn: ({ original: { productions } }) =>
+      classifyProductionStatus(productions[productions.length - 1]),
   },
   {
     id: "details",

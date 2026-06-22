@@ -38,7 +38,7 @@ export default function ProductionSelector({
       isLoading={isLoading}
       noItemFoundMsg={
         <NoItemFoundMsg
-          title="Nenhuma produção ativa encontrada"
+          title="Nenhuma produção ativa (em andamento) encontrada"
           desc="Cria uma nova produção em"
           url="/productions"
           urlName="produções"

@@ -68,7 +68,11 @@ const productColumns: ColumnDef<ProductProduction>[] = [
           className="flex gap-1 hover:underline items-center"
           href={`/productions/${lastProduction?.id}`}
         >
-          {lastProduction && <ProductionDetails production={lastProduction} />}
+          {lastProduction &&
+            lastProduction.status != "COMPLETED" &&
+            lastProduction.status != "CANCELLED" && (
+              <ProductionDetails production={lastProduction} />
+            )}
           {lastProduction?.op}
         </Link>
       );

@@ -46,6 +46,7 @@ const productionFlowColumns: ColumnDef<ProductionFlow>[] = [
     cell: ({ row: { original } }) => {
       return <ProductionFlowDepartaments productionFlow={original} />;
     },
+    enableSorting: false,
   },
   {
     accessorKey: "is_active",

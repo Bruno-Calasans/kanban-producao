@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
-import { ProductProduction } from "@/types/database.type";
+import { ProductionStatus, ProductProduction } from "@/types/database.type";
 import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import ProductionStatusBadge from "@/components/custom/badges/ProductionStatusBadge";
@@ -82,7 +82,7 @@ const productColumns: ColumnDef<ProductProduction>[] = [
   {
     id: "last-movimentation-status",
     accessorFn: ({ productions }) =>
-      productions.length > 0 ? `${productions[productions.length - 1].status}` : undefined,
+      productions.length > 0 ? productions[productions.length - 1].status : undefined,
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({
       row: {
@@ -92,8 +92,11 @@ const productColumns: ColumnDef<ProductProduction>[] = [
       productions.length > 0 ? (
         <ProductionStatusBadge production={productions[productions.length - 1]} />
       ) : null,
-    sortingFn: ({ original: { productions } }) =>
-      classifyProductionStatus(productions[productions.length - 1]),
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = rowA.getValue<ProductionStatus>(columnId);
+      const b = rowB.getValue<ProductionStatus>(columnId);
+      return classifyProductionStatus(a) - classifyProductionStatus(b);
+    },
   },
   {
     id: "details",

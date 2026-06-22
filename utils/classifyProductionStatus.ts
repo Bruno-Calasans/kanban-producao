@@ -1,6 +1,6 @@
-import { ProductionPopulated } from "@/types/database.type";
+import { ProductionStatus } from "@/types/database.type";
 
-export default function classifyProductionStatus({ status }: ProductionPopulated) {
+export default function classifyProductionStatus(status: ProductionStatus) {
   switch (status) {
     case "CANCELLED":
       return 0;

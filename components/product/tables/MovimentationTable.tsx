@@ -2,10 +2,11 @@
 
 import { DataTable } from "@/components/custom/data-table/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
-import type { MovimentationPopulated } from "@/types/database.type";
+import type { MovimentationPopulated, MovimentationType } from "@/types/database.type";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import MovimentationTypeBadge from "@/components/production/badges/MovimentationTypeBadge";
 import formatStringToDate from "@/utils/formatStringToDate";
+import classifyMovimentationType from "@/utils/classifyMovimentationType";
 
 type MovimentationTableProps = {
   movimentations: MovimentationPopulated[];
@@ -19,6 +20,11 @@ const movimentationColumns: ColumnDef<MovimentationPopulated>[] = [
     cell: ({ row: { original: movimentation } }) => (
       <MovimentationTypeBadge movimentation={movimentation} />
     ),
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = rowA.getValue<MovimentationType>(columnId);
+      const b = rowB.getValue<MovimentationType>(columnId);
+      return classifyMovimentationType(a) - classifyMovimentationType(b);
+    },
   },
   {
     accessorKey: "amount",

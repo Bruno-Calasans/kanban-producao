@@ -47,11 +47,15 @@ export function calcDeadlineStatus({
       : null;
 
     // Quantos dias para expirar
+    // Negativo = expirou
+    // Positivo = não expirou
     const expireDays = plannedEndDate ? differenceInDays(plannedEndDate, today) : 0;
 
     // Verifica quantos dias terminou depois do prazo
+    // Negativo = expirou com atraso
+    // Positivo = expirou sem atraso
     const expireDaysAfterEnd =
-      plannedEndDate && actualEndDate ? differenceInDays(actualEndDate, plannedEndDate) : 0;
+      plannedEndDate && actualEndDate ? differenceInDays(plannedEndDate, actualEndDate) : 0;
 
     // Prazo não recebeu entrada e não tem nada disponível
     if (!hasInput && !hasWork) {
@@ -74,7 +78,7 @@ export function calcDeadlineStatus({
     }
 
     // Prazo concluído com atraso
-    if (actualEndDate && !hasWork && expireDays < 0) {
+    if (actualEndDate && !hasWork && expireDaysAfterEnd < 0) {
       statusData.status = "COMPLETED_EXPIRED";
     }
 

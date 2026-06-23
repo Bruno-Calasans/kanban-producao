@@ -65,6 +65,8 @@ export default function SkipMovimentationForm({
             finished_at: null,
             responsible_id: null,
             deadline_id: departamentDeadline ? departamentDeadline.id : null,
+            goal_id: null,
+            is_cancelled: false,
           },
         });
 

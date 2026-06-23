@@ -68,6 +68,8 @@ export default function CreateReprocessForm({
             type: "REPROCESS",
             reason: null,
             deadline_id: departamentDeadline ? departamentDeadline.id : null,
+            goal_id: null,
+            is_cancelled: false,
           },
         });
 

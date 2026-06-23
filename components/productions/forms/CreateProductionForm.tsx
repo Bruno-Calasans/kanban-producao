@@ -67,6 +67,8 @@ export default function CreateProductionForm({ defaultProduct }: CreateProductio
             finished_at: new Date().toISOString(),
             reason: "",
             deadline_id: null,
+            goal_id: null,
+            is_cancelled: false,
           },
         });
 

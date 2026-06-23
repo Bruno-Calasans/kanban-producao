@@ -77,6 +77,8 @@ export default function ReturnDepartamentForm({
             responsible_id: null,
             reason: null,
             deadline_id: deadline ? deadline.id : null,
+            goal_id: null,
+            is_cancelled: false,
           },
         });
 

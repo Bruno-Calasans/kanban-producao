@@ -65,6 +65,8 @@ export default function MoveExternalForm({
             finished_at: null,
             reason: null,
             deadline_id: departamentDeadline ? departamentDeadline.id : null,
+            goal_id: null,
+            is_cancelled: false,
           },
         });
 

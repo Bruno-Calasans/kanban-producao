@@ -68,6 +68,8 @@ export default function CreateProductProductionForm({ product }: CreateProductPr
             deadline_id: null,
             type: "INIT",
             reason: "",
+            goal_id: null,
+            is_cancelled: false,
           },
         });
 

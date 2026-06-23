@@ -77,6 +77,8 @@ export default function CreateMovimentationForm({
             deadline_id: departamentDeadline.id,
             type: "TRANSFER",
             reason: null,
+            goal_id: null,
+            is_cancelled: false,
           },
         });
 

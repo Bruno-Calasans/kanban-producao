@@ -69,7 +69,7 @@ export default function InternalWeekDeadlineCard({
   const hideFinishDailyGoalAction =
     isDailyGoalDone || isFinished || (isDailyGoalIncomplete && amountDoneInThisDay > 0);
   const hideRedoDailygoalAction =
-    !dailyGoal || (dailyGoal && lastMovimentation?.goal_id != dailyGoal.id);
+    isFinished || !dailyGoal || (dailyGoal && lastMovimentation?.goal_id != dailyGoal.id);
 
   return (
     <WeekDeadlineCardContextMenu

@@ -13,6 +13,8 @@ import Link from "next/link";
 import DeadlineTypeBadge from "../../DeadlineTypeBadge";
 import WeekDeadlineCardContextMenu from "./InternalWeekDeadlineCardContextMenu";
 import useWeeklyDeadlineCard from "@/hooks/week-deadline-card/useWeeklyDeadlineCard";
+import sortMovimentationByCreatedAt from "@/utils/sortMovimentationByCreatedAt";
+import removeDuplicate from "@/utils/removeDuplicate";
 
 export type InternalWeekDeadlineCardProps = {
   weekDay: Date;
@@ -30,11 +32,10 @@ export default function InternalWeekDeadlineCard({
   weekDailyGoals,
 }: InternalWeekDeadlineCardProps) {
   const setSelectedDeadlineId = useWeeklyDeadlineStore((state) => state.setSelectedDeadlineId);
+  const isShort = useShortCardVersion((state) => state.isShort);
   const isSameDeadline = useWeeklyDeadlineStore(
     (state) => state.selectedDeadlineId === deadline.production.id,
   );
-  const isShort = useShortCardVersion((state) => state.isShort);
-  const production = deadline.production;
 
   const {
     totalAmount,
@@ -49,18 +50,26 @@ export default function InternalWeekDeadlineCard({
     isExpectedThisWeekDay,
     isStartedThisWeekDay,
     hasWork,
+    dailyGoal,
   } = useWeeklyDeadlineCard({ deadline, weekDailyGoals, departamentStates, weekDay });
 
+  const production = deadline.production;
+
   // Movimentações dessa produção, exceto a inicial
-  const movimentations = departamentStates
-    .flatMap((state) => state.movimentations)
-    .filter((mov) => mov.type != "INIT");
+  const movimentations = removeDuplicate(
+    departamentStates.flatMap((state) => state.movimentations).filter((mov) => mov.type != "INIT"),
+  );
+
+  const sortedMovimentationsByDate = dailyGoal ? sortMovimentationByCreatedAt(movimentations) : [];
+  const lastMovimentation = sortedMovimentationsByDate.at(-1)!;
 
   const hideDeleteDeadlineAction = movimentations.length > 1;
   const hideEditDeadlineAction = isFinished || avaliableAmount == 0;
   const hideFinishDeadlineAction = isFinished || avaliableAmount == 0;
   const hideFinishDailyGoalAction =
     isDailyGoalDone || isFinished || (isDailyGoalIncomplete && amountDoneInThisDay > 0);
+  const hideRedoDailygoalAction =
+    !dailyGoal || (dailyGoal && lastMovimentation?.goal_id != dailyGoal.id);
 
   return (
     <WeekDeadlineCardContextMenu
@@ -70,11 +79,13 @@ export default function InternalWeekDeadlineCard({
       metaWeekDate={weekDay}
       deadline={deadline}
       departamentAvaliableAmount={avaliableAmount}
-      hidden={!avaliableAmount || isDailyGoalDone}
+      dailyGoal={dailyGoal}
+      hidden={!avaliableAmount}
       hideDeleteDeadlineAction={hideDeleteDeadlineAction}
       hideEditDeadlineAction={hideEditDeadlineAction}
       hideFinishDeadlineAction={hideFinishDeadlineAction}
       hideFinishDailyGoalAction={hideFinishDailyGoalAction}
+      hideRedoDailygoalAction={hideRedoDailygoalAction}
     >
       <Link
         className={cn("flex flex-col h-fit rounded-none mt-2 p-1", !hasWork && "cursor-default")}

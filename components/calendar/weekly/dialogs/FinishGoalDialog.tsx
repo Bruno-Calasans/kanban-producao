@@ -6,7 +6,7 @@ import CustomDialog from "@/components/custom/CustomDialog";
 import FinishMetaForm from "@/components/calendar/weekly/forms/finish-daily-goal/FinishGoalForm";
 
 type FinishGoalDialogProps = {
-  goalAmount: number;
+  expectedGoalAmount: number;
   metaWeekDate: Date;
   departament: Departament;
   deadline: ProductionDeadlinePopulated;
@@ -16,11 +16,11 @@ type FinishGoalDialogProps = {
 
 export default function FinishGoalDialog({
   departamentStates,
-  goalAmount,
   departament,
   metaWeekDate,
   deadline,
   departamentAvaliableAmount,
+  expectedGoalAmount,
 }: FinishGoalDialogProps) {
   return (
     <CustomDialog
@@ -35,11 +35,11 @@ export default function FinishGoalDialog({
     >
       <FinishMetaForm
         departamentStates={departamentStates}
-        goalAmount={goalAmount}
         departament={departament}
         metaWeekDate={metaWeekDate}
         deadline={deadline}
         departamentAvaliableAmount={departamentAvaliableAmount}
+        expectedGoalAmount={expectedGoalAmount}
       />
     </CustomDialog>
   );

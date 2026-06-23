@@ -11,6 +11,7 @@ export type MoveNextDepartamentData = {
   responsibleId: number | null;
   startedAt: string | null;
   finished_at: string | null;
+  dailyGoalId?: number | null;
   amount?: number;
 };
 
@@ -181,6 +182,7 @@ export async function moveToNextDepartament({
   finished_at,
   responsibleId,
   departamentStates,
+  dailyGoalId,
 }: MoveNextDepartamentData) {
   let movedAmount = 0;
 
@@ -209,6 +211,8 @@ export async function moveToNextDepartament({
         type: "TRANSFER",
         deadline_id: null,
         reason: null,
+        goal_id: dailyGoalId || null,
+        is_cancelled: false
       },
     });
 

@@ -78,7 +78,7 @@ export default function MonthlyCalendarPage() {
               // onSelect={setRange}
               numberOfMonths={1}
               captionLayout="dropdown-months"
-              className="[--cell-size:--spacing(10)] md:[--cell-size:--spacing(16)]"
+              className="[--cell-size:--spacing(11)] md:[--cell-size:--spacing(16)]"
               modifiers={{
                 deadlines: deadlineDates,
                 startedDealines: startDeadlineDates,
@@ -114,7 +114,7 @@ export default function MonthlyCalendarPage() {
                         {children}
                         <Badge
                           variant="ghost"
-                          className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 mt-1"
+                          className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 mt-1 p-2"
                         >
                           {finishedDeadlineDatesInThisDay.length} término(s)
                         </Badge>
@@ -128,7 +128,7 @@ export default function MonthlyCalendarPage() {
                         {children}
                         <Badge
                           variant="ghost"
-                          className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300 mt-1"
+                          className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300 mt-1 p-2"
                         >
                           {deadlinesInThisDay.length} entrega(s)
                         </Badge>

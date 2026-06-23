@@ -48,6 +48,7 @@ export type DialogID =
   | `delete-deadline-${number | string}`
   | `finish-deadline-${number}`
   | `finish-meta-${number | string}`
+  | `redo-daily-goal-${number | string}`
 
   // Movimentação
   | `create-movimentation-${number}`

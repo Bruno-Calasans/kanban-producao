@@ -6,6 +6,7 @@ import { formSchema, useAppForm, FinishMetaFormContextFormSchema } from "./Finis
 import { FieldGroup } from "@/components/ui/field";
 import { useState } from "react";
 import {
+  DailyGoalPopulated,
   Departament,
   DepartamentState,
   ProductionDeadlinePopulated,
@@ -16,16 +17,16 @@ import { GoalDatesField } from "./fields/GoalDatesField";
 import { GoalResponsibleField } from "./fields/GoalResponsibleField";
 import { DialogID } from "@/hooks/dialog/DialogContext";
 import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
-import useCreateDailyGoal from "@/hooks/meta/useCreateDailyGoal";
+import useCreateDailyGoal from "@/hooks/daily-goal/useCreateDailyGoal";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 
 type FinishGoalFormProps = {
-  goalAmount: number;
   metaWeekDate: Date;
   departament: Departament;
+  expectedGoalAmount: number;
   deadline: ProductionDeadlinePopulated;
   departamentStates: DepartamentState[];
   departamentAvaliableAmount: number;
@@ -33,10 +34,10 @@ type FinishGoalFormProps = {
 
 export default function FinishGoalForm({
   departamentStates,
-  goalAmount,
   departament,
   metaWeekDate,
   deadline,
+  expectedGoalAmount,
   departamentAvaliableAmount,
 }: FinishGoalFormProps) {
   const { closeDialog } = useDialog();
@@ -48,7 +49,7 @@ export default function FinishGoalForm({
 
   const form = useAppForm({
     defaultValues: {
-      amount: goalAmount,
+      amount: expectedGoalAmount,
       started_at: new Date().toDateString(),
       finished_at: new Date().toDateString(),
       responsible: "",
@@ -64,6 +65,15 @@ export default function FinishGoalForm({
         const startedAtString = started_at ? new Date(started_at).toISOString() : null;
         const finishedAtString = finished_at ? new Date(finished_at).toISOString() : null;
 
+        const { data: createdDailyGoal } = await createDailyGoal({
+          amount_done: amount,
+          expected_amount: expectedGoalAmount,
+          deadline_id: deadline.id,
+          ref_date: metaWeekDate.toISOString(),
+          started_at: startedAtString,
+          finished_at: finishedAtString,
+        });
+
         await moveNextDepartament({
           production: deadline.production,
           departamentStates,
@@ -71,15 +81,7 @@ export default function FinishGoalForm({
           finished_at: finishedAtString,
           startedAt: startedAtString,
           responsibleId: responsible ? responsible.id : null,
-        });
-
-        await createDailyGoal({
-          amount_done: amount,
-          expected_amount: goalAmount,
-          deadline_id: deadline.id,
-          ref_date: metaWeekDate.toISOString(),
-          started_at: startedAtString,
-          finished_at: finishedAtString,
+          dailyGoalId: createdDailyGoal.id,
         });
 
         toast.success("Meta concluída com sucesso!");
@@ -106,7 +108,7 @@ export default function FinishGoalForm({
       <FieldGroup>
         <GoalAmountField
           form={form}
-          goalAmount={goalAmount}
+          goalAmount={expectedGoalAmount}
           maxAmount={departamentAvaliableAmount}
         />
         <GoalResponsibleField

@@ -34,7 +34,7 @@ export default function useWeeklyDeadlineCard({
   const { production, planned_start_at, planned_end_at, actual_end_at, departament } = deadline;
 
   // Pega a meta deste dia
-  const dayGoal = weekDailyGoals.find(
+  const dailyGoal = weekDailyGoals.find(
     (meta) => formatDate(new Date(meta.ref_date + "T00:00:00")) == formatDate(weekDay),
   );
 
@@ -56,7 +56,7 @@ export default function useWeeklyDeadlineCard({
   const weekTotalAmount = weekDailyGoals.reduce((prev, curr) => prev + curr.amount_done, 0);
 
   // Quantidade feita neste dia da semana
-  const amountDoneInThisDay = dayGoal ? dayGoal.amount_done : 0;
+  const amountDoneInThisDay = dailyGoal ? dailyGoal.amount_done : 0;
 
   // Dias para fazer (SEM CONSIDERAR DOMINGO)
   const daysAmount =
@@ -94,8 +94,8 @@ export default function useWeeklyDeadlineCard({
   const isFinished = !!endDate && avaliableAmount == 0;
 
   // Quantidade de peças que deve ser feita neste dia
-  const goalAmount = dayGoal
-    ? dayGoal.expected_amount
+  const goalAmount = dailyGoal
+    ? dailyGoal.expected_amount
     : Math.ceil((isFinished ? totalAmount : avaliableAmount) / totalDays);
 
   // Tem peças disponíveis para fazer
@@ -109,7 +109,7 @@ export default function useWeeklyDeadlineCard({
 
   // Meta será incompleta se fizer menos que a meta estabelecida
   const isDailyGoalIncomplete =
-    hasWork && !!dayGoal && dayGoal.amount_done < dayGoal.expected_amount;
+    hasWork && !!dailyGoal && dailyGoal.amount_done < dailyGoal.expected_amount;
 
   // Diz se o prazo cai neste dia da semana
   const isExpectedThisWeekDay = plannedEndDate && plannedEndDate.getTime() == weekDay.getTime();
@@ -127,7 +127,7 @@ export default function useWeeklyDeadlineCard({
 
   return {
     hasWork,
-    dayGoal,
+    dailyGoal,
     isExpired,
     workState,
     daysAmount,

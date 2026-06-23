@@ -26,7 +26,7 @@ export const PRODUCTION_STATUS_CONFIG: ProductionStatusConfigItem = {
   },
   PENDING: {
     label: "PENDENTE",
-    className: "bg-orange-400 text-white",
+    className: "bg-yellow-400 text-white",
     tooltip: "Produção aguardando início",
     icon: HourglassIcon,
   },

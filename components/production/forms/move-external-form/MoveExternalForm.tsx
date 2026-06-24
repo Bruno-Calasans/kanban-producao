@@ -72,7 +72,7 @@ export default function MoveExternalForm({
 
         if (plannedEndAt) {
           await createDeadline({
-            departament_id: currDepartament.id,
+            departament_id: selectedDepartament.id,
             production_id: production.id,
             planned_end_at: new Date(plannedEndAt).toISOString(),
             planned_start_at: null,

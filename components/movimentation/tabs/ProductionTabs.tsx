@@ -26,14 +26,14 @@ type ProductionTabsProps = {
 const TABS = ["DEPARTAMENTS", "DEADLINES", "MOVIMENTATIONS", "DEADLINE-LOGS"];
 
 export default function ProductionTabs({
-  departamentStates,
   departamentDeadlineStates,
+  departamentStates,
   movimentations,
   deadlines,
   deadlineLogs,
 }: ProductionTabsProps) {
   const [selectedTab, setSelectedTab] = useState(TABS[0]);
-  console.log(departamentStates);
+  const internalDeadlines = deadlines.filter((deadline) => !deadline.departament.is_external);
 
   return (
     <Tabs value={selectedTab} onValueChange={setSelectedTab}>
@@ -44,7 +44,7 @@ export default function ProductionTabs({
           </TabsTrigger>
 
           <TabsTrigger className="m-2" value={TABS[1]}>
-            Prazos <CountBadge amount={deadlines.length} />
+            Prazos <CountBadge amount={internalDeadlines.length} />
           </TabsTrigger>
 
           <TabsTrigger className="m-2" value={TABS[3]}>

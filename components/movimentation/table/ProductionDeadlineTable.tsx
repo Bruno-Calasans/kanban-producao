@@ -49,6 +49,7 @@ export default function ProductionDeadlineTable({
   departamentDeadlineStates,
   hideSearch,
 }: ProductionDeadlineTableProps) {
+  
   // Remove o departamento final
   const filteredDeadlineStates = departamentDeadlineStates.filter(
     (deadline) => !deadline.departament.is_final,

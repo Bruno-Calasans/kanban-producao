@@ -40,6 +40,8 @@ export default function ExternalWeekDeadlineCard({
     departamentExternalState,
   } = useExternalWeeklyDeadlineCard({ deadline, departamentStates, weekDay });
 
+  console.log(departament)
+
   return (
     <ExternalWeekDeadlineCardContextMenu
       departamentStates={departamentStates}

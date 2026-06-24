@@ -7,6 +7,7 @@ import {
   defaultMoveExternalFormValues,
 } from "@/components/production/forms/move-external-form/moveExternalFormContext";
 import { DatePickerInput } from "@/components/custom/DatePicker";
+import RequiredFieldTooltip from "@/components/custom/RequiredFieldTooltip";
 
 export const ExternalDeadlineField = withForm({
   defaultValues: defaultMoveExternalFormValues,
@@ -22,11 +23,11 @@ export const ExternalDeadlineField = withForm({
               return (
                 <Field data-invalid={isInvalid}>
                   <FieldLabel className="gap-0" htmlFor={field.name}>
-                    Prazo de Retorno
+                    Prazo de Retorno <RequiredFieldTooltip />
                   </FieldLabel>
                   <DatePickerInput
                     currentDate={field.state.value}
-                    onChangeDate={(value) => field.handleChange(value?.toDateString())}
+                    onChangeDate={(value) => field.handleChange(value ? value.toDateString() : "")}
                     placeholder="Selecione o prazo"
                   />
                   <FieldDescription>

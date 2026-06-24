@@ -121,8 +121,6 @@ export function calcDepartamentStates({
       status = "COMPLETED";
     }
 
-    console.log(skippedAmount);
-
     // =========================
     // FLAGS
     // =========================

@@ -103,7 +103,8 @@ export default function WeeklyDeadlineTable({
             >
               <div className="m-0 p-0 grid md:grid-cols-1 xl:grid-cols-2">
                 {deadlines?.map((deadline) => {
-                  if (deadline.departament.is_external) {
+
+                  if (department.is_external) {
                     return (
                       <ExternalWeekDeadlineCard
                         key={`${department.id}-${deadline.id}-${day.key}`}

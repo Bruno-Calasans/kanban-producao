@@ -51,12 +51,12 @@ export default function ProductionHeaderAlerts({
   const expiredDeadlineAlert = expiredDepartaments.length > 0 && productionStatus != "CANCELLED";
 
   return (
-    <div id="production-alerts" className="flex gap-2 flex-col my-1">
-      
+    <div id="production-alerts" className="flex gap-2 flex-col py-1 mb-1">
       {deadlines.length == 0 && !noDeadlineAlert && (
         <InfoAlert
           title="Produção sem prazo definido"
           description="Nenhum departamento tem prazo de entrega. Vá na aba 'Prazos' e defina os prazos para os departamentos."
+          hideCloseButton
         />
       )}
 

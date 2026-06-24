@@ -24,5 +24,8 @@ export default function useUpdateInicialMovimentation() {
         queryKey: movimentationKeys.list(productionId),
       });
     },
+    onError(error, data) {
+      console.log(data);
+    },
   });
 }

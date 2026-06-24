@@ -4,8 +4,9 @@ import {
   CheckIcon,
   TriangleAlertIcon,
   CircleDashedIcon,
-  ClockAlertIcon,
   RotateCcwIcon,
+  MoveUpRightIcon,
+  ChevronsRightIcon,
 } from "lucide-react";
 
 type DepartamentStatusConfigItem = {
@@ -26,12 +27,13 @@ export function getDepartamentStatusConfig({
       label: "PULADO",
       tooltip: "Departamento foi pulado",
       className: "bg-stone-400 text-white",
+      Icon: ChevronsRightIcon,
     },
     EXTERNAL: {
-      label: (expireDays: number) => `ATRASADO (${expireDays} dias atrás)`,
-      className: "bg-red-400 text-white",
-      tooltip: "Prazo expirado",
-      Icon: ClockAlertIcon,
+      label: "EXTERNO",
+      className: "bg-purple-400 text-white",
+      tooltip: "Enviado para fora daqui",
+      Icon: MoveUpRightIcon,
     },
     IN_PROGRESS: {
       label: "ANDAMENTO",

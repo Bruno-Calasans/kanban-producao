@@ -16,6 +16,7 @@ export type MoveNextDepartamentData = {
 };
 
 export type UpdateInitialMovimentation = {
+  productionId: number;
   departamentId: number;
   amount: number;
 };
@@ -160,19 +161,23 @@ export async function getAllMovimentationsByResponsible(responsibleId: number) {
 }
 
 export async function updateInitialMovimentation({
+  productionId,
   departamentId,
   amount,
 }: UpdateInitialMovimentation) {
-  return await supabase
+  const response = await supabase
     .from("Movimentation")
     .update({
       departament_id: departamentId,
       amount,
     })
-    .select()
+    .eq("production_id", productionId)
     .eq("type", "INIT")
+    .select()
     .single()
     .throwOnError();
+
+  return response;
 }
 
 export async function moveToNextDepartament({
@@ -212,7 +217,7 @@ export async function moveToNextDepartament({
         deadline_id: null,
         reason: null,
         goal_id: dailyGoalId || null,
-        is_cancelled: false
+        is_cancelled: false,
       },
     });
 

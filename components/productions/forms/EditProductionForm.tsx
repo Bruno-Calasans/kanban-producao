@@ -75,6 +75,7 @@ export default function EditProductionFormForm({
           const firstTemplate = templates[0];
 
           await updateInitialMovimentation({
+            productionId: production.id,
             departamentId: firstTemplate.departament.id,
             amount,
           });
@@ -101,6 +102,8 @@ export default function EditProductionFormForm({
     setProduct(production.product);
     setProductionFlow(production.productionFlow);
   };
+
+  console.log(productionFlow);
 
   const isPending = isProductionPending || isMovimentationPending;
 

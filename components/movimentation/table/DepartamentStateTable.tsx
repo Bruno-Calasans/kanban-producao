@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTableColumnHeader from "@/components/custom/data-table/DataTableColumnHeader";
 import DepartamentStatusBadge from "@/components/production/badges/DepartamentStatusBadge";
 import DepartamentActions from "@/components/production/DepartamentActions";
+import DepartamentDeadlineStatus from "@/components/custom/DepartamentDeadlineStatus";
 
 type DepartamentStateTableProps = {
   departamentStates: DepartamentState[];
@@ -28,6 +29,11 @@ export default function DepartamentStateTable({
       id: "departament.name",
       accessorKey: "departament.name",
       header: ({ column }) => <DataTableColumnHeader column={column} title="Departamento" />,
+      cell: ({
+        row: {
+          original: { departament },
+        },
+      }) => <DepartamentDeadlineStatus departament={departament} deadlines={deadlines} />,
       enableSorting: false,
     },
     {

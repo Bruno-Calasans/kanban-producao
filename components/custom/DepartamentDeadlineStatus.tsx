@@ -1,9 +1,4 @@
-import {
-  Departament,
-  ProductionDeadlineLogPopulated,
-  ProductionDeadlinePopulated,
-} from "@/types/database.type";
-
+import { Departament, ProductionDeadlinePopulated } from "@/types/database.type";
 import { CalendarCheckIcon, CalendarXIcon } from "lucide-react";
 import CustomTooltip from "./CustomTooltip";
 

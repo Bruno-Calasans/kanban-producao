@@ -118,7 +118,7 @@ export function DatePickerInput({
                 selected={currentDate as Date | undefined}
                 locale={ptBR}
                 lang="PtBr"
-                startMonth={now}
+                // startMonth={now}
                 month={month as Date | undefined}
                 onMonthChange={setMonth}
                 onSelect={(date) => {

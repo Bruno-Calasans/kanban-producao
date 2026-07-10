@@ -1,6 +1,5 @@
 import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { differenceInDays, startOfDay } from "date-fns";
-import daysDiffExceptSunday from "./daysDiffExceptSunday";
 
 export type DeadlineStatus =
   | "NOT_DEFINED" // DEADLINE NÃO FOI CRIADA
@@ -37,6 +36,7 @@ export function calcDeadlineStatus({
     const today = startOfDay(new Date());
     const hasInput = departamentState.inputAmount > 0;
     const hasWork = departamentState.avaliableAmount > 0;
+    const hasreprocess = departamentState.flags?.hasReprocess;
 
     const plannedEndDate = deadline.planned_end_at
       ? startOfDay(new Date(deadline.planned_end_at))
@@ -58,7 +58,7 @@ export function calcDeadlineStatus({
       plannedEndDate && actualEndDate ? differenceInDays(plannedEndDate, actualEndDate) : 0;
 
     // Prazo não recebeu entrada e não tem nada disponível
-    if (!hasInput && !hasWork) {
+    if ((!hasInput && !hasWork) || (hasreprocess && !hasWork)) {
       statusData.status = "NOT_READY";
     }
 

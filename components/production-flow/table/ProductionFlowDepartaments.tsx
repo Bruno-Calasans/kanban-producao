@@ -1,7 +1,7 @@
 import Loader from "@/components/custom/Loader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import useGetAllProductionFlowTemplates from "@/hooks/production-flow-template/useGetAllProductionFlowTemplates";
+import useGetAllProductionFlowTemplates from "@/hooks/production-flow-template/useGetAllFlowTemplatesByProductionFlow";
 import { cn } from "@/lib/utils";
 import { ProductionFlow } from "@/types/database.type";
 import { useState } from "react";

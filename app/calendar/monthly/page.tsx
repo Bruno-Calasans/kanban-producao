@@ -1,51 +1,119 @@
 "use client";
 
-import * as React from "react";
-import { Calendar, CalendarDayButton } from "@/components/ui/calendar";
-import { Card, CardContent } from "@/components/ui/card";
+import { useMemo, useState } from "react";
+import { groupDeadlineStatusByDeadline } from "@/utils/groupDeadlineStatusByDeadline";
+import { FilterItem } from "@/components/custom/FilterItems";
 import Loader from "@/components/custom/Loader";
-import PageMsg from "@/components/custom/msgs/PageMsg";
-import { Badge } from "@/components/ui/badge";
 import PageTitle from "@/components/custom/PageTitle";
-import useGetAllMovimentationDeadlinesWithProduct from "@/hooks/production-deadline/useGetAllProductionDeadlinesWithProduct";
-import DepartamentItemSelector, {
-  DepartamentItem,
-} from "@/components/calendar/DepartamentItemSelector";
+import PageMsg from "@/components/custom/msgs/PageMsg";
 import DeadlineCard from "@/components/calendar/DeadlineCard";
-import { formatDate } from "@/utils/formatDate";
+import useGetAllProductionDeadlines from "@/hooks/production-deadline/useGetAllProductionDeadlines";
+import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
+import MonthlyDeadlineFilters, {
+  DeadlineType,
+} from "@/components/calendar/monthly/MonthlyDeadlineFilters";
+import MonthlyDeadlineCalendarCard from "@/components/calendar/monthly/MonthlyDeadlineCalendarCard";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 
 export default function MonthlyCalendarPage() {
-  const { data, isPending, error } = useGetAllMovimentationDeadlinesWithProduct();
-  const deadlines = data?.data || [];
-  const [selectedDepartaments, setSelectedDepartaments] = React.useState<DepartamentItem[]>([]);
+  const [departamentsFilter, setSelectedDepartaments] = useState<FilterItem[]>([]);
+  const [selectedDeadlineTypes, setSelectedDeadlineTypes] = useState<FilterItem[]>([]);
+  const [selectedDeadlineDateTypes, setSelectedDeadlineDateTypes] = useState<FilterItem[]>([]);
+  const [filteredDeadlines, setFilteredDeadlines] = useState<ProductionDeadlinePopulated[]>([]);
 
-  const notEndDeadlines = deadlines.filter((deadline) => !deadline.actual_end_at);
+  const {
+    data: deadlinesData,
+    isLoading: isDeadlinesLoading,
+    error: deadlineError,
+  } = useGetAllProductionDeadlines();
+  const deadlines = deadlinesData?.data || [];
 
-  const startDeadlineDates = notEndDeadlines
-    .filter((deadline) => deadline.planned_start_at != null)
-    .map((deadline) => new Date(deadline.planned_start_at!));
+  const productions = deadlines.map((deadline) => deadline.production);
+  const {
+    departamentStatesByProduction,
+    isLoading: isDepartamentStatesByProductionLoading,
+    error: departamentStatesByProductionError,
+  } = useGetAllProductionDepartamentStates({ productions });
 
-  const finishedDeadlineDates = deadlines
-    .filter((deadline) => deadline.actual_end_at != null)
-    .map((deadline) => new Date(deadline.actual_end_at!));
+  const deadlineStatusByDeadline = groupDeadlineStatusByDeadline({
+    deadlines,
+    departamentStatesByProduction,
+  });
 
-  const deadlineDates = notEndDeadlines
-    .filter((deadline) => deadline.planned_end_at != null)
-    .map((deadline) => new Date(deadline.planned_end_at!));
+  const selectedDeadlines = useMemo(() => {
+    return (
+      (filteredDeadlines.length > 0 ? filteredDeadlines : deadlines)
+        // Filtra por departamento
+        .filter((deadline) =>
+          departamentsFilter.some((departament) => departament.value === deadline.departament.id),
+        )
+        // Filtra por tipo de prazo
+        .filter((deadline) => {
+          if (selectedDeadlineTypes.length === 0) return true;
 
-  const selectedDeadlines = notEndDeadlines.filter((deadline) =>
-    selectedDepartaments.some((departament) => departament.value === deadline.departament.id),
-  );
+          const deadlineStatus = deadlineStatusByDeadline.get(deadline.id);
+          const isExpired = deadlineStatus?.status === "EXPIRED";
+          const isFinished =
+            deadlineStatus?.status === "COMPLETED" ||
+            deadlineStatus?.status === "COMPLETED_EXPIRED";
+          const isInProgress = deadlineStatus?.status === "IN_PROGRESS";
+          const isUnset = deadlineStatus?.status === "NOT_DEFINED";
+          const isWaiting = deadlineStatus?.status === "NOT_READY";
+          const isReopen = deadlineStatus?.status === "REOPEN";
 
-  if (isPending) return <Loader title="Carregando prazos..." />;
+          const expireFilter = selectedDeadlineTypes.some(
+            (type) => type.value === DeadlineType.EXPIRED && isExpired,
+          );
+
+          const hasFinishedFilter = selectedDeadlineTypes.some(
+            (type) => type.value === DeadlineType.FINISHED && isFinished,
+          );
+
+          const hasInProgressFilter = selectedDeadlineTypes.some(
+            (type) => type.value === DeadlineType.IN_PROGRESS && isInProgress,
+          );
+
+          const hasUnsetFilter = selectedDeadlineTypes.some(
+            (type) => type.value === DeadlineType.NOT_DEFINED && isUnset,
+          );
+
+          const hasWaitingFilter = selectedDeadlineTypes.some(
+            (type) => type.value === DeadlineType.WAITING && isWaiting,
+          );
+
+          const hasReopenFilter = selectedDeadlineTypes.some(
+            (type) => type.value === DeadlineType.REOPEN && isReopen,
+          );
+
+          if (
+            (expireFilter && isExpired) ||
+            (hasFinishedFilter && isFinished) ||
+            (hasInProgressFilter && isInProgress) ||
+            (hasUnsetFilter && isUnset) ||
+            (hasWaitingFilter && isWaiting) ||
+            (hasReopenFilter && isReopen)
+          ) {
+            return true;
+          }
+
+          return false;
+        })
+    );
+  }, [deadlines, deadlineStatusByDeadline]);
+
+  const isLoading = isDeadlinesLoading || isDepartamentStatesByProductionLoading;
+  const error = deadlineError || departamentStatesByProductionError;
+
+  if (isLoading) return <Loader title="Carregando prazos..." />;
 
   if (error)
     return (
       <PageMsg
         title="Erro ao carregar prazos"
         content="Ocorreu um erro ao carregar os prazos."
-        backBtnUrl="/"
         backBtnLabel="Voltar à página inicial"
+        backBtnUrl="/"
       />
     );
 
@@ -53,113 +121,39 @@ export default function MonthlyCalendarPage() {
     <section>
       <PageTitle>Calendário Mensal</PageTitle>
 
-      <DepartamentItemSelector
+      {/* Filtro de departamentos */}
+      <MonthlyDeadlineFilters
         deadlines={deadlines}
-        isLoading={isPending}
-        onSelectDepartaments={setSelectedDepartaments}
+        departamentsFilter={departamentsFilter}
+        selectedDeadlineTypes={selectedDeadlineTypes}
+        selectedDeadlineDateTypes={selectedDeadlineDateTypes}
+        deadlineStatusByDeadline={deadlineStatusByDeadline}
+        setSelectedDepartaments={setSelectedDepartaments}
+        setSelectedDeadlineTypes={setSelectedDeadlineTypes}
+        setSelectedDeadlineDateTypes={setSelectedDeadlineDateTypes}
       />
 
+      {/* Prazos para entregar */}
       <div className="flex gap-4 justify-between">
         <div className="flex flex-col flex-1">
-          <p className="font-bold mb-2">Para entregar ({selectedDeadlines.length})</p>
-          <div className="flex flex-col gap-3 p-1 overflow-y-scroll h-full">
+          <p className="font-bold mb-2">Prazos ({selectedDeadlines.length})</p>
+
+          <ScrollArea className="h-[700px] rounded-md border p-4">
             {selectedDeadlines.map((deadline) => (
-              <DeadlineCard key={deadline.id} deadline={deadline} />
+              <DeadlineCard
+                key={deadline.id}
+                deadline={deadline}
+                deadlineStatus={deadlineStatusByDeadline.get(deadline.id)!}
+              />
             ))}
-          </div>
+          </ScrollArea>
         </div>
 
-        <Card className="p-0">
-          <CardContent className="p-0">
-            <Calendar
-              mode="single"
-              // defaultMonth={range?.from}
-              // selected={range}
-              // onSelect={setRange}
-              numberOfMonths={1}
-              captionLayout="dropdown-months"
-              className="[--cell-size:--spacing(11)] md:[--cell-size:--spacing(16)]"
-              modifiers={{
-                deadlines: deadlineDates,
-                startedDealines: startDeadlineDates,
-                finishedDeadlineDates: finishedDeadlineDates,
-              }}
-              modifiersClassNames={{
-                deadlines: "border-1 border-red-500",
-                startedDealines: "border-1 border-indigo-500",
-                finishedDeadlineDates: "border-1 border-emerald-500",
-              }}
-              formatters={{
-                formatMonthDropdown: (date) => {
-                  return date.toLocaleString("default", { month: "long" });
-                },
-              }}
-              components={{
-                DayButton: ({ children, modifiers, day, ...props }) => {
-                  const deadlinesInThisDay = deadlineDates.filter(
-                    (deadlineDate) => formatDate(deadlineDate) == formatDate(day.date),
-                  );
-
-                  const startedDealinesInThisDay = startDeadlineDates.filter(
-                    (deadlineDate) => formatDate(deadlineDate) == formatDate(day.date),
-                  );
-
-                  const finishedDeadlineDatesInThisDay = finishedDeadlineDates.filter(
-                    (deadlineDate) => formatDate(deadlineDate) == formatDate(day.date),
-                  );
-
-                  if (finishedDeadlineDatesInThisDay.length > 0) {
-                    return (
-                      <CalendarDayButton day={day} modifiers={modifiers} {...props}>
-                        {children}
-                        <Badge
-                          variant="ghost"
-                          className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 mt-1 p-2"
-                        >
-                          {finishedDeadlineDatesInThisDay.length} término(s)
-                        </Badge>
-                      </CalendarDayButton>
-                    );
-                  }
-
-                  if (deadlinesInThisDay.length > 0) {
-                    return (
-                      <CalendarDayButton day={day} modifiers={modifiers} {...props}>
-                        {children}
-                        <Badge
-                          variant="ghost"
-                          className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300 mt-1 p-2"
-                        >
-                          {deadlinesInThisDay.length} entrega(s)
-                        </Badge>
-                      </CalendarDayButton>
-                    );
-                  }
-
-                  if (startedDealinesInThisDay.length > 0) {
-                    return (
-                      <CalendarDayButton day={day} modifiers={modifiers} {...props}>
-                        {children}
-                        <Badge
-                          variant="ghost"
-                          className="bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 mt-1"
-                        >
-                          {startedDealinesInThisDay.length} iniciado(s)
-                        </Badge>
-                      </CalendarDayButton>
-                    );
-                  }
-
-                  return (
-                    <CalendarDayButton day={day} modifiers={modifiers} {...props}>
-                      {children}
-                    </CalendarDayButton>
-                  );
-                },
-              }}
-            />
-          </CardContent>
-        </Card>
+        <MonthlyDeadlineCalendarCard
+          deadlines={deadlines}
+          selectedDeadlineDateTypes={selectedDeadlineDateTypes}
+          onClickDate={setFilteredDeadlines}
+        />
       </div>
     </section>
   );

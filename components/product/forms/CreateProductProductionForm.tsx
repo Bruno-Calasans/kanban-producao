@@ -7,7 +7,7 @@ import {
   formSchema,
 } from "./ProductProductionFormContext";
 import { Product, ProductionFlow } from "@/types/database.type";
-import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
+import { getAllFlowTemplatesByProductionFlow } from "@/service/api/productionFlowTemplate";
 import { ProductProductProductionAmountField } from "./fields/ProductProductionAmountField";
 import { useState } from "react";
 import { ProductProductionFlowField } from "./fields/ProductProductionFlowField";
@@ -50,7 +50,7 @@ export default function CreateProductProductionForm({ product }: CreateProductPr
           status: "PENDING",
         });
 
-        const { data: flowTemplates } = await getAllProductionFlowTemplates(
+        const { data: flowTemplates } = await getAllFlowTemplatesByProductionFlow(
           production.production_flow_id,
         );
 

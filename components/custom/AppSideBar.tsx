@@ -20,6 +20,7 @@ import {
   CalendarDaysIcon,
   PackageIcon,
   LayoutGridIcon,
+  ScrollTextIcon,
 } from "lucide-react";
 import { MenuItem } from "./app-sidebar/MenuItem";
 import SubMenu from "./app-sidebar/SubMenu";
@@ -30,11 +31,17 @@ const topMenu = [
     url: "/",
     icon: HomeIcon,
   },
+    {
+    name: "Resumo",
+    url: "/resume",
+    icon: ScrollTextIcon,
+  },
   {
     name: "Produções",
     url: "/productions",
     icon: PackageIcon,
   },
+
 ];
 
 const bottomMenu = [

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllFlowTemplatesByDepartament } from "@/service/api/processFlowTemplate";
+import { getAllFlowTemplatesByDepartament } from "@/service/api/productionFlowTemplate";
 import { productionFlowTemplateKeys } from "@/constants/keys/productionFlowTemplateKeys";
 
 export default function useGetlAllFlowTemplatesByDepartament(departamentId: number) {

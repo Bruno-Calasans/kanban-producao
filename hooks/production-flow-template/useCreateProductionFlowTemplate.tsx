@@ -2,7 +2,7 @@ import { productionFlowKeys } from "@/constants/keys/productionFlowKeys";
 import {
   createProductionFlowTemplate,
   CreateProductionFlowTemplateData,
-} from "@/service/api/processFlowTemplate";
+} from "@/service/api/productionFlowTemplate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function useCreateProductionFlowTemplate() {

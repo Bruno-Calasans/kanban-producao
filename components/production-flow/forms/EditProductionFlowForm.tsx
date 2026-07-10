@@ -15,7 +15,7 @@ import { ProductionFlowUseDefaultField } from "./fields/ProductionFlowUseDefault
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useCreateProductionFlowTemplate from "@/hooks/production-flow-template/useCreateProductionFlowTemplate";
-import useGetAllProductionFlowTemplates from "@/hooks/production-flow-template/useGetAllProductionFlowTemplates";
+import useGetAllProductionFlowTemplates from "@/hooks/production-flow-template/useGetAllFlowTemplatesByProductionFlow";
 import useDeleteProductionFlowTemplates from "@/hooks/production-flow-template/useDeleteProductionFlowTemplates";
 import useUpdateProductionFlow from "@/hooks/production-flow/useUpdateProductionFlow";
 import CancelButton from "@/components/custom/buttons/CancelButton";

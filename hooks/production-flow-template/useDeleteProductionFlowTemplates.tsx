@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { productionFlowKeys } from "@/constants/keys/productionFlowKeys";
-import { deleteFlowTemplates } from "@/service/api/processFlowTemplate";
+import { deleteFlowTemplates } from "@/service/api/productionFlowTemplate";
 
 export default function useDeleteProductionFlowTemplates() {
   const queryClient = useQueryClient();

@@ -56,19 +56,22 @@ export default function DepartamentItemSelector({
   }, [isLoading]);
 
   return (
-    <div className="flex flex-wrap gap-3 p-2 mb-2">
-      {uniqueDepartamentItems.map((item) => (
-        <Badge
-          key={item.value}
-          className={cn(
-            "cursor-pointer bg-slate-400 hover:bg-stone-600",
-            isItemSelected(item) ? "bg-stone-800" : "bg-slate-400",
-          )}
-          onClick={() => handleDepartamentSelect(item)}
-        >
-          {item.label}
-        </Badge>
-      ))}
+    <div className="flex  flex-wrap gap-3 p-2 mb-2">
+      <p className="text-sm text-muted-foreground">Departamentos: </p>
+      <div className="flex flex-wrap gap-2">
+        {uniqueDepartamentItems.map((item) => (
+          <Badge
+            key={item.value}
+            className={cn(
+              "cursor-pointer bg-slate-400 hover:bg-stone-600",
+              isItemSelected(item) ? "bg-stone-800" : "bg-slate-400",
+            )}
+            onClick={() => handleDepartamentSelect(item)}
+          >
+            {item.label}
+          </Badge>
+        ))}
+      </div>
     </div>
   );
 }

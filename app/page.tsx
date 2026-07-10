@@ -36,7 +36,7 @@ export default function Home() {
   return (
     <section>
       <PageTitle>Home</PageTitle>
-      <p>Resume todos os produtos e suas últimas produções. </p>
+      <p>Resume todos os produtos e suas últimas produções.</p>
       <ResumeTable productProductions={productProductions} />
     </section>
   );

@@ -6,7 +6,7 @@ import { ProductionProductNameField } from "./fields/ProductionProductNameField"
 import { useAppForm, formSchema, ProductionFormSchema } from "./productionFormContext";
 import { ProductionAmountField } from "./fields/ProductionAmountField";
 import { Product, ProductionFlow, ProductionPopulated } from "@/types/database.type";
-import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
+import { getAllFlowTemplatesByProductionFlow } from "@/service/api/productionFlowTemplate";
 import { ProductionFlowField } from "./fields/ProductionFlowField";
 import { ProductionOpField } from "./fields/ProductionOpField";
 import { DialogID } from "@/hooks/dialog/DialogContext";
@@ -69,7 +69,7 @@ export default function EditProductionFormForm({
           productionFlow && production.productionFlow.id != productionFlow.id;
 
         if (amount != production.amount || isProductionFlowDiff) {
-          const { data: templates } = await getAllProductionFlowTemplates(
+          const { data: templates } = await getAllFlowTemplatesByProductionFlow(
             selectedProductionFlow.id,
           );
           const firstTemplate = templates[0];

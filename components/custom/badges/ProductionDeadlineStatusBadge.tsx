@@ -13,11 +13,11 @@ export default function ProductionDeadlineStatusBadge({
   let config = DEADLINE_STATUS_CONFIG[status];
 
   if (status == "COMPLETED_EXPIRED" && typeof config.label == "function") {
-    config.label = config.label(expireDaysAfterEnd);
+    config.label = config.label(Math.abs(expireDaysAfterEnd));
   }
 
   if (status == "EXPIRED" && typeof config.label == "function") {
-    config.label = config.label(expireDays);
+    config.label = config.label(Math.abs(expireDays));
   }
 
   return (

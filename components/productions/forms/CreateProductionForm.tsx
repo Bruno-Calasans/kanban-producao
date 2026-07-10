@@ -9,7 +9,7 @@ import { ProductionOpField } from "./fields/ProductionOpField";
 import { ProductionFlowField } from "./fields/ProductionFlowField";
 import { ProductionAmountField } from "./fields/ProductionAmountField";
 import { Product, ProductionFlow } from "@/types/database.type";
-import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
+import { getAllFlowTemplatesByProductionFlow } from "@/service/api/productionFlowTemplate";
 import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import { useCreateProduction } from "@/hooks/production/useCreateProduction";
 import useDialog from "@/hooks/dialog/useDialog";
@@ -51,7 +51,7 @@ export default function CreateProductionForm({ defaultProduct }: CreateProductio
           production_flow_id: productionFlow.id,
         });
 
-        const { data: processFlows } = await getAllProductionFlowTemplates(productionFlow.id);
+        const { data: processFlows } = await getAllFlowTemplatesByProductionFlow(productionFlow.id);
 
         await createMovimentation({
           production,

@@ -5,7 +5,7 @@ import {
   CreateMovimentationData,
   getAllMovimentationsByProduction,
 } from "@/service/api/movimentationApi";
-import { getAllProductionFlowTemplates } from "@/service/api/processFlowTemplate";
+import { getAllFlowTemplatesByProductionFlow } from "@/service/api/productionFlowTemplate";
 import { ProductionPopulated } from "@/types/database.type";
 import { calcProductionStatus } from "@/utils/calcProductionStatus";
 import { calcDepartamentStates } from "@/utils/calcDepartamentStates";
@@ -27,7 +27,7 @@ export async function createMovimentationAction({
   const { data: movimentations } = await getAllMovimentationsByProduction(production.id);
 
   // Pega todos os templates do fluxo de produção
-  const { data: flowTemplates } = await getAllProductionFlowTemplates(
+  const { data: flowTemplates } = await getAllFlowTemplatesByProductionFlow(
     production.production_flow_id,
   );
 

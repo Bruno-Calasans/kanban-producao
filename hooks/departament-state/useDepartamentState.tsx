@@ -2,7 +2,7 @@
 "use client";
 
 import { ProductionPopulated } from "@/types/database.type";
-import useGetAllProductionFlowTemplates from "../production-flow-template/useGetAllProductionFlowTemplates";
+import usegetAllProductionFlowTemplatesByProductionFlow from "../production-flow-template/useGetAllFlowTemplatesByProductionFlow";
 import useGetAllMovimentationsByProduction from "../movimentation/useGetAllMovimentationsByProduction";
 import { useMemo } from "react";
 import { calcDepartamentStates } from "@/utils/calcDepartamentStates";
@@ -16,7 +16,7 @@ export default function useDepartamentState({ production }: UseDepartamentStateP
     data: flowTemplateData,
     error: flowTemplateError,
     isPending: isFlowTemplatePending,
-  } = useGetAllProductionFlowTemplates(production?.production_flow_id);
+  } = usegetAllProductionFlowTemplatesByProductionFlow(production?.production_flow_id);
 
   const {
     data: movimentationsData,

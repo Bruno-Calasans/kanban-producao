@@ -11,7 +11,19 @@ export async function createProductionFlowTemplate(data: CreateProductionFlowTem
   return await supabase.from("ProductionFlowTemplate").insert(data).throwOnError();
 }
 
-export async function getAllProductionFlowTemplates(productionFlowId: number) {
+export async function getAllFlowTemplates() {
+  return await supabase
+    .from("ProductionFlowTemplate")
+    .select(
+      `*,
+        departament:Departament!departament_id(*)
+        `,
+    )
+    .order("sequence", { ascending: true })
+    .throwOnError();
+}
+
+export async function getAllFlowTemplatesByProductionFlow(productionFlowId: number) {
   return await supabase
     .from("ProductionFlowTemplate")
     .select(

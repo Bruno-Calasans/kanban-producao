@@ -117,6 +117,11 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.selected > button {
+  background-color: rgba(255, 0, 0, 0.407);
+  border: 2px solid red;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

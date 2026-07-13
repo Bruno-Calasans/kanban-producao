@@ -8,9 +8,7 @@ export function groupDeadlinesByProduction(deadlines: ProductionDeadlinePopulate
     const movimentationId = production.id;
 
     const currentGroup = deadlinesByMovimentation.get(movimentationId) || [];
-
     currentGroup.push(deadline);
-
     deadlinesByMovimentation.set(movimentationId, currentGroup);
   }
 

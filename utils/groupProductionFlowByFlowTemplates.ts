@@ -4,11 +4,11 @@ export function groupProductionFlowByFlowTemplates(flowTemplates: ProductionFlow
   const flowTemplateByProductionFlow = new Map<number, ProductionFlowTemplate[]>();
 
   for (const flowTemplate of flowTemplates) {
-    const flowTemplateId = flowTemplate.id;
+    const productionFlowId = flowTemplate.production_flow_id;
 
-    const currentGroup = flowTemplateByProductionFlow.get(flowTemplateId) || [];
+    const currentGroup = flowTemplateByProductionFlow.get(productionFlowId) || [];
     currentGroup.push(flowTemplate);
-    flowTemplateByProductionFlow.set(flowTemplateId, currentGroup);
+    flowTemplateByProductionFlow.set(productionFlowId, currentGroup);
   }
 
   return flowTemplateByProductionFlow;

@@ -41,11 +41,13 @@ export default function DeadlineCard({ deadline, deadlineStatus }: DeadlineCardP
           <CardTitle className="text-md">{deadline.production.product.name}</CardTitle>
         </Link>
 
-        <Link className="hover:underline" href={`/productions/${deadline.production.id}`}>
-          <CardDescription>Produção #{deadline.production.id}</CardDescription>
-        </Link>
-
-        <CardDescription>Quantidade: {deadline.production.amount}</CardDescription>
+        <CardDescription className="flex flex-col gap-1">
+          <Link className="hover:underline" href={`/productions/${deadline.production.id}`}>
+            <span>OP: {deadline.production.op}</span>
+          </Link>
+          <span>Ref: {deadline.production.product.ref}</span>
+          <span>Quantidade: {deadline.production.amount}</span>
+        </CardDescription>
 
         <CardAction className="text-sm">
           <span className="font-bold">Prazo</span>:{" "}

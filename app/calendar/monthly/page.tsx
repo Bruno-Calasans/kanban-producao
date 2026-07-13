@@ -15,13 +15,17 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ProductionDeadlinePopulated } from "@/types/database.type";
 import { DeadlineStatusEnum } from "@/utils/calcDeadlineStatus";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function MonthlyCalendarPage() {
   const [departamentsFilter, setSelectedDepartaments] = useState<FilterItem[]>([]);
   const [selectedDeadlineTypes, setSelectedDeadlineTypes] = useState<FilterItem[]>([]);
   const [selectedDeadlineDateTypes, setSelectedDeadlineDateTypes] = useState<FilterItem[]>([]);
-  const [filteredDeadlines, setFilteredDeadlines] = useState<ProductionDeadlinePopulated[]>([]);
+  const [filteredDeadlines, setFilteredDeadlines] = useState<ProductionDeadlinePopulated[] | null>(
+    null,
+  );
   const [selectedDate, setSelectedDate] = useState<Date>();
+  const [search, setSearch] = useState<string>("");
 
   const {
     data: deadlinesData,
@@ -44,7 +48,7 @@ export default function MonthlyCalendarPage() {
 
   const selectedDeadlines = useMemo(() => {
     return (
-      filteredDeadlines
+      (filteredDeadlines || deadlines)
         // Filtra por departamento
         .filter((deadline) =>
           departamentsFilter.some((departament) => departament.value === deadline.departament.id),
@@ -100,13 +104,27 @@ export default function MonthlyCalendarPage() {
 
           return false;
         })
+        // Filtra por nome, op ou ref
+        .filter((deadline) => {
+          if (search) {
+            const { production } = deadline;
+            const lowerCaseSearch = search.toLowerCase();
+            const isProductName = production.product.name.toLowerCase().includes(lowerCaseSearch);
+            const isOp = String(production.op).includes(lowerCaseSearch);
+            const isRef = String(production.product.ref).includes(lowerCaseSearch);
+
+            if (isProductName || isOp || isRef) return true;
+            return false;
+          }
+          return true;
+        })
         .sort(
           (a, b) =>
             DeadlineStatusEnum[deadlineStatusByDeadline.get(a.id)!.status] -
             DeadlineStatusEnum[deadlineStatusByDeadline.get(b.id)!.status],
         )
     );
-  }, [deadlines, deadlineStatusByDeadline]);
+  }, [deadlines, deadlineStatusByDeadline, search]);
 
   const isLoading = isDeadlinesLoading || isDepartamentStatesByProductionLoading;
   const error = deadlineError || departamentStatesByProductionError;
@@ -151,22 +169,34 @@ export default function MonthlyCalendarPage() {
 
       {/* Prazos para entregar */}
       <div className="flex gap-4 justify-between">
-        <div className="flex flex-col flex-1">
-          <div className="flex justify-between gap-0 mb-1">
-            <p className="font-bold mb-2">Prazos ({selectedDeadlines.length})</p>
-            {selectedDate && (
-              <div className="flex justify-end items-end gap-2">
-                <p className="text-stone-500 italic">
-                  Data selecionada: <span>{selectedDate.toLocaleDateString()}</span>
-                </p>
-                <Button
-                  className="bg-red-500 hover:bg-red-600"
-                  size="xs"
-                  onClick={onRemoveSelectedDate}
-                >
-                  Remover
-                </Button>
-              </div>
+        <div className="flex flex-col flex-1 gap-4">
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between items-center gap-2">
+              <p className="font-bold">Prazos ({selectedDeadlines.length})</p>
+              {selectedDate && (
+                <div className="flex justify-end items-end gap-2">
+                  <p className="text-stone-500 italic">
+                    Data selecionada: <span>{selectedDate.toLocaleDateString()}</span>
+                  </p>
+                  <Button
+                    className="bg-red-500 hover:bg-red-600"
+                    size="xs"
+                    onClick={onRemoveSelectedDate}
+                  >
+                    Remover
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <Input
+              type="text"
+              placeholder="Pesquisa prazo por produto, OP ou REF"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <p className="text-stone-600 text-sm italic mt-1">Pesquisando por: {search}</p>
             )}
           </div>
 

@@ -11,7 +11,7 @@ import { groupDeadlinesByMonth } from "@/utils/groupDeadlinesByMonth";
 type MonthlyDeadlineCalendarCardProps = {
   deadlines: ProductionDeadlinePopulated[];
   selectedDeadlineDateTypes: FilterItem[];
-  onClickDate: (deadlines: ProductionDeadlinePopulated[]) => void;
+  onClickDate: (deadlines: ProductionDeadlinePopulated[], selectedDate: Date) => void;
 };
 
 export default function MonthlyDeadlineCalendarCard({
@@ -25,6 +25,10 @@ export default function MonthlyDeadlineCalendarCard({
     return groupDeadlinesByMonth({ deadlines, month });
   }, [deadlines, month]);
 
+  const { plannedEndDates, finishedDeadlineDates } = useMemo(() => {
+    return groupDeadlinesByDates(deadlines);
+  }, [deadlines, month]);
+
   return (
     <Card className="p-0">
       <CardContent className="p-0">
@@ -35,11 +39,11 @@ export default function MonthlyDeadlineCalendarCard({
           month={month}
           onMonthChange={setMonth}
           // className="[--cell-size:--spacing(11)] md:[--cell-size:--spacing(16)]"
-          // modifiers={{
-          //   deadlines: deadlineDates,
-          //   startedDealines: startDeadlineDates,
-          //   finishedDeadlineDates: finishedDeadlineDates,
-          // }}
+          modifiers={
+            {
+              // deadlines: [...finishedDeadlineDates],
+            }
+          }
           modifiersClassNames={{
             selected: "selected",
             // today: "text-black font-bold",
@@ -54,7 +58,7 @@ export default function MonthlyDeadlineCalendarCard({
           }}
           components={{
             DayButton: ({ children, modifiers, day, ...props }) => {
-              const deadlinesInThisDay = deadlinesByMonth.get(day.date.getDate());
+              const deadlinesInThisDay = deadlinesByMonth.get(day.date.toLocaleDateString());
 
               if (!deadlinesInThisDay)
                 return (
@@ -63,8 +67,7 @@ export default function MonthlyDeadlineCalendarCard({
                   </CalendarDayButton>
                 );
 
-              const { plannedStartDeadlines, plannedEndDeadlines, finishedDeadlines, deadlines } =
-                deadlinesInThisDay;
+              const { plannedEndDeadlines, finishedDeadlines, deadlines } = deadlinesInThisDay;
 
               return (
                 <CalendarDayButton
@@ -72,30 +75,18 @@ export default function MonthlyDeadlineCalendarCard({
                   modifiers={modifiers}
                   {...props}
                   className="h-26"
-                  onClick={(e) => onClickDate(deadlines)}
-                  onBlur={(e) => console.log("blur")}
+                  onClick={(e) => onClickDate(deadlines, day.date)}
                 >
                   {children}
 
-                  {/* Prazos que terminaram neste dia */}
-                  {plannedStartDeadlines.length > 0 &&
+                  {/* Prazos que começam neste dia */}
+                  {plannedEndDeadlines.length > 0 &&
                     selectedDeadlineDateTypes.some((t) => t.value == DeadlineDateType.END) && (
                       <Badge
                         variant="ghost"
-                        className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300 mt-1"
+                        className="bg-indigo-50 text-red-700 dark:bg-red-950 dark:text-red-300 mt-1"
                       >
-                        {plannedStartDeadlines.length} prazo(s)
-                      </Badge>
-                    )}
-
-                  {/* Prazos que começam neste dia */}
-                  {plannedEndDeadlines.length > 0 &&
-                    selectedDeadlineDateTypes.some((t) => t.value == DeadlineDateType.START) && (
-                      <Badge
-                        variant="ghost"
-                        className="bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 mt-1"
-                      >
-                        {plannedEndDeadlines.length} início(s)
+                        {plannedEndDeadlines.length} prazo(s)
                       </Badge>
                     )}
 

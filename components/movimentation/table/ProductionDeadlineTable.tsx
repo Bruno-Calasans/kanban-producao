@@ -33,15 +33,17 @@ const columns: ColumnDef<DepartamentDeadlineState>[] = [
     enableSorting: false,
     cell: ({
       row: {
-        original: { status, expireDays, expireDaysAfterEnd },
+        original: { deadline, status, expireDays, expireDaysAfterEnd },
       },
-    }) => (
-      <ProductionDeadlineStatusBadge
-        status={status}
-        expireDays={expireDays}
-        expireDaysAfterEnd={expireDaysAfterEnd}
-      />
-    ),
+    }) =>
+      deadline && (
+        <ProductionDeadlineStatusBadge
+          deadline={deadline}
+          status={status}
+          expireDays={expireDays}
+          expireDaysAfterEnd={expireDaysAfterEnd}
+        />
+      ),
   },
 ];
 
@@ -49,7 +51,6 @@ export default function ProductionDeadlineTable({
   departamentDeadlineStates,
   hideSearch,
 }: ProductionDeadlineTableProps) {
-  
   // Remove o departamento final
   const filteredDeadlineStates = departamentDeadlineStates.filter(
     (deadline) => !deadline.departament.is_final,

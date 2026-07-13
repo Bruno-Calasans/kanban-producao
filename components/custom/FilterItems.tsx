@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
-import { CheckIcon, TrashIcon, XIcon } from "lucide-react";
+import { CheckIcon, XIcon } from "lucide-react";
 
 export type FilterItem = {
   label: string;

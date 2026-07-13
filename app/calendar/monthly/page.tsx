@@ -9,18 +9,19 @@ import PageMsg from "@/components/custom/msgs/PageMsg";
 import DeadlineCard from "@/components/calendar/DeadlineCard";
 import useGetAllProductionDeadlines from "@/hooks/production-deadline/useGetAllProductionDeadlines";
 import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
-import MonthlyDeadlineFilters, {
-  DeadlineType,
-} from "@/components/calendar/monthly/MonthlyDeadlineFilters";
+import MonthlyDeadlineFilters from "@/components/calendar/monthly/MonthlyDeadlineFilters";
 import MonthlyDeadlineCalendarCard from "@/components/calendar/monthly/MonthlyDeadlineCalendarCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ProductionDeadlinePopulated } from "@/types/database.type";
+import { DeadlineStatusEnum } from "@/utils/calcDeadlineStatus";
+import { Button } from "@/components/ui/button";
 
 export default function MonthlyCalendarPage() {
   const [departamentsFilter, setSelectedDepartaments] = useState<FilterItem[]>([]);
   const [selectedDeadlineTypes, setSelectedDeadlineTypes] = useState<FilterItem[]>([]);
   const [selectedDeadlineDateTypes, setSelectedDeadlineDateTypes] = useState<FilterItem[]>([]);
   const [filteredDeadlines, setFilteredDeadlines] = useState<ProductionDeadlinePopulated[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date>();
 
   const {
     data: deadlinesData,
@@ -43,7 +44,7 @@ export default function MonthlyCalendarPage() {
 
   const selectedDeadlines = useMemo(() => {
     return (
-      (filteredDeadlines.length > 0 ? filteredDeadlines : deadlines)
+      filteredDeadlines
         // Filtra por departamento
         .filter((deadline) =>
           departamentsFilter.some((departament) => departament.value === deadline.departament.id),
@@ -59,31 +60,31 @@ export default function MonthlyCalendarPage() {
             deadlineStatus?.status === "COMPLETED_EXPIRED";
           const isInProgress = deadlineStatus?.status === "IN_PROGRESS";
           const isUnset = deadlineStatus?.status === "NOT_DEFINED";
-          const isWaiting = deadlineStatus?.status === "NOT_READY";
+          const isWaiting = deadlineStatus?.status === "WAITING";
           const isReopen = deadlineStatus?.status === "REOPEN";
 
           const expireFilter = selectedDeadlineTypes.some(
-            (type) => type.value === DeadlineType.EXPIRED && isExpired,
+            (type) => type.value === DeadlineStatusEnum.EXPIRED && isExpired,
           );
 
           const hasFinishedFilter = selectedDeadlineTypes.some(
-            (type) => type.value === DeadlineType.FINISHED && isFinished,
+            (type) => type.value === DeadlineStatusEnum.COMPLETED && isFinished,
           );
 
           const hasInProgressFilter = selectedDeadlineTypes.some(
-            (type) => type.value === DeadlineType.IN_PROGRESS && isInProgress,
+            (type) => type.value === DeadlineStatusEnum.IN_PROGRESS && isInProgress,
           );
 
           const hasUnsetFilter = selectedDeadlineTypes.some(
-            (type) => type.value === DeadlineType.NOT_DEFINED && isUnset,
+            (type) => type.value === DeadlineStatusEnum.NOT_DEFINED && isUnset,
           );
 
           const hasWaitingFilter = selectedDeadlineTypes.some(
-            (type) => type.value === DeadlineType.WAITING && isWaiting,
+            (type) => type.value === DeadlineStatusEnum.WAITING && isWaiting,
           );
 
           const hasReopenFilter = selectedDeadlineTypes.some(
-            (type) => type.value === DeadlineType.REOPEN && isReopen,
+            (type) => type.value === DeadlineStatusEnum.REOPEN && isReopen,
           );
 
           if (
@@ -99,11 +100,26 @@ export default function MonthlyCalendarPage() {
 
           return false;
         })
+        .sort(
+          (a, b) =>
+            DeadlineStatusEnum[deadlineStatusByDeadline.get(a.id)!.status] -
+            DeadlineStatusEnum[deadlineStatusByDeadline.get(b.id)!.status],
+        )
     );
   }, [deadlines, deadlineStatusByDeadline]);
 
   const isLoading = isDeadlinesLoading || isDepartamentStatesByProductionLoading;
   const error = deadlineError || departamentStatesByProductionError;
+
+  const onSelectedDate = (deadlinesInThisDate: ProductionDeadlinePopulated[], date: Date) => {
+    setFilteredDeadlines(deadlinesInThisDate);
+    setSelectedDate(date);
+  };
+
+  const onRemoveSelectedDate = () => {
+    setFilteredDeadlines(deadlines);
+    setSelectedDate(undefined);
+  };
 
   if (isLoading) return <Loader title="Carregando prazos..." />;
 
@@ -136,12 +152,28 @@ export default function MonthlyCalendarPage() {
       {/* Prazos para entregar */}
       <div className="flex gap-4 justify-between">
         <div className="flex flex-col flex-1">
-          <p className="font-bold mb-2">Prazos ({selectedDeadlines.length})</p>
+          <div className="flex justify-between gap-0 mb-1">
+            <p className="font-bold mb-2">Prazos ({selectedDeadlines.length})</p>
+            {selectedDate && (
+              <div className="flex justify-end items-end gap-2">
+                <p className="text-stone-500 italic">
+                  Data selecionada: <span>{selectedDate.toLocaleDateString()}</span>
+                </p>
+                <Button
+                  className="bg-red-500 hover:bg-red-600"
+                  size="xs"
+                  onClick={onRemoveSelectedDate}
+                >
+                  Remover
+                </Button>
+              </div>
+            )}
+          </div>
 
           <ScrollArea className="h-[700px] rounded-md border p-4">
             {selectedDeadlines.map((deadline) => (
               <DeadlineCard
-                key={deadline.id}
+                key={`${deadline.id}-${deadline.departament.id}-${deadline.production.id}`}
                 deadline={deadline}
                 deadlineStatus={deadlineStatusByDeadline.get(deadline.id)!}
               />
@@ -152,7 +184,7 @@ export default function MonthlyCalendarPage() {
         <MonthlyDeadlineCalendarCard
           deadlines={deadlines}
           selectedDeadlineDateTypes={selectedDeadlineDateTypes}
-          onClickDate={setFilteredDeadlines}
+          onClickDate={onSelectedDate}
         />
       </div>
     </section>

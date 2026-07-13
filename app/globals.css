@@ -118,8 +118,7 @@
 }
 
 .selected > button {
-  background-color: rgba(255, 0, 0, 0.407);
-  border: 2px solid red;
+  background-color: none;
 }
 
 @layer base {

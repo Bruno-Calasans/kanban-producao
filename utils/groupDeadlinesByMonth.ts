@@ -10,12 +10,12 @@ type GroupDeadlinesByMonthProps = {
 export function groupDeadlinesByMonth({ deadlines, month }: GroupDeadlinesByMonthProps) {
   const startDay = 1;
   const endDay = endOfMonth(month).getDate();
-  const deadlinesByMonth = new Map<number, GroupDeadlinesByDate>();
+  const deadlinesByMonth = new Map<string, GroupDeadlinesByDate>();
 
-  for (let day = startDay; day < endDay; day++) {
+  for (let day = startDay; day <= endDay; day++) {
     month.setDate(day);
     const deadlinesByDate = groupDeadlinesByDate({ date: month, deadlines });
-    deadlinesByMonth.set(day, deadlinesByDate);
+    deadlinesByMonth.set(month.toLocaleDateString(), deadlinesByDate);
   }
 
   return deadlinesByMonth;

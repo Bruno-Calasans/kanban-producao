@@ -1,24 +1,18 @@
 import { Badge } from "@/components/ui/badge";
 import { DeadlineStatusData } from "@/utils/calcDeadlineStatus";
-import { DEADLINE_STATUS_CONFIG } from "@/constants/config/deadlineStatusConfig";
+import { getDeadlineStatusConfig } from "@/constants/config/deadlineStatusConfig";
+import { ProductionDeadlinePopulated } from "@/types/database.type";
 import CustomTooltip from "@/components/custom/CustomTooltip";
 
-type ProductionDeadlineStatusBadgeProps = DeadlineStatusData;
+type ProductionDeadlineStatusBadgeProps = {
+  deadline?: ProductionDeadlinePopulated;
+} & DeadlineStatusData;
 
 export default function ProductionDeadlineStatusBadge({
-  status,
-  expireDays,
-  expireDaysAfterEnd,
+  deadline,
+  ...statusData
 }: ProductionDeadlineStatusBadgeProps) {
-  let config = DEADLINE_STATUS_CONFIG[status];
-
-  if (status == "COMPLETED_EXPIRED" && typeof config.label == "function") {
-    config.label = config.label(Math.abs(expireDaysAfterEnd));
-  }
-
-  if (status == "EXPIRED" && typeof config.label == "function") {
-    config.label = config.label(Math.abs(expireDays));
-  }
+  const config = getDeadlineStatusConfig(statusData, deadline);
 
   return (
     <CustomTooltip content={config.tooltip}>

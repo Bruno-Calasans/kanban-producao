@@ -25,14 +25,13 @@ export default function DeadlineCard({ deadline, deadlineStatus }: DeadlineCardP
 
   return (
     <Card
-      onMouseEnter={() => console.log(deadline, deadlineStatus)}
       className={cn(
         "w-flex-1 p- mt-3",
         status === "EXPIRED" && "border border-red-500",
         status == "COMPLETED" && "border border-green-500",
         status == "COMPLETED_EXPIRED" && "border border-green-500",
         status == "IN_PROGRESS" && "border border-blue-500",
-        status == "NOT_READY" && "border border-amber-500",
+        status == "WAITING" && "border border-amber-500",
         status == "NOT_DEFINED" && "border border-gray-500",
         status == "REOPEN" && "border border-orange-500",
       )}
@@ -56,6 +55,7 @@ export default function DeadlineCard({ deadline, deadlineStatus }: DeadlineCardP
 
       <CardFooter className="flex flex-1 gap-2">
         <ProductionDeadlineStatusBadge
+          deadline={deadline}
           status={status}
           expireDays={expireDays}
           expireDaysAfterEnd={expireDaysAfterEnd}

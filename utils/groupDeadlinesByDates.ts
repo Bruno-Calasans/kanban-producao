@@ -1,9 +1,10 @@
 import { ProductionDeadlinePopulated } from "@/types/database.type";
 
 export type DeadlinesByDates = {
-  deadlineDates: Date[];
-  startDeadlineDates: Date[];
-  finishedDeadlineDates: Date[];
+  plannedEndDates: Date[]; // todas as datas
+  startDeadlineDates: Date[]; // datas de início das deadlines
+  finishedDeadlineDates: Date[]; // dates que as deadlines terminam
+
   plannedStartDeadlines: ProductionDeadlinePopulated[];
   plannedEndDeadlines: ProductionDeadlinePopulated[];
   finishedDeadlines: ProductionDeadlinePopulated[];
@@ -11,7 +12,7 @@ export type DeadlinesByDates = {
 
 export function groupDeadlinesByDates(deadlines: ProductionDeadlinePopulated[]) {
   const deadlinesByDates: DeadlinesByDates = {
-    deadlineDates: [],
+    plannedEndDates: [],
     startDeadlineDates: [],
     finishedDeadlineDates: [],
     plannedStartDeadlines: [],
@@ -26,7 +27,7 @@ export function groupDeadlinesByDates(deadlines: ProductionDeadlinePopulated[]) 
     }
 
     if (deadline.planned_end_at != null) {
-      deadlinesByDates.deadlineDates.push(new Date(deadline.planned_end_at));
+      deadlinesByDates.plannedEndDates.push(new Date(deadline.planned_end_at));
       deadlinesByDates.plannedEndDeadlines.push(deadline);
     }
 

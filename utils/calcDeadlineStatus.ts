@@ -1,9 +1,19 @@
 import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { differenceInDays, startOfDay } from "date-fns";
 
+export enum DeadlineStatusEnum {
+  EXPIRED,
+  NOT_DEFINED,
+  WAITING,
+  REOPEN,
+  IN_PROGRESS,
+  COMPLETED,
+  COMPLETED_EXPIRED,
+}
+
 export type DeadlineStatus =
   | "NOT_DEFINED" // DEADLINE NÃO FOI CRIADA
-  | "NOT_READY" // SEM QUANTIDADE DISPONÍVEL
+  | "WAITING" // SEM QUANTIDADE DISPONÍVEL
   | "IN_PROGRESS" // QUANTIDADE DISPONÍVEL E NÃO EXPIROU
   | "EXPIRED" // QUANTIDADE DISPONÍVEL E EXPIROU
   | "COMPLETED" // DEADLINE CONCLÚIDA E SEM QUANTIDADE DISPONÍVEL
@@ -59,12 +69,17 @@ export function calcDeadlineStatus({
 
     // Prazo não recebeu entrada e não tem nada disponível
     if ((!hasInput && !hasWork) || (hasreprocess && !hasWork)) {
-      statusData.status = "NOT_READY";
+      statusData.status = "WAITING";
     }
 
-    // Prazo não concluído
-    if (plannedEndDate && !actualEndDate && hasWork) {
-      statusData.status = expireDays < 0 ? "EXPIRED" : "IN_PROGRESS";
+    // Prazo não concluído e com atraso
+    if (plannedEndDate && !actualEndDate && expireDays < 0) {
+      statusData.status = "EXPIRED";
+    }
+
+    // Prazo não concluído e sem atraso
+    if (plannedEndDate && !actualEndDate && hasWork && expireDays >= 0) {
+      statusData.status = "IN_PROGRESS";
     }
 
     // Prazo concluído com quantidade disponível

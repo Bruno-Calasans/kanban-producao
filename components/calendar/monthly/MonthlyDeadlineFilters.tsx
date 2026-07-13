@@ -1,61 +1,46 @@
 import FilterItems, { FilterItem } from "@/components/custom/FilterItems";
 import { ProductionDeadlinePopulated } from "@/types/database.type";
-import { DeadlineStatusData } from "@/utils/calcDeadlineStatus";
-import { useEffect, useMemo } from "react";
+import { DeadlineStatusData, DeadlineStatusEnum } from "@/utils/calcDeadlineStatus";
 
 export enum DeadlineDateType {
-  START,
   END,
   FINISHED,
 }
 
-export enum DeadlineType {
-  EXPIRED,
-  FINISHED,
-  NOT_DEFINED,
-  IN_PROGRESS,
-  WAITING,
-  REOPEN,
-}
-
 const deadlineDateType = [
-  {
-    id: DeadlineDateType.START,
-    label: "INÍCIO",
-  },
   {
     id: DeadlineDateType.END,
     label: "FIM",
   },
   {
     id: DeadlineDateType.FINISHED,
-    label: "CONCLUSÃO",
+    label: "FINALIZADO",
   },
 ];
 
 const deadlineType = [
   {
-    id: DeadlineType.EXPIRED,
+    id: DeadlineStatusEnum.EXPIRED,
     label: "EXPIRADO",
   },
   {
-    id: DeadlineType.FINISHED,
+    id: DeadlineStatusEnum.COMPLETED,
     label: "CONCLUÍDO",
   },
   {
-    id: DeadlineType.IN_PROGRESS,
+    id: DeadlineStatusEnum.IN_PROGRESS,
     label: "EM ANDAMENTO",
   },
   {
-    id: DeadlineType.WAITING,
+    id: DeadlineStatusEnum.WAITING,
     label: "AGUARDANDO",
   },
   {
-    id: DeadlineType.NOT_DEFINED,
+    id: DeadlineStatusEnum.NOT_DEFINED,
     label: "NÃO DEFINIDO",
   },
   {
-    id: DeadlineType.REOPEN,
+    id: DeadlineStatusEnum.REOPEN,
     label: "REABERTO",
   },
 ];
@@ -96,7 +81,7 @@ export default function MonthlyDeadlineFilters({
         data={deadlineType}
         labelAcessorKey={(data) => data.label}
         valueAcessorKey={(data) => data.id}
-        filterLabel="Filtro tipo de prazo"
+        filterLabel="Filtro por status do prazo"
         selectedItems={selectedDeadlineTypes}
         onSelectItem={setSelectedDeadlineTypes}
       />
@@ -106,7 +91,7 @@ export default function MonthlyDeadlineFilters({
         data={deadlineDateType}
         labelAcessorKey={(data) => data.label}
         valueAcessorKey={(data) => data.id}
-        filterLabel="Filtro por data do prazo"
+        filterLabel="Mostrar datas do prazo no calendário"
         selectedItems={selectedDeadlineDateTypes}
         onSelectItem={setSelectedDeadlineDateTypes}
       />

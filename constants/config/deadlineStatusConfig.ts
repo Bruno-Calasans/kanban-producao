@@ -1,4 +1,5 @@
-import { DeadlineStatus } from "@/utils/calcDeadlineStatus";
+import { ProductionDeadline } from "@/types/database.type";
+import { DeadlineStatus, DeadlineStatusData } from "@/utils/calcDeadlineStatus";
 import {
   HourglassIcon,
   CheckIcon,
@@ -18,46 +19,55 @@ type DeadlineStatusConfigItem = Record<
   }
 >;
 
-export const DEADLINE_STATUS_CONFIG: DeadlineStatusConfigItem = {
-  NOT_DEFINED: {
-    label: "SEM PRAZO",
-    className: "bg-stone-400 text-white",
-    tooltip: "Nenhum prazo definido",
-  },
-  EXPIRED: {
-    label: (expireDays: number) => `ATRASADO (${expireDays} dias atrás)`,
-    className: "bg-red-400 text-white",
-    tooltip: "Prazo expirado",
-    icon: ClockAlertIcon,
-  },
-  IN_PROGRESS: {
-    label: "ANDAMENTO",
-    className: "bg-indigo-400 text-white",
-    tooltip: "Prazo ainda não expirou",
-    icon: CircleDashedIcon,
-  },
-  REOPEN: {
-    label: "REABERTO",
-    className: "bg-orange-400 text-white",
-    tooltip: "Prazo reaberto para edição",
-    icon: RotateCcwIcon,
-  },
-  NOT_READY: {
-    label: "AGUARDANDO",
-    className: "bg-yellow-400 text-white",
-    tooltip: "Prazo ainda não está pronto",
-    icon: HourglassIcon,
-  },
-  COMPLETED_EXPIRED: {
-    label: "CONCLUÍDO",
-    className: "bg-orange-400 text-white",
-    tooltip: "Prazo concluído com atraso",
-    icon: TriangleAlertIcon,
-  },
-  COMPLETED: {
-    label: "CONCLUÍDO",
-    className: "bg-emerald-400 text-white",
-    tooltip: "Prazo concluído sem atraso",
-    icon: CheckIcon,
-  },
-} as const;
+export function getDeadlineStatusConfig(
+  { status, expireDays, expireDaysAfterEnd }: DeadlineStatusData,
+  deadline?: ProductionDeadline,
+) {
+  const actulEndDate = deadline?.actual_end_at ? new Date(deadline.actual_end_at) : null;
+
+  const DEADLINE_STATUS_CONFIG: DeadlineStatusConfigItem = {
+    NOT_DEFINED: {
+      label: "SEM PRAZO",
+      className: "bg-stone-400 text-white",
+      tooltip: "Nenhum prazo definido",
+    },
+    EXPIRED: {
+      label: "EXPIRADO",
+      className: "bg-red-400 text-white",
+      tooltip: `Prazo atrasado ${Math.abs(expireDays)} dia(s) atrás`,
+      icon: ClockAlertIcon,
+    },
+    IN_PROGRESS: {
+      label: "ANDAMENTO",
+      className: "bg-indigo-400 text-white",
+      tooltip: "Prazo ainda não expirou",
+      icon: CircleDashedIcon,
+    },
+    REOPEN: {
+      label: "REABERTO",
+      className: "bg-orange-400 text-white",
+      tooltip: "Prazo reaberto para edição",
+      icon: RotateCcwIcon,
+    },
+    WAITING: {
+      label: "AGUARDANDO",
+      className: "bg-yellow-400 text-white",
+      tooltip: "Prazo ainda não está pronto",
+      icon: HourglassIcon,
+    },
+    COMPLETED_EXPIRED: {
+      label: "CONCLUÍDO",
+      className: "bg-emerald-400 text-white",
+      tooltip: `Prazo concluído com atraso dia ${actulEndDate?.toLocaleDateString()}`,
+      icon: TriangleAlertIcon,
+    },
+    COMPLETED: {
+      label: "CONCLUÍDO",
+      className: "bg-emerald-400 text-white",
+      tooltip: `Prazo concluído sem atraso dia ${actulEndDate?.toLocaleDateString()}`,
+      icon: CheckIcon,
+    },
+  } as const;
+
+  return DEADLINE_STATUS_CONFIG[status];
+}

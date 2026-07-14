@@ -70,7 +70,7 @@ export function calcDeadlineStatus({
       plannedEndDate && actualEndDate ? differenceInDays(plannedEndDate, actualEndDate) : 0;
 
     // Prazo não recebeu entrada e não tem nada disponível
-    if ((!hasInput && !hasWork) || (hasreprocess && !hasWork)) {
+    if (!hasWork && !hasInput) {
       statusData.status = "WAITING";
     }
 

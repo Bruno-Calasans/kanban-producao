@@ -212,12 +212,7 @@ export default function ProductionDeadlineDatesInput({
     productionStatus == "PENDING";
 
   return (
-    <div
-      className={cn(
-        "grid grid-rows-1 grid-cols-2 items-center gap-1",
-        shortVersion && "flex flex-col",
-      )}
-    >
+    <div className={cn("grid grid-cols-2 items-center gap-1", shortVersion && "flex flex-col")}>
       {/* Escolher data de início planejada */}
       <DatePickerInput
         className="w-full"
@@ -282,6 +277,7 @@ export default function ProductionDeadlineDatesInput({
               />
             )}
 
+            {/* Delete, cancel and save buttons */}
             <div className={cn("flex items-end gap-1 mt-1 flex-1")}>
               {canDeleteDeadline && !shortVersion && (
                 <DeleteButton

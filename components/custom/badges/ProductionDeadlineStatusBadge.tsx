@@ -11,10 +11,9 @@ type ProductionDeadlineStatusBadgeProps = {
 
 export default function ProductionDeadlineStatusBadge({
   deadline,
-  deadlineStatus
+  deadlineStatus,
 }: ProductionDeadlineStatusBadgeProps) {
   const config = getDeadlineStatusConfig(deadlineStatus, deadline);
-
   return (
     <CustomTooltip content={config.tooltip}>
       <Badge className={config.className}>

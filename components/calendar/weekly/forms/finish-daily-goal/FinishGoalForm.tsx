@@ -22,6 +22,7 @@ import CancelButton from "@/components/custom/buttons/CancelButton";
 import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
+import useUpdateProductionDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
 
 type FinishGoalFormProps = {
   metaWeekDate: Date;
@@ -46,6 +47,8 @@ export default function FinishGoalForm({
   const { mutateAsync: createDailyGoal, isPending: isMetaPending } = useCreateDailyGoal();
   const { mutateAsync: moveNextDepartament, isPending: isNextDepartamentPending } =
     useMoveToNextDepartament();
+  const { mutateAsync: updateDeadline, isPending: isUpdateDeadlinePending } =
+    useUpdateProductionDeadline();
 
   const form = useAppForm({
     defaultValues: {
@@ -62,8 +65,15 @@ export default function FinishGoalForm({
     onSubmit: async ({ value }) => {
       const { amount, started_at, finished_at } = value;
       try {
-        const startedAtString = started_at ? new Date(started_at).toISOString() : null;
-        const finishedAtString = finished_at ? new Date(finished_at).toISOString() : null;
+        const isDepartamentEmptyAfterFinishGoal = departamentAvaliableAmount - amount == 0;
+
+        const startedAtString = started_at
+          ? new Date(started_at).toISOString()
+          : new Date().toISOString();
+
+        const finishedAtString = finished_at
+          ? new Date(finished_at).toISOString()
+          : new Date().toISOString();
 
         const { data: createdDailyGoal } = await createDailyGoal({
           amount_done: amount,
@@ -84,6 +94,17 @@ export default function FinishGoalForm({
           dailyGoalId: createdDailyGoal.id,
         });
 
+        // Atualiza deadline caso a última meta concluída tem zerado o departamento
+        if (isDepartamentEmptyAfterFinishGoal) {
+          await updateDeadline({
+            deadlineId: deadline.id,
+            updateData: {
+              actual_start_at: startedAtString,
+              actual_end_at: finishedAtString,
+            },
+          });
+        }
+
         toast.success("Meta concluída com sucesso!");
         closeDialog(dialogId);
         form.reset();
@@ -95,7 +116,7 @@ export default function FinishGoalForm({
     },
   });
 
-  const isPending = isNextDepartamentPending || isMetaPending;
+  const isPending = isNextDepartamentPending || isMetaPending || isUpdateDeadlinePending;
 
   return (
     <form

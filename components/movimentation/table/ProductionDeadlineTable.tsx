@@ -35,17 +35,16 @@ const columns: ColumnDef<DepartamentDeadlineState>[] = [
       row: {
         original: { deadline, status, expireDays, expireDaysAfterEnd },
       },
-    }) =>
-      deadline && (
-        <ProductionDeadlineStatusBadge
-          deadline={deadline}
-          deadlineStatus={{
-            status,
-            expireDays,
-            expireDaysAfterEnd,
-          }}
-        />
-      ),
+    }) => (
+      <ProductionDeadlineStatusBadge
+        deadline={deadline}
+        deadlineStatus={{
+          status,
+          expireDays,
+          expireDaysAfterEnd,
+        }}
+      />
+    ),
   },
 ];
 

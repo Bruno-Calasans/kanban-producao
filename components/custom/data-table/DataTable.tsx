@@ -37,6 +37,10 @@ interface DataTableProps<TData, TValue> {
   hideSearch?: boolean;
   pageSizes?: number[];
   defaultPageSize?: number;
+  defaultSorting?: {
+    id: string;
+    desc: boolean;
+  }[];
   onEdit?: (row: TData) => void;
   onDelete?: (row: TData) => void;
   onClickRow?: (rowModel: Row<TData>) => void;
@@ -53,10 +57,11 @@ export function DataTable<TData, TValue>({
   hideSearch,
   pageSizes,
   defaultPageSize,
+  defaultSorting,
   onClickRow,
   onClickCell,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>(defaultSorting || []);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 

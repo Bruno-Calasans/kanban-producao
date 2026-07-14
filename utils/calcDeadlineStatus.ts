@@ -25,6 +25,12 @@ type CalcDeadlineStatusProps = {
   departamentState: DepartamentState;
 };
 
+export const DEFAULT_DEADLINE_STATUS: DeadlineStatusData = {
+  status: "NOT_DEFINED",
+  expireDays: 0,
+  expireDaysAfterEnd: 0,
+};
+
 export type DeadlineStatusData = {
   status: DeadlineStatus;
   expireDays: number;
@@ -36,11 +42,7 @@ export function calcDeadlineStatus({
   departamentState,
 }: CalcDeadlineStatusProps): DeadlineStatusData {
   // Sem prazo
-  let statusData: DeadlineStatusData = {
-    status: "NOT_DEFINED",
-    expireDays: 0,
-    expireDaysAfterEnd: 0,
-  };
+  let statusData = { ...DEFAULT_DEADLINE_STATUS };
 
   if (deadline) {
     const today = startOfDay(new Date());

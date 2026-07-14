@@ -39,9 +39,11 @@ const columns: ColumnDef<DepartamentDeadlineState>[] = [
       deadline && (
         <ProductionDeadlineStatusBadge
           deadline={deadline}
-          status={status}
-          expireDays={expireDays}
-          expireDaysAfterEnd={expireDaysAfterEnd}
+          deadlineStatus={{
+            status,
+            expireDays,
+            expireDaysAfterEnd,
+          }}
         />
       ),
   },

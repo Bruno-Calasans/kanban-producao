@@ -5,16 +5,16 @@ import PageMsg from "@/components/custom/msgs/PageMsg";
 import PageTitle from "@/components/custom/PageTitle";
 import DepartamentTabs from "@/components/resume/DepartamentTabs";
 import useGetAllActiveDepartaments from "@/hooks/departament/useGetAllActiveDepartaments";
-import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
 import useGetAllProductionDeadlines from "@/hooks/production-deadline/useGetAllProductionDeadlines";
 import useGetAllFlowTemplates from "@/hooks/production-flow-template/useGetAllFlowTemplates";
 import useGetAllProductions from "@/hooks/production/useGetAllProductions";
-import { getAllDeadlinesByProduction } from "@/service/api/productionDeadline";
+import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
 import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
 import { groupProductionsByDepartament } from "@/utils/groupProductionsByDepartament";
 import { groupProductionFlowByFlowTemplates } from "@/utils/groupProductionFlowByFlowTemplates";
 import { groupDeadlineStatusByDeadline } from "@/utils/groupDeadlineStatusByDeadline";
-import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
+import { useMemo } from "react";
+import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
 
 export default function ResumePage() {
   const {
@@ -51,23 +51,48 @@ export default function ResumePage() {
     error: departamentStatesByProductionError,
   } = useGetAllProductionDepartamentStates({ productions });
 
-  const deadlinesByProduction = groupDeadlinesByProduction(deadlines);
-  const templatesByFlow = groupProductionFlowByFlowTemplates(flowTemplates);
+  const {
+    productionsByDepartament,
+    deadlinesByProduction,
+    deadlineStatusByDeadline,
+    deadlinesByDepartament,
+  } = useMemo(() => {
+    const deadlinesByProduction = groupDeadlinesByProduction(deadlines);
+    const templatesByFlow = groupProductionFlowByFlowTemplates(flowTemplates);
 
-  const productionsByDepartament = groupProductionsByDepartament({
-    productions,
-    templatesByFlow,
-  });
+    const productionsByDepartament = groupProductionsByDepartament({
+      productions,
+      templatesByFlow,
+    });
 
-  const deadlineStatusByDeadline = groupDeadlineStatusByDeadline({
-    deadlines,
-    departamentStatesByProduction,
-  });
+    const deadlineStatusByDeadline = groupDeadlineStatusByDeadline({
+      deadlines,
+      departamentStatesByProduction,
+    });
+
+    const deadlinesByDepartament = groupDeadlinesByDepartament(deadlines);
+
+    return {
+      deadlinesByProduction,
+      productionsByDepartament,
+      deadlineStatusByDeadline,
+      deadlinesByDepartament,
+    };
+  }, [deadlines, flowTemplates, departamentStatesByProduction]);
 
   const isLoading =
-    isDepartamentsLoading || isProductionsLoading || isDeadlinesLoading || isFlowTemplatesLoading;
+    isDepartamentsLoading ||
+    isProductionsLoading ||
+    isDeadlinesLoading ||
+    isFlowTemplatesLoading ||
+    isDepartamentStatesByProductionLoading;
 
-  const error = departamentsError || productionsError || deadlinesError || flowTemplatesError;
+  const error =
+    departamentsError ||
+    productionsError ||
+    deadlinesError ||
+    flowTemplatesError ||
+    departamentStatesByProductionError;
 
   if (isLoading) {
     return <Loader title="Carregando produtos..." />;
@@ -90,13 +115,16 @@ export default function ResumePage() {
 
   return (
     <section>
-      <PageTitle>Resumo</PageTitle>
-      <p>Resume todas as produções por departamento.</p>
+      <div className="flex flex-col mb-4">
+        <PageTitle>Resumo</PageTitle>
+        <p>Resume todas as produções por departamento.</p>
+      </div>
       <DepartamentTabs
         departaments={departaments}
         productionsByDepartament={productionsByDepartament}
-        deadlinesByProduction={deadlinesByProduction}
         deadlineStatusByDeadline={deadlineStatusByDeadline}
+        deadlinesByDepartament={deadlinesByDepartament}
+        departamentStatesByProduction={departamentStatesByProduction}
       />
     </section>
   );

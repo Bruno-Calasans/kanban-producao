@@ -3,36 +3,51 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Departament,
-  ProductionDeadline,
+  DepartamentState,
   ProductionDeadlinePopulated,
   ProductionPopulated,
 } from "@/types/database.type";
 import { useState } from "react";
-import CountBadge from "@/components/custom/badges/CountBadge";
-import ProductionTable from "../productions/table/ProductionTable";
-import DepartamentProductionTable from "./DepartamentProductionTable";
 import { DeadlineStatusData } from "@/utils/calcDeadlineStatus";
+import CountBadge from "@/components/custom/badges/CountBadge";
+import DepartamentProductionTable from "./DepartamentProductionTable";
+import groupDeadlineDataByProductionAndDepartament from "@/utils/groupDeadlineDataByProductionAndDepartament";
+import groupDepartamentStatesByProductionAndDepartament from "@/utils/groupDepartamentStatesByProductionAndDepartament";
 
 type ProductionTabsProps = {
   departaments: Departament[];
   productionsByDepartament: Map<number, ProductionPopulated[]>;
-  deadlinesByProduction: Map<number, ProductionDeadlinePopulated[]>;
   deadlineStatusByDeadline: Map<number, DeadlineStatusData>;
+  deadlinesByDepartament: Map<number, ProductionDeadlinePopulated[]>;
+  departamentStatesByProduction: Map<number, DepartamentState[]>;
 };
 
 export default function DepartamentTabs({
   departaments,
   productionsByDepartament,
-  deadlinesByProduction,
   deadlineStatusByDeadline,
+  deadlinesByDepartament,
+  departamentStatesByProduction,
 }: ProductionTabsProps) {
   const [selectedTab, setSelectedTab] = useState(String(departaments[0].id));
 
-  const productions = productionsByDepartament.get(Number(selectedTab)) || [];
-  const departament = departaments.find((dpt) => dpt.id == Number(selectedTab))!;
-  const deadlines = deadlinesByProduction.get(departament.id)!;
-  const deadline = deadlines.find((d) => d.departament.id == departament.id);
-  const deadlineStatus = deadlineStatusByDeadline.get(deadline?.id);
+  const selectedDepartamentId = Number(selectedTab);
+  const departament = departaments.find((dpt) => dpt.id == selectedDepartamentId)!;
+  const productions = productionsByDepartament.get(selectedDepartamentId) || [];
+  const deadlines = deadlinesByDepartament.get(selectedDepartamentId) || [];
+
+  // Tem os status e deadline do departamento selecionado por produção
+  const deadlineDataByProduction = groupDeadlineDataByProductionAndDepartament({
+    departamentProductions: productions,
+    departamentDeadlines: deadlines,
+    deadlineStatusByDeadline,
+  });
+
+  const departamentStateDataByProduction = groupDepartamentStatesByProductionAndDepartament({
+    departament,
+    departamentProductions: productions,
+    departamentStatesByProduction,
+  });
 
   return (
     <Tabs value={selectedTab} onValueChange={setSelectedTab}>
@@ -41,6 +56,7 @@ export default function DepartamentTabs({
           {departaments.map((dpt) => (
             <TabsTrigger className="m-2" value={String(dpt.id)} key={dpt.id}>
               {dpt.name.toUpperCase()}
+              <CountBadge amount={deadlinesByDepartament.get(dpt.id)?.length || 0} />
             </TabsTrigger>
           ))}
         </TabsList>
@@ -48,9 +64,10 @@ export default function DepartamentTabs({
 
       <TabsContent value={selectedTab}>
         <DepartamentProductionTable
-          productions={productions}
           departament={departament}
-          deadline={deadline}
+          productions={productions}
+          deadlineDataByProduction={deadlineDataByProduction}
+          departamentStateDataByProduction={departamentStateDataByProduction}
         />
       </TabsContent>
     </Tabs>

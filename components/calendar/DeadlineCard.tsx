@@ -56,12 +56,7 @@ export default function DeadlineCard({ deadline, deadlineStatus }: DeadlineCardP
       </CardHeader>
 
       <CardFooter className="flex flex-1 gap-2">
-        <ProductionDeadlineStatusBadge
-          deadline={deadline}
-          status={status}
-          expireDays={expireDays}
-          expireDaysAfterEnd={expireDaysAfterEnd}
-        />
+        <ProductionDeadlineStatusBadge deadline={deadline} deadlineStatus={deadlineStatus} />
         {status == "NOT_DEFINED" && (
           <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300">
             SEM PRAZO

@@ -16,7 +16,7 @@ export default function DeadlineStateMsg({
   departamentState,
   hidePlannedDateSection,
 }: DeadlineStateMsgProps) {
-  const { status, expireDays, expireDaysAfterEnd } = calcDeadlineStatus({
+  const deadlineStatus = calcDeadlineStatus({
     deadline,
     departamentState,
   });
@@ -102,7 +102,7 @@ export default function DeadlineStateMsg({
           vertical
           item={{
             label: "Dias restantes",
-            value: expireDays ? `${expireDays}/${totalDays}` : "N/A",
+            value: deadlineStatus.expireDays ? `${deadlineStatus.expireDays}/${totalDays}` : "N/A",
             icon: CalendarMinus2Icon,
           }}
         />
@@ -110,13 +110,7 @@ export default function DeadlineStateMsg({
           vertical
           item={{
             label: "Status",
-            value: (
-              <ProductionDeadlineStatusBadge
-                status={status}
-                expireDays={expireDays}
-                expireDaysAfterEnd={expireDaysAfterEnd}
-              />
-            ),
+            value: <ProductionDeadlineStatusBadge deadlineStatus={deadlineStatus} />,
             icon: CalendarMinus2Icon,
           }}
         />

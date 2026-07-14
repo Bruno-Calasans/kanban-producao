@@ -6,13 +6,14 @@ import CustomTooltip from "@/components/custom/CustomTooltip";
 
 type ProductionDeadlineStatusBadgeProps = {
   deadline?: ProductionDeadlinePopulated;
-} & DeadlineStatusData;
+  deadlineStatus: DeadlineStatusData;
+};
 
 export default function ProductionDeadlineStatusBadge({
   deadline,
-  ...statusData
+  deadlineStatus
 }: ProductionDeadlineStatusBadgeProps) {
-  const config = getDeadlineStatusConfig(statusData, deadline);
+  const config = getDeadlineStatusConfig(deadlineStatus, deadline);
 
   return (
     <CustomTooltip content={config.tooltip}>

@@ -21,10 +21,12 @@ import RemoveDateButton from "./RemoveDataButton";
 
 type ProductionDeadlineDatesInputProps = {
   departamentDeadlineState: DepartamentDeadlineState;
+  shortVersion?: boolean;
 };
 
 export default function ProductionDeadlineDatesInput({
   departamentDeadlineState,
+  shortVersion,
 }: ProductionDeadlineDatesInputProps) {
   const { departament, production, deadline, status, expireDaysAfterEnd, departamentState } =
     departamentDeadlineState;
@@ -211,7 +213,10 @@ export default function ProductionDeadlineDatesInput({
 
   return (
     <div
-      className={cn("grid grid-rows-1 grid-cols-2 items-center gap-1")}
+      className={cn(
+        "grid grid-rows-1 grid-cols-2 items-center gap-1",
+        shortVersion && "flex flex-col",
+      )}
     >
       {/* Escolher data de início planejada */}
       <DatePickerInput
@@ -266,11 +271,8 @@ export default function ProductionDeadlineDatesInput({
         )}
 
         {/* Botões */}
-        <div className="flex gap-2 items-end">
-          {/* Botão para deletar prazo */}
-
-          {/* Botão para salvar prazo */}
-          <div className="flex flex-col gap-1 ">
+        <div className="flex gap-2 items-end flex-1">
+          <div className="flex flex-col gap-1">
             {hasChanged && deadline && (
               <Input
                 value={reason}
@@ -280,8 +282,8 @@ export default function ProductionDeadlineDatesInput({
               />
             )}
 
-            <div className="flex items-end gap-1 mt-1 flex-1">
-              {canDeleteDeadline && (
+            <div className={cn("flex items-end gap-1 mt-1 flex-1")}>
+              {canDeleteDeadline && !shortVersion && (
                 <DeleteButton
                   label="Excluir"
                   onClick={onDelete}
@@ -290,6 +292,7 @@ export default function ProductionDeadlineDatesInput({
                   hiddenIcon
                 />
               )}
+
               {hasChanged && (
                 <>
                   <CancelButton

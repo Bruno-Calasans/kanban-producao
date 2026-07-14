@@ -48,8 +48,6 @@ export default function ProductionPageContent({ production }: ProductionPageCont
     productionDepartamentStates: departamentStates,
   });
 
-  console.log(departamentStates)
-
   const isPending =
     isDepartamentStatePending ||
     isMovimentationsPending ||

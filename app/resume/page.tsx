@@ -95,16 +95,16 @@ export default function ResumePage() {
     departamentStatesByProductionError;
 
   if (isLoading) {
-    return <Loader title="Carregando produtos..." />;
+    return <Loader title="Carregando produções..." />;
   }
 
   if (error)
     return (
       <PageMsg
-        title="Erro ao carregar produtos"
+        title="Erro ao carregar produções"
         content={
           <>
-            <p>Desculpe, mas não foi possível carregar os produtos</p>
+            <p>Desculpe, mas não foi possível carregar as produções</p>
             <p>
               Error: <code>{error.message}</code>
             </p>

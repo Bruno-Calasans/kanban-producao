@@ -64,7 +64,7 @@ export function getDeadlineStatusConfig(
     COMPLETED: {
       label: "CONCLUÍDO",
       className: "bg-emerald-400 text-white",
-      tooltip: `Prazo concluído sem atraso dia ${actulEndDate?.toLocaleDateString()}`,
+      tooltip: `Prazo concluído dia ${actulEndDate?.toLocaleDateString()}`,
       icon: CheckIcon,
     },
   } as const;

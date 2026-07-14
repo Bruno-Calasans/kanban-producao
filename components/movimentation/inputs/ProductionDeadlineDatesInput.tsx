@@ -208,7 +208,7 @@ export default function ProductionDeadlineDatesInput({
   // Só posso excluir o prazo se a produção ainda não começou
   const canDeleteDeadline =
     deadline &&
-    (deadline.planned_start_at || deadline?.planned_end_at) &&
+    (deadline.planned_start_at || deadline.planned_end_at) &&
     productionStatus == "PENDING";
 
   return (
@@ -255,7 +255,7 @@ export default function ProductionDeadlineDatesInput({
         }
       />
 
-      <div className="pt-1 flex justify-end gap-1 col-span-2">
+      <div className="pt-1 flex justify-end items-end gap-1 col-span-2">
         {/* Mostra quando o prazo concluído */}
         {deadline && (
           <FinishedDeadlineMsg
@@ -266,8 +266,8 @@ export default function ProductionDeadlineDatesInput({
         )}
 
         {/* Botões */}
-        <div className="flex gap-2 items-end flex-1">
-          <div className="flex flex-col gap-1">
+        <div className="flex gap-2 items-end">
+          <div className="flex flex-col gap-1 items-end self-end">
             {hasChanged && deadline && (
               <Input
                 value={reason}

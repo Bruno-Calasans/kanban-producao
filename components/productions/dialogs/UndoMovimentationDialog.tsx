@@ -78,25 +78,16 @@ export default function UndoMovimentationDialog({
           <strong>{production.op}</strong>?
         </p>
 
-        {/* <div className="flex flex-col gap-1">
-          <p>
-            <span className="font-bold">Tem meta associada? </span> <HasBadge has={!!dailyGoalId} />
-          </p>
-          <p>
-            <span className="font-bold">Tem Prazo associado?</span> <HasBadge has={!!dailyGoalId} />
-          </p>
-        </div> */}
-
         <FieldGroup>
           <Field orientation="horizontal">
             <Checkbox
-              id="terms-checkbox-desc"
-              name="terms-checkbox-desc"
+              id="delete-deadline"
+              name="delete-deadline"
               checked={deleteDeadlineChecked}
               onCheckedChange={(value) => setDeleteDeadlineChecked(!!value)}
             />
             <FieldContent>
-              <FieldLabel htmlFor="terms-checkbox-desc">Excluir prazo</FieldLabel>
+              <FieldLabel htmlFor="delete-deadline">Excluir prazo</FieldLabel>
               <FieldDescription>
                 O prazo associado a essa movimentação também será excluído
               </FieldDescription>

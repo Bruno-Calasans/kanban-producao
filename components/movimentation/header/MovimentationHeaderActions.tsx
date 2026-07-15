@@ -44,7 +44,7 @@ export default function ProductionHeaderActions({
   }, []);
 
   return (
-    <div className="flex gap-2 border-black my-3">
+    <div className="flex gap-2 border-black my-3 mt-1">
       {canEdit && (
         <CustomDialog
           id={`edit-production-${production.id}`}
@@ -67,7 +67,7 @@ export default function ProductionHeaderActions({
           trigger={
             <Button variant="destructive" size="xs">
               <UndoIcon />
-              Desfazer <span className="font-bold text-black">Ctrl + Z</span>
+              Desfazer <span className="font-bold text-red-900">Ctrl + Z</span>
             </Button>
           }
         >

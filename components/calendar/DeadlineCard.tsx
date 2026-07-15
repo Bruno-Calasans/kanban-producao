@@ -37,7 +37,7 @@ export default function DeadlineCard({ deadline, deadlineStatus }: DeadlineCardP
       )}
     >
       <CardHeader>
-        <Link className="hover:underline" href={`/products/${deadline.production.id}`}>
+        <Link className="hover:underline" href={`/products/${deadline.production.product.id}`}>
           <CardTitle className="text-md">{deadline.production.product.name}</CardTitle>
         </Link>
 

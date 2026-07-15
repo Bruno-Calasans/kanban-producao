@@ -72,17 +72,18 @@ export default function DepartamentProductionTable({
 
         return (
           <div className="flex gap-1">
-            {/* {plannedEndAtDate && <p>{plannedEndAtDate.toLocaleDateString()}</p>} */}
-            <ProductionDeadlineDatesInput
-              shortVersion
-              departamentDeadlineState={{
-                production,
-                departament,
-                departamentState,
-                deadline,
-                ...deadlineStatus,
-              }}
-            />
+            {!departament.is_external && (
+              <ProductionDeadlineDatesInput
+                shortVersion
+                departamentDeadlineState={{
+                  production,
+                  departament,
+                  departamentState,
+                  deadline,
+                  ...deadlineStatus,
+                }}
+              />
+            )}
           </div>
         );
       },

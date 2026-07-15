@@ -68,11 +68,13 @@ export default function FinishDeadlineForm({
 
         await moveNextDepartament({
           production: deadline.production,
+          deadlineId: deadline.id,
           departamentStates,
           amount: production.amount,
           startedAt: startDate,
           finished_at: endDate,
           responsibleId: null,
+          dailyGoalId: null,
         });
 
         toast.success("Prazo finalizado com sucesso!");

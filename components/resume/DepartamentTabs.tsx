@@ -33,8 +33,9 @@ export default function DepartamentTabs({
 
   const selectedDepartamentId = Number(selectedTab);
   const departament = departaments.find((dpt) => dpt.id == selectedDepartamentId)!;
-  const productions = productionsByDepartament.get(selectedDepartamentId) || [];
   const deadlines = deadlinesByDepartament.get(selectedDepartamentId) || [];
+  const productions =
+    productionsByDepartament.get(selectedDepartamentId) || deadlines.map((d) => d.production);
 
   // Tem os status e deadline do departamento selecionado por produção
   const deadlineDataByProduction = groupDeadlineDataByProductionAndDepartament({
@@ -48,6 +49,8 @@ export default function DepartamentTabs({
     departamentProductions: productions,
     departamentStatesByProduction,
   });
+
+  console.log(deadlines);
 
   return (
     <Tabs value={selectedTab} onValueChange={setSelectedTab}>

@@ -23,14 +23,14 @@ export default function MovimentationHeader({
   production,
   deadlines,
   flowTemplates,
+  movimentations,
   departamentStates,
   departamentDeadlineStates,
-  movimentations,
 }: ProductionHeaderProps) {
   return (
     <div>
       <ProductionHeaderMainInfo production={production} />
-      <ProductionHeaderActions production={production} />
+      <ProductionHeaderActions production={production} movimentations={movimentations} />
       <ProductionHeaderAlerts
         production={production}
         deadlines={deadlines}

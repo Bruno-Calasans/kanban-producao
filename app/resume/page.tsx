@@ -50,6 +50,7 @@ export default function ResumePage() {
     isLoading: isDepartamentStatesByProductionLoading,
     error: departamentStatesByProductionError,
   } = useGetAllProductionDepartamentStates({ productions });
+  
 
   const {
     productionsByDepartament,

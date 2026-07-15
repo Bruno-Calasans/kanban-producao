@@ -4,13 +4,12 @@ import { DialogID } from "@/hooks/dialog/DialogContext";
 import type { MovimentationPopulated, ProductionPopulated } from "@/types/database.type";
 import CustomDialog from "@/components/custom/CustomDialog";
 import CancelButton from "@/components/custom/buttons/CancelButton";
-import DeleteButton from "@/components/custom/buttons/DeleteButton";
 import useDialog from "@/hooks/dialog/useDialog";
 import useDeleteMovimentation from "@/hooks/movimentation/useDeleteMovimentation";
 import useDeleteDailyGoal from "@/hooks/daily-goal/useDeleteDailyGoal";
 import useDeleteProductionDeadline from "@/hooks/production-deadline/useDeleteProductionDeadline";
 import HasBadge from "@/components/custom/badges/HasBadge";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Field,
   FieldContent,
@@ -19,6 +18,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
+import UndoButton from "@/components/custom/buttons/UndoButton";
 
 type UndoMovimentationDialogProps = {
   production: ProductionPopulated;
@@ -32,7 +32,7 @@ export default function UndoMovimentationDialog({
   children,
 }: UndoMovimentationDialogProps) {
   const router = useRouter();
-  const { closeDialog } = useDialog();
+  const { openDialog, closeDialog } = useDialog();
   const dialogId: DialogID = `delete-movimentation-${movimentation.id}`;
 
   const { mutateAsync: deleteMovimentation, isPending: isDeleteMovimentationPending } =
@@ -71,10 +71,10 @@ export default function UndoMovimentationDialog({
     isDeleteMovimentationPending || isDeleteDailyGoalPending || isDeleteDeadlinePending;
 
   return (
-    <CustomDialog id={dialogId} title="Excluir última movimentação" trigger={children}>
+    <CustomDialog id={dialogId} title="Desfazer última movimentação" trigger={children}>
       <div className="flex flex-col gap-3">
         <p>
-          Tem certeza que deseja excluir a última movimentação da produção{" "}
+          Tem certeza que deseja desfazer a última movimentação da produção{" "}
           <strong>{production.op}</strong>?
         </p>
 
@@ -112,7 +112,7 @@ export default function UndoMovimentationDialog({
 
         <div className="flex flex-row mt-4 p-2 gap-2 justify-end">
           <CancelButton isLoading={isPending} onClick={() => closeDialog(dialogId)} />
-          <DeleteButton isLoading={isPending} onClick={handleDelete} />
+          <UndoButton isLoading={isPending} onClick={handleDelete} label="Desfazer" />
         </div>
       </div>
     </CustomDialog>

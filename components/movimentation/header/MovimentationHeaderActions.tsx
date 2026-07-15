@@ -6,6 +6,9 @@ import DeleteProductionDialog from "@/components/productions/dialogs/DeleteProdu
 import CancelProductionDialog from "@/components/productions/dialogs/CancelProductionDialog";
 import EditProductionForm from "@/components/productions/forms/EditProductionForm";
 import UndoMovimentationDialog from "@/components/productions/dialogs/UndoMovimentationDialog";
+import { useEffect } from "react";
+import useDialog from "@/hooks/dialog/useDialog";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 
 type ProductionHeaderActionsProps = {
   production: ProductionPopulated;
@@ -16,6 +19,7 @@ export default function ProductionHeaderActions({
   production,
   movimentations,
 }: ProductionHeaderActionsProps) {
+  const { openDialog } = useDialog();
   const productionStatus = production.status;
   const canEdit = productionStatus == "PENDING";
   const canDelete = productionStatus == "PENDING";
@@ -23,6 +27,21 @@ export default function ProductionHeaderActions({
   const canUndoMovimentation = productionStatus != "CANCELLED" && movimentations.length > 1;
   // movimentação tá na ordem crescente de data de criação
   const lastMovimentation = movimentations[0];
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (canUndoMovimentation && event.ctrlKey && event.key.toLowerCase() === "z") {
+        event.preventDefault();
+        openDialog(`delete-movimentation-${lastMovimentation.id}`);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <div className="flex gap-2 border-black my-3">
@@ -48,7 +67,7 @@ export default function ProductionHeaderActions({
           trigger={
             <Button variant="destructive" size="xs">
               <UndoIcon />
-              Desfazer
+              Desfazer <span className="font-bold text-black">Ctrl + Z</span>
             </Button>
           }
         >

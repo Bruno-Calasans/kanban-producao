@@ -57,12 +57,6 @@ export default function DeadlineCard({ deadline, deadlineStatus }: DeadlineCardP
 
       <CardFooter className="flex flex-1 gap-2">
         <ProductionDeadlineStatusBadge deadline={deadline} deadlineStatus={deadlineStatus} />
-        {status == "NOT_DEFINED" && (
-          <Badge className="bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300">
-            SEM PRAZO
-          </Badge>
-        )}
-
         <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
           {deadline.departament.name}
         </Badge>

@@ -12,6 +12,7 @@ import { differenceInDays } from "date-fns";
 import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import ReturnDepartamentDialog from "@/components/production/dialogs/ReturnDepartamentDialog";
 import useExternalDepartamentState from "@/hooks/external-departament-state/useExternalDepartamentState";
+import EditDeadlineDialog from "@/components/productions/dialogs/EditDeadlineDialog";
 
 type ProductionHeaderAlertsProps = {
   production: ProductionPopulated;
@@ -80,7 +81,7 @@ export default function ProductionHeaderAlerts({
         externalDepartamentStates.length > 0 &&
         productionStatus != "CANCELLED" &&
         externalDepartamentStates.map((state) => {
-          const hasDeadline = externalDeadlines.find(
+          const externalDeadline = externalDeadlines.find(
             (deadline) => deadline.departament.id === state.departament.id,
           );
 
@@ -88,8 +89,8 @@ export default function ProductionHeaderAlerts({
 
           const today = new Date();
           const expireDate =
-            hasDeadline && hasDeadline.planned_end_at
-              ? new Date(hasDeadline.planned_end_at)
+            externalDeadline && externalDeadline.planned_end_at
+              ? new Date(externalDeadline.planned_end_at)
               : undefined;
 
           expireDate?.setHours(0, 0, 0, 0);
@@ -126,10 +127,13 @@ export default function ProductionHeaderAlerts({
                 </p>
               }
               actionLabel={
-                <ReturnDepartamentDialog
-                  avaliableDepartaments={avaliableDepartaments}
-                  externalProcessState={state}
-                />
+                <div className="flex gap-1">
+                  {externalDeadline && <EditDeadlineDialog deadline={externalDeadline} />}
+                  <ReturnDepartamentDialog
+                    avaliableDepartaments={avaliableDepartaments}
+                    externalProcessState={state}
+                  />
+                </div>
               }
             />
           );

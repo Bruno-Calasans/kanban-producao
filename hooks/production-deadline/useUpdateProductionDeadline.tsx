@@ -14,6 +14,7 @@ export default function useUpdateProductionDeadline() {
     mutationFn: (data: { deadlineId: number; updateData: UpdateProductionDeadlineData }) =>
       updateProductionDeadline(data.deadlineId, data.updateData),
     onSuccess: ({ data }) => {
+      
       queryClient.invalidateQueries({
         queryKey: productionDeadlineKeys.lists(),
         exact: false,

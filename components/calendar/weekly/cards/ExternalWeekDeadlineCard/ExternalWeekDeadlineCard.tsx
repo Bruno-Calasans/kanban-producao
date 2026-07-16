@@ -1,6 +1,6 @@
-import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { ShirtIcon, HashIcon, BoxesIcon } from "lucide-react";
 import { useWeeklyDeadlineStore } from "@/store/weeklyDeadlineCardStore";
 import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";

@@ -4,17 +4,18 @@ import { CalendarCheckIcon } from "lucide-react";
 import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import CustomDialog from "@/components/custom/CustomDialog";
 import FinishDeadlineForm from "@/components/calendar/weekly/forms/finish-deadline/FinishDeadlineForm";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 
 type FinishDeadlineDialogProps = {
   deadline: ProductionDeadlinePopulated;
   departamentStates: DepartamentState[];
-  departamentAvaliableAmount: number;
+  deadlineState: DepartamentDeadlineState;
 };
 
 export default function FinishDeadlineDialog({
   deadline,
+  deadlineState,
   departamentStates,
-  departamentAvaliableAmount,
 }: FinishDeadlineDialogProps) {
   return (
     <CustomDialog
@@ -30,8 +31,8 @@ export default function FinishDeadlineDialog({
     >
       <FinishDeadlineForm
         deadline={deadline}
+        deadlineState={deadlineState}
         departamentStates={departamentStates}
-        departamentAvaliableAmount={departamentAvaliableAmount}
       />
     </CustomDialog>
   );

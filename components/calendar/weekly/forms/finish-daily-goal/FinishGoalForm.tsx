@@ -23,32 +23,35 @@ import errorHandler from "@/utils/errorHandler";
 import useDialog from "@/hooks/dialog/useDialog";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import useUpdateProductionDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 
 type FinishGoalFormProps = {
-  metaWeekDate: Date;
+  dailyGoalDate: Date;
   departament: Departament;
   expectedGoalAmount: number;
-  deadline: ProductionDeadlinePopulated;
   departamentStates: DepartamentState[];
-  departamentAvaliableAmount: number;
+  deadlineState: DepartamentDeadlineState;
 };
 
 export default function FinishGoalForm({
   departamentStates,
   departament,
-  metaWeekDate,
-  deadline,
+  dailyGoalDate,
   expectedGoalAmount,
-  departamentAvaliableAmount,
+  deadlineState,
 }: FinishGoalFormProps) {
   const { closeDialog } = useDialog();
-  const dialogId: DialogID = `finish-meta-${metaWeekDate.toISOString()}`;
+  const dialogId: DialogID = `finish-meta-${dailyGoalDate.toISOString()}`;
   const [responsible, setResponsible] = useState<Responsible>();
+
   const { mutateAsync: createDailyGoal, isPending: isMetaPending } = useCreateDailyGoal();
   const { mutateAsync: moveNextDepartament, isPending: isNextDepartamentPending } =
     useMoveToNextDepartament();
   const { mutateAsync: updateDeadline, isPending: isUpdateDeadlinePending } =
     useUpdateProductionDeadline();
+
+  const { deadline, departamentState } = deadlineState;
+  const { avaliableAmount } = departamentState;
 
   const form = useAppForm({
     defaultValues: {
@@ -64,8 +67,11 @@ export default function FinishGoalForm({
     },
     onSubmit: async ({ value }) => {
       const { amount, started_at, finished_at } = value;
+
+      if (!deadline) return;
+
       try {
-        const isDepartamentEmptyAfterFinishGoal = departamentAvaliableAmount - amount == 0;
+        const isDepartamentEmptyAfterFinishGoal = avaliableAmount - amount == 0;
 
         const startedAtString = started_at
           ? new Date(started_at).toISOString()
@@ -79,7 +85,7 @@ export default function FinishGoalForm({
           amount_done: amount,
           expected_amount: expectedGoalAmount,
           deadline_id: deadline.id,
-          ref_date: metaWeekDate.toISOString(),
+          ref_date: dailyGoalDate.toISOString(),
           started_at: startedAtString,
           finished_at: finishedAtString,
         });
@@ -94,7 +100,7 @@ export default function FinishGoalForm({
           dailyGoalId: createdDailyGoal.id,
         });
 
-        // Atualiza deadline caso a última meta concluída tem zerado o departamento
+        // Atualiza deadline caso a última meta concluída tenha zerado o departamento
         if (isDepartamentEmptyAfterFinishGoal) {
           await updateDeadline({
             deadlineId: deadline.id,
@@ -127,11 +133,7 @@ export default function FinishGoalForm({
       }}
     >
       <FieldGroup>
-        <GoalAmountField
-          form={form}
-          goalAmount={expectedGoalAmount}
-          maxAmount={departamentAvaliableAmount}
-        />
+        <GoalAmountField form={form} goalAmount={expectedGoalAmount} maxAmount={avaliableAmount} />
         <GoalResponsibleField
           form={form}
           departament={departament}

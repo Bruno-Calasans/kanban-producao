@@ -4,6 +4,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import {
   DailyGoalPopulated,
   Departament,
@@ -21,10 +22,10 @@ type InternalWeekDeadlineCardContextMenurops = {
   departamentStates: DepartamentState[];
   departament: Departament;
   goalAmount: number;
-  metaWeekDate: Date;
+  dailyGoalDate: Date;
   deadline: ProductionDeadlinePopulated;
+  deadlineState: DepartamentDeadlineState;
   dailyGoal?: DailyGoalPopulated;
-  departamentAvaliableAmount: number;
   hideFinishDeadlineAction?: boolean;
   hideFinishDailyGoalAction?: boolean;
   hideEditDeadlineAction?: boolean;
@@ -38,15 +39,15 @@ export default function InternalWeekDeadlineCardContextMenu({
   departamentStates,
   departament,
   goalAmount,
-  metaWeekDate,
   deadline,
   dailyGoal,
+  dailyGoalDate,
+  deadlineState,
   hideFinishDeadlineAction,
   hideEditDeadlineAction,
   hideFinishDailyGoalAction,
   hideDeleteDeadlineAction,
   hideRedoDailygoalAction,
-  departamentAvaliableAmount,
   hidden,
 }: InternalWeekDeadlineCardContextMenurops) {
   const departamentState = departamentStates.find(
@@ -62,12 +63,11 @@ export default function InternalWeekDeadlineCardContextMenu({
         {!hideFinishDailyGoalAction && (
           <ContextMenuItem asChild>
             <FinishGoalDialog
+              deadlineState={deadlineState}
               departamentStates={departamentStates}
               expectedGoalAmount={goalAmount}
+              dailyGoalDate={dailyGoalDate}
               departament={departament}
-              metaWeekDate={metaWeekDate}
-              deadline={deadline}
-              departamentAvaliableAmount={departamentAvaliableAmount}
             />
           </ContextMenuItem>
         )}
@@ -88,8 +88,8 @@ export default function InternalWeekDeadlineCardContextMenu({
           <ContextMenuItem asChild>
             <FinishDeadlineDialog
               deadline={deadline}
+              deadlineState={deadlineState}
               departamentStates={departamentStates}
-              departamentAvaliableAmount={departamentAvaliableAmount}
             />
           </ContextMenuItem>
         )}

@@ -105,6 +105,11 @@ export default function WeeklyDeadlineTable({
                     (state) => state.deadline?.id == deadline.id,
                   )!;
 
+                  const weekDailyGoals = goalsByDeadline?.get(deadline.id) || [];
+
+                  const departamentStates =
+                    departamentStatesByProduction.get(deadline.production.id) || [];
+
                   if (department.is_external) {
                     return (
                       <ExternalWeekDeadlineCard
@@ -112,9 +117,7 @@ export default function WeeklyDeadlineTable({
                         deadline={deadline}
                         weekDay={day.date}
                         deadlineState={deadlineState}
-                        departamentStates={
-                          departamentStatesByProduction.get(deadline.production.id) || []
-                        }
+                        departamentStates={departamentStates}
                       />
                     );
                   }
@@ -125,10 +128,9 @@ export default function WeeklyDeadlineTable({
                       deadline={deadline}
                       weekDay={day.date}
                       departament={department}
-                      weekDailyGoals={goalsByDeadline?.get(deadline.id) || []}
-                      departamentStates={
-                        departamentStatesByProduction.get(deadline.production.id) || []
-                      }
+                      weekDailyGoals={weekDailyGoals}
+                      deadlineState={deadlineState}
+                      departamentStates={departamentStates}
                     />
                   );
                 })}

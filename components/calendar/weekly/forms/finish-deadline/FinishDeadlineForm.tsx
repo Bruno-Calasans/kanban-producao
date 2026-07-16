@@ -14,20 +14,22 @@ import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdat
 import useMoveToNextDepartament from "@/hooks/movimentation/useMoveToNextDepartament";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 import DeadlineStateMsg from "../../DeadlineStateMsg";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 
 type FinishDeadlineFormProps = {
   deadline: ProductionDeadlinePopulated;
   departamentStates: DepartamentState[];
-  departamentAvaliableAmount: number;
+  deadlineState: DepartamentDeadlineState;
 };
 
 export default function FinishDeadlineForm({
   deadline,
   departamentStates,
-  departamentAvaliableAmount,
+  deadlineState,
 }: FinishDeadlineFormProps) {
   const dialogId: DialogID = `finish-deadline-${deadline.id}`;
   const { closeDialog } = useDialog();
+  const { departamentState } = deadlineState;
 
   const {
     mutateAsync: updateDeadline,
@@ -90,23 +92,6 @@ export default function FinishDeadlineForm({
 
   const isPending = isUpdateDeadlinePending || isNextDepartamentPending;
   const isError = updateDeadlineError || moveNextDepartamentError;
-
-  const plannedStartDate = deadline.planned_start_at
-    ? new Date(deadline.planned_start_at)
-    : undefined;
-
-  const today = new Date();
-  const plannedEndDate = deadline.planned_end_at ? new Date(deadline.planned_end_at) : undefined;
-
-  const isExpired =
-    plannedEndDate && plannedStartDate && plannedEndDate.getTime() < today.getTime();
-
-  const remainingDays =
-    plannedEndDate && plannedStartDate ? differenceInDays(plannedEndDate, today) + 2 : 0;
-
-  const departamentState = departamentStates.find(
-    (state) => state.departament.id === deadline.departament.id,
-  )!;
 
   return (
     <form

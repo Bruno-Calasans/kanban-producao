@@ -1,9 +1,9 @@
 import { ProductionPopulated } from "@/types/database.type";
 import { InfoIcon, ClockCheckIcon, ClipboardClockIcon, TriangleAlertIcon } from "lucide-react";
-import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
+import { EXPIRE_WARNING_BEFORE_DAYS } from "@/constants/others/others";
 import Loader from "@/components/custom/Loader";
 import CustomTooltip from "@/components/custom/CustomTooltip";
-import { EXPIRE_WARNING_BEFORE_DAYS } from "@/constants/others/others";
+import useGetAllDeadlinesByProduction from "@/hooks/production-deadline/useGetAllDeadlinesByProduction";
 
 type ProductionDetailsProps = {
   production: ProductionPopulated;

@@ -10,7 +10,7 @@ export default function CountBadge({ amount, className }: CountBadgeProps) {
   return (
     <Badge
       className={cn(
-        "flex justify-center items-center rounded-full w-2 h-4 text-xs bg-indigo-500",
+        "flex justify-center items-center rounded-full w-2 h-4 text-xs bg-indigo-500 p-2.5",
         className,
       )}
     >

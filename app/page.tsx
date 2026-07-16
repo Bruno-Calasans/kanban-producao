@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import Loader from "@/components/custom/Loader";
 import PageTitle from "@/components/custom/PageTitle";
-import ResumeTable from "@/components/resume/ResumeTable";
+import ResumeTable from "@/components/home/ResumeTable";
 import useGetAllProductions from "@/hooks/production/useGetAllProductions";
 import PageMsg from "@/components/custom/msgs/PageMsg";
 import groupProductProductions from "@/utils/groupProductByProductions";
@@ -15,7 +15,7 @@ export default function Home() {
   const productProductions = useMemo(() => groupProductProductions(productions), [productions]);
 
   if (isPending) {
-    return <Loader title="Carregando Resumo..." />;
+    return <Loader title="Carregando Página inicial..." />;
   }
 
   if (error)

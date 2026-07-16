@@ -102,12 +102,6 @@ export default function DepartamentProductionTable({
         );
       },
     },
-    // {
-    //   id: "action",
-    //   cell: ({ row: { original: production } }) => (
-    //     <ProductionTableDropdownMenu production={production} />
-    //   ),
-    // },
   ];
   return (
     <DataTable

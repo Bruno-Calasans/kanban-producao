@@ -11,7 +11,6 @@ type ExternalWeekDeadlineCardContextMenuProps = {
   children: React.ReactNode;
   departamentStates: DepartamentState[];
   deadline: ProductionDeadlinePopulated;
-  departamentAvaliableAmount: number;
   departamentExternalState?: DepartamentState;
   hidden?: boolean;
 };
@@ -23,7 +22,9 @@ export default function ExternalWeekDeadlineCardContextMenu({
   departamentExternalState,
   hidden,
 }: ExternalWeekDeadlineCardContextMenuProps) {
-  const avaliableDepartaments = departamentStates.map((state) => state.departament);
+  const internalDepartaments = departamentStates
+    .map((state) => state.departament)
+    .filter((departament) => departament && !departament.is_external);
 
   return (
     <ContextMenu>
@@ -35,7 +36,7 @@ export default function ExternalWeekDeadlineCardContextMenu({
           {departamentExternalState && (
             <ReturnDialog
               externalDepartamentState={departamentExternalState}
-              avaliableDepartaments={avaliableDepartaments}
+              avaliableDepartaments={internalDepartaments}
               deadline={deadline}
             />
           )}

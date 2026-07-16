@@ -6,7 +6,7 @@ import {
 } from "@/types/database.type";
 import { calcDeadlineStatus, DeadlineStatus } from "./calcDeadlineStatus";
 
-type CalcDepartamentStateData = {
+type CalcProductionDeadlineStatesProps = {
   production: Production;
   productionDeadlines: ProductionDeadlinePopulated[];
   productionDepartamentStates: DepartamentState[];
@@ -22,11 +22,11 @@ export type DepartamentDeadlineState = {
   deadline?: ProductionDeadlinePopulated;
 };
 
-export function calcDepartamentDeadlineState({
+export function calcProductionDeadlineStates({
   production,
   productionDeadlines,
   productionDepartamentStates,
-}: CalcDepartamentStateData) {
+}: CalcProductionDeadlineStatesProps) {
   const statesByDepartament = new Map<number, DepartamentState>();
   const deadlinesByDepartament = new Map<number, ProductionDeadlinePopulated>();
   const states: DepartamentDeadlineState[] = [];

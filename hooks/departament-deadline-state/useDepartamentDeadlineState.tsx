@@ -6,7 +6,7 @@ import {
   ProductionDeadlinePopulated,
   ProductionPopulated,
 } from "@/types/database.type";
-import { calcDepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
+import { calcProductionDeadlineStates } from "@/utils/calcDepartamentDeadlineState";
 
 type UseDepartamenteDeadlineStateProps = {
   production: ProductionPopulated;
@@ -20,7 +20,7 @@ export default function useDepartamentDeadlineState({
   productionDepartamentStates,
 }: UseDepartamenteDeadlineStateProps) {
   const departamentDeadlineStates = useMemo(() => {
-    return calcDepartamentDeadlineState({
+    return calcProductionDeadlineStates({
       production,
       productionDeadlines,
       productionDepartamentStates,

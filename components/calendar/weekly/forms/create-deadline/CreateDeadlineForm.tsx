@@ -5,7 +5,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { useMemo, useState } from "react";
 import { Departament, ProductionPopulated } from "@/types/database.type";
 import { defaultCreateDeadlineForm, useAppForm, formSchema } from "./createDeadlineFormContext";
-import { calcDepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
+import { calcProductionDeadlineStates } from "@/utils/calcDepartamentDeadlineState";
 import { ProductionSelectorFieldField } from "./fields/ProductionSelectorField";
 import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
 import errorHandler from "@/utils/errorHandler";
@@ -89,7 +89,7 @@ export default function CreateDeadlineForm() {
       ? deadlinesByProduction.get(selectedProduction.id) || []
       : [];
 
-    return calcDepartamentDeadlineState({
+    return calcProductionDeadlineStates({
       production: selectedProduction,
       productionDeadlines,
       productionDepartamentStates,

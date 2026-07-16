@@ -12,29 +12,41 @@ import {
   DailyGoalPopulated,
   DepartamentState,
   ProductionDeadlinePopulated,
+  ProductionPopulated,
 } from "@/types/database.type";
 import { DAYS_OF_WEEK } from "@/constants/others/date";
 import { cn } from "@/lib/utils";
 import { createCalendarMatrix } from "@/utils/createCalendarMatrix";
-import { normalizeWeekDays } from "@/utils/createNormalizedWeekDays";
+import { NormalizedWeekDay, normalizeWeekDays } from "@/utils/createNormalizedWeekDays";
 import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
 import { useMemo } from "react";
 import { isToday } from "date-fns";
 import { useSelectedWeekDay } from "@/hooks/local-storage/useSelectedWeekDay";
 import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
+import { groupDeadlineStateByProduction } from "@/utils/groupDeadlineStateByProduction";
+import { DepartamentDeadlineState } from "@/utils/calcDepartamentDeadlineState";
 import WeekSelector from "@/components/calendar/weekly/WeekSelector";
 import useWeek from "@/hooks/use-week/useWeek";
 import ExternalWeekDeadlineCard from "./cards/ExternalWeekDeadlineCard/ExternalWeekDeadlineCard";
 import InternalWeekDeadlineCard from "@/components/calendar/weekly/cards/InternalWeekDeadlineCard/InternalWeekDeadlineCard";
 import sortMapByKey from "@/utils/sortMapByKey";
 
+type CreateRowProps = {
+  normalizedWeekDays: NormalizedWeekDay[];
+  calendarMatrix: Map<number, Map<string, ProductionDeadlinePopulated[]>>;
+  sortedDepartments: [number, ProductionDeadlinePopulated[]][];
+  deadlineStateByProduction: Map<number, DepartamentDeadlineState[]>;
+};
+
 type WeeklyDeadlineTableProps = {
+  productions: ProductionPopulated[];
   deadlines: ProductionDeadlinePopulated[];
   goalsByDeadline: Map<number, DailyGoalPopulated[]>;
   departamentStatesByProduction: Map<number, DepartamentState[]>;
 };
 
 export default function WeeklyDeadlineTable({
+  productions,
   deadlines,
   goalsByDeadline,
   departamentStatesByProduction,
@@ -44,30 +56,13 @@ export default function WeeklyDeadlineTable({
     startDate: selectedWeekDay ? new Date(selectedWeekDay) : new Date(),
   });
 
-  const normalizedWeekDays = useMemo(() => normalizeWeekDays(weekDays), [weekDays]);
-
-  // Agrupa prazos por departamento
-  const deadlinesByDepartament = useMemo(() => groupDeadlinesByDepartament(deadlines), [deadlines]);
-
-  // Agrupa prazos por produção
-  const deadlinesByProduction = useMemo(
-    () => groupDeadlinesByProduction(deadlines),
-    [deadlines, departamentStatesByProduction],
-  );
-
   // Prazos por departamento, por dia da semana
-  const calendarMatrix = useMemo(
-    () =>
-      createCalendarMatrix({
-        deadlines,
-        normalizedWeekDays,
-      }),
-    [deadlines, normalizedWeekDays],
-  );
-
-  const sortedDepartments = sortMapByKey(deadlinesByDepartament);
-
-  const createRows = () => {
+  const createRows = ({
+    calendarMatrix,
+    normalizedWeekDays,
+    sortedDepartments,
+    deadlineStateByProduction,
+  }: CreateRowProps) => {
     return normalizedWeekDays.map((day) => (
       <TableRow key={day.key}>
         {/* Linha de cabeçalho */}
@@ -103,6 +98,12 @@ export default function WeeklyDeadlineTable({
             >
               <div className="m-0 p-0 grid md:grid-cols-1 xl:grid-cols-2">
                 {deadlines?.map((deadline) => {
+                  const deadlineStates =
+                    deadlineStateByProduction.get(deadline.production.id) || [];
+
+                  const deadlineState = deadlineStates.find(
+                    (state) => state.deadline?.id == deadline.id,
+                  )!;
 
                   if (department.is_external) {
                     return (
@@ -110,7 +111,7 @@ export default function WeeklyDeadlineTable({
                         key={`${department.id}-${deadline.id}-${day.key}`}
                         deadline={deadline}
                         weekDay={day.date}
-                        departament={department}
+                        deadlineState={deadlineState}
                         departamentStates={
                           departamentStatesByProduction.get(deadline.production.id) || []
                         }
@@ -139,17 +140,41 @@ export default function WeeklyDeadlineTable({
     ));
   };
 
-  const rows = useMemo(
-    () => createRows(),
-    [
-      calendarMatrix,
-      deadlinesByDepartament,
-      normalizedWeekDays,
-      weekDays,
-      goalsByDeadline,
-      departamentStatesByProduction,
-    ],
-  );
+  const { rows, deadlinesByDepartament, deadlineStateByProduction, deadlinesByProduction } =
+    useMemo(() => {
+      const deadlinesByDepartament = groupDeadlinesByDepartament(deadlines);
+
+      const sortedDepartments = sortMapByKey(deadlinesByDepartament);
+
+      const normalizedWeekDays = normalizeWeekDays(weekDays);
+
+      const deadlinesByProduction = groupDeadlinesByProduction(deadlines);
+
+      const deadlineStateByProduction = groupDeadlineStateByProduction({
+        productions,
+        deadlinesByProduction,
+        departamentStatesByProduction,
+      });
+
+      const calendarMatrix = createCalendarMatrix({
+        deadlines,
+        normalizedWeekDays,
+      });
+
+      const rows = createRows({
+        normalizedWeekDays,
+        calendarMatrix,
+        sortedDepartments,
+        deadlineStateByProduction,
+      });
+
+      return {
+        rows,
+        deadlineStateByProduction,
+        deadlinesByProduction,
+        deadlinesByDepartament,
+      };
+    }, [weekDays, productions, deadlines, goalsByDeadline, departamentStatesByProduction]);
 
   return (
     <section>
@@ -158,8 +183,6 @@ export default function WeeklyDeadlineTable({
         getCurrentWeek={getCurrentWeek}
         getNextWeek={getNextWeek}
         getPreviousWeek={getPreviousWeek}
-        deadlinesByProduction={deadlinesByProduction}
-        departamentStatesByProduction={departamentStatesByProduction}
       />
 
       <div className="overflow-auto max-h-[90vh]">

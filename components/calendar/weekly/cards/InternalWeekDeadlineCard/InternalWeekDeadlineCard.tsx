@@ -61,13 +61,18 @@ export default function InternalWeekDeadlineCard({
   );
 
   const sortedMovimentationsByDate = dailyGoal ? sortMovimentationByCreatedAt(movimentations) : [];
+
   const lastMovimentation = sortedMovimentationsByDate.at(-1)!;
 
   const hideDeleteDeadlineAction = movimentations.length > 1;
+
   const hideEditDeadlineAction = isFinished || avaliableAmount == 0;
+
   const hideFinishDeadlineAction = isFinished || avaliableAmount == 0;
+
   const hideFinishDailyGoalAction =
     isDailyGoalDone || isFinished || (isDailyGoalIncomplete && amountDoneInThisDay > 0);
+
   const hideRedoDailygoalAction =
     isFinished || !dailyGoal || (dailyGoal && lastMovimentation?.goal_id != dailyGoal.id);
 

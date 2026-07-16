@@ -60,6 +60,7 @@ export default function MonthlyCalendarPage() {
   return (
     <section>
       <WeeklyDeadlineTable
+        productions={productions}
         deadlines={deadlines}
         goalsByDeadline={goalsByDeadline}
         departamentStatesByProduction={departamentStatesByProduction}

@@ -6,13 +6,13 @@ import normalizeDate from "@/utils/normalizeDate";
 type UseExternalWeeklyDeadlineCardProps = {
   weekDay: Date;
   deadline: ProductionDeadlinePopulated;
-  departamentStates: DepartamentState[];
+  departamentState: DepartamentState;
 };
 
 export default function useExternalWeeklyDeadlineCard({
   deadline,
   weekDay,
-  departamentStates,
+  departamentState,
 }: UseExternalWeeklyDeadlineCardProps) {
   const { planned_end_at, actual_end_at } = deadline;
 
@@ -22,19 +22,14 @@ export default function useExternalWeeklyDeadlineCard({
   const today = normalizeDate(new Date())!;
   const normalizedWeekDay = normalizeDate(weekDay)!;
 
-  // Verificando os departamentos externos
-  const departamentExternalState = departamentStates.find(
-    (state) => state.departament.id == deadline.departament.id,
-  );
-
   // Quantidade disponível no departamento externo
-  const avaliableAmount = departamentExternalState?.avaliableAmount || 0;
+  const avaliableAmount = departamentState?.avaliableAmount || 0;
 
   // Quantidade retornada do departamento externo
-  const amountDone = departamentExternalState?.returnAmount || 0;
+  const amountDone = departamentState?.returnAmount || 0;
 
   // Quantidade totaal e inicial no departamento externo
-  const totalAmount = departamentExternalState?.externalAmount || 0;
+  const totalAmount = departamentState?.externalAmount || 0;
 
   const hasWork = amountDone > 0;
 
@@ -52,7 +47,6 @@ export default function useExternalWeeklyDeadlineCard({
     plannedEndDate && plannedEndDate.getTime() == normalizedWeekDay.getTime();
 
   return {
-    departamentExternalState,
     isExpectedThisWeekDay,
     avaliableAmount,
     totalAmount,

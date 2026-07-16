@@ -4,17 +4,10 @@ import { Button } from "@/components/ui/button";
 import { MONTHS } from "@/constants/others/date";
 import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
 import { ChevronLeftIcon, ChevronRightIcon, ExpandIcon, ShrinkIcon } from "lucide-react";
-import {
-  DepartamentState,
-  ProductionDeadlinePopulated,
-  ProductionPopulated,
-} from "@/types/database.type";
 import PageTitle from "@/components/custom/PageTitle";
 import CreateDeadlineDialog from "./dialogs/CreateDeadlineDialog";
 
 type WeekSelectorProps = {
-  deadlinesByProduction: Map<number, ProductionDeadlinePopulated[]>;
-  departamentStatesByProduction: Map<number, DepartamentState[]>;
   startDayOfWeek: Date;
   getPreviousWeek: () => void;
   getCurrentWeek: () => void;

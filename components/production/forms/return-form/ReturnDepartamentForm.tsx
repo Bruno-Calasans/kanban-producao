@@ -12,14 +12,13 @@ import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/ty
 import { ReturnAmountField } from "./fields/ReturnAmountField";
 import { ReturnDepartamentField } from "./fields/ReturnDepartamentField";
 import { ReturnDatesField } from "./fields/ReturnDatesField";
-import { ExternalDepartamentState } from "@/utils/calcDepartamentExternalState";
 import { useState } from "react";
 import { DialogID } from "@/hooks/dialog/DialogContext";
+import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import useDialog from "@/hooks/dialog/useDialog";
 import ConfirmButton from "@/components/custom/buttons/ConfirmButton";
 import errorHandler from "@/utils/errorHandler";
 import useUpdateMovimentationDeadline from "@/hooks/production-deadline/useUpdateProductionDeadline";
-import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimentation";
 import CancelButton from "@/components/custom/buttons/CancelButton";
 
 type ReturnDepartamentFormProps = {

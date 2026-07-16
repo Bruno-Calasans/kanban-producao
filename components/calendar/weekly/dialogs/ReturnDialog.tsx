@@ -4,7 +4,6 @@ import CustomDialog from "@/components/custom/CustomDialog";
 import { MoveDownLeftIcon } from "lucide-react";
 import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import ReturnProcessForm from "@/components/production/forms/return-form/ReturnDepartamentForm";
-import { ExternalDepartamentState } from "@/utils/calcDepartamentExternalState";
 
 type ReturnDialogProps = {
   externalDepartamentState: DepartamentState;

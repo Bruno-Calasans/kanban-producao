@@ -1,7 +1,11 @@
-import { MovimentationPopulated, ProductionPopulated } from "@/types/database.type";
+import {
+  DepartamentState,
+  MovimentationPopulated,
+  ProductionPopulated,
+} from "@/types/database.type";
 import { ExternalDepartamentState } from "./calcDepartamentExternalState";
 
-export type GroupExternalProcessState = Record<number, ExternalDepartamentState>;
+export type GroupExternalProcessState = Record<number, DepartamentState>;
 
 type CalcExternalDepartamentStateProps = {
   production: ProductionPopulated;
@@ -25,15 +29,27 @@ export function calcExternalDepartamentState({
           departament,
           production,
           externalMovimentations: [movimentation],
-          departamentMovimentations: [movimentation],
+          movimentations: [movimentation],
           returnMovimentations: [],
           avaliableAmount: 0,
           externalAmount: 0,
           returnAmount: 0,
+          flowTemplates: [],
+          forwardAmount: 0,
+          inputAmount: 0,
+          inputMovimentations: [],
+          nextDepartament: null,
+          previousDepartament: null,
+          outputAmount: 0,
+          outputMovimentations: [],
+          reprocessAmount: 0,
+          skippedAmount: 0,
+          template: null,
+          status: "IN_PROGRESS",
         };
       }
 
-      groups[departament.id].departamentMovimentations.push(movimentation);
+      groups[departament.id].movimentations.push(movimentation);
       groups[departament.id].externalMovimentations.push(movimentation);
       groups[departament.id].avaliableAmount += movimentation.amount;
       groups[departament.id].externalAmount += movimentation.amount;
@@ -49,20 +65,42 @@ export function calcExternalDepartamentState({
           departament,
           production,
           returnMovimentations: [movimentation],
-          departamentMovimentations: [movimentation],
+          movimentations: [movimentation],
           externalMovimentations: [],
           avaliableAmount: 0,
           externalAmount: 0,
           returnAmount: 0,
+          flowTemplates: [],
+          forwardAmount: 0,
+          inputAmount: 0,
+          inputMovimentations: [],
+          nextDepartament: null,
+          previousDepartament: null,
+          outputAmount: 0,
+          outputMovimentations: [],
+          reprocessAmount: 0,
+          skippedAmount: 0,
+          template: null,
+          status: "IN_PROGRESS",
         };
       }
 
-      groups[departament.id].departamentMovimentations.push(movimentation);
+      groups[departament.id].movimentations.push(movimentation);
       groups[departament.id].returnMovimentations.push(movimentation);
       groups[departament.id].avaliableAmount -= movimentation.amount;
       groups[departament.id].returnAmount += movimentation.amount;
     }
   }
 
-  return Object.values(groups);
+  const departamentStates = Object.values(groups);
+
+  for (const departamentState of departamentStates) {
+    if (departamentState.avaliableAmount > 0) {
+      departamentState.status = "IN_PROGRESS";
+    } else {
+      departamentState.status = "COMPLETED";
+    }
+  }
+
+  return departamentStates;
 }

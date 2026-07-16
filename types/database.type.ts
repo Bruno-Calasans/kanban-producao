@@ -46,7 +46,6 @@ export type MovimentationStatus =
   | "REPROCESSING"
   | "EXTERNAL";
 
-  
 export type DepartamentStateStatus =
   | "PENDING" // Departamento ainda não começou a trabalhar
   | "COMPLETED" // Departamento terminou de trabalhar
@@ -70,6 +69,7 @@ export type DepartamentState = {
   outputAmount: number;
   externalAmount: number;
   reprocessAmount: number;
+  returnAmount: number;
   avaliableAmount: number;
   forwardAmount: number;
   skippedAmount: number;
@@ -79,10 +79,12 @@ export type DepartamentState = {
   departament: Departament;
   previousDepartament: Departament | null;
   nextDepartament: Departament | null;
-  template: ProductionFlowTemplatePopulated;
+  template: ProductionFlowTemplatePopulated | null;
   movimentations: MovimentationPopulated[];
   inputMovimentations: MovimentationPopulated[];
   outputMovimentations: MovimentationPopulated[];
+  externalMovimentations: MovimentationPopulated[];
+  returnMovimentations: MovimentationPopulated[];
   flags?: DepartamentStateFlags;
 };
 

@@ -47,7 +47,12 @@ export async function getAllProductionMovimentationsTemplates(productions: Produ
   const movimentationsByProduction = new Map<number, MovimentationPopulated[]>();
   const templatesByProductionFlow = new Map<number, ProductionFlowTemplatePopulated[]>();
 
-  if (!productions || productions.length == 0) return dataByProduction;
+  if (!productions || productions.length == 0)
+    return {
+      dataByProduction,
+      movimentationsByProduction,
+      templatesByProductionFlow,
+    };
 
   const productionIds = [...new Set(productions.map((production) => production.id))];
   const flowIds = [...new Set(productions.map((m) => m.production_flow_id))];
@@ -76,6 +81,7 @@ export async function getAllProductionMovimentationsTemplates(productions: Produ
     templatesByProductionFlow.set(key, curr);
   }
 
+  // Agrupando as movimentações e templates da produção
   for (const production of productions) {
     const productionId = production.id;
     const productionFlowId = production.production_flow_id;
@@ -90,5 +96,9 @@ export async function getAllProductionMovimentationsTemplates(productions: Produ
     });
   }
 
-  return dataByProduction;
+  return {
+    dataByProduction,
+    movimentationsByProduction,
+    templatesByProductionFlow,
+  };
 }

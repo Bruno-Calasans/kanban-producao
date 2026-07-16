@@ -22,11 +22,13 @@ import RemoveDateButton from "./RemoveDataButton";
 type ProductionDeadlineDatesInputProps = {
   departamentDeadlineState: DepartamentDeadlineState;
   shortVersion?: boolean;
+  onlyEndDate?: boolean;
 };
 
 export default function ProductionDeadlineDatesInput({
   departamentDeadlineState,
   shortVersion,
+  onlyEndDate,
 }: ProductionDeadlineDatesInputProps) {
   const { departament, production, deadline, status, expireDaysAfterEnd, departamentState } =
     departamentDeadlineState;
@@ -202,6 +204,7 @@ export default function ProductionDeadlineDatesInput({
     departamentStatus == "COMPLETED";
 
   // Só pode definir prazo se a produção ainda não começou
+  const isExternalDeadline = deadline?.departament.is_external;
   const isStartDateInputDisabled = isInputDisabled;
   const isEndDateInputDisabled = !(selectedStartDate || plannedStartDate) || isInputDisabled;
 

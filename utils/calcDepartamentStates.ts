@@ -6,6 +6,7 @@ import {
   ProductionPopulated,
   DepartamentStateStatus,
 } from "@/types/database.type";
+import { calcExternalDepartamentState } from "./calcExternalDepartamentState";
 
 type ProcessStatusData = {
   production: ProductionPopulated;
@@ -193,12 +194,18 @@ export function calcDepartamentStates({
 
       skippedAmount,
 
+      returnAmount: 0,
+
       // EXECUÇÕES
       inputMovimentations,
 
       outputMovimentations,
 
       movimentations: [...inputMovimentations, ...outputMovimentations],
+
+      returnMovimentations: [],
+
+      externalMovimentations: [],
 
       // FLAGS
       flags: {
@@ -220,10 +227,14 @@ export function calcDepartamentStates({
   // =========================
   // DEPARTAMENTOS PULADOS
   // =========================
-
   checkSkippedDepartaments(states);
 
-  return states;
+  // =========================
+  // CALCULANDO O ESTADO DOS DEPARTAMENTOS EXTERNOS
+  // =========================
+  const departamentStates = calcExternalDepartamentState({ production, movimentations });
+
+  return [...states, ...departamentStates];
 }
 
 export function checkSkippedDepartaments(departamentStates: DepartamentState[]) {

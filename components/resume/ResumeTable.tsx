@@ -39,18 +39,18 @@ const productColumns: ColumnDef<ProductProduction>[] = [
       </Link>
     ),
   },
-  {
-    id: "productions",
-    accessorFn: ({ productions }) => productions.length,
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Produções" />,
-    cell({
-      row: {
-        original: { productions },
-      },
-    }) {
-      return productions ? productions.length : 0;
-    },
-  },
+  // {
+  //   id: "productions",
+  //   accessorFn: ({ productions }) => productions.length,
+  //   header: ({ column }) => <DataTableColumnHeader column={column} title="Produções" />,
+  //   cell({
+  //     row: {
+  //       original: { productions },
+  //     },
+  //   }) {
+  //     return productions ? productions.length : 0;
+  //   },
+  // },
   {
     id: "last-production",
     accessorFn: ({ productions }) =>

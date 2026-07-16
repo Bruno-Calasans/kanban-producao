@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { MoveDownLeftIcon } from "lucide-react";
 import { ExternalDepartamentState } from "@/utils/calcDepartamentExternalState";
-import { Departament } from "@/types/database.type";
+import { Departament, DepartamentState } from "@/types/database.type";
 import CustomDialog from "@/components/custom/CustomDialog";
 import ReturnProcessForm from "../forms/return-form/ReturnDepartamentForm";
 
 type ReturnDepartamentDialogProps = {
-  externalProcessState: ExternalDepartamentState;
+  externalProcessState: DepartamentState;
   avaliableDepartaments: Departament[];
 };
 

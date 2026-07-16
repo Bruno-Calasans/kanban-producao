@@ -95,7 +95,7 @@ export default function CreateReprocessForm({
           departament.id != departamentState.departament.id &&
           // Tem valor de sequência
           template?.sequence != null &&
-          departamentState.template.sequence != null &&
+          departamentState?.template?.sequence != null &&
           template?.sequence != departamentState.template.sequence,
       )
       .map((state) => state.departament);

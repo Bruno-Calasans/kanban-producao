@@ -39,10 +39,6 @@ export function calcDepartamentExternalState({
   const returnAmount = returnMovimentations.reduce((prev, curr) => prev + curr.amount, 0);
   const avaliableAmount = externalAmount - returnAmount;
 
-  // const departament = externalMovimentations.find(
-  //   (exe) => exe.departament_id === departament.id,
-  // )?.departament!;
-
   return {
     production,
     departament,

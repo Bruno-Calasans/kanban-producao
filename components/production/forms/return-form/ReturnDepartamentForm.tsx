@@ -8,7 +8,7 @@ import {
   ReturnProcessFormContextSchema,
 } from "./returnDepartamentFormContext";
 import { FieldGroup } from "@/components/ui/field";
-import { Departament, ProductionDeadlinePopulated } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import { ReturnAmountField } from "./fields/ReturnAmountField";
 import { ReturnDepartamentField } from "./fields/ReturnDepartamentField";
 import { ReturnDatesField } from "./fields/ReturnDatesField";
@@ -23,7 +23,7 @@ import { useCreateMovimentation } from "@/hooks/movimentation/useCreateMovimenta
 import CancelButton from "@/components/custom/buttons/CancelButton";
 
 type ReturnDepartamentFormProps = {
-  externalDepartamentState: ExternalDepartamentState;
+  externalDepartamentState: DepartamentState;
   avaliableDepartaments: Departament[];
   deadline?: ProductionDeadlinePopulated;
 };

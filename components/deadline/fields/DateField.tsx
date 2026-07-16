@@ -21,7 +21,7 @@ export const DateField = withForm({
                   <FieldLabel htmlFor={field.name}>Data de Fim</FieldLabel>
                   <DatePickerInput
                     currentDate={field.state.value}
-                    onChangeDate={(value) => field.handleChange(value?.toDateString())}
+                    onChangeDate={(value) => field.handleChange(value?.toDateString() || "")}
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>

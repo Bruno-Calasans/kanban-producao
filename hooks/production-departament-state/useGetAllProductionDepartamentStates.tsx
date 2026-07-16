@@ -15,13 +15,17 @@ export default function useGetAllProductionDepartamentStates({
   const { data, error, isPending, isLoading } =
     useGetAllProductionMovimentationsTemplates(productions);
 
+  const dataByProduction = data?.dataByProduction;
+  const movimentationsByProduction = data?.movimentationsByProduction;
+  const templatesByProductionFlow = data?.templatesByProductionFlow;
+
+  // Agrupa os estados dos departamentos por produção
   const departamentStatesByProduction = useMemo(() => {
-    // Agrupa os estados dos departamentos por movimentação
     const groups = new Map<number, DepartamentState[]>();
 
-    if (!data || error || isLoading || productions.length === 0) return groups;
+    if (!dataByProduction || error || isLoading || productions.length === 0) return groups;
 
-    for (const [movimentationId, movimentationExecutionTemplate] of data) {
+    for (const [movimentationId, movimentationExecutionTemplate] of dataByProduction) {
       const { production, movimentations, templates } = movimentationExecutionTemplate;
 
       const departamentStates = calcDepartamentStates({
@@ -37,6 +41,8 @@ export default function useGetAllProductionDepartamentStates({
   }, [productions, data, isLoading]);
 
   return {
+    movimentationsByProduction,
+    templatesByProductionFlow,
     departamentStatesByProduction,
     isPending,
     isLoading,

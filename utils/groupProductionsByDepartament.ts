@@ -1,22 +1,26 @@
-import { ProductionFlowTemplate, ProductionPopulated } from "@/types/database.type";
+import {
+  ProductionFlowTemplate,
+  ProductionFlowTemplatePopulated,
+  ProductionPopulated,
+} from "@/types/database.type";
 
 type GroupProductionsByDepartamentProps = {
   productions: ProductionPopulated[];
-  templatesByFlow: Map<number, ProductionFlowTemplate[]>;
+  templatesByProductionFlow: Map<number, ProductionFlowTemplatePopulated[]>;
 };
 
 export function groupProductionsByDepartament({
   productions,
-  templatesByFlow,
+  templatesByProductionFlow,
 }: GroupProductionsByDepartamentProps) {
   const productionsByDepartament = new Map<number, ProductionPopulated[]>();
 
   for (const production of productions) {
     const productionFlowId = production.production_flow_id;
-    const templates = templatesByFlow.get(productionFlowId) || [];
+    const templates = templatesByProductionFlow.get(productionFlowId) || [];
 
     for (const template of templates) {
-      const departamentId = template.departament_id;
+      const departamentId = template.departament.id;
 
       const currentGroup = productionsByDepartament.get(departamentId) || [];
       currentGroup.push(production);

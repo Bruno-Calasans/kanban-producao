@@ -1,5 +1,9 @@
 import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
-import { calcDeadlineStatus, DeadlineStatusData } from "./calcDeadlineStatus";
+import {
+  calcDeadlineStatus,
+  DeadlineStatusData,
+  DEFAULT_DEADLINE_STATUS,
+} from "./calcDeadlineStatus";
 
 type GroupDeadlineStatusByDeadlineProps = {
   deadlines: ProductionDeadlinePopulated[];
@@ -20,13 +24,10 @@ export function groupDeadlineStatusByDeadline({
     );
 
     if (!departamentState) {
-      deadlineStatusByDeadline.set(deadline.id, {
-        status: "NOT_DEFINED",
-        expireDays: 0,
-        expireDaysAfterEnd: 0,
-      });
+      deadlineStatusByDeadline.set(deadline.id, DEFAULT_DEADLINE_STATUS);
     } else {
       const deadlineStatus = calcDeadlineStatus({ deadline, departamentState });
+
       deadlineStatusByDeadline.set(deadline.id, deadlineStatus);
     }
   }

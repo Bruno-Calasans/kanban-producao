@@ -50,8 +50,6 @@ export default function DepartamentTabs({
     departamentStatesByProduction,
   });
 
-  console.log(deadlines);
-
   return (
     <Tabs value={selectedTab} onValueChange={setSelectedTab}>
       <div className="flex justify-between">

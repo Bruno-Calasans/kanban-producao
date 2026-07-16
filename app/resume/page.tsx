@@ -6,12 +6,10 @@ import PageTitle from "@/components/custom/PageTitle";
 import DepartamentTabs from "@/components/resume/DepartamentTabs";
 import useGetAllActiveDepartaments from "@/hooks/departament/useGetAllActiveDepartaments";
 import useGetAllProductionDeadlines from "@/hooks/production-deadline/useGetAllProductionDeadlines";
-import useGetAllFlowTemplates from "@/hooks/production-flow-template/useGetAllFlowTemplates";
 import useGetAllProductions from "@/hooks/production/useGetAllProductions";
 import useGetAllProductionDepartamentStates from "@/hooks/production-departament-state/useGetAllProductionDepartamentStates";
 import { groupDeadlinesByProduction } from "@/utils/groupDeadlinesByProduction";
 import { groupProductionsByDepartament } from "@/utils/groupProductionsByDepartament";
-import { groupProductionFlowByFlowTemplates } from "@/utils/groupProductionFlowByFlowTemplates";
 import { groupDeadlineStatusByDeadline } from "@/utils/groupDeadlineStatusByDeadline";
 import { useMemo } from "react";
 import { groupDeadlinesByDepartament } from "@/utils/groupDeadlinesByDepartament";
@@ -39,31 +37,23 @@ export default function ResumePage() {
   const deadlines = deadlinesData?.data || [];
 
   const {
-    data: flowTemplatesData,
-    isLoading: isFlowTemplatesLoading,
-    error: flowTemplatesError,
-  } = useGetAllFlowTemplates();
-  const flowTemplates = flowTemplatesData?.data || [];
-
-  const {
+    movimentationsByProduction,
+    templatesByProductionFlow,
     departamentStatesByProduction,
     isLoading: isDepartamentStatesByProductionLoading,
     error: departamentStatesByProductionError,
   } = useGetAllProductionDepartamentStates({ productions });
-  
 
-  const {
-    productionsByDepartament,
-    deadlinesByProduction,
-    deadlineStatusByDeadline,
-    deadlinesByDepartament,
-  } = useMemo(() => {
+  const groupData = useMemo(() => {
+    if (!templatesByProductionFlow) return;
+
+    const deadlinesByDepartament = groupDeadlinesByDepartament(deadlines);
+
     const deadlinesByProduction = groupDeadlinesByProduction(deadlines);
-    const templatesByFlow = groupProductionFlowByFlowTemplates(flowTemplates);
 
     const productionsByDepartament = groupProductionsByDepartament({
       productions,
-      templatesByFlow,
+      templatesByProductionFlow,
     });
 
     const deadlineStatusByDeadline = groupDeadlineStatusByDeadline({
@@ -71,29 +61,24 @@ export default function ResumePage() {
       departamentStatesByProduction,
     });
 
-    const deadlinesByDepartament = groupDeadlinesByDepartament(deadlines);
-
     return {
       deadlinesByProduction,
       productionsByDepartament,
       deadlineStatusByDeadline,
       deadlinesByDepartament,
     };
-  }, [deadlines, flowTemplates, departamentStatesByProduction]);
+  }, [deadlines, departamentStatesByProduction, templatesByProductionFlow]);
 
   const isLoading =
     isDepartamentsLoading ||
     isProductionsLoading ||
     isDeadlinesLoading ||
-    isFlowTemplatesLoading ||
     isDepartamentStatesByProductionLoading;
 
   const error =
-    departamentsError ||
-    productionsError ||
-    deadlinesError ||
-    flowTemplatesError ||
-    departamentStatesByProductionError;
+    departamentsError || productionsError || deadlinesError || departamentStatesByProductionError;
+
+  console.log(groupData?.deadlinesByDepartament)
 
   if (isLoading) {
     return <Loader title="Carregando produções..." />;
@@ -120,13 +105,15 @@ export default function ResumePage() {
         <PageTitle>Resumo</PageTitle>
         <p>Resume todas as produções por departamento.</p>
       </div>
-      <DepartamentTabs
-        departaments={departaments}
-        productionsByDepartament={productionsByDepartament}
-        deadlineStatusByDeadline={deadlineStatusByDeadline}
-        deadlinesByDepartament={deadlinesByDepartament}
-        departamentStatesByProduction={departamentStatesByProduction}
-      />
+      {groupData && (
+        <DepartamentTabs
+          departaments={departaments}
+          productionsByDepartament={groupData.productionsByDepartament}
+          deadlineStatusByDeadline={groupData.deadlineStatusByDeadline}
+          deadlinesByDepartament={groupData.deadlinesByDepartament}
+          departamentStatesByProduction={departamentStatesByProduction}
+        />
+      )}
     </section>
   );
 }

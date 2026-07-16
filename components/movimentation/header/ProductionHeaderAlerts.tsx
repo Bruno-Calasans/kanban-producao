@@ -31,6 +31,7 @@ export default function ProductionHeaderAlerts({
   departamentStates,
   departamentDeadlineStates,
 }: ProductionHeaderAlertsProps) {
+  
   const { externalDepartamentStates } = useExternalDepartamentState({
     production,
     movimentations,

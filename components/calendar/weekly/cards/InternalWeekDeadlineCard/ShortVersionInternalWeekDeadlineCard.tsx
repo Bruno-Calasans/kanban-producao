@@ -22,7 +22,7 @@ export function ShortVersionInternalWeekDeadlineCard({
 
   if (status == "WAITING")
     return (
-      <div>
+      <div className="mr-4">
         <p className="font-bold mb-1 text-md">OP: {op}</p>
         <p className="flex gap-0.5 items-center justify-center text-xs">
           <span className="font-bold">AGUARDANDO</span>
@@ -32,7 +32,7 @@ export function ShortVersionInternalWeekDeadlineCard({
 
   if (status == "EXPIRED")
     return (
-      <div>
+      <div className="mr-4">
         <p className="font-bold mb-1 text-md">OP: {op}</p>
         <p className="font-bold mb-1 text-md">Meta: {goalAmount}</p>
       </div>

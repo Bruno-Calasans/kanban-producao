@@ -1,7 +1,7 @@
 "use client";
 
 import { DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
-import { calcDepartamentExternalState } from "@/utils/calcDepartamentExternalState";
+import normalizeDate from "@/utils/normalizeDate";
 
 type UseExternalWeeklyDeadlineCardProps = {
   weekDay: Date;
@@ -14,26 +14,18 @@ export default function useExternalWeeklyDeadlineCard({
   weekDay,
   departamentStates,
 }: UseExternalWeeklyDeadlineCardProps) {
-  const { production, planned_start_at, planned_end_at, actual_end_at, departament } = deadline;
+  const { planned_end_at, actual_end_at } = deadline;
 
   // Datas
-  const startDate = planned_start_at ? new Date(planned_start_at) : undefined;
-  const plannedEndDate = planned_end_at ? new Date(planned_end_at) : undefined;
-  const endDate = actual_end_at ? new Date(actual_end_at) : undefined;
-  const today = new Date();
-
-  today.setHours(0, 0, 0, 0);
-  plannedEndDate?.setHours(0, 0, 0, 0);
-  endDate?.setHours(0, 0, 0, 0);
-  weekDay.setHours(0, 0, 0, 0);
+  const plannedEndDate = normalizeDate(planned_end_at);
+  const endDate = normalizeDate(actual_end_at);
+  const today = normalizeDate(new Date())!;
+  const normalizedWeekDay = normalizeDate(weekDay)!;
 
   // Verificando os departamentos externos
-  const movimentations = departamentStates.flatMap((state) => state.movimentations);
-  const departamentExternalState = calcDepartamentExternalState({
-    departament,
-    production,
-    movimentations,
-  });
+  const departamentExternalState = departamentStates.find(
+    (state) => state.departament.id == deadline.departament.id,
+  );
 
   // Quantidade disponível no departamento externo
   const avaliableAmount = departamentExternalState?.avaliableAmount || 0;
@@ -56,7 +48,8 @@ export default function useExternalWeeklyDeadlineCard({
   const isDone = amountDone > 0 && amountDone == totalAmount;
 
   // Prazo do departamento termina este dia da semana
-  const isExpectedThisWeekDay = plannedEndDate && plannedEndDate.getTime() == weekDay.getTime();
+  const isExpectedThisWeekDay =
+    plannedEndDate && plannedEndDate.getTime() == normalizedWeekDay.getTime();
 
   return {
     departamentExternalState,

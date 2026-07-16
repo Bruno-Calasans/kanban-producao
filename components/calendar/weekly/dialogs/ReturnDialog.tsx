@@ -2,12 +2,12 @@
 
 import CustomDialog from "@/components/custom/CustomDialog";
 import { MoveDownLeftIcon } from "lucide-react";
-import { Departament, ProductionDeadlinePopulated } from "@/types/database.type";
+import { Departament, DepartamentState, ProductionDeadlinePopulated } from "@/types/database.type";
 import ReturnProcessForm from "@/components/production/forms/return-form/ReturnDepartamentForm";
 import { ExternalDepartamentState } from "@/utils/calcDepartamentExternalState";
 
 type ReturnDialogProps = {
-  externalDepartamentState: ExternalDepartamentState;
+  externalDepartamentState: DepartamentState;
   avaliableDepartaments: Departament[];
   deadline?: ProductionDeadlinePopulated;
 };

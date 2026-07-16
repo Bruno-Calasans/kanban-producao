@@ -22,13 +22,11 @@ import RemoveDateButton from "./RemoveDataButton";
 type ProductionDeadlineDatesInputProps = {
   departamentDeadlineState: DepartamentDeadlineState;
   shortVersion?: boolean;
-  onlyEndDate?: boolean;
 };
 
 export default function ProductionDeadlineDatesInput({
   departamentDeadlineState,
   shortVersion,
-  onlyEndDate,
 }: ProductionDeadlineDatesInputProps) {
   const { departament, production, deadline, status, expireDaysAfterEnd, departamentState } =
     departamentDeadlineState;
@@ -214,105 +212,105 @@ export default function ProductionDeadlineDatesInput({
     (deadline.planned_start_at || deadline.planned_end_at) &&
     productionStatus == "PENDING";
 
+  const showCompletedDeadlineMsg =
+    deadline && (status == "COMPLETED" || status == "COMPLETED_EXPIRED");
+
   return (
-    <div className={cn("grid grid-cols-2 items-center gap-1", shortVersion && "flex flex-col")}>
+    <div className={"flex flex-col gap-2"}>
       {/* Escolher data de início planejada */}
-      <DatePickerInput
-        className="w-full"
-        // minDate={today}
-        currentDate={selectedStartDate || plannedStartDate}
-        placeholder={plannedStartDate ? "" : "Data de início"}
-        onChangeDate={(date) => onChangeDate(date, "START")}
-        disabled={isStartDateInputDisabled}
-        extraAddon={
-          plannedStartDate &&
-          !isPending &&
-          !isStartDateInputDisabled &&
-          canDeleteDeadline && (
-            <RemoveDateButton
-              title="Remover data planejada de início"
-              onClick={() => removePlannedDate("planned_end_at")}
-            />
-          )
-        }
-      />
+      <div className="flex flex-col gap-2">
+        <DatePickerInput
+          className="w-full"
+          // minDate={today}
+          currentDate={selectedStartDate || plannedStartDate}
+          placeholder={plannedStartDate ? "" : "Data de início"}
+          onChangeDate={(date) => onChangeDate(date, "START")}
+          disabled={isStartDateInputDisabled}
+          extraAddon={
+            plannedStartDate &&
+            !isPending &&
+            !isStartDateInputDisabled &&
+            canDeleteDeadline && (
+              <RemoveDateButton
+                title="Remover data planejada de início"
+                onClick={() => removePlannedDate("planned_end_at")}
+              />
+            )
+          }
+        />
 
-      {/* Escolher data de fim planejada */}
-      <DatePickerInput
-        className="w-full"
-        minDate={selectedStartDate || plannedStartDate}
-        currentDate={selectedEndDate || plannedEndDate}
-        onChangeDate={(date) => onChangeDate(date, "END")}
-        placeholder={plannedEndDate ? "" : "Data de fim"}
-        disabled={isEndDateInputDisabled}
-        extraAddon={
-          plannedEndDate &&
-          !isPending &&
-          !isEndDateInputDisabled &&
-          canDeleteDeadline && (
-            <RemoveDateButton
-              title="Remover data planejada de fim"
-              onClick={() => removePlannedDate("planned_end_at")}
-            />
-          )
-        }
-      />
+        {/* Escolher data de fim planejada */}
+        <DatePickerInput
+          className="w-full"
+          minDate={selectedStartDate || plannedStartDate}
+          currentDate={selectedEndDate || plannedEndDate}
+          onChangeDate={(date) => onChangeDate(date, "END")}
+          placeholder={plannedEndDate ? "" : "Data de fim"}
+          disabled={isEndDateInputDisabled}
+          extraAddon={
+            plannedEndDate &&
+            !isPending &&
+            !isEndDateInputDisabled &&
+            canDeleteDeadline && (
+              <RemoveDateButton
+                title="Remover data planejada de fim"
+                onClick={() => removePlannedDate("planned_end_at")}
+              />
+            )
+          }
+        />
+      </div>
 
-      <div className="pt-1 flex justify-end items-end gap-1 col-span-2">
-        {/* Mostra quando o prazo concluído */}
-        {deadline && (
+      {/* Botões */}
+      {!showCompletedDeadlineMsg && (
+        <div className="flex flex-col gap-1">
+          {hasChanged && deadline && (
+            <Input
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="Motivo do replanejamento (opcional)"
+              className="w-full p-2 border-2 rounded-sm"
+            />
+          )}
+
+          {/* Delete, cancel and save buttons */}
+          <div className="flex items-end justify-end w-full gap-1 mt-1">
+            {canDeleteDeadline && !shortVersion && (
+              <DeleteButton
+                label="Excluir"
+                onClick={onDelete}
+                isLoading={isPending}
+                size="xs"
+                hiddenIcon
+              />
+            )}
+
+            {hasChanged && (
+              <>
+                <CancelButton label="Cancelar" size="xs" onClick={onCancel} isLoading={isPending} />
+                <SaveButton
+                  label="Salvar"
+                  size="xs"
+                  onClick={onSave}
+                  isLoading={isPending}
+                  hiddenIcon
+                />
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Mostra quando o prazo concluído */}
+      {showCompletedDeadlineMsg && (
+        <div className="flex items-end justify-end">
           <FinishedDeadlineMsg
             deadline={deadline}
             status={status}
             expireDaysAfterEnd={expireDaysAfterEnd}
           />
-        )}
-
-        {/* Botões */}
-        <div className="flex gap-2 items-end">
-          <div className="flex flex-col gap-1 items-end self-end">
-            {hasChanged && deadline && (
-              <Input
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder="Motivo do replanejamento (opcional)"
-                className="w-75 p-2 border-2 rounded-sm"
-              />
-            )}
-
-            {/* Delete, cancel and save buttons */}
-            <div className={cn("flex items-end gap-1 mt-1 flex-1")}>
-              {canDeleteDeadline && !shortVersion && (
-                <DeleteButton
-                  label="Excluir"
-                  onClick={onDelete}
-                  isLoading={isPending}
-                  size="xs"
-                  hiddenIcon
-                />
-              )}
-
-              {hasChanged && (
-                <>
-                  <CancelButton
-                    label="Cancelar"
-                    size="xs"
-                    onClick={onCancel}
-                    isLoading={isPending}
-                  />
-                  <SaveButton
-                    label="Salvar"
-                    size="xs"
-                    onClick={onSave}
-                    isLoading={isPending}
-                    hiddenIcon
-                  />
-                </>
-              )}
-            </div>
-          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

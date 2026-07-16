@@ -5,7 +5,6 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { ProductionDeadlinePopulated, DepartamentState } from "@/types/database.type";
-import { ExternalDepartamentState } from "@/utils/calcDepartamentExternalState";
 import ReturnDialog from "../../dialogs/ReturnDialog";
 
 type ExternalWeekDeadlineCardContextMenuProps = {
@@ -13,7 +12,7 @@ type ExternalWeekDeadlineCardContextMenuProps = {
   departamentStates: DepartamentState[];
   deadline: ProductionDeadlinePopulated;
   departamentAvaliableAmount: number;
-  departamentExternalState: ExternalDepartamentState;
+  departamentExternalState?: DepartamentState;
   hidden?: boolean;
 };
 
@@ -29,13 +28,17 @@ export default function ExternalWeekDeadlineCardContextMenu({
   return (
     <ContextMenu>
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
+
       <ContextMenuContent hidden={hidden}>
+        {/* Dialog para retornar do departamento externo */}
         <ContextMenuItem asChild>
-          <ReturnDialog
-            externalDepartamentState={departamentExternalState}
-            avaliableDepartaments={avaliableDepartaments}
-            deadline={deadline}
-          />
+          {departamentExternalState && (
+            <ReturnDialog
+              externalDepartamentState={departamentExternalState}
+              avaliableDepartaments={avaliableDepartaments}
+              deadline={deadline}
+            />
+          )}
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>

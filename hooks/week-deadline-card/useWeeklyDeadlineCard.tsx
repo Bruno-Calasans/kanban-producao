@@ -5,16 +5,10 @@ import {
   DepartamentState,
   ProductionDeadlinePopulated,
 } from "@/types/database.type";
-import daysDiffExceptSunday from "@/utils/daysDiffExceptSunday";
 import { formatDate } from "@/utils/formatDate";
-import {
-  differenceInDays,
-  eachDayOfInterval,
-  isSunday,
-  isWithinInterval,
-  parseISO,
-  startOfDay,
-} from "date-fns";
+import { isWithinInterval, parseISO, startOfDay } from "date-fns";
+import daysDiffExceptSunday from "@/utils/daysDiffExceptSunday";
+import normalizeDate from "@/utils/normalizeDate";
 
 type UseWeeklyDeadlineCardProps = {
   weekDay: Date;
@@ -38,16 +32,11 @@ export default function useWeeklyDeadlineCard({
     (meta) => formatDate(new Date(meta.ref_date + "T00:00:00")) == formatDate(weekDay),
   );
 
-  const today = new Date();
-  const plannedStartDate = planned_start_at ? new Date(planned_start_at) : undefined;
-  const plannedEndDate = planned_end_at ? new Date(planned_end_at) : undefined;
-  const endDate = actual_end_at ? new Date(actual_end_at) : undefined;
-
-  today.setHours(0, 0, 0, 0);
-  plannedStartDate?.setHours(0, 0, 0, 0);
-  plannedEndDate?.setHours(0, 0, 0, 0);
-  endDate?.setHours(0, 0, 0, 0);
-  weekDay.setHours(0, 0, 0, 0);
+  const plannedStartDate = normalizeDate(planned_start_at);
+  const plannedEndDate = normalizeDate(planned_end_at);
+  const endDate = normalizeDate(actual_end_at);
+  const today = normalizeDate(new Date())!;
+  const normalizedWeekDay = normalizeDate(weekDay)!;
 
   // Quantidade total que tem que fazer
   const totalAmount = production.amount;
@@ -112,8 +101,11 @@ export default function useWeeklyDeadlineCard({
     hasWork && !!dailyGoal && dailyGoal.amount_done < dailyGoal.expected_amount;
 
   // Diz se o prazo cai neste dia da semana
-  const isExpectedThisWeekDay = plannedEndDate && plannedEndDate.getTime() == weekDay.getTime();
-  const isStartedThisWeekDay = plannedStartDate && plannedStartDate.getTime() == weekDay.getTime();
+  const isExpectedThisWeekDay =
+    plannedEndDate && plannedEndDate.getTime() == normalizedWeekDay.getTime();
+
+  const isStartedThisWeekDay =
+    plannedStartDate && plannedStartDate.getTime() == normalizedWeekDay.getTime();
 
   let workState: DeadlineWorkState = "NO_WORK";
 

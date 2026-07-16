@@ -71,18 +71,16 @@ export default function DepartamentProductionTable({
         const departamentState = departamentStateDataByProduction.get(production.id)!;
 
         return (
-          <div className="flex gap-1">
-            <ProductionDeadlineDatesInput
-              shortVersion
-              departamentDeadlineState={{
-                production,
-                departament,
-                departamentState,
-                deadline,
-                ...deadlineStatus,
-              }}
-            />
-          </div>
+          <ProductionDeadlineDatesInput
+            shortVersion
+            departamentDeadlineState={{
+              production,
+              departament,
+              departamentState,
+              deadline,
+              ...deadlineStatus,
+            }}
+          />
         );
       },
     },
@@ -98,7 +96,9 @@ export default function DepartamentProductionTable({
       cell({ getValue }) {
         const { deadline, deadlineStatus } = getValue() as DeadlineData;
         return (
-          <ProductionDeadlineStatusBadge deadline={deadline} deadlineStatus={deadlineStatus} />
+          <div className="flex items-center flex-1 justify-center">
+            <ProductionDeadlineStatusBadge deadline={deadline} deadlineStatus={deadlineStatus} />
+          </div>
         );
       },
     },

@@ -40,8 +40,6 @@ export default function ExternalWeekDeadlineCard({
     departamentExternalState,
   } = useExternalWeeklyDeadlineCard({ deadline, departamentStates, weekDay });
 
-  console.log(departament)
-
   return (
     <ExternalWeekDeadlineCardContextMenu
       departamentStates={departamentStates}
@@ -57,7 +55,7 @@ export default function ExternalWeekDeadlineCard({
         <Badge
           asChild
           className={cn(
-            "flex flex-co h-fit rounded-none p-3 mt-2",
+            "flex flex-co h-fit rounded-none p-3",
 
             // Deadline externa sem atraso
             !isExpired &&

@@ -68,8 +68,8 @@ export default function FullVersionInternalWeekDeadlineCard({
       </p>
       <p className="flex gap-0.5 items-center justify-center text-xs">
         <HashIcon size={16} />
-        <span className="font-bold">CONCLUÍDO:</span>
-        {amount}
+        <span className="font-bold">CONCLUÍDO</span>
+        {/* {amount} */}
       </p>
     </>
   );

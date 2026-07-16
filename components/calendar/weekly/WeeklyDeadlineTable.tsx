@@ -181,6 +181,7 @@ export default function WeeklyDeadlineTable({
   return (
     <section>
       <WeekSelector
+        weekDays={weekDays}
         startDayOfWeek={startDayOfWeek}
         getCurrentWeek={getCurrentWeek}
         getNextWeek={getNextWeek}

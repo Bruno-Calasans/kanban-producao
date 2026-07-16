@@ -6,8 +6,11 @@ import { useShortCardVersion } from "@/hooks/local-storage/useShortCardVersion";
 import { ChevronLeftIcon, ChevronRightIcon, ExpandIcon, ShrinkIcon } from "lucide-react";
 import PageTitle from "@/components/custom/PageTitle";
 import CreateDeadlineDialog from "./dialogs/CreateDeadlineDialog";
+import { cn } from "@/lib/utils";
+import { isToday } from "date-fns";
 
 type WeekSelectorProps = {
+  weekDays: Date[];
   startDayOfWeek: Date;
   getPreviousWeek: () => void;
   getCurrentWeek: () => void;
@@ -15,12 +18,14 @@ type WeekSelectorProps = {
 };
 
 export default function WeekSelector({
+  weekDays,
   startDayOfWeek,
   getPreviousWeek,
   getCurrentWeek,
   getNextWeek,
 }: WeekSelectorProps) {
   const { isShort, toggleShort } = useShortCardVersion();
+  const hasToday = weekDays.find((day) => isToday(day));
 
   return (
     <div className="flex justify-between mb-2">
@@ -52,6 +57,7 @@ export default function WeekSelector({
         </Button>
         <Button
           size="xs"
+          className={cn(!hasToday && "bg-stone-400")}
           onClick={() => {
             getCurrentWeek();
           }}

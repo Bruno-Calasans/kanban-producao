@@ -204,7 +204,8 @@ export default function ProductionDeadlineDatesInput({
   // Só pode definir prazo se a produção ainda não começou
   const isExternalDeadline = deadline?.departament.is_external;
   const isStartDateInputDisabled = isInputDisabled;
-  const isEndDateInputDisabled = !(selectedStartDate || plannedStartDate) || isInputDisabled;
+  const isEndDateInputDisabled =
+    (!(selectedStartDate || plannedStartDate) && !isExternalDeadline) || isInputDisabled;
 
   // Só posso excluir o prazo se a produção ainda não começou
   const canDeleteDeadline =
@@ -219,25 +220,27 @@ export default function ProductionDeadlineDatesInput({
     <div className={"flex flex-col gap-2"}>
       {/* Escolher data de início planejada */}
       <div className="flex flex-col gap-2">
-        <DatePickerInput
-          className="w-full"
-          // minDate={today}
-          currentDate={selectedStartDate || plannedStartDate}
-          placeholder={plannedStartDate ? "" : "Data de início"}
-          onChangeDate={(date) => onChangeDate(date, "START")}
-          disabled={isStartDateInputDisabled}
-          extraAddon={
-            plannedStartDate &&
-            !isPending &&
-            !isStartDateInputDisabled &&
-            canDeleteDeadline && (
-              <RemoveDateButton
-                title="Remover data planejada de início"
-                onClick={() => removePlannedDate("planned_end_at")}
-              />
-            )
-          }
-        />
+        {!isExternalDeadline && (
+          <DatePickerInput
+            className="w-full"
+            // minDate={today}
+            currentDate={selectedStartDate || plannedStartDate}
+            placeholder={plannedStartDate ? "" : "Data de início"}
+            onChangeDate={(date) => onChangeDate(date, "START")}
+            disabled={isStartDateInputDisabled}
+            extraAddon={
+              plannedStartDate &&
+              !isPending &&
+              !isStartDateInputDisabled &&
+              canDeleteDeadline && (
+                <RemoveDateButton
+                  title="Remover data planejada de início"
+                  onClick={() => removePlannedDate("planned_end_at")}
+                />
+              )
+            }
+          />
+        )}
 
         {/* Escolher data de fim planejada */}
         <DatePickerInput

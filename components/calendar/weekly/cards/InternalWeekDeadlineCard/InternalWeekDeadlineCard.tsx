@@ -108,12 +108,12 @@ export default function InternalWeekDeadlineCard({
             isShort && "p-1",
 
             // Deadline interna sem atraso
-            (status == "IN_PROGRESS" || status == "WAITING") &&
+            (status == "IN_PROGRESS" || status == "WAITING" || status == "REOPEN") &&
               "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
 
             // Quando passa o mouse em cima de uma deadline interna sem atraso
             isSameDeadline &&
-              (status == "IN_PROGRESS" || status == "WAITING") &&
+              (status == "IN_PROGRESS" || status == "WAITING" || status == "REOPEN") &&
               !isDailyGoalIncomplete &&
               "border-blue-700 ",
 

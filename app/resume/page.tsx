@@ -78,8 +78,6 @@ export default function ResumePage() {
   const error =
     departamentsError || productionsError || deadlinesError || departamentStatesByProductionError;
 
-  console.log(groupData?.deadlinesByDepartament)
-
   if (isLoading) {
     return <Loader title="Carregando produções..." />;
   }

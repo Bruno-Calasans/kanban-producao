@@ -19,7 +19,10 @@ export default function DeadlineTypeBadge({
 }: DeadlineTypeBadgeProps) {
   const deadlineType = checkDeadlineType(deadline);
 
-  if (deadlineType === "ONLY_EXPECTED" && isExpectedThisWeekDay) {
+  if (
+    (deadlineType === "ONLY_EXPECTED" && isExpectedThisWeekDay) ||
+    (isStartedThisWeekDay && isExpectedThisWeekDay)
+  ) {
     return (
       <div
         className={cn(

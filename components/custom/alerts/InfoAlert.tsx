@@ -1,25 +1,9 @@
 import { InfoIcon } from "lucide-react";
-import { CustomAlert } from "./CustomAlert";
+import { CustomAlert, CustomAlertProps } from "./CustomAlert";
 import { cn } from "@/lib/utils";
 import { ClassValue } from "clsx";
 
-type InfoAlertProps = {
-  title: string;
-  description: React.ReactNode;
-  alertIcon?: React.ReactNode;
-  hideCloseButton?: boolean;
-  closeIcon?: React.ReactNode;
-  classNames?: {
-    container?: ClassValue;
-    title?: ClassValue;
-    description?: ClassValue;
-    action?: ClassValue;
-  };
-  close?: boolean;
-  isDestructive?: boolean;
-  actionLabel?: React.ReactNode;
-  onAction?: () => void;
-};
+type InfoAlertProps = CustomAlertProps;
 
 export function InfoAlert({
   title,

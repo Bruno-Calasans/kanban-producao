@@ -4,7 +4,7 @@ import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/u
 import { cn } from "@/lib/utils";
 import { ClassValue } from "clsx";
 
-type CustomAlertProps = {
+export type CustomAlertProps = {
   title: string;
   description: React.ReactNode;
   alertIcon?: React.ReactNode;

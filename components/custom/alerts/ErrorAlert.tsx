@@ -1,25 +1,9 @@
 import { CircleXIcon } from "lucide-react";
-import { CustomAlert } from "./CustomAlert";
+import { CustomAlert, CustomAlertProps } from "./CustomAlert";
 import { cn } from "@/lib/utils";
 import { ClassValue } from "clsx";
 
-type ErroAlertProps = {
-  title: string;
-  description: string;
-  alertIcon?: React.ReactNode;
-  hideCloseButton?: boolean;
-  closeIcon?: React.ReactNode;
-  classNames?: {
-    container?: ClassValue;
-    title?: ClassValue;
-    description?: ClassValue;
-    action?: ClassValue;
-  };
-  close?: boolean;
-  isDestructive?: boolean;
-  actionLabel?: React.ReactNode;
-  onAction?: () => void;
-};
+type ErroAlertProps = CustomAlertProps;
 
 export function ErrorAlert({
   title,

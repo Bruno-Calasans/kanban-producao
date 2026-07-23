@@ -31,7 +31,6 @@ export default function ProductionHeaderAlerts({
   departamentStates,
   departamentDeadlineStates,
 }: ProductionHeaderAlertsProps) {
-  
   const { externalDepartamentStates } = useExternalDepartamentState({
     production,
     movimentations,
@@ -53,11 +52,17 @@ export default function ProductionHeaderAlerts({
   const expiredDeadlineAlert = expiredDepartaments.length > 0 && productionStatus != "CANCELLED";
 
   return (
-    <div id="production-alerts" className="flex gap-2 flex-col py-1 mb-1">
+    <div id="production-alerts" className="flex gap-0 flex-col py-0.5 mb-1">
       {deadlines.length == 0 && !noDeadlineAlert && (
         <InfoAlert
           title="Produção sem prazo definido"
-          description="Nenhum departamento tem prazo de entrega. Vá na aba 'Prazos' e defina os prazos para os departamentos."
+          description={
+            <p>
+              Nenhum departamento tem prazo de entrega. Vá na aba{" "}
+              <span className="font-bold underline">Prazos</span> e defina os prazos para os
+              departamentos.
+            </p>
+          }
           hideCloseButton
         />
       )}
@@ -65,15 +70,30 @@ export default function ProductionHeaderAlerts({
       {cancelledAlert && (
         <ErrorAlert
           title="Produção Cancelada"
-          description={`Esta produção foi cancelada dia ${new Date(production.updated_at).toLocaleDateString()}. Você não pode realizar mais ações ou definir prazos para esta movimentação.`}
+          description={
+            <p>
+              Esta produção foi cancelada dia{" "}
+              <span className="font-bold">
+                {new Date(production.updated_at).toLocaleDateString()}
+              </span>
+              . Você não pode realizar mais ações ou definir prazos para esta movimentação.
+            </p>
+          }
           hideCloseButton
         />
       )}
 
       {expiredDeadlineAlert && (
         <ErrorAlert
-          title="Departamento com prazo expirado"
-          description="Existem departamentos com prazos expirados. Verifique a aba de prazos para mais detalhes."
+          title="Departamento(s) com prazo expirado"
+          description={
+            <p>
+              Você tem <span className="font-bold">{expiredDepartaments.length}</span> prazos
+              expirados. Verifique a aba de <span className="font-bold underline">Prazos</span> para
+              mais detalhes.
+            </p>
+          }
+          hideCloseButton
         />
       )}
 
